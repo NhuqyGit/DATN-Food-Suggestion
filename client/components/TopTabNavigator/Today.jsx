@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import PlanDate from "../untils/PlanDate";
@@ -9,6 +9,13 @@ import data from "../../data/MealPlan.js";
 import ListDishItem from "../untils/ListDishItem";
 import Plus from "../untils/Plus.jsx";
 import { useNavigation } from "@react-navigation/native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 function Today() {
   const navigation = useNavigation();
   const date = moment().format("MMMM Do");
@@ -17,9 +24,29 @@ function Today() {
   const dayInfo = data[dayOfWeekNumber];
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
+  const translateY = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withSpring(translateY.value) }],
+    };
+  });
+  const animateList = () => {
+    translateY.value = withTiming(0, {
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+    });
+  };
   const toggleAccordion = (index) => {
     setOpenAccordionIndex(openAccordionIndex === index ? null : index);
+    animateList();
   };
+  useEffect(() => {
+    if (openAccordionIndex !== null) {
+      translateY.value = 10;
+      animateList();
+    }
+  }, [openAccordionIndex]);
 
   return (
     <View className="py-4  h-full bg-white">
@@ -35,7 +62,7 @@ function Today() {
 
           <TouchableOpacity
             onPress={() => toggleAccordion(dayOfWeekNumber)}
-            style={{ padding: 10 }}
+            style={{ paddingRight: 10, paddingTop: 10 }}
           >
             <Feather
               name={
@@ -49,7 +76,7 @@ function Today() {
           </TouchableOpacity>
         </View>
         {openAccordionIndex === dayOfWeekNumber && (
-          <View>
+          <Animated.View style={animatedStyle}>
             {dayInfo.assets.map((asset, assetIndex) => (
               <ListDishItem
                 key={assetIndex}
@@ -58,7 +85,7 @@ function Today() {
                 imgUri={asset.imgUri}
               />
             ))}
-          </View>
+          </Animated.View>
         )}
       </ScrollView>
     </View>

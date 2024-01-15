@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import Feather from "react-native-vector-icons/Feather.js";
@@ -9,6 +9,13 @@ import ListDishItem from "../untils/ListDishItem";
 import data from "../../data/MealPlan.js";
 import Plus from "../untils/Plus.jsx";
 import { useNavigation } from "@react-navigation/native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 function ThisWeek() {
   const navigation = useNavigation();
   const startDate = moment().startOf("week");
@@ -23,9 +30,30 @@ function ThisWeek() {
 
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
+  const translateY = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withSpring(translateY.value) }],
+    };
+  });
+  const animateList = () => {
+    translateY.value = withTiming(0, {
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+    });
+  };
   const toggleAccordion = (index) => {
     setOpenAccordionIndex(openAccordionIndex === index ? null : index);
+    animateList();
   };
+
+  useEffect(() => {
+    if (openAccordionIndex !== null) {
+      translateY.value = 10;
+      animateList();
+    }
+  }, [openAccordionIndex]);
   return (
     <View className="py-4 h-full bg-white">
       <PlanDate date={date} />
@@ -42,7 +70,7 @@ function ThisWeek() {
 
               <TouchableOpacity
                 onPress={() => toggleAccordion(index)}
-                style={{ padding: 10 }}
+                style={{ paddingRight: 10, paddingTop: 10 }}
               >
                 <Feather
                   name={
@@ -54,7 +82,7 @@ function ThisWeek() {
               </TouchableOpacity>
             </View>
             {openAccordionIndex === index && (
-              <View>
+              <Animated.View style={animatedStyle}>
                 {day.assets.map((asset, assetIndex) => (
                   <ListDishItem
                     key={assetIndex}
@@ -63,7 +91,7 @@ function ThisWeek() {
                     imgUri={asset.imgUri}
                   />
                 ))}
-              </View>
+              </Animated.View>
             )}
           </View>
         ))}

@@ -22,18 +22,18 @@ const PopOver = () => {
       <Popover
         isVisible={isVisible}
         onRequestClose={() => setIsVisible(false)}
-        from={new Rect(370, 190, 20, 40)}
+        from={new Rect(360, 190, 20, 52)}
       >
         <View className=" w-64 h-28 p-4 bg-white rounded-tl-2xl rounded-bl-2xl">
           <View className="flex flex-row justify-between mt-2">
             <Text className="text-red-600 text-lg font-semibold">
               Delete All
             </Text>
-            <Feather name="trash-2" size={30} color={"red"} />
+            <Feather name="trash-2" size={26} color={"red"} />
           </View>
-          <View className="flex flex-row justify-between mt-2">
+          <View className="flex flex-row justify-between mt-3">
             <Text className="text-lg font-semibold">Sort by cooking time</Text>
-            <Material name="sort-clock-descending-outline" size={32} />
+            <Material name="sort-clock-descending-outline" size={26} />
           </View>
         </View>
       </Popover>

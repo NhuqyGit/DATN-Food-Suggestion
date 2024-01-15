@@ -23,7 +23,7 @@ export default function ListDishItem({ name, time, imgUri }) {
               {time}
             </Text>
           </View>
-          <View className="ml-28">
+          <View>
             <Ionicons name="trash-outline" size={30} color="red" />
           </View>
         </View>
