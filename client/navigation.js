@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen';
 import Profile from './screens/Profile';
 import MealPlan from './screens/MealPlan';
 import Personalization from './screens/Personalization';
+import FoodDetailsScreen from "./screens/FoodDetails";
 
 // const Stack = createNativeStackNavigator();
 
