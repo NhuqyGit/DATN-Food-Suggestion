@@ -3,11 +3,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import React from 'react';
-import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
 import Profile from './screens/Profile';
 import MealPlan from './screens/MealPlan';
 import Personalization from './screens/Personalization';
-import FoodDetailsScreen from "./screens/FoodDetails";
+import FoodDetailsScreen from './components/FoodDetails/FoodDetails.jsx';
 
 // const Stack = createNativeStackNavigator();
 
@@ -32,7 +32,7 @@ export default function Navigation() {
           headerShown: false,
         }}
       >
-        <Tab.Screen name='Home' component={HomeScreen} />
+        <Tab.Screen name='Home' component={FoodDetailsScreen} />
         <Tab.Screen name='Profile' component={Profile} />
         <Tab.Screen name='MealPlan' component={MealPlan} />
         <Tab.Screen name='Personalization' component={Personalization} />

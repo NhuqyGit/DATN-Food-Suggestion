@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-} from "react-native";
+} from 'react-native';
 
 const MoreByCreator = ({ author, recipes }) => (
   <View style={styles.container}>
@@ -15,6 +15,7 @@ const MoreByCreator = ({ author, recipes }) => (
       data={recipes}
       keyExtractor={(item) => item.id}
       horizontal
+      showsHorizontalScrollIndicator={false}
       renderItem={({ item }) => (
         <TouchableOpacity
           onPress={() => alert(`View details of ${item.name}`)}
@@ -29,7 +30,7 @@ const MoreByCreator = ({ author, recipes }) => (
       style={styles.viewAllButton}
       onPress={() => alert(`View all by ${author}`)}
     >
-      <Text style={{ color: "green" }}>View All</Text>
+      <Text style={{ color: 'green' }}>View All</Text>
     </TouchableOpacity>
   </View>
 );
@@ -40,12 +41,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 5,
   },
   recipeItem: {
     margin: 5,
-    alignItems: "center",
+    alignItems: 'center',
   },
   recipeImage: {
     width: 100,
@@ -61,3 +62,4 @@ const styles = StyleSheet.create({
 });
 
 export default MoreByCreator;
+
