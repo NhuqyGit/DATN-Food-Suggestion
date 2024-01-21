@@ -9,12 +9,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useState } from 'react';
-import SvgPer1 from './assets/svgs/per1'
-import SvgPer2 from './assets/svgs/per2'
+import SvgPer1 from './assets/svgs/per1';
+import SvgPer2 from './assets/svgs/per2';
 import PerScreen from './screens/PerScreen';
-import PerDone from './screens/PerDone'
+import PerDone from './screens/PerDone';
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 const cuisines = [
   {
@@ -89,7 +89,7 @@ const cuisines = [
     image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
-]
+];
 const step2 = [
   {
     id: 1,
@@ -163,48 +163,49 @@ const step2 = [
     image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
-] 
+];
 const ques = [
-{
-  question: "What are your favorite cuisines?",
-  listAns: cuisines,
-  svg: SvgPer1
-},
-{
-  question: "What are your favorite cuisidfasdfnes?",
-  listAns: step2,
-  svg: SvgPer2
-}
-]
+  {
+    question: 'What are your favorite cuisines?',
+    listAns: cuisines,
+    svg: SvgPer1,
+  },
+  {
+    question: 'What are your favorite cuisidfasdfnes?',
+    listAns: step2,
+    svg: SvgPer2,
+  },
+];
 
 export default function App() {
   const [currentStep, setCurrentStep] = useState(0);
-  const onNext = () => { 
+  const onNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
-  console.log(currentStep) 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-          name={"Personalize"}
+        <Stack.Screen
+          name={'Personalize'}
           options={{
-            headerShown: false
+            headerShown: false,
           }}
         >
-        {(props) => <PerScreen
-                      {...props}
-                      step={currentStep}
-                      ques={ques[currentStep]}
-                      onNext={onNext}
-                    />}
+          {(props) => (
+            <PerScreen
+              {...props}
+              step={currentStep}
+              ques={ques[currentStep]}
+              onNext={onNext}
+            />
+          )}
         </Stack.Screen>
 
-        <Stack.Screen 
-          name={"PersonalizeDone"}
+        <Stack.Screen
+          name={'PersonalizeDone'}
           component={PerDone}
           options={{
-            headerShown: false
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
@@ -220,5 +221,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
 
