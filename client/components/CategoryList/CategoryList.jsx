@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     marginTop: 32,
+    paddingHorizontal: 16,
   },
 
   title: {
