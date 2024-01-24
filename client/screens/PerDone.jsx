@@ -12,10 +12,10 @@ const PerDone = ({navigation}) => {
           source={require('../assets/images/PersonalizeScreen/slice3.png')}
         />
 
-        <Text style={styles.h1}>You're all set!</Text>
+        <Text style={styles.h1}>You're all set!!!</Text>
         <Text style={styles.span}>Visit your personalized home feed of recipe suggestions</Text>
         
-        <TouchableOpacity onPress={()=>navigation.navigate('Personalize')}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Personalize1')}>
           <View style={styles.btn}>
     
             <Text style={styles.btnText}>Get Started</Text>

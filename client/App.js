@@ -7,10 +7,14 @@
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { TransitionSpecs, HeaderStyleInterpolators } from '@react-navigation/stack';
+
 
 import { useState } from 'react';
-import SvgPer1 from './assets/svgs/per1';
-import SvgPer2 from './assets/svgs/per2';
+import SvgPer1 from './assets/svgs/Personalize/per1';
+import SvgPer2 from './assets/svgs/Personalize/per2';
+import SvgPer3 from './assets/svgs/Personalize/per3';
+import SvgPer4 from './assets/svgs/Personalize/per4';
 import PerScreen from './screens/PerScreen';
 import PerDone from './screens/PerDone';
 
@@ -166,46 +170,70 @@ const step2 = [
 ];
 const ques = [
   {
+    id: 0,
     question: 'What are your favorite cuisines?',
     listAns: cuisines,
     svg: SvgPer1,
   },
   {
+    id: 1,
     question: 'What are your favorite cuisidfasdfnes?',
     listAns: step2,
     svg: SvgPer2,
   },
+  {
+    id: 2,
+    question: 'What are your favorite cuisidfasdfnes?',
+    listAns: step2,
+    svg: SvgPer3,
+  },
+  {
+    id: 3,
+    question: 'What are your favorite cuisidfasdfnes?',
+    listAns: step2,
+    svg: SvgPer4,
+  },
 ];
+
+
 
 export default function App() {
   const [currentStep, setCurrentStep] = useState(0);
-  const onNext = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
+
+  const listStackPer = ques.map((s, i)=>{
+    return(
+      <Stack.Screen
+        key={i.toString()}
+        name={'Personalize'+i.toString()}
+        options={{
+          headerShown: false,
+        }}
+      >
+        {(props) => (
+          <PerScreen
+            {...props}
+            ques={s}
+            quesLen={ques.length}
+          />
+        )}
+      </Stack.Screen>
+    )
+  })
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name={'Personalize'}
-          options={{
-            headerShown: false,
-          }}
-        >
-          {(props) => (
-            <PerScreen
-              {...props}
-              step={currentStep}
-              ques={ques[currentStep]}
-              onNext={onNext}
-            />
-          )}
-        </Stack.Screen>
+      <Stack.Navigator
+        screenOptions={{
+          animation: 'none'
+        }}
+      >
 
+        {listStackPer}
         <Stack.Screen
           name={'PersonalizeDone'}
           component={PerDone}
           options={{
             headerShown: false,
+            // animation
           }}
         />
       </Stack.Navigator>
