@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
+  TouchableHighlight,
 } from 'react-native';
 import React, {
   useEffect,
@@ -17,11 +18,12 @@ import React, {
   useMemo,
 } from 'react';
 import Ans from '../components/Ans';
+import SvgArrowLeft from '../assets/svgs/arrowLeft';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 
-const PerScreen = ({ navigation, step, ques, onNext }) => {
+const PerScreen = ({ navigation, ques, quesLen}) => {
   const [answers, setAnswers] = useState(ques.listAns);
 
   useEffect(() => {
@@ -33,12 +35,18 @@ const PerScreen = ({ navigation, step, ques, onNext }) => {
   };
 
   const handleOnNext = () => {
-    if (step === 1) {
+    if (ques.id === quesLen - 1) {
       navigation.navigate('PersonalizeDone');
-    } else {
-      onNext();
+    } 
+    else {
+      navigation.navigate('Personalize'+(ques.id+1).toString())
     }
   };
+
+  const handleBack = () =>{
+    navigation.navigate('Personalize'+(ques.id-1).toString())
+  }
+
 
   const handleAnswerChange = (updatedAnswer) => {
     const updatedAnswers = answers.map((answer) =>
@@ -71,10 +79,22 @@ const PerScreen = ({ navigation, step, ques, onNext }) => {
   return (
     // <SafeAreaView style={styles.container}>
     <View style={styles.container}>
-      <Image
-        style={{ width: '100%', height: deviceHeight / 3 }}
-        source={require('../assets/images/PersonalizeScreen/slice3.png')}
-      />
+      
+      <View style={{position: 'relative', width: '100%', height: deviceHeight / 3}}>
+        <Image
+          style={{ width: '100%', height: '100%'}}
+          source={require('../assets/images/PersonalizeScreen/slice3.png')}
+        />
+        {ques.id > 0 ? 
+          <TouchableHighlight style={styles.btnBackContain} onPress={handleBack}>
+            <View style={styles.btnBack}>
+              <SvgArrowLeft color="#5E5E5E"/>
+            </View>
+          </TouchableHighlight>
+          :
+          null
+        }
+      </View>
 
       <View style={styles.svgCircle}>
         <ques.svg />
@@ -165,6 +185,22 @@ const styles = StyleSheet.create({
   },
   btnNext: {
     backgroundColor: '#4CAF50',
+  },
+  btnBackContain: {
+    position: 'absolute',
+    height: 45,
+    width: 45,
+    top: 35,
+    left: 20,
+    borderRadius: 100,
+  },
+  btnBack:{
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#fbfbfb",
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   btnText: {
     fontSize: deviceHeight * 0.018,
