@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   FlatList,
+  ScrollView,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,82 +14,129 @@ import { COLORS, FONTS, SIZES } from "../theme/theme";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const img = require("../constants/knike-fork");
+const img = require("../constants/knife-fork.jpg");
+const data = [{ id: 0 }, { id: 1 }];
 
 const SavedRecipeLists = () => (
-  <View style={{ flex: 1, width: "80%" }}>
+  <View style={{ flex: 1, backgroundColor: "red" }}>
     <View
       style={{
-        borderRadius: 12,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        alignItems: "center",
+        backgroundColor: "blue",
         flexDirection: "row",
         justifyContent: "space-between",
+        paddingHorizontal: 5,
       }}
     >
-      <View />
-      <Text>Saved Recipes</Text>
+      <Text
+        style={{
+          ...FONTS.h2,
+          color: COLORS.primary,
+          alignItems: "center",
+          padding: 5,
+        }}
+      >
+        Saved Recipes
+      </Text>
       <TouchableOpacity>
-        <Text>Add</Text>
+        <Text
+          style={{
+            ...FONTS.h2,
+            color: COLORS.primary,
+            alignItems: "center",
+            padding: 5,
+          }}
+        >
+          Add
+        </Text>
       </TouchableOpacity>
     </View>
-
-    <FlatList
-      data={recipeLists}
-      numColumns={1}
-      renderItem={({ item, index }) => (
-        <TouchableOpacity>
+    {data.map((item, index) => {
+      return (
+        <TouchableOpacity key={index}>
           <View
             style={{
+              flex: 1,
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingHorizontal: 3,
-              marginVertical: 5,
+              backgroundColor: "gray",
+              borderRadius: 5,
+              paddingHorizontal: 20,
+              marginTop: 5,
+              paddingVertical: 5,
             }}
           >
-            <Image
-              key={index}
-              source={img}
-              style={{ width: "100%", height: "100%", borderRadius: 45 }}
-            />
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: COLORS.primary,
+                alignItems: "center",
+              }}
+            >
+              My recipes
+            </Text>
 
-            <Text>{item.name}</Text>
+            <Image
+              source={img}
+              style={{ width: 50, height: 50, borderRadius: 45 }}
+            />
           </View>
         </TouchableOpacity>
-      )}
-    />
+      );
+    })}
   </View>
 );
 
 const PersonalRecipeList = () => (
-  <View style={{ flex: 1, width: "80%" }}>
+  <View style={{ flex: 1, backgroundColor: "red" }}>
     <View
       style={{
-        borderRadius: 12,
-        flexDirection: "row",
-        justifyContent: "space-between",
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+
+        backgroundColor: "blue",
+        paddingHorizontal: 5,
       }}
     >
-      <View />
-      <Text>Personal Recipes</Text>
+      <Text
+        style={{
+          ...FONTS.h2,
+          color: COLORS.primary,
+          alignItems: "center",
+          padding: 5,
+        }}
+      >
+        Personal Recipes
+      </Text>
     </View>
 
     <TouchableOpacity>
       <View
         style={{
+          flex: 1,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingHorizontal: 3,
-          marginVertical: 5,
+          backgroundColor: "gray",
+          borderRadius: 5,
+          paddingHorizontal: 20,
+          marginTop: 5,
+          paddingVertical: 5,
         }}
       >
-        <Image
-          key={index}
-          source={img}
-          style={{ width: "100%", height: "100%", borderRadius: 45 }}
-        />
+        <Text
+          style={{ ...FONTS.h3, color: COLORS.primary, alignItems: "center" }}
+        >
+          My recipes
+        </Text>
 
-        <Text>{item.name}</Text>
+        <Image
+          source={img}
+          style={{ width: 50, height: 50, borderRadius: 45 }}
+        />
       </View>
     </TouchableOpacity>
   </View>
@@ -102,99 +151,52 @@ const Profile = () => {
       }}
     >
       <StatusBar backgroundColor={COLORS.gray} />
-      <View style={{ width: "100%" }}>
-        <Image
-          source={img}
-          resizeMode="cover"
-          style={{
-            height: 228,
-            width: "100%",
-          }}
-        />
-      </View>
-
-      <View style={{ flex: 1, alignItems: "center" }}>
-        <Image
-          source={img}
-          resizeMode="contain"
-          style={{
-            height: 155,
-            width: 155,
-            borderRadius: 999,
-            borderColor: COLORS.primary,
-            borderWidth: 2,
-            marginTop: -90,
-          }}
-        />
-
-        <Text
-          style={{
-            ...FONTS.h3,
-            color: COLORS.primary,
-            marginVertical: 8,
-          }}
-        >
-          Melissa Peters
-        </Text>
-        <Text
-          style={{
-            color: COLORS.black,
-            ...FONTS.body4,
-          }}
-        >
-          Interior designer
-        </Text>
-
-        <View
-          style={{
-            flexDirection: "row",
-            marginVertical: 6,
-            alignItems: "center",
-          }}
-        >
-          <MaterialIcons name="location-on" size={24} color="black" />
-          <Text
+      <ScrollView>
+        <TouchableOpacity>
+          <View
             style={{
-              ...FONTS.body4,
-              marginLeft: 4,
+              position: "absolute",
+              right: 25,
+              top: 25,
+              backgroundColor: "rgba(52, 52, 52, 0.1)",
+              padding: 10,
+              borderRadius: 999,
             }}
           >
-            Lagos, Nigeria
+            <MaterialIcons name="settings" size={24} color="gray" />
+          </View>
+        </TouchableOpacity>
+        <View style={{ flex: 1, alignItems: "center", marginTop: 30 }}>
+          <Image
+            source={img}
+            resizeMode="contain"
+            style={{
+              height: 100,
+              width: 100,
+              borderRadius: 999,
+              borderColor: COLORS.primary,
+              borderWidth: 0.5,
+            }}
+          />
+
+          <Text
+            style={{
+              ...FONTS.h2,
+              color: COLORS.primary,
+              marginVertical: 8,
+              fontWeight: "bold",
+            }}
+          >
+            Melissa Peters
           </Text>
         </View>
 
-        
-
-          
-
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            style={{
-              width: 124,
-              height: 36,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: COLORS.primary,
-              borderRadius: 10,
-              marginHorizontal: SIZES.padding * 2,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.white,
-              }}
-            >
-              Edit Profile
-            </Text>
-          </TouchableOpacity>
+        <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20, gap: 10 }}>
+          <PersonalRecipeList />
+          <SavedRecipeLists />
         </View>
-      </View>
-
-      <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20 }}>
-        <PersonalRecipeList />
-        <SavedRecipeLists />
-      </View>
+        <View style={{ height: 500 }} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
