@@ -8,86 +8,92 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS, SIZES} from "../constants/theme";
+import { COLORS, FONTS, SIZES } from "../theme/theme";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { photos } from "../constants/data";
 
+const img = require("../constants/knike-fork");
 
-const img = requie(../assets/knife-fork.jpg);
 const SavedRecipeLists = () => (
-  <View style={{ flex: 1, width: 80% }}>
-  
-	<View style={{borderRadius: 12, flexDirection: 'row', justifyContent:'space-between'}}>
-		<View/>
-		<Text>Saved Recipes</Text>
-		<TouchableOpacity>		
-			<Text>Add</Text>
-		</TouchableOpacity>
-	</View>
-	
+  <View style={{ flex: 1, width: "80%" }}>
+    <View
+      style={{
+        borderRadius: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <View />
+      <Text>Saved Recipes</Text>
+      <TouchableOpacity>
+        <Text>Add</Text>
+      </TouchableOpacity>
+    </View>
+
     <FlatList
       data={recipeLists}
       numColumns={1}
       renderItem={({ item, index }) => (
-	  <TouchableOpacity>
-        <View
-          style={{
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center',
-            paddingHorizontal: 3,
-			marginVertical: 5
-          }}
-        >
-          <Image
-            key={index}
-            source={img}
-            style={{ width: "100%", height: "100%", borderRadius: 45 }}
-          />
-		  
-		  <Text>{item.name}</Text>
-        </View>
+        <TouchableOpacity>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 3,
+              marginVertical: 5,
+            }}
+          >
+            <Image
+              key={index}
+              source={img}
+              style={{ width: "100%", height: "100%", borderRadius: 45 }}
+            />
 
-	  </TouchableOpacity>
+            <Text>{item.name}</Text>
+          </View>
+        </TouchableOpacity>
       )}
     />
   </View>
 );
 
 const PersonalRecipeList = () => (
-  <View style={{ flex: 1, width: 80% }}>
-  
-	<View style={{borderRadius: 12, flexDirection: 'row', justifyContent:'space-between'}}>
-		<View/>
-		<Text>Personal Recipes</Text>
-	</View>
-	
-	<TouchableOpacity>
-		<View
-		  style={{
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-			alignItems: 'center',
-			paddingHorizontal: 3,
-			marginVertical: 5
-		  }}
-		>
-		  <Image
-			key={index}
-			source={img}
-			style={{ width: "100%", height: "100%", borderRadius: 45 }}
-		  />
-		  
-		  <Text>{item.name}</Text>
-		</View>
-	</TouchableOpacity>
-</View>
+  <View style={{ flex: 1, width: "80%" }}>
+    <View
+      style={{
+        borderRadius: 12,
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <View />
+      <Text>Personal Recipes</Text>
+    </View>
+
+    <TouchableOpacity>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 3,
+          marginVertical: 5,
+        }}
+      >
+        <Image
+          key={index}
+          source={img}
+          style={{ width: "100%", height: "100%", borderRadius: 45 }}
+        />
+
+        <Text>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  </View>
 );
 
 const Profile = () => {
-
   return (
     <SafeAreaView
       style={{
@@ -157,87 +163,9 @@ const Profile = () => {
           </Text>
         </View>
 
-        <View
-          style={{
-            paddingVertical: 8,
-            flexDirection: "row",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
-              }}
-            >
-              122
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Followers
-            </Text>
-          </View>
+        
 
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
-              }}
-            >
-              67
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Followings
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
-            }}
-          >
-            <Text
-              style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
-              }}
-            >
-              77K
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Likes
-            </Text>
-          </View>
-        </View>
+          
 
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
@@ -260,15 +188,12 @@ const Profile = () => {
               Edit Profile
             </Text>
           </TouchableOpacity>
-
-          
         </View>
       </View>
 
       <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20 }}>
-		<PersonalRecipeList />
-		<SavedRecipeLists />
-       
+        <PersonalRecipeList />
+        <SavedRecipeLists />
       </View>
     </SafeAreaView>
   );

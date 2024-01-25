@@ -10,13 +10,16 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import { COLORS, FONTS } from "../constants";
+import { COLORS, FONTS } from "../theme/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-import { imagesDataURL } from "../constants/data";
+
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 
+
+const img = require("../constants/knike-fork");
+
 const EditProfile = ({ navigation }) => {
-  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
+  const [selectedImage, setSelectedImage] = useState(img);
   const [name, setName] = useState("Melissa Peters");
   const [email, setEmail] = useState("metperters@gmail.com");
   const [password, setPassword] = useState("randompassword");
