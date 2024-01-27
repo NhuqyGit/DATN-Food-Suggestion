@@ -1,8 +1,35 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS } from "../constants";
+import { COLORS, FONTS } from "../theme/theme";
 import { MaterialIcons } from "@expo/vector-icons";
+
+const SettingsItem = ({ item }) => {
+  return (
+    <TouchableOpacity
+      onPress={item.action}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 8,
+        paddingLeft: 12,
+      }}
+    >
+      <MaterialIcons name={item.icon} size={24} color={item.color} />
+      <Text
+        style={{
+          marginLeft: 36,
+          ...FONTS.semiBold,
+          fontWeight: 600,
+          fontSize: 16,
+          color: item.color,
+        }}
+      >
+        {item.text}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 const Settings = ({ navigation }) => {
   const navigateToEditProfile = () => {
@@ -58,14 +85,26 @@ const Settings = ({ navigation }) => {
       icon: "person-outline",
       text: "Edit Profile",
       action: navigateToEditProfile,
+      color: "black",
     },
-    { icon: "security", text: "Security", action: navigateToSecurity },
+    {
+      icon: "security",
+      text: "Security",
+      action: navigateToSecurity,
+      color: "black",
+    },
     {
       icon: "notifications-none",
       text: "Notifications",
       action: navigateToNotifications,
+      color: "black",
     },
-    { icon: "lock-outline", text: "Privacy", action: navigateToPrivacy },
+    {
+      icon: "lock-outline",
+      text: "Privacy",
+      action: navigateToPrivacy,
+      color: "black",
+    },
   ];
 
   const supportItems = [
@@ -73,12 +112,19 @@ const Settings = ({ navigation }) => {
       icon: "credit-card",
       text: "My Subscription",
       action: navigateToSubscription,
+      color: "black",
     },
-    { icon: "help-outline", text: "Help & Support", action: navigateToSupport },
+    {
+      icon: "help-outline",
+      text: "Help & Support",
+      action: navigateToSupport,
+      color: "black",
+    },
     {
       icon: "info-outline",
       text: "Terms and Policies",
       action: navigateToTermsAndPolicies,
+      color: "black",
     },
   ];
 
@@ -87,8 +133,14 @@ const Settings = ({ navigation }) => {
       icon: "delete-outline",
       text: "Free up space",
       action: navigateToFreeSpace,
+      color: "black",
     },
-    { icon: "save-alt", text: "Date Saver", action: navigateToDateSaver },
+    {
+      icon: "save-alt",
+      text: "Date Saver",
+      action: navigateToDateSaver,
+      color: "black",
+    },
   ];
 
   const actionsItems = [
@@ -96,35 +148,16 @@ const Settings = ({ navigation }) => {
       icon: "outlined-flag",
       text: "Report a problem",
       action: navigateToReportProblem,
+      color: "black",
     },
-    { icon: "people-outline", text: "Add Account", action: addAccount },
-    { icon: "logout", text: "Log out", action: logout },
+    {
+      icon: "people-outline",
+      text: "Add Account",
+      action: addAccount,
+      color: "black",
+    },
+    { icon: "logout", text: "Log out", action: logout, color: "red" },
   ];
-
-  const renderSettingsItem = ({ icon, text, action }) => (
-    <TouchableOpacity
-      onPress={action}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        paddingVertical: 8,
-        paddingLeft: 12,
-        backgroundColor: COLORS.gray,
-      }}
-    >
-      <MaterialIcons name={icon} size={24} color="black" />
-      <Text
-        style={{
-          marginLeft: 36,
-          ...FONTS.semiBold,
-          fontWeight: 600,
-          fontSize: 16,
-        }}
-      >
-        {text}{" "}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView
@@ -135,26 +168,27 @@ const Settings = ({ navigation }) => {
     >
       <View
         style={{
-          marginHorizontal: 12,
           flexDirection: "row",
           justifyContent: "center",
+          backgroundColor: "orange",
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
         }}
       >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
             position: "absolute",
-            left: 0,
+            left: 10,
+            top: 15,
           }}
         >
-          <MaterialIcons
-            name="keyboard-arrow-left"
-            size={24}
-            color={COLORS.black}
-          />
+          <MaterialIcons name="keyboard-arrow-left" size={40} color="white" />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h3 }}>Settings</Text>
+        <Text style={{ ...FONTS.h1, paddingVertical: 20, color: "white" }}>
+          Settings
+        </Text>
       </View>
 
       <ScrollView style={{ marginHorizontal: 12 }}>
@@ -163,15 +197,13 @@ const Settings = ({ navigation }) => {
           <Text style={{ ...FONTS.h4, marginVertical: 10 }}>Account</Text>
           <View
             style={{
-              borderRadius: 12,
-              backgrounColor: COLORS.gray,
+              borderRadius: 15,
+              backgroundColor: COLORS.gray,
             }}
           >
-            {accountItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
+            {accountItems.map((item, index) => {
+              return <SettingsItem item={item} key={index} />;
+            })}
           </View>
         </View>
 
@@ -183,52 +215,46 @@ const Settings = ({ navigation }) => {
           </Text>
           <View
             style={{
-              borderRadius: 12,
-              backgrounColor: COLORS.gray,
+              borderRadius: 15,
+              backgroundColor: COLORS.gray,
             }}
           >
-            {supportItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
+            {supportItems.map((item, index) => {
+              return <SettingsItem item={item} key={index} />;
+            })}
           </View>
         </View>
 
         {/* Cache & Cellular */}
-        <View style={{ marginBottom: 12 }}>
+        <View style={{ marginBottom: 15 }}>
           <Text style={{ ...FONTS.h4, marginVertical: 10 }}>
             Cache & Cellular{" "}
           </Text>
           <View
             style={{
               borderRadius: 12,
-              backgrounColor: COLORS.gray,
+              backgroundColor: COLORS.gray,
             }}
           >
-            {cacheAndCellularItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
+            {cacheAndCellularItems.map((item, index) => {
+              return <SettingsItem item={item} key={index} />;
+            })}
           </View>
         </View>
 
         {/* Actions Settings */}
 
-        <View style={{ marginBottom: 12 }}>
+        <View style={{ marginBottom: 15 }}>
           <Text style={{ ...FONTS.h4, marginVertical: 10 }}>Actions</Text>
           <View
             style={{
               borderRadius: 12,
-              backgrounColor: COLORS.gray,
+              backgroundColor: COLORS.gray,
             }}
           >
-            {actionsItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
+            {actionsItems.map((item, index) => {
+              return <SettingsItem item={item} key={index} />;
+            })}
           </View>
         </View>
       </ScrollView>

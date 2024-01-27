@@ -17,35 +17,31 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SIZES } from "../theme/theme";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const img = require("../constants/knife-fork.jpg");
-const data = [{ id: 0 }, { id: 1 }];
+const data = [
+  { id: 0, name: "List", date: "12/21/54" },
+  { id: 0, name: "List", date: "12/21/54" },
+  { id: 0, name: "List", date: "12/21/54" },
+  { id: 0, name: "List", date: "12/21/54" },
+];
 
-const SavedRecipeLists = () => (
-  <View style={{ flex: 1 }}>
-    <View
-      style={{
-        borderRadius: 15,
-        alignItems: "center",
-        backgroundColor: "orange",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingHorizontal: 5,
-        paddingVertical:5
-      }}
-    >
-      <Text
+const SavedRecipeLists = () => {
+  const navigation = useNavigation();
+  return (
+    <View style={{ flex: 1 }}>
+      <View
         style={{
-          ...FONTS.h2,
-          color: COLORS.primary,
+          borderRadius: 15,
           alignItems: "center",
-          padding: 5,
+          backgroundColor: "orange",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 5,
+          paddingVertical: 5,
         }}
-        
       >
-        Saved Recipes
-      </Text>
-      <TouchableOpacity>
         <Text
           style={{
             ...FONTS.h2,
@@ -54,27 +50,43 @@ const SavedRecipeLists = () => (
             padding: 5,
           }}
         >
-          Add
+          Saved Recipes
         </Text>
-      </TouchableOpacity>
-    </View>
-    {data.map((item, index) => {
-      return (
-        <TouchableOpacity key={index} style={[
-          {
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderRadius: 15,
-            paddingHorizontal: 20,
-            marginTop: 5,
-            paddingVertical: 5,
-            backgroundColor: "white",
-          },
-          styles.boxShadow,
-        ]}>
-          
+        <TouchableOpacity>
+          <Text
+            style={{
+              ...FONTS.h2,
+              color: COLORS.primary,
+              alignItems: "center",
+              padding: 5,
+            }}
+          >
+            Add
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {data.map((item, index) => {
+        return (
+          <TouchableOpacity
+            key={index}
+            style={[
+              {
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 20,
+                marginTop: 5,
+                paddingVertical: 5,
+                backgroundColor: "white",
+              },
+              styles.boxShadow,
+            ]}
+            onPress={() => {
+              navigation.navigate("List", { id: item.id, name: item.name });
+            }}
+          >
             <Text
               style={{
                 ...FONTS.h3,
@@ -82,43 +94,47 @@ const SavedRecipeLists = () => (
                 alignItems: "center",
               }}
             >
-              My recipes
+              {item.name}
             </Text>
 
             <Image
               source={img}
               style={{ width: 50, height: 50, borderRadius: 45 }}
             />
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-);
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+};
 
-const PersonalRecipeList = () => (
-  <View style={{ flex: 1 }}>
-    <View
-      style={{
-        borderRadius: 15,
-
-        backgroundColor: "orange",
-        paddingHorizontal: 5,
-        paddingVertical:5
- }}
-    >
-      <Text
+const PersonalRecipeList = () => {
+  const navigation = useNavigation();
+  return (
+    <View style={{ flex: 1 }}>
+      <View
         style={{
-          ...FONTS.h2,
-          color: COLORS.primary,
-          alignItems: "center",
-          padding: 5,
+          borderRadius: 15,
+
+          backgroundColor: "orange",
+          paddingHorizontal: 5,
+          paddingVertical: 5,
         }}
       >
-        Personal Recipes
-      </Text>
-    </View>
+        <Text
+          style={{
+            ...FONTS.h2,
+            color: COLORS.primary,
+            alignItems: "center",
+            padding: 5,
+          }}
+        >
+          Personal Recipes
+        </Text>
+      </View>
 
-    <TouchableOpacity style={[
+      <TouchableOpacity
+        style={[
           {
             flex: 1,
             flexDirection: "row",
@@ -131,18 +147,23 @@ const PersonalRecipeList = () => (
             backgroundColor: "white",
           },
           styles.boxShadow,
-        ]}>
+        ]}
+        onPress={() => {
+          navigation.navigate("PersonalList", { id: 1, name: 'My recipes' });
+        }}
+      >
         <Text style={{ ...FONTS.h3 }}>My recipes</Text>
 
         <Image
           source={img}
           style={{ width: 50, height: 50, borderRadius: 45 }}
         />
-    </TouchableOpacity>
-  </View>
-);
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const [isCreateVisible, setCreateVisible] = useState(false);
   const [isSettingVisible, setSettingVisible] = useState(false);
   const [listName, setListName] = useState("");
@@ -178,7 +199,7 @@ const Profile = () => {
         backgroundColor: COLORS.white,
       }}
     >
-      <StatusBar backgroundColor={COLORS.gray} />
+      <StatusBar backgroundColor='black' style='light'/>
 
       <ScrollView>
         <View
@@ -189,7 +210,8 @@ const Profile = () => {
         >
           <TouchableOpacity
             onPress={() => {
-              setSettingVisible(true);
+              navigation.navigate('Settings')
+              // setSettingVisible(true);
             }}
             style={{ position: "absolute", right: 25, top: 0 }}
           >
@@ -253,14 +275,17 @@ const Profile = () => {
           />
         </TouchableWithoutFeedback>
         <View
-          style={[{
-            position: "absolute",
-            right: 50,
-            top: 60,
-            width: "35%",
-            backgroundColor: "white",
-            borderRadius: 20,
-          },styles.boxShadow]}
+          style={[
+            {
+              position: "absolute",
+              right: 50,
+              top: 60,
+              width: "35%",
+              backgroundColor: "white",
+              borderRadius: 20,
+            },
+            styles.boxShadow,
+          ]}
         >
           <TouchableOpacity
             style={{
@@ -280,7 +305,7 @@ const Profile = () => {
             }}
           >
             <Text style={{ ...FONTS.h3, color: "white", fontWeight: "500" }}>
-              Log out
+              Settings
             </Text>
           </TouchableOpacity>
         </View>
