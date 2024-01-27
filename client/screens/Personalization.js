@@ -16,73 +16,73 @@ const cuisines = [
   {
     id: 1,
     name: '???',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 2,
     name: 'Việt Nam',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 3,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 4,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 5,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 6,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 7,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 8,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 9,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 10,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 11,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 12,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
 ];
@@ -90,73 +90,73 @@ const step2 = [
   {
     id: 1,
     name: 'Concak',
-    image: require('./assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
+    image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
   {
     id: 2,
     name: 'Việt Nam',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 3,
     name: 'Loremadf',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 4,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 5,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 6,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 7,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 8,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 9,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 10,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 11,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
   {
     id: 12,
     name: 'Lorem',
-    image: require('./assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
+    image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
 ];
@@ -202,22 +202,20 @@ export default function Personalization() {
     );
   });
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          animation: 'none',
+    <Stack.Navigator
+      screenOptions={{
+        animation: 'none',
+      }}
+    >
+      {listStackPer}
+      <Stack.Screen
+        name={'PersonalizeDone'}
+        component={PerDone}
+        options={{
+          headerShown: false,
         }}
-      >
-        {listStackPer}
-        <Stack.Screen
-          name={'PersonalizeDone'}
-          component={PerDone}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      />
+    </Stack.Navigator>
   );
 }
 

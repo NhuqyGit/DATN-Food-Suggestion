@@ -1,6 +1,7 @@
 import {
   View,
   TextInput,
+  Text,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -14,10 +15,11 @@ const Header = () => {
       <TouchableOpacity>
         <Image style={styles.logo} source={require('../../assets/logo.png')} />
       </TouchableOpacity>
-      <View style={styles.searchContainer}>
+      <TouchableOpacity style={styles.searchContainer}>
         <Icon name='search' size={20} style={styles.searchIcon} />
-        <TextInput style={styles.input} placeholder='Search' />
-      </View>
+        {/* <TextInput style={styles.input} placeholder='Search' /> */}
+        <Text style={styles.input}>Search</Text>
+      </TouchableOpacity>
       <TouchableOpacity>
         <Icon name='camera' size={20} />
       </TouchableOpacity>

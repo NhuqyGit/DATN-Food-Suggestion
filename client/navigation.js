@@ -8,6 +8,7 @@ import Profile from './screens/Profile';
 import MealPlan from './screens/MealPlan';
 import Personalization from './screens/Personalization';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Search from './screens/Search';
 
 // const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,16 @@ export default function Navigation() {
             tabBarIcon: ({ color, size }) => <Icon name='home' size={26} />,
           }}
           component={HomeScreen}
+        />
+        <Tab.Screen
+          name='Search'
+          options={{
+            // tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Icon name='window-restore' size={26} />
+            ),
+          }}
+          component={Search}
         />
         <Tab.Screen
           name='Personalization'
