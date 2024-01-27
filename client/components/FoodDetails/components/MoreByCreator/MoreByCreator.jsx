@@ -18,13 +18,13 @@ export function renderStarRating(rating) {
   const starElements = [];
 
   for (let i = 0; i < filledStars; i++) {
-    starElements.push(<Icon key={i} name="star" size={16} color="gold" />);
+    starElements.push(<Icon key={i} name="star" size={16} color="#FF6321" />);
   }
 
   if (hasHalfStar) {
     starElements.push(
       <View key="half" style={{ flexDirection: "row", alignItems: "center" }}>
-        <Icon name="star-half-empty" size={16} color="gold" />
+        <Icon name="star-half-empty" size={16} color="#FF6321" />
       </View>
     );
   }
@@ -36,7 +36,7 @@ export function renderStarRating(rating) {
   }
 
   return starElements;
-};
+}
 
 const MoreByCreator = ({ author, recipes }) => (
   <View style={styles.container}>
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   recipeContainer: {
-   
     borderRadius: 10,
     overflow: "hidden",
     position: "relative",
@@ -109,6 +108,7 @@ const styles = StyleSheet.create({
   recipeImage: {
     width: 100,
     height: 100,
+    borderRadius: 10,
   },
   saveRecipeButton: {
     padding: 5,
