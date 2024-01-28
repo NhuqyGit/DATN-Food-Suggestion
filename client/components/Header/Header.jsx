@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 8,
-    paddingHorizontal: 16,
   },
   logo: {
     width: 40,
