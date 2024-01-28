@@ -34,3 +34,11 @@ export const themeColors = {
   ...pallete[0],
 };
 
+export const theme = {
+  colors: {
+    primary: '#FF6321',
+    grayBackground: '#E2E2E2',
+    secondary: '#4CAF50',
+  },
+};
+
