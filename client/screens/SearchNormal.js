@@ -1,11 +1,30 @@
-import { StyleSheet, Text, View, TextInput, ScrollView, TouchableWithoutFeedback, TouchableOpacity, StatusBar, Keyboard } from 'react-native'
+import { StyleSheet, Text, View, TextInput, ScrollView, TouchableWithoutFeedback, TouchableOpacity, StatusBar} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconSearch from '../assets/svgs/iconSearch';
 import IconCam from '../assets/svgs/iconCam';
 import SvgArrowLeft from '../assets/svgs/arrowLeft';
+import SearchHistory from '../components/SearchHistory/SearchHistory';
 import React from 'react'
 
 const SearchNormal = ({navigation}) => {
+    const searchHis = [
+        {
+            keyWord: 'rau câu'
+        },
+        {
+            keyWord: 'rau câu'
+        },
+        {
+            keyWord: 'rau câu'
+        },
+        {
+            keyWord: 'rau câu'
+        },
+        {
+            keyWord: 'rau câu'
+        },
+    ]
+
     const handleBack = () =>{
         console.log("pop")
         navigation.pop()
@@ -13,31 +32,35 @@ const SearchNormal = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-        <View style={styles.searchBar}>
-            <TouchableOpacity onPress={handleBack}>
-                <SvgArrowLeft color="#231F20" />
-            </TouchableOpacity>
-            <View style={styles.searchBarContainer}>
-            <IconSearch color="#8C8C8C" style={styles.searchIcon}/>
-            {/* <Icon name='search' color={"#8C8C8C"} size={20} style={styles.searchIcon} /> */}
-            <TextInput
-                style={styles.searchInput} 
-                placeholder='Input your ingredients...'
-                placeholderTextColor='#9F9F9F'
-                // onFocus={handleOnFocus}
-            />
+        <TouchableWithoutFeedback>
+            <View style={styles.searchBar}>
+                <TouchableOpacity onPress={handleBack}>
+                    <SvgArrowLeft color="#231F20" />
+                </TouchableOpacity>
+                <View style={styles.searchBarContainer}>
+                <IconSearch color="#8C8C8C" style={styles.searchIcon}/>
+                {/* <Icon name='search' color={"#8C8C8C"} size={20} style={styles.searchIcon} /> */}
+                <TextInput
+                    style={styles.searchInput} 
+                    autoFocus={true}
+                    placeholder='Input your ingredients...'
+                    placeholderTextColor='#9F9F9F'
+                    // onFocus={handleOnFocus}
+                />
+                </View>
+                <TouchableOpacity onPress={()=>navigation.push('SearchCam')}>
+                    <IconCam color="#231F20"style={styles.camIcon} />
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={()=>navigation.push('SearchCam')}>
-                <IconCam color="#231F20"style={styles.camIcon} />
-            </TouchableOpacity>
-        </View>
         </TouchableWithoutFeedback>
         <ScrollView 
-            style={{backgroundColor: 'tomato'}}    
+            style={{padding: 15}}    
         >
-            <Text>AAAAAAAAAAAAAAAA</Text>
+            {searchHis.map((item, index)=>{
+                return(
+                    <SearchHistory key={index.toString()} item={item}/>
+                )
+            })}
 
         </ScrollView>
     </SafeAreaView>
