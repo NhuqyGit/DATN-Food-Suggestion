@@ -9,6 +9,7 @@ import React from 'react';
 import RecommendItem from '../RecommendItem/RecommendItem';
 import { theme } from '../../theme';
 import RecommendItemHorizontal from '../RecommendItem/RecommendItemHorizontal';
+import SmallRecommendItem from '../RecommendItem/SmallRecommendItem';
 
 const RecommendList = () => {
   const mockData = [
@@ -45,26 +46,56 @@ const RecommendList = () => {
   ];
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Recommend for you</Text>
-        <TouchableOpacity>
-          <Text style={styles.viewAll}>View all</Text>
-        </TouchableOpacity>
+      <View style={styles.horizontalPadding}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Recommend for you</Text>
+          <TouchableOpacity>
+            <Text style={styles.viewAll}>View all</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {mockData?.map((item) => (
+            <RecommendItem key={item.id} item={item} />
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {mockData?.map((item) => (
-          <RecommendItem key={item.id} item={item} />
-        ))}
-      </ScrollView>
 
-      <View style={styles.header}>
-        <Text style={styles.title}>Recommend for you</Text>
+      <View style={styles.horizontalPadding}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Recommend for you</Text>
+        </View>
+        <ScrollView vertical showsVerticalScrollIndicator={false}>
+          {mockData?.map((item) => (
+            <RecommendItemHorizontal key={item.id} item={item} />
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView vertical showsVerticalScrollIndicator={false}>
-        {mockData?.map((item) => (
-          <RecommendItemHorizontal key={item.id} item={item} />
-        ))}
-      </ScrollView>
+
+      <View style={[styles.healthyList, styles.horizontalPadding]}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Healthy recipes</Text>
+          <TouchableOpacity>
+            <Text style={styles.viewAll}>View all</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {mockData?.map((item) => (
+            <SmallRecommendItem key={item.id} item={item} />
+          ))}
+        </ScrollView>
+
+        <View style={styles.header}>
+          <Text style={styles.title}>Quick recipes</Text>
+          <TouchableOpacity>
+            <Text style={styles.viewAll}>View all</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {mockData?.map((item) => (
+            <SmallRecommendItem key={item.id} item={item} />
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -73,6 +104,10 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 16,
     flexDirection: 'column',
+  },
+
+  horizontalPadding: {
+    paddingHorizontal: 16,
   },
 
   header: {
@@ -91,6 +126,11 @@ const styles = StyleSheet.create({
   viewAll: {
     fontSize: 16,
     color: theme.colors.secondary,
+  },
+
+  healthyList: {
+    backgroundColor: '#FEFFD3',
+    paddingBottom: 32,
   },
 });
 
