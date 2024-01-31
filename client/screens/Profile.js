@@ -35,34 +35,48 @@ const SavedRecipeLists = () => {
         style={{
           borderRadius: 15,
           alignItems: "center",
-          backgroundColor: "orange",
           flexDirection: "row",
           justifyContent: "space-between",
-          paddingHorizontal: 5,
           paddingVertical: 5,
         }}
       >
-        <Text
-          style={{
-            ...FONTS.h2,
-            color: COLORS.primary,
-            alignItems: "center",
-            padding: 5,
-          }}
-        >
-          Saved Recipes
-        </Text>
         <TouchableOpacity>
-          <Text
+          <View
             style={{
-              ...FONTS.h2,
-              color: COLORS.primary,
+              flexDirection: "row",
+              backgroundColor: "orange",
               alignItems: "center",
-              padding: 5,
+              justifyContent: "center",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 45,
             }}
           >
-            Add
-          </Text>
+            <Text style={{ color: "white", fontSize: 17, paddingBottom: 2 }}>
+              Sort
+            </Text>
+            <MaterialIcons
+              name="sort-by-alpha"
+              size={24}
+              color="white"
+              style={{ marginLeft: 5 }}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{ marginRight: 5 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <MaterialIcons size={24} name="add-box" color="orange" />
+            <Text
+              style={{
+                fontSize: 17,
+                color: "orange",
+                alignItems: "center",
+              }}
+            >
+              Add
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
       {data.map((item, index) => {
@@ -99,7 +113,12 @@ const SavedRecipeLists = () => {
 
             <Image
               source={img}
-              style={{ width: 50, height: 50, borderRadius: 45 }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 45,
+                opacity: 0.5,
+              }}
             />
           </TouchableOpacity>
         );
@@ -112,27 +131,6 @@ const PersonalRecipeList = () => {
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          borderRadius: 15,
-
-          backgroundColor: "orange",
-          paddingHorizontal: 5,
-          paddingVertical: 5,
-        }}
-      >
-        <Text
-          style={{
-            ...FONTS.h2,
-            color: COLORS.primary,
-            alignItems: "center",
-            padding: 5,
-          }}
-        >
-          Personal Recipes
-        </Text>
-      </View>
-
       <TouchableOpacity
         style={[
           {
@@ -149,14 +147,19 @@ const PersonalRecipeList = () => {
           styles.boxShadow,
         ]}
         onPress={() => {
-          navigation.navigate("PersonalList", { id: 1, name: 'My recipes' });
+          navigation.navigate("PersonalList", { id: 1, name: "My recipes" });
         }}
       >
         <Text style={{ ...FONTS.h3 }}>My recipes</Text>
 
         <Image
           source={img}
-          style={{ width: 50, height: 50, borderRadius: 45 }}
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 45,
+            opacity: 0.5,
+          }}
         />
       </TouchableOpacity>
     </View>
@@ -199,7 +202,7 @@ const Profile = ({ navigation }) => {
         backgroundColor: COLORS.white,
       }}
     >
-      <StatusBar backgroundColor='black' style='light'/>
+      <StatusBar backgroundColor="black" style="light" />
 
       <ScrollView>
         <View
@@ -210,10 +213,10 @@ const Profile = ({ navigation }) => {
         >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Settings')
+              navigation.navigate("Settings");
               // setSettingVisible(true);
             }}
-            style={{ position: "absolute", right: 25, top: 0 }}
+            style={{ position: "absolute", right: 20, top: 0 }}
           >
             <View
               style={{

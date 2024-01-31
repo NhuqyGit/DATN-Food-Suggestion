@@ -128,21 +128,7 @@ const Settings = ({ navigation }) => {
     },
   ];
 
-  const cacheAndCellularItems = [
-    {
-      icon: "delete-outline",
-      text: "Free up space",
-      action: navigateToFreeSpace,
-      color: "black",
-    },
-    {
-      icon: "save-alt",
-      text: "Date Saver",
-      action: navigateToDateSaver,
-      color: "black",
-    },
-  ];
-
+  
   const actionsItems = [
     {
       icon: "outlined-flag",
@@ -150,12 +136,7 @@ const Settings = ({ navigation }) => {
       action: navigateToReportProblem,
       color: "black",
     },
-    {
-      icon: "people-outline",
-      text: "Add Account",
-      action: addAccount,
-      color: "black",
-    },
+   
     { icon: "logout", text: "Log out", action: logout, color: "red" },
   ];
 
@@ -225,23 +206,7 @@ const Settings = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Cache & Cellular */}
-        <View style={{ marginBottom: 15 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10 }}>
-            Cache & Cellular{" "}
-          </Text>
-          <View
-            style={{
-              borderRadius: 12,
-              backgroundColor: COLORS.gray,
-            }}
-          >
-            {cacheAndCellularItems.map((item, index) => {
-              return <SettingsItem item={item} key={index} />;
-            })}
-          </View>
-        </View>
-
+     
         {/* Actions Settings */}
 
         <View style={{ marginBottom: 15 }}>
