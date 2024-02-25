@@ -8,6 +8,7 @@ import MealPlan from './screens/MealPlan';
 import Personalization from './screens/Personalization';
 import FoodDetailsScreen from './components/FoodDetails/FoodDetails';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ProfileStack from './screens/ProfileStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,7 +64,7 @@ export default function Navigation() {
             tabBarLabel: 'Profile',
             tabBarIcon: ({ color, size }) => <Icon name='user' size={26} />,
           }}
-          component={Profile}
+          component={ProfileStack}
         />
       </Tab.Navigator>
     </NavigationContainer>
