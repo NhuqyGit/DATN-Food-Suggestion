@@ -1,12 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import React from "react";
-import HomeScreen from "./screens/HomeScreen";
-import Profile from "./screens/Profile";
-import MealPlan from "./screens/MealPlan";
-import Personalization from "./screens/Personalization";
-import FoodDetailsScreen from "./components/FoodDetails/FoodDetails";
+import React from 'react';
+import HomeScreen from './screens/HomeScreen';
+import Profile from './screens/Profile';
+import MealPlan from './screens/MealPlan';
+import Personalization from './screens/Personalization';
+import FoodDetailsScreen from './components/FoodDetails/FoodDetails';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -69,3 +69,4 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
+

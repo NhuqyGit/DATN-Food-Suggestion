@@ -16,7 +16,9 @@ const MealPlanMadeEasy = () => {
         source={require('../../assets/mealPlanMadeEasy.png')}
       />
       <TouchableOpacity>
-        <Text style={styles.startButton}>Start Planning</Text>
+        <View style={styles.startButton}>
+          <Text style={styles.startButtonText}>Start Planning</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -55,13 +57,13 @@ const styles = StyleSheet.create({
 
   startButton: {
     backgroundColor: '#40AD53',
-    paddingHorizontal: 50,
-    paddingVertical: 10,
-    borderRadius: 20,
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    paddingHorizontal: 60,
+    paddingVertical: 15,
+    borderRadius: 200,
   },
+
+  startButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
 });
 
 export default MealPlanMadeEasy;
+
