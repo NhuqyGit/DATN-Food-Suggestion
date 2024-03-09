@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import {
   Menu,
@@ -14,8 +14,6 @@ import { COLORS, FONTS } from '../theme/theme'
 const img = require('../constants/knife-fork.jpg')
 
 function RecipeListItem({ item }) {
-  const [isVisible, setVisible] = useState(false)
-
   return (
     <View>
       <TouchableOpacity>

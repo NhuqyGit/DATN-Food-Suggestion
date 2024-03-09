@@ -5,7 +5,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.tslint": "explicit",
-    "source.fixAll.stylelint": "explicit"
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": true
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -45,9 +46,6 @@
   "prettier.proseWrap": "always",
   "prettier.useTabs": false,
   "prettier.endOfLine": "lf",
-  "diffEditor.wordWrap": "off",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  }
+  "diffEditor.wordWrap": "off"
 }
 
