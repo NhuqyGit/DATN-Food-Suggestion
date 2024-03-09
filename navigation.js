@@ -1,16 +1,16 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import React from 'react';
-import HomeScreen from './screens/HomeScreen';
-import Profile from './screens/Profile';
-import MealPlan from './screens/MealPlan';
-import Personalization from './screens/Personalization';
-import FoodDetailsScreen from './components/FoodDetails/FoodDetails';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import ProfileStack from './screens/ProfileStack';
+import React from 'react'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import HomeScreen from './screens/HomeScreen'
+import Profile from './screens/Profile'
+import MealPlan from './screens/MealPlan'
+import Personalization from './screens/Personalization'
+import FoodDetailsScreen from './components/FoodDetails/FoodDetails'
+import ProfileStack from './screens/ProfileStack'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 export default function Navigation() {
   return (
@@ -68,6 +68,5 @@ export default function Navigation() {
         />
       </Tab.Navigator>
     </NavigationContainer>
-  );
+  )
 }
-

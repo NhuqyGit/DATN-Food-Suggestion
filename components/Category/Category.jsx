@@ -1,7 +1,7 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import React from 'react'
 
-const Category = ({ item }) => {
+function Category({ item }) {
   return (
     <TouchableOpacity>
       <View style={styles.container}>
@@ -12,8 +12,8 @@ const Category = ({ item }) => {
         />
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     height: 40,
     objectFit: 'cover',
   },
-});
+})
 
-export default Category;
-
+export default Category

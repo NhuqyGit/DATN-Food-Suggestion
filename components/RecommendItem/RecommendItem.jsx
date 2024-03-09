@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   View,
   Text,
@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { theme } from '../../theme';
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { theme } from '../../theme'
 
-const RecommendItem = ({ item }) => {
+function RecommendItem({ item }) {
   return (
     <TouchableOpacity style={styles.container}>
       <Image style={styles.image} source={item?.image} />
@@ -25,8 +25,8 @@ const RecommendItem = ({ item }) => {
         </View>
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     borderRadius:
       Math.round(
-        Dimensions.get('window').width + Dimensions.get('window').height
+        Dimensions.get('window').width + Dimensions.get('window').height,
       ) / 2,
     width: Dimensions.get('window').width * 0.075,
     height: Dimensions.get('window').width * 0.075,
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-});
+})
 
-export default RecommendItem;
-
+export default RecommendItem

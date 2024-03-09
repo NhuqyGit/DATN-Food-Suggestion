@@ -1,8 +1,8 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import Category from '../Category/Category';
+import React from 'react'
+import { ScrollView, StyleSheet, View, Text } from 'react-native'
+import Category from '../Category/Category'
 
-const CategoryList = () => {
+function CategoryList() {
   const mockData = [
     {
       id: 1,
@@ -16,7 +16,7 @@ const CategoryList = () => {
       id: 3,
       title: 'Category 3',
     },
-  ];
+  ]
 
   return (
     <View style={styles.container}>
@@ -31,8 +31,8 @@ const CategoryList = () => {
         ))}
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
   },
-});
+})
 
-export default CategoryList;
-
+export default CategoryList

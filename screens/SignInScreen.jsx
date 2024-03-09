@@ -1,11 +1,16 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '../theme';
-import { StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React from 'react'
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { theme } from '../theme'
 
-const SignInScreen = () => {
+function SignInScreen() {
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -42,8 +47,8 @@ const SignInScreen = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -108,7 +113,6 @@ const styles = StyleSheet.create({
   orLogin: {
     alignSelf: 'center',
   },
-});
+})
 
-export default SignInScreen;
-
+export default SignInScreen

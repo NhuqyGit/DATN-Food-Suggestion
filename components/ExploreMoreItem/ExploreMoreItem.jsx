@@ -1,14 +1,14 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native'
+import React from 'react'
 
-const ExploreMoreItem = ({ item }) => {
+function ExploreMoreItem({ item }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item?.title}</Text>
       <Image style={styles.image} source={item?.image} />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
   },
-});
+})
 
-export default ExploreMoreItem;
-
+export default ExploreMoreItem

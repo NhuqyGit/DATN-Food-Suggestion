@@ -1,16 +1,13 @@
-import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import { useState } from 'react';
-import SvgPer1 from '../assets/svgs/Personalize/per1';
-import SvgPer2 from '../assets/svgs/Personalize/per2';
-import SvgPer3 from '../assets/svgs/Personalize/per3';
-import SvgPer4 from '../assets/svgs/Personalize/per4';
-import PerScreen from './PerScreen';
-import PerDone from './PerDone';
+import SvgPer1 from '../assets/svgs/Personalize/per1'
+import SvgPer2 from '../assets/svgs/Personalize/per2'
+import SvgPer3 from '../assets/svgs/Personalize/per3'
+import SvgPer4 from '../assets/svgs/Personalize/per4'
+import PerDone from './PerDone'
+import PerScreen from './PerScreen'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const cuisines = [
   {
@@ -85,7 +82,7 @@ const cuisines = [
     image: require('../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png'),
     status: false,
   },
-];
+]
 const step2 = [
   {
     id: 1,
@@ -159,7 +156,7 @@ const step2 = [
     image: require('../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg'),
     status: false,
   },
-];
+]
 const ques = [
   {
     id: 0,
@@ -185,22 +182,22 @@ const ques = [
     listAns: step2,
     svg: SvgPer4,
   },
-];
+]
 
 export default function Personalization() {
   const listStackPer = ques.map((s, i) => {
     return (
       <Stack.Screen
         key={i.toString()}
-        name={'Personalize' + i.toString()}
+        name={`Personalize${i.toString()}`}
         options={{
           headerShown: false,
         }}
       >
         {(props) => <PerScreen {...props} ques={s} quesLen={ques.length} />}
       </Stack.Screen>
-    );
-  });
+    )
+  })
   return (
     <Stack.Navigator
       screenOptions={{
@@ -209,13 +206,12 @@ export default function Personalization() {
     >
       {listStackPer}
       <Stack.Screen
-        name={'PersonalizeDone'}
+        name='PersonalizeDone'
         component={PerDone}
         options={{
           headerShown: false,
         }}
       />
     </Stack.Navigator>
-  );
+  )
 }
-

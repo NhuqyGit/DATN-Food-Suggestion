@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
-import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem';
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
 
-const ExploreMore = () => {
+function ExploreMore() {
   const mockData = [
     {
       id: 1,
@@ -29,7 +29,7 @@ const ExploreMore = () => {
       title: 'Trending',
       image: require('../../assets/recommendImage.jpg'),
     },
-  ];
+  ]
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ExploreMore</Text>
@@ -37,8 +37,8 @@ const ExploreMore = () => {
         <ExploreMoreItem key={item.id} item={item} />
       ))}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
   },
-});
+})
 
-export default ExploreMore;
-
+export default ExploreMore

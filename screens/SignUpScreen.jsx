@@ -1,10 +1,15 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { theme } from '../theme';
-import { StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native'
+import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { theme } from '../theme'
 
-const SignUpScreen = () => {
+function SignUpScreen() {
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -24,9 +29,9 @@ const SignUpScreen = () => {
           />
         </View>
         <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar}></View>
-          <View style={styles.progressBar}></View>
-          <View style={styles.progressBar}></View>
+          <View style={styles.progressBar} />
+          <View style={styles.progressBar} />
+          <View style={styles.progressBar} />
         </View>
 
         <View style={styles.warningContainer}>
@@ -56,8 +61,8 @@ const SignUpScreen = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -102,31 +107,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
 
-  thirdPartyContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 40,
-    gap: 10,
-  },
-
-  thirdPartyButton: {
-    padding: 15,
-    minWidth: 60,
-    borderRadius: 6,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-
-  forgotPassword: {
-    color: theme.colors.primary,
-  },
-
-  orLogin: {
-    alignSelf: 'center',
-  },
-
   progressBarContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -159,7 +139,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
-});
+})
 
-export default SignUpScreen;
-
+export default SignUpScreen

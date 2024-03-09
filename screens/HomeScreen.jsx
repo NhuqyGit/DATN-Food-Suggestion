@@ -1,13 +1,13 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Header from '../components/Header/Header';
-import CategoryList from '../components/CategoryList/CategoryList';
-import RecommendList from '../components/RecommendList/RecommendList';
-import MealPlanMadeEasy from '../components/Introduction/MealPlanMadeEasy';
-import ExploreMore from '../components/ExploreMore/ExploreMore';
+import React from 'react'
+import { ScrollView, StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import CategoryList from '../components/CategoryList/CategoryList'
+import ExploreMore from '../components/ExploreMore/ExploreMore'
+import Header from '../components/Header/Header'
+import MealPlanMadeEasy from '../components/Introduction/MealPlanMadeEasy'
+import RecommendList from '../components/RecommendList/RecommendList'
 
-const HomeScreen = () => {
+function HomeScreen() {
   return (
     <SafeAreaView>
       <ScrollView
@@ -22,8 +22,8 @@ const HomeScreen = () => {
         <ExploreMore />
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     height: 'fit-content',
     gap: 16,
   },
-});
+})
 
-export default HomeScreen;
-
+export default HomeScreen

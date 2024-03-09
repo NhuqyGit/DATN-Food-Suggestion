@@ -1,67 +1,56 @@
+import React, { useEffect, useMemo, useState } from 'react'
 import {
-  Animated,
-  SafeAreaView,
+  Dimensions,
+  Image,
   StyleSheet,
   Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Dimensions,
   TouchableHighlight,
-} from 'react-native';
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
-import Ans from '../components/Ans';
-import SvgArrowLeft from '../assets/svgs/arrowLeft';
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import SvgArrowLeft from '../assets/svgs/arrowLeft'
+import Ans from '../components/Ans'
 
-const deviceHeight = Dimensions.get('window').height;
-const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height
+const deviceWidth = Dimensions.get('window').width
 
-const PerScreen = ({ navigation, ques, quesLen}) => {
-  const [answers, setAnswers] = useState(ques.listAns);
+function PerScreen({ navigation, ques, quesLen }) {
+  const [answers, setAnswers] = useState(ques.listAns)
 
   useEffect(() => {
-    setAnswers(ques.listAns);
-  }, [ques.listAns]);
+    setAnswers(ques.listAns)
+  }, [ques.listAns])
 
   const checkNextStatus = () => {
-    return answers.every((c) => c.status === false);
-  };
+    return answers.every((c) => c.status === false)
+  }
 
   const handleOnNext = () => {
     if (ques.id === quesLen - 1) {
-      navigation.navigate('PersonalizeDone');
-    } 
-    else {
-      navigation.navigate('Personalize'+(ques.id+1).toString())
+      navigation.navigate('PersonalizeDone')
+    } else {
+      navigation.navigate(`Personalize${(ques.id + 1).toString()}`)
     }
-  };
-
-  const handleBack = () =>{
-    navigation.navigate('Personalize'+(ques.id-1).toString())
   }
 
+  const handleBack = () => {
+    navigation.navigate(`Personalize${(ques.id - 1).toString()}`)
+  }
 
   const handleAnswerChange = (updatedAnswer) => {
     const updatedAnswers = answers.map((answer) =>
-      answer.id === updatedAnswer.id ? updatedAnswer : answer
-    );
-    setAnswers(updatedAnswers);
-  };
+      answer.id === updatedAnswer.id ? updatedAnswer : answer,
+    )
+    setAnswers(updatedAnswers)
+  }
 
   const listCuisines = useMemo(
     () =>
       answers.map((c) => (
         <Ans props={c} onChange={handleAnswerChange} key={c.id} />
       )),
-    [answers]
-  );
+    [answers],
+  )
 
   // const handleAnswerChange = useCallback((updatedAnswer) => {
   //   const updatedAnswers = answers.map((answer) =>
@@ -79,21 +68,27 @@ const PerScreen = ({ navigation, ques, quesLen}) => {
   return (
     // <SafeAreaView style={styles.container}>
     <View style={styles.container}>
-      
-      <View style={{position: 'relative', width: '100%', height: deviceHeight / 3}}>
+      <View
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: deviceHeight / 3,
+        }}
+      >
         <Image
-          style={{ width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%' }}
           source={require('../assets/images/PersonalizeScreen/slice3.png')}
         />
-        {ques.id > 0 ? 
-          <TouchableHighlight style={styles.btnBackContain} onPress={handleBack}>
+        {ques.id > 0 ? (
+          <TouchableHighlight
+            style={styles.btnBackContain}
+            onPress={handleBack}
+          >
             <View style={styles.btnBack}>
-              <SvgArrowLeft color="#5E5E5E"/>
+              <SvgArrowLeft color='#5E5E5E' />
             </View>
           </TouchableHighlight>
-          :
-          null
-        }
+        ) : null}
       </View>
 
       <View style={styles.svgCircle}>
@@ -125,10 +120,10 @@ const PerScreen = ({ navigation, ques, quesLen}) => {
       </TouchableOpacity>
       {/* </SafeAreaView> */}
     </View>
-  );
-};
+  )
+}
 
-export default PerScreen;
+export default PerScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -194,13 +189,13 @@ const styles = StyleSheet.create({
     left: 20,
     borderRadius: 100,
   },
-  btnBack:{
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#fbfbfb",
+  btnBack: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fbfbfb',
     borderRadius: 100,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   btnText: {
     fontSize: deviceHeight * 0.018,
@@ -214,5 +209,4 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: '#bdbdbd',
   },
-});
-
+})

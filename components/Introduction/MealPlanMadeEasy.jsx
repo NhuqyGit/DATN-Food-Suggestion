@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-const MealPlanMadeEasy = () => {
+function MealPlanMadeEasy() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -21,8 +21,8 @@ const MealPlanMadeEasy = () => {
         </View>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
   },
 
   startButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-});
+})
 
-export default MealPlanMadeEasy;
-
+export default MealPlanMadeEasy

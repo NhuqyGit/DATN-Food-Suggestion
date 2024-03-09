@@ -4,11 +4,11 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native';
-import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+} from 'react-native'
+import React from 'react'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
-const Header = () => {
+function Header() {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
@@ -22,8 +22,8 @@ const Header = () => {
         <Icon name='camera' size={20} />
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 8,
   },
-});
+})
 
-export default Header;
-
+export default Header

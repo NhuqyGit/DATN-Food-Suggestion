@@ -1,86 +1,81 @@
+import { MaterialIcons } from '@expo/vector-icons'
+import * as ImagePicker from 'expo-image-picker'
+import React, { useState } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
   Image,
-  TextInput,
   Modal,
-} from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
-import { COLORS, FONTS } from "../theme/theme";
-import { MaterialIcons } from "@expo/vector-icons";
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker'
+import { COLORS, FONTS } from '../theme/theme'
 
+const img = require('../constants/knike-fork')
 
-const img = require("../constants/knike-fork");
+function EditProfile({ navigation }) {
+  const [selectedImage, setSelectedImage] = useState(img)
+  const [name, setName] = useState('Melissa Peters')
+  const [email, setEmail] = useState('metperters@gmail.com')
+  const [password, setPassword] = useState('randompassword')
+  const [country, setCountry] = useState('Nigeria')
 
-const EditProfile = ({ navigation }) => {
-  const [selectedImage, setSelectedImage] = useState(img);
-  const [name, setName] = useState("Melissa Peters");
-  const [email, setEmail] = useState("metperters@gmail.com");
-  const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("Nigeria");
-
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const today = new Date();
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(false)
+  const today = new Date()
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
-    "YYYY/MM/DD"
-  );
-  const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+    'YYYY/MM/DD',
+  )
+  const [selectedStartDate, setSelectedStartDate] = useState('01/01/1990')
+  const [startedDate, setStartedDate] = useState('12/12/2023')
 
   const handleChangeStartDate = (propDate) => {
-    setStartedDate(propDate);
-  };
+    setStartedDate(propDate)
+  }
 
   const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
-  };
+    setOpenStartDatePicker(!openStartDatePicker)
+  }
 
   const handleImageSelection = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
       quality: 1,
-    });
+    })
 
-    console.log(result);
+    console.log(result)
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedImage(result.assets[0].uri)
     }
-  };
+  }
 
   function renderDatePicker() {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openStartDatePicker}
-      >
+      <Modal animationType='slide' transparent visible={openStartDatePicker}>
         <View
           style={{
             flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <View
             style={{
               margin: 20,
               backgroundColor: COLORS.primary,
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               borderRadius: 20,
               padding: 35,
-              width: "90%",
-              shadowColor: "#000",
+              width: '90%',
+              shadowColor: '#000',
               shadowOffset: {
                 width: 0,
                 height: 2,
@@ -91,19 +86,19 @@ const EditProfile = ({ navigation }) => {
             }}
           >
             <DatePicker
-              mode="calendar"
+              mode='calendar'
               minimumDate={startDate}
               selected={startedDate}
               onDateChanged={handleChangeStartDate}
               onSelectedChange={(date) => setSelectedStartDate(date)}
               options={{
                 backgroundColor: COLORS.primary,
-                textHeaderColor: "#469ab6",
+                textHeaderColor: '#469ab6',
                 textDefaultColor: COLORS.white,
                 selectedTextColor: COLORS.white,
-                mainColor: "#469ab6",
+                mainColor: '#469ab6',
                 textSecondaryColor: COLORS.white,
-                borderColor: "rgba(122,146,165,0.1)",
+                borderColor: 'rgba(122,146,165,0.1)',
               }}
             />
 
@@ -113,7 +108,7 @@ const EditProfile = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    );
+    )
   }
 
   return (
@@ -127,19 +122,19 @@ const EditProfile = ({ navigation }) => {
       <View
         style={{
           marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
+          flexDirection: 'row',
+          justifyContent: 'center',
         }}
       >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: 0,
           }}
         >
           <MaterialIcons
-            name="keyboard-arrow-left"
+            name='keyboard-arrow-left'
             size={24}
             color={COLORS.black}
           />
@@ -151,7 +146,7 @@ const EditProfile = ({ navigation }) => {
       <ScrollView>
         <View
           style={{
-            alignItems: "center",
+            alignItems: 'center',
             marginVertical: 22,
           }}
         >
@@ -169,14 +164,14 @@ const EditProfile = ({ navigation }) => {
 
             <View
               style={{
-                position: "absolute",
+                position: 'absolute',
                 bottom: 0,
                 right: 10,
                 zIndex: 9999,
               }}
             >
               <MaterialIcons
-                name="photo-camera"
+                name='photo-camera'
                 size={32}
                 color={COLORS.primary}
               />
@@ -187,7 +182,7 @@ const EditProfile = ({ navigation }) => {
         <View>
           <View
             style={{
-              flexDirection: "column",
+              flexDirection: 'column',
               marginBottom: 6,
             }}
           >
@@ -195,26 +190,26 @@ const EditProfile = ({ navigation }) => {
             <View
               style={{
                 height: 44,
-                width: "100%",
+                width: '100%',
                 borderColor: COLORS.secondaryGray,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
-                justifyContent: "center",
+                justifyContent: 'center',
                 paddingLeft: 8,
               }}
             >
               <TextInput
                 value={name}
                 onChangeText={(value) => setName(value)}
-                editable={true}
+                editable
               />
             </View>
           </View>
 
           <View
             style={{
-              flexDirection: "column",
+              flexDirection: 'column',
               marginBottom: 6,
             }}
           >
@@ -222,26 +217,26 @@ const EditProfile = ({ navigation }) => {
             <View
               style={{
                 height: 44,
-                width: "100%",
+                width: '100%',
                 borderColor: COLORS.secondaryGray,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
-                justifyContent: "center",
+                justifyContent: 'center',
                 paddingLeft: 8,
               }}
             >
               <TextInput
                 value={email}
                 onChangeText={(value) => setEmail(value)}
-                editable={true}
+                editable
               />
             </View>
           </View>
 
           <View
             style={{
-              flexDirection: "column",
+              flexDirection: 'column',
               marginBottom: 6,
             }}
           >
@@ -249,19 +244,19 @@ const EditProfile = ({ navigation }) => {
             <View
               style={{
                 height: 44,
-                width: "100%",
+                width: '100%',
                 borderColor: COLORS.secondaryGray,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
-                justifyContent: "center",
+                justifyContent: 'center',
                 paddingLeft: 8,
               }}
             >
               <TextInput
                 value={password}
                 onChangeText={(value) => setPassword(value)}
-                editable={true}
+                editable
                 secureTextEntry
               />
             </View>
@@ -269,7 +264,7 @@ const EditProfile = ({ navigation }) => {
 
           <View
             style={{
-              flexDirection: "column",
+              flexDirection: 'column',
               marginBottom: 6,
             }}
           >
@@ -278,12 +273,12 @@ const EditProfile = ({ navigation }) => {
               onPress={handleOnPressStartDate}
               style={{
                 height: 44,
-                width: "100%",
+                width: '100%',
                 borderColor: COLORS.secondaryGray,
                 borderWidth: 1,
                 borderRadius: 4,
                 marginVertical: 6,
-                justifyContent: "center",
+                justifyContent: 'center',
                 paddingLeft: 8,
               }}
             >
@@ -294,7 +289,7 @@ const EditProfile = ({ navigation }) => {
 
         <View
           style={{
-            flexDirection: "column",
+            flexDirection: 'column',
             marginBottom: 6,
           }}
         >
@@ -302,19 +297,19 @@ const EditProfile = ({ navigation }) => {
           <View
             style={{
               height: 44,
-              width: "100%",
+              width: '100%',
               borderColor: COLORS.secondaryGray,
               borderWidth: 1,
               borderRadius: 4,
               marginVertical: 6,
-              justifyContent: "center",
+              justifyContent: 'center',
               paddingLeft: 8,
             }}
           >
             <TextInput
               value={country}
               onChangeText={(value) => setCountry(value)}
-              editable={true}
+              editable
             />
           </View>
         </View>
@@ -324,8 +319,8 @@ const EditProfile = ({ navigation }) => {
             backgroundColor: COLORS.primary,
             height: 44,
             borderRadius: 6,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Text
@@ -341,7 +336,7 @@ const EditProfile = ({ navigation }) => {
         {renderDatePicker()}
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default EditProfile;
+export default EditProfile

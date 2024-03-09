@@ -1,175 +1,175 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
-  View,
-  Text,
   Image,
-  TouchableOpacity,
+  Modal,
   ScrollView,
   StyleSheet,
-  Modal,
+  Text,
   TextInput,
-  PanResponder
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import MoreByCreator from "./components/MoreByCreator/MoreByCreator";
-import { renderStarRating } from "./components/MoreByCreator/MoreByCreator";
-import StarRating from "react-native-star-rating";
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import StarRating from 'react-native-star-rating'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import MoreByCreator, {
+  renderStarRating,
+} from './components/MoreByCreator/MoreByCreator'
 
 const foodDetails = {
-  name: "Delicious Dish",
-  author: "Chef Huu Nien :)",
-  image: require("../../assets/monngon.jpg"),
+  name: 'Delicious Dish',
+  author: 'Chef Huu Nien :)',
+  image: require('../../assets/monngon.jpg'),
   ingredients: [
-    "Ingredient 1",
-    "Ingredient 2",
-    "Ingredient 3",
-    "Ingredient 4",
-    "Ingredient 5",
-    "Ingredient 6",
+    'Ingredient 1',
+    'Ingredient 2',
+    'Ingredient 3',
+    'Ingredient 4',
+    'Ingredient 5',
+    'Ingredient 6',
   ],
   reviews: [
-    { user: "User1", comment: "Delicious!", rating: 1 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4 },
-    { user: "User1", comment: "Delicious!", rating: 5 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4.5 },
-    { user: "User1", comment: "Delicious!", rating: 2 },
-    { user: "User2", comment: "Amazing recipe!", rating: 3 },
-    { user: "User1", comment: "Delicious!", rating: 3.4 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4 },
+    { user: 'User1', comment: 'Delicious!', rating: 1 },
+    { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+    { user: 'User1', comment: 'Delicious!', rating: 5 },
+    { user: 'User2', comment: 'Amazing recipe!', rating: 4.5 },
+    { user: 'User1', comment: 'Delicious!', rating: 2 },
+    { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+    { user: 'User1', comment: 'Delicious!', rating: 3.4 },
+    { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
   ],
   rating: 4,
   totalTime: 40,
-};
+}
 const reportReasons = [
-  "Inappropriate Content",
-  "Spam",
-  "Harassment",
-  "False Information",
-  "Bad Content",
-  "Wordy",
-  "False Image",
+  'Inappropriate Content',
+  'Spam',
+  'Harassment',
+  'False Information',
+  'Bad Content',
+  'Wordy',
+  'False Image',
   "I don't like it",
-  "Others",
-];
+  'Others',
+]
 
 const moreByThisCreator = [
   {
-    id: "1",
-    name: "Recipe 1",
-    author: "Chef Huu Nien :)",
+    id: '1',
+    name: 'Recipe 1',
+    author: 'Chef Huu Nien :)',
     rating: 5,
-    image: require("../../assets/monngon.jpg"),
+    image: require('../../assets/monngon.jpg'),
   },
   {
-    id: "2",
-    name: "Recipe 2",
-    author: "Chef Huu Nien :)",
+    id: '2',
+    name: 'Recipe 2',
+    author: 'Chef Huu Nien :)',
     rating: 3,
-    image: require("../../assets/monngon.jpg"),
+    image: require('../../assets/monngon.jpg'),
   },
   {
-    id: "3",
-    name: "Recipe 3",
-    author: "Chef Huu Nien :)",
+    id: '3',
+    name: 'Recipe 3',
+    author: 'Chef Huu Nien :)',
     rating: 4.5,
-    image: require("../../assets/monngon.jpg"),
+    image: require('../../assets/monngon.jpg'),
   },
   {
-    id: "4",
-    name: "Recipe 4",
-    author: "Chef Huu Nien :)",
+    id: '4',
+    name: 'Recipe 4',
+    author: 'Chef Huu Nien :)',
     rating: 5,
-    image: require("../../assets/monngon.jpg"),
+    image: require('../../assets/monngon.jpg'),
   },
   {
-    id: "5",
-    name: "Recipe 5",
-    author: "Chef Huu Nien :)",
+    id: '5',
+    name: 'Recipe 5',
+    author: 'Chef Huu Nien :)',
     rating: 3,
-    image: require("../../assets/monngon.jpg"),
+    image: require('../../assets/monngon.jpg'),
   },
-];
+]
 
-const FoodDetailsScreen = () => {
-  const [selectedTab, setSelectedTab] = useState("overview");
+function FoodDetailsScreen() {
+  const [selectedTab, setSelectedTab] = useState('overview')
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isAddingReview, setAddingReview] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [isAddingReview, setAddingReview] = useState(false)
   const [newReview, setNewReview] = useState({
-    user: "",
+    user: '',
     rating: 0,
-    comment: "",
-  });
-  const [selectedReasons, setSelectedReasons] = useState([]);
-  const [isReporting, setReporting] = useState(false);
+    comment: '',
+  })
+  const [selectedReasons, setSelectedReasons] = useState([])
+  const [isReporting, setReporting] = useState(false)
 
   const startReporting = () => {
-    setReporting(true);
-  };
+    setReporting(true)
+  }
 
   const cancelReporting = () => {
-    setReporting(false);
-    setSelectedReasons([]);
-  };
+    setReporting(false)
+    setSelectedReasons([])
+  }
 
   const toggleReason = (reason) => {
     if (selectedReasons.includes(reason)) {
-      setSelectedReasons(selectedReasons.filter((r) => r !== reason));
+      setSelectedReasons(selectedReasons.filter((r) => r !== reason))
     } else {
-      setSelectedReasons([...selectedReasons, reason]);
+      setSelectedReasons([...selectedReasons, reason])
     }
-  };
+  }
 
   const handleReportSubmission = () => {
-    alert(`Report Issued for Reasons: ${selectedReasons.join(", ")}`);
-    cancelReporting();
-  };
+    alert(`Report Issued for Reasons: ${selectedReasons.join(', ')}`)
+    cancelReporting()
+  }
 
   const startAddingReview = () => {
-    setAddingReview(true);
-  };
+    setAddingReview(true)
+  }
 
   const cancelAddingReview = () => {
-    setAddingReview(false);
-  };
+    setAddingReview(false)
+  }
 
   const addReview = () => {
-    alert(`New Review: ${JSON.stringify(newReview)}`);
-    setNewReview({ user: "", rating: 0, comment: "" });
-    cancelAddingReview();
-  };
+    alert(`New Review: ${JSON.stringify(newReview)}`)
+    setNewReview({ user: '', rating: 0, comment: '' })
+    cancelAddingReview()
+  }
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+    setModalVisible(!isModalVisible)
+  }
 
   const handleAddToMealPlan = () => {
-    toggleModal();
-    alert("Food added to Meal Plan!");
-  };
+    toggleModal()
+    alert('Food added to Meal Plan!')
+  }
 
   const handleAddToCollection = () => {
-    toggleModal();
-    alert("Food added to Collection!");
-  };
+    toggleModal()
+    alert('Food added to Collection!')
+  }
 
   const handleTabPress = (tab) => {
-    setSelectedTab(tab);
-  };
+    setSelectedTab(tab)
+  }
 
   const renderOverviewTab = () => (
     <View style={styles.containter}>
       <View style={styles.row}>
         <View style={styles.rowItem}>
-          <Icon name="star" size={20} color="#FF6321" style={styles.icon} />
-          <Text style={{ fontWeight: "semibold" }}>Rating:</Text>
+          <Icon name='star' size={20} color='#FF6321' style={styles.icon} />
+          <Text style={{ fontWeight: 'semibold' }}>Rating:</Text>
           <Text style={styles.value}>{foodDetails.rating}</Text>
         </View>
       </View>
       <View style={styles.line} />
       <View style={styles.row}>
         <View style={styles.rowItem}>
-          <Icon name="clock-o" size={20} color="black" style={styles.icon} />
-          <Text style={{ fontWeight: "semibold" }}>Total time:</Text>
+          <Icon name='clock-o' size={20} color='black' style={styles.icon} />
+          <Text style={{ fontWeight: 'semibold' }}>Total time:</Text>
           <Text style={styles.value}>{foodDetails.totalTime} mins</Text>
         </View>
       </View>
@@ -179,7 +179,7 @@ const FoodDetailsScreen = () => {
         <Text style={styles.reportIssuer}>Report Issuer</Text>
       </TouchableOpacity>
     </View>
-  );
+  )
 
   const renderIngredientsTab = () => (
     <ScrollView style={styles.containter}>
@@ -190,7 +190,7 @@ const FoodDetailsScreen = () => {
               style={styles.addButton}
               onPress={() => alert(`Add ${ingredient} to shopping list!`)}
             >
-              <Icon name="cutlery" size={20} color="white" />
+              <Icon name='cutlery' size={20} color='white' />
             </TouchableOpacity>
             <Text style={styles.ingredientText}>{ingredient}</Text>
           </View>
@@ -198,7 +198,7 @@ const FoodDetailsScreen = () => {
         </View>
       ))}
     </ScrollView>
-  );
+  )
 
   const renderReviewsTab = () => (
     <View>
@@ -206,7 +206,7 @@ const FoodDetailsScreen = () => {
         style={styles.addReviewButton}
         onPress={startAddingReview}
       >
-        <Icon name="comment" size={20} color="green" />
+        <Icon name='comment' size={20} color='green' />
         <Text style={styles.addReviewText}>Add Review</Text>
       </TouchableOpacity>
       <View style={styles.line} />
@@ -231,12 +231,12 @@ const FoodDetailsScreen = () => {
         ))}
       </ScrollView>
     </View>
-  );
+  )
 
   const renderReportModal = () => (
     <Modal
-      animationType="slide"
-      transparent={true}
+      animationType='slide'
+      transparent
       visible={isReporting}
       onRequestClose={cancelReporting}
     >
@@ -244,7 +244,7 @@ const FoodDetailsScreen = () => {
         <TouchableOpacity style={styles.overlay} onPress={cancelReporting} />
         <View style={styles.innerReportContainer}>
           <TouchableOpacity style={styles.closeIcon} onPress={cancelReporting}>
-            <Icon name="close" size={20} color="black" />
+            <Icon name='close' size={20} color='black' />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>Select Reasons for Report</Text>
           {reportReasons.map((reason, index) => (
@@ -254,9 +254,9 @@ const FoodDetailsScreen = () => {
               onPress={() => toggleReason(reason)}
             >
               {selectedReasons.includes(reason) ? (
-                <Icon name="check-square-o" size={20} color="green" />
+                <Icon name='check-square-o' size={20} color='green' />
               ) : (
-                <Icon name="square-o" size={20} color="green" />
+                <Icon name='square-o' size={20} color='green' />
               )}
               <Text style={styles.reasonOptionText}>{reason}</Text>
             </TouchableOpacity>
@@ -270,26 +270,25 @@ const FoodDetailsScreen = () => {
         </View>
       </View>
     </Modal>
-  );
-
+  )
 
   return (
     <View style={{ flex: 1 }}>
       <Image
         source={foodDetails.image}
-        style={{ width: "100%", height: 300 }}
+        style={{ width: '100%', height: 300 }}
       />
 
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           margin: 10,
         }}
       >
         <View>
-          <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
             {foodDetails.name}
           </Text>
           <Text style={{ fontSize: 16 }}>{`By ${foodDetails.author}`}</Text>
@@ -299,42 +298,42 @@ const FoodDetailsScreen = () => {
           style={{
             width: 40,
             height: 40,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             borderRadius: 20,
-            backgroundColor: "green",
+            backgroundColor: 'green',
           }}
           onPress={toggleModal}
         >
-          <Icon name="plus" size={20} color="white" />
+          <Icon name='plus' size={20} color='white' />
         </TouchableOpacity>
       </View>
 
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-around",
-          borderBottomColor: "gray",
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          borderBottomColor: 'gray',
           borderBottomWidth: 1,
         }}
       >
         <TouchableOpacity
-          onPress={() => handleTabPress("overview")}
+          onPress={() => handleTabPress('overview')}
           style={{
             padding: 10,
-            borderBottomColor: "green",
-            borderBottomWidth: selectedTab === "overview" ? 2 : 0,
+            borderBottomColor: 'green',
+            borderBottomWidth: selectedTab === 'overview' ? 2 : 0,
           }}
         >
           <Text>Overview</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => handleTabPress("ingredients")}
+          onPress={() => handleTabPress('ingredients')}
           style={{
             padding: 10,
-            borderBottomColor: "green",
-            borderBottomWidth: selectedTab === "ingredients" ? 2 : 0,
+            borderBottomColor: 'green',
+            borderBottomWidth: selectedTab === 'ingredients' ? 2 : 0,
           }}
         >
           <View>
@@ -346,11 +345,11 @@ const FoodDetailsScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => handleTabPress("reviews")}
+          onPress={() => handleTabPress('reviews')}
           style={{
             padding: 10,
-            borderBottomColor: "green",
-            borderBottomWidth: selectedTab === "reviews" ? 2 : 0,
+            borderBottomColor: 'green',
+            borderBottomWidth: selectedTab === 'reviews' ? 2 : 0,
           }}
         >
           <View>
@@ -363,14 +362,14 @@ const FoodDetailsScreen = () => {
       </View>
 
       <ScrollView style={{ flex: 1, marginTop: 20 }}>
-        {selectedTab === "overview" && renderOverviewTab()}
-        {selectedTab === "ingredients" && renderIngredientsTab()}
-        {selectedTab === "reviews" && renderReviewsTab()}
+        {selectedTab === 'overview' && renderOverviewTab()}
+        {selectedTab === 'ingredients' && renderIngredientsTab()}
+        {selectedTab === 'reviews' && renderReviewsTab()}
       </ScrollView>
 
       <Modal
-        animationType="slide"
-        transparent={true}
+        animationType='slide'
+        transparent
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
@@ -378,28 +377,28 @@ const FoodDetailsScreen = () => {
           <TouchableOpacity style={styles.overlay} onPress={toggleModal} />
           <View style={styles.innerContainer}>
             <TouchableOpacity style={styles.closeIcon} onPress={toggleModal}>
-              <Icon name="close" size={20} color="black" />
+              <Icon name='close' size={20} color='black' />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={handleAddToMealPlan}
             >
-              <Icon name="file" size={20} color="#4CAF50" />
+              <Icon name='file' size={20} color='#4CAF50' />
               <Text style={styles.modalOptionText}>Add to Meal Plan</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={handleAddToCollection}
             >
-              <Icon name="plus" size={20} color="#4CAF50" />
+              <Icon name='plus' size={20} color='#4CAF50' />
               <Text style={styles.modalOptionText}>Add to Collection</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <Modal
-        animationType="slide"
-        transparent={true}
+        animationType='slide'
+        transparent
         visible={isAddingReview}
         onRequestClose={cancelAddingReview}
       >
@@ -413,7 +412,7 @@ const FoodDetailsScreen = () => {
               style={styles.closeIcon}
               onPress={cancelAddingReview}
             >
-              <Icon name="close" size={20} color="black" />
+              <Icon name='close' size={20} color='black' />
             </TouchableOpacity>
             <View style={styles.addReviewContainer}>
               <View style={styles.starRating}>
@@ -421,16 +420,16 @@ const FoodDetailsScreen = () => {
                   maxStars={5}
                   rating={newReview.rating}
                   starSize={20}
-                  fullStarColor="#FF6321"
+                  fullStarColor='#FF6321'
                   selectedStar={(rating) =>
-                    setNewReview({ ...newReview, rating: rating })
+                    setNewReview({ ...newReview, rating })
                   }
                 />
               </View>
 
               <TextInput
                 style={styles.yourReview}
-                placeholder="Your Review"
+                placeholder='Your Review'
                 multiline
                 value={newReview.comment}
                 onChangeText={(text) =>
@@ -449,8 +448,8 @@ const FoodDetailsScreen = () => {
       </Modal>
       {renderReportModal()}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   containter: {
@@ -458,18 +457,18 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   ratingRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   icon: {
     marginRight: 5,
@@ -479,50 +478,50 @@ const styles = StyleSheet.create({
   },
   line: {
     borderBottomWidth: 0.5,
-    borderBottomColor: "green",
+    borderBottomColor: 'green',
     marginBottom: 20,
     paddingBottom: 20,
   },
   ingredientRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
   addButton: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "green",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   ingredientText: {
     fontSize: 16,
   },
   addReviewButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
     borderRadius: 5,
   },
   addReviewText: {
     marginLeft: 20,
     fontSize: 16,
-    fontWeight: "semibold",
+    fontWeight: 'semibold',
   },
   reviewContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 25,
   },
   avatarContainer: {
-    backgroundColor: "lightgray",
+    backgroundColor: 'lightgray',
     width: 40,
     height: 40,
     borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   avatarText: {
@@ -532,12 +531,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 1,
   },
   ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 1,
   },
   ratingText: {
@@ -545,35 +544,35 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
   innerContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     height: 252,
   },
   innerReportContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     height: 500,
   },
   closeIcon: {
-    position: "absolute",
+    position: 'absolute',
     top: 15,
     right: 20,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalOption: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 10,
     padding: 5,
     marginTop: 15,
@@ -586,25 +585,25 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   addButtonReview: {
-    backgroundColor: "green",
+    backgroundColor: 'green',
     padding: 10,
     borderRadius: 5,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
     marginTop: 45,
   },
   addButtonText: {
-    color: "white",
+    color: 'white',
   },
   cancelButton: {
-    backgroundColor: "red",
+    backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
   },
   cancelButtonText: {
-    color: "white",
+    color: 'white',
   },
   starRating: {
     marginRight: 50,
@@ -615,20 +614,20 @@ const styles = StyleSheet.create({
   },
 
   reportIssuer: {
-    color: "#4CAF50",
+    color: '#4CAF50',
     fontSize: 16,
-   
+
     marginTop: 10,
-    marginBottom: 30
+    marginBottom: 30,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 15,
   },
   reasonOptionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
   reasonOptionText: {
@@ -636,15 +635,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   reportButton: {
-    backgroundColor: "#FF6321",
+    backgroundColor: '#FF6321',
     padding: 15,
     borderRadius: 5,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 20,
   },
   reportButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
   },
-});
-export default FoodDetailsScreen;
+})
+export default FoodDetailsScreen

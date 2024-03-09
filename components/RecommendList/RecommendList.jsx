@@ -4,14 +4,14 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-} from 'react-native';
-import React from 'react';
-import RecommendItem from '../RecommendItem/RecommendItem';
-import { theme } from '../../theme';
-import RecommendItemHorizontal from '../RecommendItem/RecommendItemHorizontal';
-import SmallRecommendItem from '../RecommendItem/SmallRecommendItem';
+} from 'react-native'
+import React from 'react'
+import RecommendItem from '../RecommendItem/RecommendItem'
+import { theme } from '../../theme'
+import RecommendItemHorizontal from '../RecommendItem/RecommendItemHorizontal'
+import SmallRecommendItem from '../RecommendItem/SmallRecommendItem'
 
-const RecommendList = () => {
+function RecommendList() {
   const mockData = [
     {
       id: 1,
@@ -43,7 +43,7 @@ const RecommendList = () => {
       author: 'Tan Sang',
       image: require('../../assets/recommendImage.jpg'),
     },
-  ];
+  ]
   return (
     <View style={styles.container}>
       <View style={styles.horizontalPadding}>
@@ -97,8 +97,8 @@ const RecommendList = () => {
         </ScrollView>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEFFD3',
     paddingBottom: 32,
   },
-});
+})
 
-export default RecommendList;
-
+export default RecommendList

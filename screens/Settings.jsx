@@ -1,16 +1,16 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS } from "../theme/theme";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons'
+import React from 'react'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { COLORS, FONTS } from '../theme/theme'
 
-const SettingsItem = ({ item }) => {
+function SettingsItem({ item }) {
   return (
     <TouchableOpacity
       onPress={item.action}
       style={{
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingVertical: 8,
         paddingLeft: 12,
       }}
@@ -28,117 +28,116 @@ const SettingsItem = ({ item }) => {
         {item.text}
       </Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-const Settings = ({ navigation }) => {
+function Settings({ navigation }) {
   const navigateToEditProfile = () => {
-    navigation.navigate("EditProfile");
-  };
+    navigation.navigate('EditProfile')
+  }
 
   const navigateToSecurity = () => {
-    console.log("Security function");
-  };
+    console.log('Security function')
+  }
 
   const navigateToNotifications = () => {
-    console.log("Notifications function");
-  };
+    console.log('Notifications function')
+  }
 
   const navigateToPrivacy = () => {
-    console.log("Privacy function");
-  };
+    console.log('Privacy function')
+  }
 
   const navigateToSubscription = () => {
-    console.log("Subscription function");
-  };
+    console.log('Subscription function')
+  }
 
   const navigateToSupport = () => {
-    console.log("Support function");
-  };
+    console.log('Support function')
+  }
 
   const navigateToTermsAndPolicies = () => {
-    console.log("Terms and Policies function");
-  };
+    console.log('Terms and Policies function')
+  }
 
   const navigateToFreeSpace = () => {
-    console.log("Free Space function");
-  };
+    console.log('Free Space function')
+  }
 
   const navigateToDateSaver = () => {
-    console.log("Date saver");
-  };
+    console.log('Date saver')
+  }
 
   const navigateToReportProblem = () => {
-    console.log("Report a problem");
-  };
+    console.log('Report a problem')
+  }
 
   const addAccount = () => {
-    console.log("Aadd account ");
-  };
+    console.log('Aadd account ')
+  }
 
   const logout = () => {
-    console.log("Logout");
-  };
+    console.log('Logout')
+  }
 
   const accountItems = [
     {
-      icon: "person-outline",
-      text: "Edit Profile",
+      icon: 'person-outline',
+      text: 'Edit Profile',
       action: navigateToEditProfile,
-      color: "black",
+      color: 'black',
     },
     {
-      icon: "security",
-      text: "Security",
+      icon: 'security',
+      text: 'Security',
       action: navigateToSecurity,
-      color: "black",
+      color: 'black',
     },
     {
-      icon: "notifications-none",
-      text: "Notifications",
+      icon: 'notifications-none',
+      text: 'Notifications',
       action: navigateToNotifications,
-      color: "black",
+      color: 'black',
     },
     {
-      icon: "lock-outline",
-      text: "Privacy",
+      icon: 'lock-outline',
+      text: 'Privacy',
       action: navigateToPrivacy,
-      color: "black",
+      color: 'black',
     },
-  ];
+  ]
 
   const supportItems = [
     {
-      icon: "credit-card",
-      text: "My Subscription",
+      icon: 'credit-card',
+      text: 'My Subscription',
       action: navigateToSubscription,
-      color: "black",
+      color: 'black',
     },
     {
-      icon: "help-outline",
-      text: "Help & Support",
+      icon: 'help-outline',
+      text: 'Help & Support',
       action: navigateToSupport,
-      color: "black",
+      color: 'black',
     },
     {
-      icon: "info-outline",
-      text: "Terms and Policies",
+      icon: 'info-outline',
+      text: 'Terms and Policies',
       action: navigateToTermsAndPolicies,
-      color: "black",
+      color: 'black',
     },
-  ];
+  ]
 
-  
   const actionsItems = [
     {
-      icon: "outlined-flag",
-      text: "Report a problem",
+      icon: 'outlined-flag',
+      text: 'Report a problem',
       action: navigateToReportProblem,
-      color: "black",
+      color: 'black',
     },
-   
-    { icon: "logout", text: "Log out", action: logout, color: "red" },
-  ];
+
+    { icon: 'logout', text: 'Log out', action: logout, color: 'red' },
+  ]
 
   return (
     <SafeAreaView
@@ -149,9 +148,9 @@ const Settings = ({ navigation }) => {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          backgroundColor: "orange",
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: 'orange',
           borderBottomLeftRadius: 20,
           borderBottomRightRadius: 20,
         }}
@@ -159,15 +158,15 @@ const Settings = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: 10,
             top: 15,
           }}
         >
-          <MaterialIcons name="keyboard-arrow-left" size={40} color="white" />
+          <MaterialIcons name='keyboard-arrow-left' size={40} color='white' />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h1, paddingVertical: 20, color: "white" }}>
+        <Text style={{ ...FONTS.h1, paddingVertical: 20, color: 'white' }}>
           Settings
         </Text>
       </View>
@@ -183,7 +182,7 @@ const Settings = ({ navigation }) => {
             }}
           >
             {accountItems.map((item, index) => {
-              return <SettingsItem item={item} key={index} />;
+              return <SettingsItem item={item} key={index} />
             })}
           </View>
         </View>
@@ -192,7 +191,7 @@ const Settings = ({ navigation }) => {
 
         <View style={{ marginBottom: 12 }}>
           <Text style={{ ...FONTS.h4, marginVertical: 10 }}>
-            Support & About{" "}
+            Support & About{' '}
           </Text>
           <View
             style={{
@@ -201,12 +200,11 @@ const Settings = ({ navigation }) => {
             }}
           >
             {supportItems.map((item, index) => {
-              return <SettingsItem item={item} key={index} />;
+              return <SettingsItem item={item} key={index} />
             })}
           </View>
         </View>
 
-     
         {/* Actions Settings */}
 
         <View style={{ marginBottom: 15 }}>
@@ -218,13 +216,13 @@ const Settings = ({ navigation }) => {
             }}
           >
             {actionsItems.map((item, index) => {
-              return <SettingsItem item={item} key={index} />;
+              return <SettingsItem item={item} key={index} />
             })}
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

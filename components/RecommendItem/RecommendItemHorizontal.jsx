@@ -1,7 +1,7 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native'
+import React from 'react'
 
-const RecommendItemHorizontal = ({ item }) => {
+function RecommendItemHorizontal({ item }) {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={item?.image} />
@@ -10,8 +10,8 @@ const RecommendItemHorizontal = ({ item }) => {
         <Text style={styles.title}>{item.title}</Text>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     color: '#5E5E5E',
     fontSize: 14,
   },
-});
+})
 
-export default RecommendItemHorizontal;
-
+export default RecommendItemHorizontal

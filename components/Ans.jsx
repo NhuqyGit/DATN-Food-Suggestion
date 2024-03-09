@@ -8,23 +8,23 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
-} from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+} from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 
-const deviceHeight = Dimensions.get('window').height;
-const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height
+const deviceWidth = Dimensions.get('window').width
 
-const Ans = ({ props, onChange }) => {
+function Ans({ props, onChange }) {
   // const [isPress, setPress] = useState(false)
-  const animatedPop = useRef(new Animated.Value(1)).current;
+  const animatedPop = useRef(new Animated.Value(1)).current
 
   const handlePress = () => {
-    handleAnimatePop();
+    handleAnimatePop()
     // onChange(index)
     // setPress(!isPress)
-    const updatedAnswer = { ...props, status: !props.status };
-    onChange(updatedAnswer);
-  };
+    const updatedAnswer = { ...props, status: !props.status }
+    onChange(updatedAnswer)
+  }
 
   const handleAnimatePop = () => {
     Animated.sequence([
@@ -43,8 +43,8 @@ const Ans = ({ props, onChange }) => {
         duration: 50,
         useNativeDriver: true,
       }),
-    ]).start();
-  };
+    ]).start()
+  }
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -77,10 +77,10 @@ const Ans = ({ props, onChange }) => {
         </Text>
       </View>
     </TouchableWithoutFeedback>
-  );
-};
+  )
+}
 
-export default Ans;
+export default Ans
 // export default React.memo(Ans, (prevProps, nextProps)=>{
 //   return(
 //     prevProps.props.status === nextProps.props.status
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: '#bdbdbd',
   },
-});
+})

@@ -29,10 +29,10 @@ const pallete = [
     text: '#dc2626',
     bgColor: (opacity) => `rgba(248, 113, 113, ${opacity})`,
   },
-];
+]
 export const themeColors = {
   ...pallete[0],
-};
+}
 
 export const theme = {
   colors: {
@@ -40,5 +40,4 @@ export const theme = {
     grayBackground: '#E2E2E2',
     secondary: '#4CAF50',
   },
-};
-
+}
