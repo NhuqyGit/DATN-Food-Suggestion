@@ -164,159 +164,313 @@ function PersonalRecipeList() {
   )
 }
 
-function Profile({ navigation }) {
-  const [isCreateVisible, setCreateVisible] = useState(false)
-  const [isSettingVisible, setSettingVisible] = useState(false)
-  const [listName, setListName] = useState('')
-  const generateBoxShadowStyle = (
-    xOffset,
-    yOffset,
-    shadowColorIos,
-    shadowOpacity,
-    shadowRadius,
-    elevation,
-    shadowColorAndroid,
-  ) => {
-    if (Platform.OS === 'ios') {
-      styles.boxShadow = {
-        shadowColor: shadowColorIos,
-        shadowOffset: { width: xOffset, height: yOffset },
-        shadowOpacity,
-        shadowRadius,
-      }
-    } else if (Platform.OS === 'android') {
-      styles.boxShadow = {
-        elevation,
-        shadowColor: shadowColorAndroid,
-      }
-    }
-  }
-  generateBoxShadowStyle(0, 2, '#000', 0.3, 3, 4, '#000')
-  const createList = () => {}
+// function Profile({ navigation }) {
+//   const [isCreateVisible, setCreateVisible] = useState(false)
+//   const [isSettingVisible, setSettingVisible] = useState(false)
+//   const [listName, setListName] = useState('')
+//   const generateBoxShadowStyle = (
+//     xOffset,
+//     yOffset,
+//     shadowColorIos,
+//     shadowOpacity,
+//     shadowRadius,
+//     elevation,
+//     shadowColorAndroid,
+//   ) => {
+//     if (Platform.OS === 'ios') {
+//       styles.boxShadow = {
+//         shadowColor: shadowColorIos,
+//         shadowOffset: { width: xOffset, height: yOffset },
+//         shadowOpacity,
+//         shadowRadius,
+//       }
+//     } else if (Platform.OS === 'android') {
+//       styles.boxShadow = {
+//         elevation,
+//         shadowColor: shadowColorAndroid,
+//       }
+//     }
+//   }
+//   generateBoxShadowStyle(0, 2, '#000', 0.3, 3, 4, '#000')
+//   const createList = () => {}
+//   return (
+//     <SafeAreaView
+//       style={{
+//         flex: 1,
+//         backgroundColor: COLORS.white,
+//       }}
+//     >
+//       <StatusBar backgroundColor='black' style='light' />
+
+//       <ScrollView>
+//         <View
+//           style={{
+//             marginTop: 30,
+//             alignItems: 'center',
+//           }}
+//         >
+//           <TouchableOpacity
+//             onPress={() => {
+//               navigation.navigate('Settings')
+//               // setSettingVisible(true);
+//             }}
+//             style={{ position: 'absolute', right: 20, top: 0 }}
+//           >
+//             <View
+//               style={{
+//                 backgroundColor: 'rgba(52, 52, 52, 0.1)',
+//                 padding: 10,
+//                 borderRadius: 999,
+//               }}
+//             >
+//               <MaterialIcons name='settings' size={24} color='gray' />
+//             </View>
+//           </TouchableOpacity>
+//           <Image
+//             source={img}
+//             resizeMode='contain'
+//             style={{
+//               height: 100,
+//               width: 100,
+//               borderRadius: 999,
+//               borderColor: COLORS.primary,
+//               borderWidth: 0.5,
+//             }}
+//           />
+
+//           <Text
+//             style={{
+//               ...FONTS.h2,
+//               color: COLORS.primary,
+//               marginVertical: 8,
+//               fontWeight: 'bold',
+//             }}
+//           >
+//             Melissa Peters
+//           </Text>
+//         </View>
+
+//         <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20, gap: 20 }}>
+//           <PersonalRecipeList />
+//           <SavedRecipeLists />
+//         </View>
+//         <View style={{ height: 500 }} />
+//       </ScrollView>
+
+//       <Modal animationType='fade' transparent visible={isSettingVisible}>
+//         <TouchableWithoutFeedback
+//           onPress={() => {
+//             setSettingVisible(false)
+//           }}
+//         >
+//           <View
+//             style={{
+//               position: 'absolute',
+//               top: 0,
+//               left: 0,
+//               bottom: 0,
+//               right: 0,
+//               backgroundColor: 'gray',
+//               opacity: 0.1,
+//             }}
+//           />
+//         </TouchableWithoutFeedback>
+//         <View
+//           style={[
+//             {
+//               position: 'absolute',
+//               right: 50,
+//               top: 60,
+//               width: '35%',
+//               backgroundColor: 'white',
+//               borderRadius: 20,
+//             },
+//             styles.boxShadow,
+//           ]}
+//         >
+//           <TouchableOpacity
+//             style={{
+//               justifyContent: 'center',
+//               padding: 15,
+//             }}
+//           >
+//             <Text style={{ ...FONTS.h3, fontWeight: '500' }}>Edit account</Text>
+//           </TouchableOpacity>
+//           <TouchableOpacity
+//             style={{
+//               backgroundColor: 'red',
+//               justifyContent: 'center',
+//               padding: 15,
+//               borderBottomLeftRadius: 20,
+//               borderBottomRightRadius: 20,
+//             }}
+//           >
+//             <Text style={{ ...FONTS.h3, color: 'white', fontWeight: '500' }}>
+//               Settings
+//             </Text>
+//           </TouchableOpacity>
+//         </View>
+//       </Modal>
+//     </SafeAreaView>
+//   )
+// }
+
+import Collection from '../components/Profile/Collection'
+
+function Profile({navigation}){
+  const data=[
+    {
+      nameCollection: 'All Yums',
+      num: 0,
+      imgCol: require('../assets/images/Profile/avatarDefault.png')
+    },
+    {
+      nameCollection: 'All Personal Recipes',
+      num: 5,
+      imgCol: require('../assets/images/Profile/avatarDefault.png')
+    },
+    {
+      nameCollection: 'Breakfasts',
+      num: 2,
+      imgCol: require('../assets/images/Profile/avatarDefault.png')
+    },
+    {
+      nameCollection: 'Desserts',
+      num: 3,
+      imgCol: require('../assets/images/Profile/avatarDefault.png')
+    },
+    {
+      nameCollection: 'Desserts',
+      num: 3,
+      imgCol: require('../assets/images/Profile/avatarDefault.png')
+    },
+  ]
+
+  const listCollection = data.map((col, index)=>{
+    return (
+      <Collection props={col} navigation={navigation} key={index.toString()}/>
+    )
+  })
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.white,
-      }}
-    >
-      <StatusBar backgroundColor='black' style='light' />
-
-      <ScrollView>
-        <View
-          style={{
-            marginTop: 30,
-            alignItems: 'center',
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Settings')
-              // setSettingVisible(true);
-            }}
-            style={{ position: 'absolute', right: 20, top: 0 }}
-          >
-            <View
-              style={{
-                backgroundColor: 'rgba(52, 52, 52, 0.1)',
-                padding: 10,
-                borderRadius: 999,
-              }}
-            >
-              <MaterialIcons name='settings' size={24} color='gray' />
-            </View>
-          </TouchableOpacity>
-          <Image
-            source={img}
-            resizeMode='contain'
-            style={{
-              height: 100,
-              width: 100,
-              borderRadius: 999,
-              borderColor: COLORS.primary,
-              borderWidth: 0.5,
-            }}
-          />
-
-          <Text
-            style={{
-              ...FONTS.h2,
-              color: COLORS.primary,
-              marginVertical: 8,
-              fontWeight: 'bold',
-            }}
-          >
-            Melissa Peters
-          </Text>
-        </View>
-
-        <View style={{ flex: 1, marginHorizontal: 22, marginTop: 20, gap: 20 }}>
-          <PersonalRecipeList />
-          <SavedRecipeLists />
-        </View>
-        <View style={{ height: 500 }} />
-      </ScrollView>
-
-      <Modal animationType='fade' transparent visible={isSettingVisible}>
-        <TouchableWithoutFeedback
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity
           onPress={() => {
-            setSettingVisible(false)
+            navigation.navigate('Settings')
           }}
-        >
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              backgroundColor: 'gray',
-              opacity: 0.1,
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View
-          style={[
-            {
-              position: 'absolute',
-              right: 50,
-              top: 60,
-              width: '35%',
-              backgroundColor: 'white',
-              borderRadius: 20,
-            },
-            styles.boxShadow,
-          ]}
-        >
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              padding: 15,
-            }}
-          >
-            <Text style={{ ...FONTS.h3, fontWeight: '500' }}>Edit account</Text>
+          style={{alignItems: 'flex-end'}}>
+          <View style={styles.btnSetting}>
+            <MaterialIcons name='settings' size={24} color='black' />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.avatar}>
+          <Image 
+            style={styles.avatarImage}
+            source={require('../assets/images/Profile/avatarTest.jpg')}/>
+        </TouchableOpacity>
+        
+        <Text style={styles.userName}>Hà Đăng Nhuận</Text>
+        <Text style={styles.userDescription}>Edit your description and tell us a little about yourself</Text>
+        
+        <View style={styles.collectionHeader}>
+          <TouchableOpacity style={styles.btnAddColl}>
+            <MaterialIcons name='playlist-add' size={28} color='#00A67D' />
+            <Text style={[styles.titleCollection]}>New Collection</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: 'red',
-              justifyContent: 'center',
-              padding: 15,
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20,
-            }}
-          >
-            <Text style={{ ...FONTS.h3, color: 'white', fontWeight: '500' }}>
-              Settings
-            </Text>
+
+          <TouchableOpacity style={styles.btnFilter}>
+            <Text style={styles.titleFilter}>Sort</Text>
+            <MaterialIcons name='keyboard-arrow-down' style={{marginLeft: 5}} size={24} color='#2d6d64' />
           </TouchableOpacity>
         </View>
-      </Modal>
+        
+        <View style={styles.listCollection}>
+          {/* <Collection /> */}
+          {listCollection}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  boxShadow: {},
+  container:{
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+  },
+  btnSetting: {
+    width: 35,
+    height: 35,
+    marginTop: 20,
+    marginRight: 20,
+    marginBottom: 15,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+    backgroundColor: '#F3F3F3'
+  },
+  avatar:{
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarImage:{
+    width: 80,
+    height: 80,
+    borderRadius: 200,
+  },
+  userName:{
+    textAlign: 'center',
+    marginTop: 15,
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#231F20'
+  },
+  userDescription: {
+    textAlign: 'center',
+    marginTop: 15,
+    fontSize: 13,
+    color: '#231F20'
+  },
+  collectionHeader:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    marginVertical: 30,
+  },
+  btnAddColl:{
+    flexDirection: 'row',
+    alignItems: 'center',
+
+  },
+  btnFilter:{
+    backgroundColor: '#ecf5f4',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  titleCollection:{
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#231F20',
+    marginLeft: 5
+  },
+  titleFilter:{
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#2d6d64',
+  },
+  listCollection: {
+    paddingHorizontal: 25,
+  }
+  
 })
 
 export default Profile
