@@ -1,123 +1,109 @@
 const data = [
   {
-    title: 'Sunday',
+    title: "Sunday",
     assets: [
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Monday',
+    title: "Monday",
     assets: [
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Tuesday',
+    title: "Tuesday",
     assets: [
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Wednesday',
+    title: "Wednesday",
     assets: [
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti avacador estelano',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Thursday',
+    title: "Thursday",
     assets: [
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Friday',
+    title: "Friday",
     assets: [
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
   {
-    title: 'Saturday',
+    title: "Saturday",
     assets: [
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Chicken rice",
+        time: "45 mins",
+        imgUri: require("../assets/chickenrice.png"),
       },
       {
-        name: 'Spagetti',
-        time: '45 mins',
-        imgUri:
-          'https://media.self.com/photos/57d8952946d0cb351c8c50c9/master/w_1600%2Cc_limit/DELICIOUS-1-POT-Lentil-and-Black-Bean-Chili-Smoky-hearty-PROTEIN-and-fiber-packed-vegan-glutenfree-lentils-chili-healthy-recipe2.jpg',
+        name: "Stinky fish salad",
+        time: "45 mins",
+        imgUri: require("../assets/dishfood.jpg"),
       },
     ],
   },
-]
+];
 
-export default data
+export default data;

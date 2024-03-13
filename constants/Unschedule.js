@@ -1,33 +1,33 @@
 const data = [
   {
     id: 1,
-    name: 'Spagetti avacador estelano',
-    time: '45 mins',
-    imgUri: 'sss',
+    name: "Water spinach stir-fry beef",
+    time: "15 mins",
+    imgUri: require("../assets/dish-image.jpg"),
   },
   {
     id: 2,
-    name: 'Spagetti avacador estelano',
-    time: '45 mins',
-    imgUri: 'sss',
+    name: "Vegetarian soup",
+    time: "20 mins",
+    imgUri: require("../assets/recommendImage.jpg"),
   },
   {
     id: 3,
-    name: 'Spagetti avacador estelano',
-    time: '45 mins',
-    imgUri: 'sss',
+    name: "Pizza Chicago",
+    time: "40 mins",
+    imgUri: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
   },
   {
     id: 4,
-    name: 'Spagetti avacador estelano',
-    time: '45 mins',
-    imgUri: 'sss',
+    name: "Buuter chicken curry",
+    time: "60 mins",
+    imgUri: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
   },
   {
     id: 5,
-    name: 'Spagetti avacador estelano',
-    time: '45 mins',
-    imgUri: 'sss',
+    name: "Vegetable rip soup",
+    time: "50 mins",
+    imgUri: require("../assets/monngon.jpg"),
   },
-]
-export default data
+];
+export default data;
