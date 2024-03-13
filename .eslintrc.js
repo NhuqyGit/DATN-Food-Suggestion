@@ -34,6 +34,7 @@ module.exports = {
     'no-unused-vars': 'error',
     'no-process-env': 'off',
     '@next/next/no-img-element': 'off',
+    ignorePatterns: ['.eslintrc.js'],
 
     'prettier/prettier': [
       'error',

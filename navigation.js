@@ -9,6 +9,7 @@ import MealPlan from './screens/MealPlan'
 import Personalization from './screens/Personalization'
 import FoodDetailsScreen from './components/FoodDetails/FoodDetails'
 import ProfileStack from './screens/ProfileStack'
+import SearchScreen from './screens/SearchScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -46,7 +47,7 @@ export default function Navigation() {
               <Icon name='plus-square-o' size={26} />
             ),
           }}
-          component={Personalization}
+          component={SearchScreen}
         />
         <Tab.Screen
           name='MealPlan'

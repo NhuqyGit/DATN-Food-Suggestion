@@ -12,7 +12,8 @@ function Header() {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <Image style={styles.logo} source={require('../../assets/logo.png')} />
+        {/* <Image style={styles.logo} source={require('../../assets/logo.png')} /> */}
+        <Icon name='arrow-left' size={20} />
       </TouchableOpacity>
       <View style={styles.searchContainer}>
         <Icon name='search' size={20} style={styles.searchIcon} />
