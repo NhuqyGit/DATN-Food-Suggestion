@@ -316,8 +316,15 @@ function PersonalRecipeList() {
 // }
 
 import Collection from '../components/Profile/Collection'
+import SortPopUp from '../components/Profile/SortPopUp'
 
 function Profile({navigation}){
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleCloseModal = () =>{
+    setModalVisible(false)
+  }
+
   const data=[
     {
       nameCollection: 'All Yums',
@@ -353,7 +360,7 @@ function Profile({navigation}){
   })
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
       <ScrollView style={styles.container}>
         <TouchableOpacity
           onPress={() => {
@@ -376,11 +383,13 @@ function Profile({navigation}){
         
         <View style={styles.collectionHeader}>
           <TouchableOpacity style={styles.btnAddColl}>
-            <MaterialIcons name='playlist-add' size={28} color='#00A67D' />
+            <MaterialIcons name='playlist-add' size={28} color='#3a9693' />
             <Text style={[styles.titleCollection]}>New Collection</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnFilter}>
+          <TouchableOpacity
+            onPress={()=> setModalVisible(true)}
+            style={styles.btnSort}>
             <Text style={styles.titleFilter}>Sort</Text>
             <MaterialIcons name='keyboard-arrow-down' style={{marginLeft: 5}} size={24} color='#2d6d64' />
           </TouchableOpacity>
@@ -390,6 +399,9 @@ function Profile({navigation}){
           {/* <Collection /> */}
           {listCollection}
         </View>
+
+        
+        <SortPopUp closePopUp={handleCloseModal} modalVisible={modalVisible}/>
       </ScrollView>
     </SafeAreaView>
   )
@@ -426,7 +438,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 15,
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#231F20'
   },
   userDescription: {
@@ -447,7 +459,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
-  btnFilter:{
+  btnSort:{
     backgroundColor: '#ecf5f4',
     paddingHorizontal: 20,
     paddingVertical: 8,
@@ -458,13 +470,13 @@ const styles = StyleSheet.create({
   },
   titleCollection:{
     fontSize: 14,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#231F20',
     marginLeft: 5
   },
   titleFilter:{
     fontSize: 14,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#2d6d64',
   },
   listCollection: {

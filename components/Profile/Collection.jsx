@@ -26,7 +26,7 @@ const Collection = ({props, navigation}) => {
         }
     }
     
-    const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.2, 3, 3, 'black')
+    const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 5, 5, 'black')
 
     return (
         <TouchableOpacity

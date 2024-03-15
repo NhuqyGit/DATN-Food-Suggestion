@@ -3,7 +3,7 @@ import React from 'react'
 import PersonalReceipeList from './PersonalRecipeList'
 import Profile from './Profile'
 import ReceipeListScreen from './ReceipeListScreen'
-import Settings from './Settings'
+import Setting from './Setting/Setting'
 
 const Stack = createNativeStackNavigator()
 function ProfileStack() {
@@ -16,7 +16,7 @@ function ProfileStack() {
       <Stack.Screen name='ProfileScreen' component={Profile} />
       <Stack.Screen name='List' component={ReceipeListScreen} />
       <Stack.Screen name='PersonalList' component={PersonalReceipeList} />
-      <Stack.Screen name='Settings' component={Settings} />
+      <Stack.Screen name='Settings' component={Setting} />
     </Stack.Navigator>
   )
 }
