@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
+import { MaterialIcons } from '@expo/vector-icons'
 
 function SmallRecommendItem({ item }) {
   return (
@@ -21,7 +22,8 @@ function SmallRecommendItem({ item }) {
         <View style={styles.authorContainer}>
           <Text style={styles.title}>{item.title}</Text>
           <View style={styles.iconContainer}>
-            <Icon style={styles.addIcon} name='plus' />
+            {/* <Icon style={styles.addIcon} name='plus' /> */}
+            <MaterialIcons name='add' size={22} color='white' />
           </View>
         </View>
       </View>
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
       ) / 2,
     width: Dimensions.get('window').width * 0.065,
     height: Dimensions.get('window').width * 0.065,
-    padding: 6,
+    // padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },

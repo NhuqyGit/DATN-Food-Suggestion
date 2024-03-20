@@ -30,11 +30,7 @@ function RecommendItem({ item}) {
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>
             {/* <Icon style={styles.addIcon} name='plus' /> */}
-            <MaterialIcons
-              name='add'
-              size={22}
-              color='white'
-            />
+            <MaterialIcons name='add' size={22} color='white' />
           </View>
         </View>
       </View>
@@ -48,7 +44,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 300,
-    height: 300,
+    height: 400,
     borderRadius: 8,
     marginRight: 16,
   },
@@ -64,7 +60,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   rating: {
     color: 'white',
@@ -77,8 +73,10 @@ const styles = StyleSheet.create({
   },
   author: {
     color: 'white',
-    fontSize: 14,
+    fontWeight: '500',
     marginRight: 4,
+    textTransform: 'uppercase',
+    color: '#9e9e9e'
   },
   iconContainer: {
     backgroundColor: theme.colors.secondary,

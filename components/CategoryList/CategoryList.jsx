@@ -46,16 +46,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     marginTop: 32,
-    paddingLeft: 20,
   },
-
+  
   title: {
+    paddingLeft: 20,
     fontSize: 28,
     fontWeight: '700',
-    marginBottom: 30
+    // marginBottom: 15
+    color: "#231F20"
   },
-
+  
   list: {
+    paddingLeft: 15,
     flexDirection: 'row',
     alignItem: 'center',
     // backgroundColor: 'red',

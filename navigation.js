@@ -12,8 +12,50 @@ import ProfileStack from "./screens/ProfileStack";
 import SearchScreen from "./screens/SearchScreen";
 import Splash from "./components/Splash/Spash";
 import Suggestionchat from "./components/SuggestionChat/Suggestionchat";
+import { theme } from './theme/index'
+import { MaterialIcons, Feather, FontAwesome, SimpleLineIcons, FontAwesome5, Octicons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 const Tab = createBottomTabNavigator();
+
+const TabArr = [
+  {
+    route: Home,
+    label: "Home",
+    activeIcon: "home-sharp", 
+    inActiveIcon: "home-outline"
+  },
+  {
+    route: Personalization,
+    label: "Per",
+    activeIcon: "add-circle-sharp", 
+    inActiveIcon: "add-circle-outline"
+  },
+  {
+    route: Suggestionchat,
+    label: "Per1",
+    activeIcon: "add-circle-sharp", 
+    inActiveIcon: "add-circle-outline"
+  },
+  {
+    route: SearchScreen,
+    label: "Search",
+    activeIcon: "search-outline", 
+    inActiveIcon: "search-outline"
+  },
+  {
+    route: MealPlan,
+    label: "Meal Plan",
+    activeIcon: "calendar-sharp", 
+    inActiveIcon: "calendar-outline"
+  },
+  {
+    route: ProfileStack,
+    label: "Profile",
+    activeIcon: "person-sharp", 
+    inActiveIcon: "person-outline"
+  },
+]
+
 
 export default function Navigation() {
   return (
@@ -23,62 +65,28 @@ export default function Navigation() {
           headerShown: false,
         }}
       >
-        <Tab.Screen
-          name="Home"
-          options={{
-            // tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => <Icon name="home" size={26} />,
-          }}
-          component={Home}
-        />
-        <Tab.Screen
-          name="Personalization"
-          options={{
-            // tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="window-restore" size={26} />
-            ),
-          }}
-          component={Personalization}
-        />
-        <Tab.Screen
-          name="splash"
-          options={{
-            // tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="window-restore" size={26} />
-            ),
-          }}
-          component={Suggestionchat}
-        />
-        <Tab.Screen
-          name="New"
-          options={{
-            // tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="plus-square-o" size={26} />
-            ),
-          }}
-          component={SearchScreen}
-        />
-        <Tab.Screen
-          name="MealPlan"
-          options={{
-            // tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="calendar-check-o" size={26} />
-            ),
-          }}
-          component={MealPlan}
-        />
-        <Tab.Screen
-          name="Profile"
-          options={{
-            tabBarLabel: "Profile",
-            tabBarIcon: ({ color, size }) => <Icon name="user" size={26} />,
-          }}
-          component={ProfileStack}
-        />
+        {
+          TabArr.map((item, index)=>{
+            return (
+              <Tab.Screen
+                key={index.toString()}
+                name={item.label}
+                options={{
+                  tabBarShowLabel: false,
+                  tabBarIcon: ({ focused }) => {
+                    return(
+                      <Ionicons
+                        name={item.activeIcon}
+                        size={26}
+                        color={focused ? theme.colors.secondary : "#9e9e9e"}/>
+                    )
+                  }
+                }}
+                component={item.route}
+              />
+            )
+          })
+        }
       </Tab.Navigator>
     </NavigationContainer>
   );
