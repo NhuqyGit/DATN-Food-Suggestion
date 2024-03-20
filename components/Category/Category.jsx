@@ -2,33 +2,69 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 function Category({ item }) {
+  const generateBoxShadowStyle = (
+    xOffset,
+    yOffset,
+    shadowColorIos,
+    shadowOpacity,
+    shadowRadius,
+    elevation,
+    shadowColorAndroid,
+  ) => {
+      if (Platform.OS === 'ios') {
+          return {
+              shadowColor: shadowColorIos,
+              shadowOffset: { width: xOffset, height: yOffset },
+              shadowOpacity,
+              shadowRadius,
+          }
+      } else if (Platform.OS === 'android') {
+          return  {
+              elevation,
+              shadowColor: shadowColorAndroid,
+          }
+      }
+  }
+
+  const boxShadow = generateBoxShadowStyle(0, 5, 'black', 0.2, 4, 4, 'black')
   return (
-    <TouchableOpacity>
-      <View style={styles.container}>
-        <Text>{item.title}</Text>
+    <TouchableOpacity style={[boxShadow, styles.container]}>
+      {/* <View style={}> */}
+        <Text style={styles.title}>{item.title}</Text>
         <Image
           style={styles.image}
-          source={require('../../assets/categoryImage.png')}
+          source={item.image}
         />
-      </View>
+      {/* </View> */}
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
+    height: 80,
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    paddingHorizontal: 10,
     paddingVertical: 8,
+    borderRadius: 10,
     gap: 8,
     alignItems: 'center',
+    justifyContent: 'space-between',
+    // borderColor: 'red',
+    // borderWidth: 1,
+    marginHorizontal: 8,
+    marginVertical: 20,
+    backgroundColor: 'white'
   },
   image: {
-    width: 40,
-    height: 40,
-    objectFit: 'cover',
+    width: 60,
+    height: 60,
+    // objectFit: 'cover',
   },
+  title:{
+    fontSize: 16,
+    fontWeight: '500'
+  }
 })
 
 export default Category

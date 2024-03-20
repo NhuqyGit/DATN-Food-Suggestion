@@ -46,23 +46,26 @@ function RecommendList() {
   ]
   return (
     <View style={styles.container}>
-      <View style={styles.horizontalPadding}>
+      {/* <View style={styles.horizontalPadding}> */}
         <View style={styles.header}>
-          <Text style={styles.title}>Recommend for you</Text>
+          <Text style={styles.title}>Yours recommendations</Text>
           <TouchableOpacity>
-            <Text style={styles.viewAll}>View all</Text>
+            <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView 
+          style={styles.listItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}>
           {mockData?.map((item) => (
             <RecommendItem key={item.id} item={item} />
           ))}
         </ScrollView>
-      </View>
+      {/* </View> */}
 
       <View style={styles.horizontalPadding}>
         <View style={styles.header}>
-          <Text style={styles.title}>Recommend for you</Text>
+          <Text style={styles.title}>Yours recommendations</Text>
         </View>
         <ScrollView vertical showsVerticalScrollIndicator={false}>
           {mockData?.map((item) => (
@@ -75,7 +78,7 @@ function RecommendList() {
         <View style={styles.header}>
           <Text style={styles.title}>Healthy recipes</Text>
           <TouchableOpacity>
-            <Text style={styles.viewAll}>View all</Text>
+            <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -102,30 +105,32 @@ function RecommendList() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16,
+    // marginTop: 16,
     flexDirection: 'column',
   },
 
-  horizontalPadding: {
-    paddingHorizontal: 16,
-  },
-
   header: {
-    marginTop: 16,
+    marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 15,
+    paddingHorizontal: 20,
   },
 
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '600',
   },
 
   viewAll: {
     fontSize: 16,
     color: theme.colors.secondary,
+    fontWeight: '500'
+  },
+
+  listItem:{
+    paddingLeft: 20,
   },
 
   healthyList: {

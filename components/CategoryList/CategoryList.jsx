@@ -6,15 +6,23 @@ function CategoryList() {
   const mockData = [
     {
       id: 1,
-      title: 'Category 1',
+      title: 'Breakfast',
+      image: require('../../assets/images/Home/category1.png')
     },
     {
       id: 2,
-      title: 'Category 2',
+      title: 'Vegetarian',
+      image: require('../../assets/images/Home/category2.png')
     },
     {
       id: 3,
-      title: 'Category 3',
+      title: 'Beverage',
+      image: require('../../assets/images/Home/category3.png')
+    },
+    {
+      id: 4,
+      title: 'Dessert',
+      image: require('../../assets/images/Home/category4.png')
     },
   ]
 
@@ -38,16 +46,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     marginTop: 32,
-    paddingHorizontal: 16,
+    paddingLeft: 20,
   },
 
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 30
   },
 
   list: {
     flexDirection: 'row',
+    alignItem: 'center',
+    // backgroundColor: 'red',
   },
 })
 

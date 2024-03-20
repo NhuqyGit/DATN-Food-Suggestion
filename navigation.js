@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
-import HomeScreen from "./screens/HomeScreen";
+import Home from "./screens/Home/Home";
 import Profile from "./screens/Profile";
 import MealPlan from "./screens/MealPlan";
 import Personalization from "./screens/Personalization";
@@ -29,7 +29,7 @@ export default function Navigation() {
             // tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => <Icon name="home" size={26} />,
           }}
-          component={HomeScreen}
+          component={Home}
         />
         <Tab.Screen
           name="Personalization"
