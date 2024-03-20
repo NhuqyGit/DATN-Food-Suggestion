@@ -26,16 +26,14 @@ function Category({ item }) {
       }
   }
 
-  const boxShadow = generateBoxShadowStyle(0, 5, 'black', 0.2, 4, 4, 'black')
+  const boxShadow = generateBoxShadowStyle(0, 3, 'black', 0.2, 5, 5, 'black')
   return (
     <TouchableOpacity style={[boxShadow, styles.container]}>
-      {/* <View style={}> */}
         <Text style={styles.title}>{item.title}</Text>
         <Image
           style={styles.image}
           source={item.image}
         />
-      {/* </View> */}
     </TouchableOpacity>
   )
 }

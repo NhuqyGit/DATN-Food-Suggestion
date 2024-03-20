@@ -17,31 +17,31 @@ function RecommendList() {
       id: 1,
       title: 'Breakfast with bread, eggs and bacon',
       author: 'Tan Sang',
-      image: require('../../assets/recommendImage.jpg'),
+      image: require('../../assets/images/Home/recommend1.png'),
     },
     {
       id: 2,
       title: 'Bun bo Hue with new broth, best recipe from around the world',
       author: 'Tan Sang',
-      image: require('../../assets/recommendImage.jpg'),
+      image: require('../../assets/images/Home/recommend2.png'),
     },
     {
       id: 3,
       title: 'Breakfast with bread, eggs and bacon',
       author: 'Tan Sang',
-      image: require('../../assets/recommendImage.jpg'),
+      image: require('../../assets/images/Home/recommend3.png'),
     },
     {
       id: 4,
       title: 'Bun bo Hue with new broth, best recipe from around the world',
       author: 'Tan Sang',
-      image: require('../../assets/recommendImage.jpg'),
+      image: require('../../assets/images/Home/recommend4.png'),
     },
     {
       id: 5,
       title: 'Breakfast with bread, eggs and bacon',
       author: 'Tan Sang',
-      image: require('../../assets/recommendImage.jpg'),
+      image: require('../../assets/images/Home/recommend3.png'),
     },
   ]
   return (
@@ -63,16 +63,19 @@ function RecommendList() {
         </ScrollView>
       {/* </View> */}
 
-      <View style={styles.horizontalPadding}>
+      {/* <View style={styles.horizontalPadding}>
         <View style={styles.header}>
           <Text style={styles.title}>Yours recommendations</Text>
         </View>
-        <ScrollView vertical showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.listItem}
+          vertical
+          showsVerticalScrollIndicator={false}>
           {mockData?.map((item) => (
             <RecommendItemHorizontal key={item.id} item={item} />
           ))}
         </ScrollView>
-      </View>
+      </View> */}
 
       <View style={[styles.healthyList, styles.horizontalPadding]}>
         <View style={styles.header}>
@@ -81,7 +84,10 @@ function RecommendList() {
             <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          style={styles.listItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}>
           {mockData?.map((item) => (
             <SmallRecommendItem key={item.id} item={item} />
           ))}
@@ -93,7 +99,10 @@ function RecommendList() {
             <Text style={styles.viewAll}>View all</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          style={styles.listItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}>
           {mockData?.map((item) => (
             <SmallRecommendItem key={item.id} item={item} />
           ))}
@@ -136,6 +145,7 @@ const styles = StyleSheet.create({
   healthyList: {
     backgroundColor: '#FEFFD3',
     paddingBottom: 32,
+    marginTop: 30
   },
 })
 
