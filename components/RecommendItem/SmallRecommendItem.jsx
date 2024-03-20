@@ -12,7 +12,9 @@ import { theme } from '../../theme'
 
 function SmallRecommendItem({ item }) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.container}>
       <Image style={styles.image} source={item?.image} />
       <View>
         <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>

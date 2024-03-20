@@ -9,10 +9,19 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
+import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
 
-function RecommendItem({ item }) {
+
+function RecommendItem({ item}) {
+  const navigation = useNavigation()
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      onPress={()=>{
+        navigation.push('FoodDetail')
+      }}
+      activeOpacity={1}
+      style={styles.container}>
       <Image style={styles.image} source={item?.image} />
       <View style={styles.overlay}>
         <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
@@ -20,7 +29,12 @@ function RecommendItem({ item }) {
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>
-            <Icon style={styles.addIcon} name='plus' />
+            {/* <Icon style={styles.addIcon} name='plus' /> */}
+            <MaterialIcons
+              name='add'
+              size={22}
+              color='white'
+            />
           </View>
         </View>
       </View>
@@ -74,7 +88,6 @@ const styles = StyleSheet.create({
       ) / 2,
     width: Dimensions.get('window').width * 0.075,
     height: Dimensions.get('window').width * 0.075,
-    padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
