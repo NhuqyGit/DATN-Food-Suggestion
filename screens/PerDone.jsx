@@ -11,7 +11,7 @@ import React from 'react'
 const deviceHeight = Dimensions.get('window').height
 const deviceWidth = Dimensions.get('window').width
 
-function PerDone({ navigation }) {
+function PerDone({ navigation, setIsDone }) {
   return (
     <View style={styles.container}>
       <Image
@@ -24,7 +24,7 @@ function PerDone({ navigation }) {
         Visit your personalized home feed of recipe suggestions
       </Text>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Personalize1')}>
+      <TouchableOpacity onPress={()=>setIsDone(true)}>
         <View style={styles.btn}>
           <Text style={styles.btnText}>Get Started</Text>
         </View>

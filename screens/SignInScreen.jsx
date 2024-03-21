@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -8,26 +8,71 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { theme } from '../theme'
+// import { theme } from '../theme'
+import { useNavigation } from '@react-navigation/native'
+import { theme } from '../theme/index'
+import { COLORS } from '../theme/theme'
+import { Ionicons } from '@expo/vector-icons'
 
 function SignInScreen() {
+  const navigation = useNavigation()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isHide, setIsHide] = useState(true)
+  
+  const handleEmailChange = (email) => {
+    setEmail(email)
+  }
+
+  const handlePasswordChange = (password) => {
+    setPassword(password);
+  };
+
+  const handleLogin = ()=>{
+    if (password === 'admin' &&  email === 'admin'){
+      navigation.navigate('Personalization')
+    }
+    else{
+      console.log("Wrong email or password")
+    }
+  }
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Sign In</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text className=''>Email</Text>
-          <TextInput style={styles.input} placeholder='Enter your email' />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text className=''>Password</Text>
+          <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            type='password'
-            placeholder='Enter your password'
+            placeholder='Enter your email'
+            value={email}
+            onChangeText={handleEmailChange}
           />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.passwordInput}>
+            <TextInput
+              style={[styles.input, styles.passwordInputLayout]}
+              type='password'
+              secureTextEntry={isHide}
+              placeholder='Enter your password'
+              value={password}
+              onChangeText={handlePasswordChange}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={()=>setIsHide(!isHide)}
+              style={styles.iconEye}>
+              <Ionicons
+                name={isHide ? "eye-off" : "eye"}
+                size={22} 
+                color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
         </View>
         <Text style={styles.forgotPassword}>Forgot password?</Text>
         <View style={styles.thirdPartyContainer}>
@@ -41,8 +86,12 @@ function SignInScreen() {
             <Icon name='facebook' size={25} color='#900' />
           </TouchableOpacity>
         </View>
-        <Text style={styles.orLogin}>Or sign up with email</Text>
-        <TouchableOpacity style={styles.signInButtonContainer}>
+        <TouchableOpacity onPress={()=>navigation.navigate('SignUpScreen')}>
+          <Text style={styles.orLogin}>Or sign up with email</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleLogin}
+          style={styles.signInButtonContainer}>
           <Text style={styles.signButton}>Sign In</Text>
         </TouchableOpacity>
       </View>
@@ -55,6 +104,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
+    backgroundColor: 'white'
   },
 
   title: {
@@ -63,11 +113,11 @@ const styles = StyleSheet.create({
   },
 
   signInButtonContainer: {
-    backgroundColor: '#FF6321',
+    backgroundColor: theme.colors.secondary,
     paddingVertical: 15,
-    paddingHorizontal: 40,
-    width: '100%',
-    borderRadius: 20,
+    // paddingHorizontal: 40,
+    // width: '100%',
+    borderRadius: 10,
   },
 
   signButton: {
@@ -82,11 +132,40 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
+  passwordInput:{
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  label:{
+    fontWeight: '500'
+  },
+
   input: {
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+  },
+
+  passwordInputLayout:{
+    flex: 1,
+    borderRightWidth: 0,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0
+  },
+
+  iconEye:{
+    height: '100%',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    borderLeftWidth: 0,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0
   },
 
   thirdPartyContainer: {
