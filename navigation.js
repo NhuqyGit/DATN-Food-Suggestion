@@ -26,22 +26,16 @@ const TabArr = [
     inActiveIcon: "home-outline"
   },
   {
-    route: Personalization,
-    label: "Per",
-    activeIcon: "add-circle-sharp", 
-    inActiveIcon: "add-circle-outline"
+    route: SearchScreen,
+    label: "Search",
+    activeIcon: "search-outline", 
+    inActiveIcon: "search-outline"
   },
   {
     route: Suggestionchat,
     label: "Per1",
     activeIcon: "add-circle-sharp", 
     inActiveIcon: "add-circle-outline"
-  },
-  {
-    route: SearchScreen,
-    label: "Search",
-    activeIcon: "search-outline", 
-    inActiveIcon: "search-outline"
   },
   {
     route: MealPlan,
