@@ -7,11 +7,13 @@ import {
 } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { theme } from '../theme'
+import { theme } from '../theme/index'
+import { useNavigation } from '@react-navigation/native'
 
 function SignUpScreen() {
+  const navigation = useNavigation()
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Let’s get started!</Text>
@@ -56,7 +58,9 @@ function SignUpScreen() {
             <Text style={styles.warningItem}>One special character</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.signUpButtonContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignInScreen')}
+          style={styles.signUpButtonContainer}>
           <Text style={styles.signButton}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
+    backgroundColor: 'white'
   },
 
   title: {
@@ -78,10 +83,10 @@ const styles = StyleSheet.create({
 
   signUpButtonContainer: {
     marginTop: 'auto',
-    backgroundColor: '#FF6321',
+    backgroundColor: theme.colors.secondary,
     paddingVertical: 15,
     paddingHorizontal: 40,
-    borderRadius: 20,
+    borderRadius: 10,
   },
 
   signButton: {
@@ -97,6 +102,7 @@ const styles = StyleSheet.create({
   },
 
   inputLabel: {
+    fontWeight: '500',
     fontSize: 16,
   },
 

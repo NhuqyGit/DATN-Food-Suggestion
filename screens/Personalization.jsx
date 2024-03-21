@@ -9,7 +9,7 @@ import PerScreen from './PerScreen'
 
 const Stack = createNativeStackNavigator()
 
-const cuisines = [
+const step1 = [
   {
     id: 1,
     name: '???',
@@ -161,7 +161,7 @@ const ques = [
   {
     id: 0,
     question: 'What are your favorite cuisines?',
-    listAns: cuisines,
+    listAns: step1,
     svg: SvgPer1,
   },
   {
@@ -173,7 +173,7 @@ const ques = [
   {
     id: 2,
     question: 'What are your favorite cuisidfasdfnes?',
-    listAns: step2,
+    listAns: step1,
     svg: SvgPer3,
   },
   {
@@ -184,7 +184,7 @@ const ques = [
   },
 ]
 
-export default function Personalization() {
+export default function Personalization({setIsDone}) {
   const listStackPer = ques.map((s, i) => {
     return (
       <Stack.Screen
@@ -194,7 +194,7 @@ export default function Personalization() {
           headerShown: false,
         }}
       >
-        {(props) => <PerScreen {...props} ques={s} quesLen={ques.length} />}
+        {(props) => <PerScreen {...props} ques={s} quesLen={ques.length}/>}
       </Stack.Screen>
     )
   })
@@ -207,11 +207,12 @@ export default function Personalization() {
       {listStackPer}
       <Stack.Screen
         name='PersonalizeDone'
-        component={PerDone}
         options={{
           headerShown: false,
         }}
-      />
+      >
+        {(props) => <PerDone {...props} setIsDone={setIsDone}/>}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }
