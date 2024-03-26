@@ -23,7 +23,15 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     gap: 16,
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
   image: {
     width: 30,
