@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Header from '../components/Header/Header'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import PopularItem from '../components/PopularItem/PopularItem'
-import DishItem from '../components/DishItem/DishItem'
+import PopularItem from '../../components/PopularItem/PopularItem'
+import DishItem from '../../components/DishItem/DishItem'
 import { ScrollView } from 'react-native'
-import HistoryItem from '../components/HistoryItem/HistoryItem'
-import SearchResultItem from '../components/SearchResultItem/SearchResultItem'
+import HistoryItem from '../../components/HistoryItem/HistoryItem'
+import SearchResultItem from '../../components/SearchResultItem/SearchResultItem'
+import SearchHeader from './components/SearchHeader'
+import { AntDesign } from '@expo/vector-icons'
 
 const SearchScreen = () => {
   const mockPopular = [
@@ -181,8 +182,8 @@ const SearchScreen = () => {
   const [isFocusSearch, setIsFocusSearch] = useState(true)
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView scrollEnabled vertical>
-        <Header />
+      <ScrollView style={styles.wrapper} scrollEnabled vertical>
+        <SearchHeader />
         {!isFocusSearch ? (
           <View>
             <View style={styles.popularWrapper}>
@@ -219,8 +220,16 @@ const SearchScreen = () => {
           //   </TouchableOpacity>
           // </View>
           <>
-            <View style={styles.title}>{`${mockHistory.length} results`}</View>
             <View style={styles.popularWrapper}>
+              <View style={styles.titleContainer}>
+                <Text
+                  style={styles.title}
+                >{`${mockHistory.length} results`}</Text>
+                <TouchableOpacity style={styles.titleContainer}>
+                  <Text style={styles.title}>{'Filter'}</Text>
+                  <AntDesign style={styles.searchIcon} name='down' size={22} />
+                </TouchableOpacity>
+              </View>
               {mockSearchResult?.map((item) => (
                 <SearchResultItem key={item.id} item={item} />
               ))}
@@ -236,6 +245,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
+  wrapper: {
+    flex: 1,
+  },
+
   popularWrapper: {
     padding: 16,
     gap: 16,
@@ -263,6 +277,13 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
+  },
+
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -270,3 +291,4 @@ const styles = StyleSheet.create({
 })
 
 export default SearchScreen
+
