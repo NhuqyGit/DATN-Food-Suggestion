@@ -1,15 +1,16 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { AntDesign } from '@expo/vector-icons'
 
 const HistoryItem = ({ item, isSearch = false }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Icon name={isSearch ? 'search' : 'clock-o'} size={20} />
+        <AntDesign name='clockcircleo' size={24} color='black' />
         <Text style={styles.title}>{item.title}</Text>
       </View>
-      {!isSearch && <Icon name='close' size={20} />}
+      {!isSearch && <AntDesign name='closecircleo' size={24} color='red' />}
     </View>
   )
 }

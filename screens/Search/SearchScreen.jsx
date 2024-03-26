@@ -180,10 +180,16 @@ const SearchScreen = () => {
   ]
 
   const [isFocusSearch, setIsFocusSearch] = useState(true)
+  const [searchText, setSearchText] = useState('')
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.wrapper} scrollEnabled vertical>
-        <SearchHeader />
+        <SearchHeader
+          setIsFocusSearch={setIsFocusSearch}
+          setSearchText={setSearchText}
+        />
+
         {!isFocusSearch ? (
           <View>
             <View style={styles.popularWrapper}>
@@ -204,36 +210,45 @@ const SearchScreen = () => {
             </View>
           </View>
         ) : (
-          // <View style={styles.popularWrapper}>
-          //   <Text style={styles.title}>Tìm kiếm gần đây</Text>
-
-          //   <View style={styles.historyList}>
-          //     {mockHistory.map((item) => (
-          //       <HistoryItem key={item.id} item={item} />
-          //     ))}
-          //   </View>
-
-          //   <TouchableOpacity>
-          //     <Text style={styles.removeHistoryButton}>
-          //       Xóa lịch sử tìm kiếm
-          //     </Text>
-          //   </TouchableOpacity>
-          // </View>
           <>
-            <View style={styles.popularWrapper}>
-              <View style={styles.titleContainer}>
-                <Text
-                  style={styles.title}
-                >{`${mockHistory.length} results`}</Text>
-                <TouchableOpacity style={styles.titleContainer}>
-                  <Text style={styles.title}>{'Filter'}</Text>
-                  <AntDesign style={styles.searchIcon} name='down' size={22} />
+            {!searchText ? (
+              <View style={styles.popularWrapper}>
+                <Text style={styles.title}>Tìm kiếm gần đây</Text>
+
+                <View style={styles.historyList}>
+                  {mockHistory.map((item) => (
+                    <HistoryItem key={item.id} item={item} />
+                  ))}
+                </View>
+
+                <TouchableOpacity style={styles.footer}>
+                  <Text style={styles.removeHistoryButton}>
+                    Xóa lịch sử tìm kiếm
+                  </Text>
                 </TouchableOpacity>
               </View>
-              {mockSearchResult?.map((item) => (
-                <SearchResultItem key={item.id} item={item} />
-              ))}
-            </View>
+            ) : (
+              <>
+                <View style={styles.popularWrapper}>
+                  <View style={styles.titleContainer}>
+                    <Text
+                      style={styles.title}
+                    >{`${mockHistory.length} results`}</Text>
+                    <TouchableOpacity style={styles.titleContainer}>
+                      <Text style={styles.filter}>{'Filter'}</Text>
+                      <AntDesign
+                        style={styles.searchIcon}
+                        name='down'
+                        size={22}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {mockSearchResult?.map((item) => (
+                    <SearchResultItem key={item.id} item={item} />
+                  ))}
+                </View>
+              </>
+            )}
           </>
         )}
       </ScrollView>
@@ -286,6 +301,11 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  filter: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
 })

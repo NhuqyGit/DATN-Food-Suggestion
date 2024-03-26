@@ -9,7 +9,7 @@ import {
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 
-function SearchHeader() {
+function SearchHeader({ setIsFocusSearch, setSearchText }) {
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -46,7 +46,17 @@ function SearchHeader() {
           size={22}
           color='#9e9e9e'
         />
-        <TextInput style={styles.input} placeholder='Search' />
+        <TextInput
+          onFocus={() => {
+            setIsFocusSearch(true)
+          }}
+          onBlur={() => {
+            setIsFocusSearch(false)
+          }}
+          onChangeText={(text) => setSearchText(text)}
+          style={styles.input}
+          placeholder='Search'
+        />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.avatarContainer}>
@@ -66,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-    paddingHorizontal: 23,
+    paddingHorizontal: 16,
     paddingVertical: 5,
   },
   avatarContainer: {
