@@ -382,7 +382,9 @@ function Profile({navigation}){
         <Text style={styles.userDescription}>Edit your description and tell us a little about yourself</Text>
         
         <View style={styles.collectionHeader}>
-          <TouchableOpacity style={styles.btnAddColl}>
+          <TouchableOpacity
+            onPress={()=> navigation.push('NewCollection')}
+            style={styles.btnAddColl}>
             <MaterialIcons name='playlist-add' size={28} color='#3a9693' />
             <Text style={[styles.titleCollection]}>New Collection</Text>
           </TouchableOpacity>
