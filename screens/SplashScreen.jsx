@@ -18,6 +18,8 @@ function SplashScreen() {
   const WIDTH = Dimensions.get("window").width;
   const [activeSlide, setActiveSlide] = useState(0);
   const [reverse, setReverse] = useState(false);
+  const navigation = useNavigation()
+
   const images = [
     {
       bg: require("../assets/splash1.png"),
@@ -53,7 +55,7 @@ function SplashScreen() {
             styles.paginationItem,
             {
               backgroundColor:
-                i == activeSlide ? "#FBBC05" : theme.colors.grayBackground,
+                i == activeSlide ? "#FBBC05" : "white",
             },
           ]}
         />
@@ -63,7 +65,7 @@ function SplashScreen() {
     return <View style={styles.pagination}>{loop}</View>;
   }
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.primary, flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: theme.colors.secondary, flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.topContainer}>
           <Carousel
@@ -77,7 +79,7 @@ function SplashScreen() {
             scrollAnimationDuration={2000}
             onSnapToItem={(index) => onSnap(index)}
             renderItem={({ item, index }) => (
-              <View style={{ flex: 1, marginVertical: 50 }} key={index}>
+              <View style={{ flex: 1, marginVertical: 30, paddingTop: 50 }} key={index}>
                 <ImageBackground
                   resizeMode="stretch"
                   source={item.bg}
@@ -91,7 +93,6 @@ function SplashScreen() {
                     style={{
                       height: 200,
                       resizeMode: "contain",
-                      marginTop: 60,
                     }}
                     source={item.icon}
                   />
@@ -108,7 +109,7 @@ function SplashScreen() {
             </Text>
             <View className="flex flex-row mt-[10px]">
               <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
-                <Text className="text-[#FF6321] text-[42px] font-bold leading-normal ">
+                <Text className="text-[#3a9693] text-[42px] font-bold leading-normal ">
                   D
                 </Text>
               </View>
@@ -117,15 +118,18 @@ function SplashScreen() {
               </Text>
             </View>
           </View>
+          <View style={{position:'absolute', bottom: 10}}>
+          {pagination()}
+
+          </View>
         </View>
 
         <View style={styles.bottomContainer}>
-          {pagination()}
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity style={styles.loginBtn} onPress={()=>{navigation.navigate("SignInScreen")}}>
             <Text style={styles.loginText}>Log-in</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signupBtn}>
+          <TouchableOpacity style={styles.signupBtn} onPress={()=>{navigation.navigate("SignUpScreen")}}>
             <Text style={styles.signupText}>Sign-up</Text>
           </TouchableOpacity>
         </View>
@@ -141,9 +145,10 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     borderRadius: 40,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.secondary,
     width: "80%",
     paddingVertical: 15,
+    marginTop: 20
   },
   loginText: {
     alignSelf: "center",
@@ -157,6 +162,7 @@ const styles = StyleSheet.create({
     width: "80%",
     borderWidth: 0.5,
     paddingVertical: 15,
+    marginTop:20
   },
   signupText: {
     alignSelf: "center",
@@ -168,23 +174,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 5,
-    marginTop: 5,
   },
   topContainer: {
-    flex: 5,
-    backgroundColor: theme.colors.primary,
+    flex: 7,
+    backgroundColor: theme.colors.secondary,
     alignItems: "center",
     justifyContent: "center",
   },
   bottomContainer: {
-    flex: 3,
-    gap: 20,
+    flex: 4,
     alignItems: "center",
     backgroundColor: "white",
   },
   paginationItem: {
     height: 3,
-    width: 10,
+    width: 20,
     borderRadius: 40,
   },
 });
