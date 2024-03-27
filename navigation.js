@@ -12,8 +12,10 @@ import Splash from './components/Splash/Spash'
 import Suggestionchat from './components/SuggestionChat/Suggestionchat'
 import { theme } from './theme/index'
 import { Ionicons } from '@expo/vector-icons'
-import SignInScreen from './screens/SignInScreen'
-import SignUpScreen from './screens/SignUpScreen'
+import SignInScreen from "./screens/SignInScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import SplashScreen from "./screens/SplashScreen";
+
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -62,6 +64,7 @@ export default function Navigation() {
             headerShown: false,
           }}
         >
+          <Stack.Screen name='SplashScreen' component={SplashScreen} />
           <Stack.Screen name='SignInScreen' component={SignInScreen} />
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='Personalization'>
