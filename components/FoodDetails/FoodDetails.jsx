@@ -694,7 +694,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 17,
-    fontWeight: "semi-bold",
+    fontWeight: "semibold",
   },
   text: {
     color: "black",

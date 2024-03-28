@@ -14,6 +14,7 @@ import { theme } from './theme/index'
 import { Ionicons } from '@expo/vector-icons'
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import RecipeCollectionScreen from './screens/CollectionsList'
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -26,7 +27,7 @@ const TabArr = [
     inActiveIcon: "home-outline"
   },
   {
-    route: SearchScreen,
+    route: SearchScreen, //RecipeCollectionScreen,
     label: "Search",
     activeIcon: "search-outline", 
     inActiveIcon: "search-outline"

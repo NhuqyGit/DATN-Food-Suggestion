@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
+    backgroundColor: 'white',
   },
   addButton: {
     flexDirection: 'row',
@@ -127,11 +128,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 17,
-    fontWeight: "semi-bold",
+    fontWeight: "semibold",
   },
 
   text: {
-    color: "black"
+    color: "black",
+    paddingLeft: 5,
+    
   },
   modalContainer: {
     flex: 1,
