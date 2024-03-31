@@ -12,7 +12,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import RadioButtonRN from "radio-buttons-react-native";
 import { theme } from "../../theme/index";
 
-const CollectionScreen = ({ navigation }) => {
+const CollectionScreen = ({ navigation}) => {
   const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
