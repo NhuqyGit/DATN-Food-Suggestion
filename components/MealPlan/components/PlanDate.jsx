@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Feather from 'react-native-vector-icons/Feather'
 import PopOver from './PopOver'
 
 export default function PlanDate({ date }) {
   return (
-    <View className='w-full flex flex-row '>
-      <View className='w-2/3 h-14 flex flex-row justify-between mx-8 px-4 py-[14px] pb-3 bg-[#ECE9E9] rounded-full'>
+    <View style={styles.container}>
+    {/* <View className='w-full flex flex-row'> */}
+      <View className='flex flex-1 flex-row items-center justify-between px-3 py-1 bg-[#ECE9E9] rounded-full'>
         <View>
           <Feather name='chevron-left' size={28} />
         </View>
@@ -16,9 +17,21 @@ export default function PlanDate({ date }) {
           <Feather name='chevron-right' size={28} />
         </View>
       </View>
-      <View className='w-14 h-14 flex items-center justify-center bg-[#ECE9E9] rounded-full'>
+      <View className='flex items-center justify-center bg-[#ECE9E9] rounded-full'>
         <PopOver />
       </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container:{
+    width: '100%',
+    display: 'flex',
+    flexDirection:  'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    gap: 20,
+  }
+})

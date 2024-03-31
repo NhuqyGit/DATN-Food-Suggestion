@@ -24,7 +24,7 @@ function MainScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={{ fontSize: 24, paddingTop: 5, fontWeight: 'bold' }}>
+        <Text style={{ fontSize: 24, paddingTop: 5, paddingHorizontal: 20, fontWeight: 'bold' }}>
           Meal Planner
         </Text>
       </View>

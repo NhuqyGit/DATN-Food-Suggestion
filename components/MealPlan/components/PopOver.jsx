@@ -8,14 +8,14 @@ function PopOver() {
   const [isVisible, setIsVisible] = useState(false)
 
   return (
-    <View className='flex flex-col items-center justify-center h-full'>
+    <View className='flex flex-col items-center justify-center'>
       <TouchableOpacity
         onPress={() => {
           setIsVisible(true)
         }}
       >
-        <View className='w-14 h-14 flex items-center justify-center bg-[#ECE9E9] rounded-full'>
-          <Feather name='more-horizontal' size={30} />
+        <View className='p-[6px] flex items-center justify-center bg-[#ECE9E9] rounded-full'>
+          <Feather  name='more-horizontal' size={24} />
         </View>
       </TouchableOpacity>
 
