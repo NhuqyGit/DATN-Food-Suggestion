@@ -32,15 +32,16 @@ function AddScreen() {
                 paddingHorizontal: 16,
                 backgroundColor: "#F3F4F6",
                 borderRadius: 8,
+                alignItems:'center'
               }}
             >
-              <View>
+              <View className="flex flex-col gap-2">
                 <Text
-                  style={{ fontSize: 16, fontWeight: "bold", color: "black" }}
+                  style={{ fontSize: 16, fontWeight: "500", color: "black" }}
                 >
                   {day.title}
                 </Text>
-                <Text style={{ fontSize: 14, color: "#999999" }}>
+                <Text style={{ fontSize: 13, color: "#999999" }}>
                   {day.recipes} RECIPES
                 </Text>
               </View>
@@ -92,7 +93,9 @@ const Stack = createNativeStackNavigator();
 
 function AddStack() {
   return (
-    <Stack.Navigator initialRouteName="AddScreen">
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="AddScreen">
       <Stack.Screen name="AddScreen" component={AddScreen} />
       <Stack.Screen name="RecipeDetails" component={RecipeDetailsScreen} />
     </Stack.Navigator>
