@@ -20,33 +20,34 @@ import MoreByCreator, {
 import { theme } from "../../theme/index";
 import PopupNotification from "./components/PopupNotification";
 
-const foodDetails = {
-  name: "Delicious Dish",
-  author: "Master Chef :)",
-  image: require("../../assets/monngon.jpg"),
-  ingredients: [
-    "Ingredient 1",
-    "Ingredient 2",
-    "Ingredient 3",
-    "Ingredient 4",
-    "Ingredient 5",
-    "Ingredient 6",
-  ],
-  reviews: [
-    { user: "User1", comment: "Delicious!", rating: 1 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4 },
-    { user: "User1", comment: "Delicious!", rating: 5 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4.5 },
-    { user: "User1", comment: "Delicious!", rating: 2 },
-    { user: "User2", comment: "Amazing recipe!", rating: 3 },
-    { user: "User1", comment: "Delicious!", rating: 3.4 },
-    { user: "User2", comment: "Amazing recipe!", rating: 4 },
-  ],
-  rating: 4,
-  totalTime: 40,
-  servings: 3,
-  calories: 80,
-};
+// const foodDetails = {
+//   name: "Delicious Dish",
+//   author: "Master Chef :)",
+//   image: require("../../assets/monngon.jpg"),
+//   ingredients: [
+//     "Ingredient 1",
+//     "Ingredient 2",
+//     "Ingredient 3",
+//     "Ingredient 4",
+//     "Ingredient 5",
+//     "Ingredient 6",
+//   ],
+//   reviews: [
+//     { user: "User1", comment: "Delicious!", rating: 1 },
+//     { user: "User2", comment: "Amazing recipe!", rating: 4 },
+//     { user: "User1", comment: "Delicious!", rating: 5 },
+//     { user: "User2", comment: "Amazing recipe!", rating: 4.5 },
+//     { user: "User1", comment: "Delicious!", rating: 2 },
+//     { user: "User2", comment: "Amazing recipe!", rating: 3 },
+//     { user: "User1", comment: "Delicious!", rating: 3.4 },
+//     { user: "User2", comment: "Amazing recipe!", rating: 4 },
+//   ],
+//   rating: 4,
+//   totalTime: 40,
+//   servings: 3,
+//   calories: 80,
+// };
+
 const reportReasons = [
   "Inappropriate Content",
   "Spam",
@@ -62,42 +63,43 @@ const reportReasons = [
 const moreByThisCreator = [
   {
     id: "1",
-    name: "Recipe 1",
+    title: "Recipe 1",
     author: "Chef Huu Nien :)",
     rating: 5,
     image: require("../../assets/monngon.jpg"),
   },
   {
     id: "2",
-    name: "Recipe 2",
+    title: "Recipe 2",
     author: "Chef Huu Nien :)",
     rating: 3,
     image: require("../../assets/monngon.jpg"),
   },
   {
     id: "3",
-    name: "Recipe 3",
+    title: "Recipe 3",
     author: "Chef Huu Nien :)",
     rating: 4.5,
     image: require("../../assets/monngon.jpg"),
   },
   {
     id: "4",
-    name: "Recipe 4",
+    title: "Recipe 4",
     author: "Chef Huu Nien :)",
     rating: 5,
     image: require("../../assets/monngon.jpg"),
   },
   {
     id: "5",
-    name: "Recipe 5",
+    title: "Recipe 5",
     author: "Chef Huu Nien :)",
     rating: 3,
     image: require("../../assets/monngon.jpg"),
   },
 ];
 
-function FoodDetailsScreen({ navigation }) {
+function FoodDetailsScreen({ navigation , route }) {
+  const { foodDetails } = route.params;
   const [selectedTab, setSelectedTab] = useState("overview");
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -445,11 +447,11 @@ function FoodDetailsScreen({ navigation }) {
           margin: 10,
         }}
       >
-        <View>
+        <View style={{flex: 7, paddingRight: 5}}>
           <Text
             style={{ fontSize: 24, fontWeight: "bold", paddingHorizontal: 10 }}
           >
-            {foodDetails.name}
+            {foodDetails.title}
           </Text>
           <Text
             style={{ fontSize: 16, paddingHorizontal: 10 }}
@@ -458,7 +460,7 @@ function FoodDetailsScreen({ navigation }) {
 
         <TouchableOpacity
           style={{
-           
+            flex: 1,
           }}
           onPress={toggleModal}
         >
@@ -701,7 +703,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   containerInitNote: {
-    padding: 60,
+    padding: 15,
     alignItems: "center",
     justifyContent: "center",
   },
