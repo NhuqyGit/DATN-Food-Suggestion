@@ -9,7 +9,7 @@ import Personalization from './screens/Personalization'
 import ProfileStack from './screens/ProfileStack'
 import SearchScreen from './screens/Search/SearchScreen'
 import Splash from './components/Splash/Spash'
-import Suggestionchat from './components/SuggestionChat/Suggestionchat'
+import FoodSuggestionScreen from './screens/FoodSuggestionScreen'
 import { theme } from './theme/index'
 import { Ionicons } from '@expo/vector-icons'
 import SignInScreen from "./screens/SignInScreen";
@@ -34,7 +34,7 @@ const TabArr = [
     inActiveIcon: 'search-outline',
   },
   {
-    route: Suggestionchat,
+    route: FoodSuggestionScreen,
     label: 'Per1',
     activeIcon: 'add-circle-sharp',
     inActiveIcon: 'add-circle-outline',
