@@ -93,14 +93,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     btnSave:{
-       
         backgroundColor: theme.colors.secondary,
         paddingHorizontal: 30,
         paddingVertical: 15,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '25%',
+        borderRadius: 25,
         width: '30%'
     },
     btnText:{

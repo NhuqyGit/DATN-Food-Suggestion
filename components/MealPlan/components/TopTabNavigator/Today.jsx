@@ -111,7 +111,7 @@ function Today() {
         )}
       </ScrollView>
 
-      <BottomSheet
+      {/* <BottomSheet
         index={-1}
         snapPoints={snapPoints}
         handleComponent={() => null}
@@ -128,7 +128,7 @@ function Today() {
           bottomSheetRef={bottomSheetRef}
           bottomList={bottomList}
         />
-      </BottomSheet>
+      </BottomSheet> */}
     </View>
   );
 }

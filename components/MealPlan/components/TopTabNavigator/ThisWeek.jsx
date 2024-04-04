@@ -118,7 +118,7 @@ function ThisWeek() {
           </View>
         ))}
       </ScrollView>
-      <BottomSheet
+      {/* <BottomSheet
         index={1}
         snapPoints={snapPoints}
         handleComponent={() => null}
@@ -135,7 +135,7 @@ function ThisWeek() {
           bottomSheetRef={bottomSheetRef}
           bottomList={bottomList}
         />
-      </BottomSheet>
+      </BottomSheet> */}
     </View>
   );
 }
