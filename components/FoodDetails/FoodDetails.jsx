@@ -320,7 +320,7 @@ function FoodDetailsScreen({ navigation , route }) {
       style={{ paddingVertical: 20, paddingHorizontal: 15, marginBottom: 20 }}
     >
       {foodDetails.ingredients.map((ingredient, index) => (
-        <View>
+        <View key={index.toString()}>
           <TouchableOpacity
             onPress={() => alert(`Add ${ingredient} to shopping list!`)}
           >
