@@ -18,7 +18,7 @@ function RecommendItem({ item}) {
   return (
     <TouchableOpacity
       onPress={()=>{
-        navigation.push('FoodDetail')
+        navigation.push('FoodDetail', { foodDetails: item })
       }}
       activeOpacity={1}
       style={styles.container}>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { ScrollView, StyleSheet, View, Animated } from 'react-native'
+import { ScrollView, StyleSheet, View, Animated, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CategoryList from '../../components/CategoryList/CategoryList'
 import ExploreMore from '../../components/ExploreMore/ExploreMore'
