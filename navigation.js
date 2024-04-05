@@ -26,30 +26,35 @@ const TabArr = [
     label: 'Home',
     activeIcon: 'home-sharp',
     inActiveIcon: 'home-outline',
+    size: 26
   },
   {
     route: SearchScreen,
     label: 'Search',
     activeIcon: 'search-outline',
     inActiveIcon: 'search-outline',
+    size: 26
   },
   {
     route: FoodSuggestionScreen,
     label: 'Per1',
     activeIcon: 'add-circle-sharp',
     inActiveIcon: 'add-circle-outline',
+    size: 40
   },
   {
     route: MealPlan,
     label: 'Meal Plan',
     activeIcon: 'calendar-sharp',
     inActiveIcon: 'calendar-outline',
+    size: 26
   },
   {
     route: ProfileStack,
     label: 'Profile',
     activeIcon: 'person-sharp',
     inActiveIcon: 'person-outline',
+    size: 26
   },
 ]
 
@@ -88,7 +93,7 @@ export default function Navigation() {
                     return (
                       <Ionicons
                         name={item.activeIcon}
-                        size={26}
+                        size={item.size}
                         color={focused ? theme.colors.secondary : '#9e9e9e'}
                       />
                     )

@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     textAlign: 'center',
     borderRadius: 100,
-    borderBlockColor: 'black',
+    borderColor: 'black',
     borderWidth: 2,
     paddingHorizontal: 24,
     paddingVertical: 8,
