@@ -14,41 +14,66 @@ import { useNavigation } from "@react-navigation/native";
 import { theme } from "../theme/index";
 import { TabView, SceneMap } from "react-native-tab-view";
 
+const FirstTab = ({ igredientList, createIngredient, deleteIngredient }) => (
+  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
+);
+
+const SecondTab = () => (
+  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
+);
+
+const ThirdTab = () => <View style={{ flex: 1, backgroundColor: "#3ab700" }} />;
+
 function CreateRecipe() {
-
-  
-  const FirstTab = () => (
-    <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-  );
-
-  const SecondTab = () => (
-    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-  );
-
-  const ThirdTab = () => (
-    <View style={{ flex: 1, backgroundColor: "#3ab700" }} />
-  );
-
-  const renderScene = SceneMap({
-    first: FirstTab,
-    second: SecondTab,
-    third: ThirdTab,
-  });
-
   const WIDTH = Dimensions.get("window").width;
-
   const [activeTab, setActiveTab] = useState(0);
   const [tabs] = useState([
-    { key: "first", title: "part1" },
-    { key: "second", title: "part2" },
-    { key: "third", title: "part3" },
+    { key: "first", title: "Ingredients" },
+    { key: "second", title: "Instructions" },
+    { key: "third", title: "Presentation" },
   ]);
+
+  function deleteIngredient(index, ingredient) {}
+  function createIngredient(ingredient) {}
+
+  const renderScene = ({ route, jumpTo }) => {
+    switch (route.key) {
+      case "first":
+        return (
+          <FirstTab
+            jumpTo={jumpTo}
+            deleteIngredient={deleteIngredient}
+            createIngredient={createIngredient}
+          />
+        );
+      case "second":
+        return <SecondTab jumpTo={jumpTo} />;
+      case "third":
+        return <ThirdTab jumpTo={jumpTo} />;
+    }
+  };
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      renderLabel={({ route, focused, color }) => (
+        <Text
+          style={{ color: focused ? theme.colors.primary : "white", fontSize: 16 }}
+        >
+          {route.title}
+        </Text>
+      )}
+      indicatorStyle={{ backgroundColor: theme.colors.primary }}
+      style={{ backgroundColor: theme.colors.secondary }}
+    />
+  );
 
   return (
     <SafeAreaView style={{ backgroundColor: theme.colors.secondary, flex: 1 }}>
       <TabView
         navigationState={{ activeTab, tabs }}
         renderScene={renderScene}
+        renderTabBar={renderTabBar}
         onIndexChange={setActiveTab}
         initialLayout={{ width: WIDTH }}
       />
