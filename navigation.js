@@ -54,7 +54,7 @@ const TabArr = [
 ]
 
 export default function Navigation() {
-  const [isDone, setIsDone] = useState(true)
+  const [isDone, setIsDone] = useState(false)
 
   return (
     <NavigationContainer>
