@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Platform
 } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
