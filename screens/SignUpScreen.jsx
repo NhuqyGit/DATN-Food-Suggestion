@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 function SignUpScreen() {
   const navigation = useNavigation()
   return (
-    <SafeAreaView style={{backgroundColor: 'white'}}>
+    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Let’s get started!</Text>
@@ -60,7 +60,8 @@ function SignUpScreen() {
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('SignInScreen')}
-          style={styles.signUpButtonContainer}>
+          style={styles.signUpButtonContainer}
+        >
           <Text style={styles.signButton}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 
   title: {
@@ -148,3 +149,4 @@ const styles = StyleSheet.create({
 })
 
 export default SignUpScreen
+

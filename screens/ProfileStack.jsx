@@ -4,6 +4,7 @@ import PersonalReceipeList from './PersonalRecipeList'
 import Profile from './Profile'
 import ReceipeListScreen from './ReceipeListScreen'
 import Setting from './Setting/Setting'
+import NewCollection from './NewCollection'
 
 const Stack = createNativeStackNavigator()
 function ProfileStack() {
@@ -17,6 +18,11 @@ function ProfileStack() {
       <Stack.Screen name='List' component={ReceipeListScreen} />
       <Stack.Screen name='PersonalList' component={PersonalReceipeList} />
       <Stack.Screen name='Settings' component={Setting} />
+      <Stack.Screen
+        options={{
+          animation: 'slide_from_bottom',
+        }}
+        name='NewCollection' component={NewCollection} />
     </Stack.Navigator>
   )
 }

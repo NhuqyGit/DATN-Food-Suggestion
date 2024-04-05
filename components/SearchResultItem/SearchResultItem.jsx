@@ -9,28 +9,23 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
-import { useNavigation } from '@react-navigation/native'
-import { MaterialIcons } from '@expo/vector-icons'
 
-
-function RecommendItem({ item}) {
-  const navigation = useNavigation()
+function SearchResultItem({ item }) {
   return (
-    <TouchableOpacity
-      onPress={()=>{
-        navigation.push('FoodDetail', { foodDetails: item })
-      }}
-      activeOpacity={1}
-      style={styles.container}>
-      <Image style={styles.image} source={item?.image} />
+    <TouchableOpacity style={styles.container}>
+      <Image
+        style={styles.image}
+        source={{
+          uri: item.image,
+        }}
+      />
       <View style={styles.overlay}>
         <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
         <Text style={styles.title}>{item.title}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>
-            {/* <Icon style={styles.addIcon} name='plus' /> */}
-            <MaterialIcons name='add' size={22} color='white' />
+            <Icon style={styles.addIcon} name='plus' />
           </View>
         </View>
       </View>
@@ -43,8 +38,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    width: 300,
-    height: 400,
+    width: '100%',
+    height: 300,
     borderRadius: 8,
     marginRight: 16,
   },
@@ -60,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
   rating: {
     color: 'white',
@@ -73,10 +68,8 @@ const styles = StyleSheet.create({
   },
   author: {
     color: 'white',
-    fontWeight: '500',
+    fontSize: 14,
     marginRight: 4,
-    textTransform: 'uppercase',
-    color: '#9e9e9e'
   },
   iconContainer: {
     backgroundColor: theme.colors.secondary,
@@ -86,6 +79,7 @@ const styles = StyleSheet.create({
       ) / 2,
     width: Dimensions.get('window').width * 0.075,
     height: Dimensions.get('window').width * 0.075,
+    padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -95,5 +89,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default RecommendItem
+export default SearchResultItem
 

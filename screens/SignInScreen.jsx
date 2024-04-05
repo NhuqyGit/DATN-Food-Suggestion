@@ -16,29 +16,28 @@ import { Ionicons } from '@expo/vector-icons'
 
 function SignInScreen() {
   const navigation = useNavigation()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isHide, setIsHide] = useState(true)
-  
+
   const handleEmailChange = (email) => {
     setEmail(email)
   }
 
   const handlePasswordChange = (password) => {
-    setPassword(password);
-  };
+    setPassword(password)
+  }
 
-  const handleLogin = ()=>{
-    if (password === 'admin' &&  email === 'admin'){
+  const handleLogin = () => {
+    if (password === 'admin' && email === 'admin') {
       navigation.navigate('Personalization')
-    }
-    else{
-      console.log("Wrong email or password")
+    } else {
+      console.log('Wrong email or password')
     }
   }
 
   return (
-    <SafeAreaView style={{backgroundColor: 'white'}}>
+    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Sign In</Text>
@@ -65,12 +64,14 @@ function SignInScreen() {
             />
             <TouchableOpacity
               activeOpacity={1}
-              onPress={()=>setIsHide(!isHide)}
-              style={styles.iconEye}>
+              onPress={() => setIsHide(!isHide)}
+              style={styles.iconEye}
+            >
               <Ionicons
-                name={isHide ? "eye-off" : "eye"}
-                size={22} 
-                color={COLORS.secondary} />
+                name={isHide ? 'eye-off' : 'eye'}
+                size={22}
+                color={COLORS.secondary}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -86,12 +87,13 @@ function SignInScreen() {
             <Icon name='facebook' size={25} color='#900' />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={()=>navigation.navigate('SignUpScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
           <Text style={styles.orLogin}>Or sign up with email</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleLogin}
-          style={styles.signInButtonContainer}>
+          style={styles.signInButtonContainer}
+        >
           <Text style={styles.signButton}>Sign In</Text>
         </TouchableOpacity>
       </View>
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 
   title: {
@@ -132,13 +134,13 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
-  passwordInput:{
+  passwordInput: {
     flexDirection: 'row',
     alignItems: 'center',
   },
 
-  label:{
-    fontWeight: '500'
+  label: {
+    fontWeight: '500',
   },
 
   input: {
@@ -148,14 +150,14 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
 
-  passwordInputLayout:{
+  passwordInputLayout: {
     flex: 1,
     borderRightWidth: 0,
     borderTopRightRadius: 0,
-    borderBottomRightRadius: 0
+    borderBottomRightRadius: 0,
   },
 
-  iconEye:{
+  iconEye: {
     height: '100%',
     padding: 10,
     flexDirection: 'row',
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderLeftWidth: 0,
     borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0
+    borderBottomLeftRadius: 0,
   },
 
   thirdPartyContainer: {
@@ -195,3 +197,4 @@ const styles = StyleSheet.create({
 })
 
 export default SignInScreen
+

@@ -1,51 +1,105 @@
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
-import data from '../../../constants/Unschedule.js'
-import ListDishItem from '../components/ListDishItem.jsx'
-import check from '../../../assets/svgs/check.js'
+import React from "react";
+import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { dataAdd } from "../../../constants/Addscreen";
+import ListDishItem from "../../MealPlan/components/ListDishItem";
 
 function AddScreen() {
-  const [selectedCards, setSelectedCards] = useState([])
-  const toggleCardSelection = (id) => {
-    const index = selectedCards.indexOf(id)
-    if (index !== -1) {
-      const newSelectedCards = [...selectedCards]
-      newSelectedCards.splice(index, 1)
-      setSelectedCards(newSelectedCards)
-    } else {
-      setSelectedCards([...selectedCards, id])
-    }
-  }
-  const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => toggleCardSelection(item.id)}>
-      <View>
-        <ListDishItem
-          name={item.name}
-          time={item.time}
-          imgUri={item.imgUri}
-          isSelected={selectedCards.includes(item.id)}
-        />
-      </View>
-    </TouchableOpacity>
-  )
+  const navigation = useNavigation();
+
   return (
-    <View className='bg-white h-full  '>
-      <Text className='text-2xl mt-12 mb-6 ml-6 font-semibold'>
-        Meal Planner
+    <View style={{ flex: 1, padding: 16, backgroundColor: "white" }}>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>
+        Add Saved Recipe
       </Text>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
-      <TouchableOpacity
-        className=' rounded-full bg-[#40AD53] w-2/3 h-12 mx-auto my-8 justify-center items-center '
-        onPress={() => {}}
-      >
-        <Text className='text-white text-xl font-bold'>Add to your plan</Text>
-      </TouchableOpacity>
+      <Text style={{ fontSize: 16, color: "#999999", marginBottom: 16 }}>
+        Browse your collections
+      </Text>
+
+      <ScrollView>
+        {dataAdd.map((day, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => navigation.navigate("RecipeDetails", { item: day })}
+            style={{ marginBottom: 16 }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                backgroundColor: "#F3F4F6",
+                borderRadius: 8,
+                alignItems:'center'
+              }}
+            >
+              <View className="flex flex-col gap-2">
+                <Text
+                  style={{ fontSize: 16, fontWeight: "500", color: "black" }}
+                >
+                  {day.title}
+                </Text>
+                <Text style={{ fontSize: 13, color: "#999999" }}>
+                  {day.recipes} RECIPES
+                </Text>
+              </View>
+              <Image
+                source={day.img}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
+              />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
-  )
+  );
 }
 
-export default AddScreen
+function RecipeDetailsScreen({ route }) {
+  const navigation = useNavigation();
+  const { item } = route.params;
+
+  return (
+    <View style={{ flex: 1, padding: 16 }}>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}>
+        {item.title}
+      </Text>
+      <ScrollView>
+        {item.assets.map((asset, assetIndex) => (
+          <ListDishItem
+            key={assetIndex}
+            name={asset.name}
+            time={asset.time}
+            imgUri={asset.imgUri}
+            isAdd={true}
+          />
+        ))}
+      </ScrollView>
+      <TouchableOpacity
+        className=" rounded-full bg-[#40AD53] w-2/3 h-12 mx-auto my-8 justify-center items-center "
+        onPress={() => {
+          navigation.navigate("MainMealPlan");
+        }}
+      >
+        <Text className="text-white text-xl font-bold">Add to your plan</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+function AddStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="AddScreen">
+      <Stack.Screen name="AddScreen" component={AddScreen} />
+      <Stack.Screen name="RecipeDetails" component={RecipeDetailsScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export default AddStack;

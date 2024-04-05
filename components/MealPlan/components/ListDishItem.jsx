@@ -1,12 +1,21 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import AntIcon from "react-native-vector-icons/AntDesign.js";
 
-export default function ListDishItem({ isSelected, name, time, imgUri }) {
+export default function ListDishItem({
+  isSelected,
+  name,
+  time,
+  imgUri,
+  isAdd = false,
+}) {
+  const [isPlus, setisPlus] = useState(false);
   return (
     <View
       style={styles.shadowView}
-      className="flex flex-row mt-2 w-11/12 h-32 mx-5 bg-slate-50 rounded-md  "
+      className="flex flex-row mt-2  h-32 mx-1 bg-slate-50 rounded-md  "
     >
       <Image source={imgUri} className="w-32 h-32 rounded-md " />
       <View
@@ -22,9 +31,35 @@ export default function ListDishItem({ isSelected, name, time, imgUri }) {
               {time}
             </Text>
           </View>
-          <View>
-            <Ionicons name="trash-outline" size={30} color="red" />
-          </View>
+          {isAdd === true ? (
+            <View>
+              {isPlus ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setisPlus(false);
+                  }}
+                >
+                  <View className="pt-2">
+                    <AntIcon name="minuscircle" size={30} color="#40AD53" />
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    setisPlus(true);
+                  }}
+                >
+                  <View className="pt-2">
+                    <AntIcon name="pluscircle" size={30} color="#40AD53" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : (
+            <View>
+              <Ionicons name="trash-outline" size={30} color="red" />
+            </View>
+          )}
         </View>
       </View>
     </View>

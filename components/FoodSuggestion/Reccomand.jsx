@@ -3,7 +3,7 @@ import { Image, Text, View } from "react-native";
 
 const Reccomand = () => {
   return (
-    <View className="py-8 px-4">
+    <View className="p-5 bg-orange-300">
       <View className="border border-dashed border-[#5E5E5E] rounded-[10px] h-[150px]">
         <View className="flex gap-2 items-center px-2 py-2">
           <View className="flex flex-row gap-1">
