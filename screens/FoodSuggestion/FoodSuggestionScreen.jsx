@@ -1,27 +1,25 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Animated } from 'react-native'
 import Reccomand from "../../components/FoodSuggestion/Reccomand";
 import RenderChat from "../../components/FoodSuggestion/RenderChat";
 import { StatusBar } from 'react-native';
-import React from 'react'
+import React, { useRef } from 'react'
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
 import { theme } from "../../theme/index";
 import { SIZES } from "../../theme/theme";
+import { translate } from 'react-native-redash';
 
 const FoodSuggestionScreen = () => {
+    const scrollY = useRef(new Animated.Value(0)).current;
+
+    const footerTranslateY = scrollY.interpolate({
+        inputRange: [0, 100], // Giá trị scroll khi footer sẽ hiện và biến mất
+        outputRange: [0, 200], // Giá trị translateY tương ứng
+        extrapolate: 'clamp' // Giữ cho giá trị không vượt ra khỏi phạm vi inputRange
+    });
+
     return (
-        <View style={{flex: 1, backgroundColor: 'red'}}>
+        <View style={{flex: 1}}>
             <StatusBar backgroundColor="black" barStyle="dark-content" />
-            {/* <View className="flex flex-row justify-between items-center h-[48px] border-b border-b-[#000000] px-4">
-                <TouchableOpacity>
-                    <Entypo name="menu" size={26} color="black" />
-                </TouchableOpacity>
-                <Text className="text-dark text-[18px] font-semibold leading-[21.78px]">
-                    Food Suggestion
-                </Text>
-                <TouchableOpacity>
-                    <Entypo name="dots-three-horizontal" size={26} color="black" />
-                </TouchableOpacity>
-            </View> */}
             <ScrollView
                 style={styles.container}
                 showsVerticalScrollIndicator={false}
@@ -29,25 +27,28 @@ const FoodSuggestionScreen = () => {
             >
                 <View>
                     <Reccomand />
-                    <Reccomand />
-                    <Reccomand />
+                    {/* <Reccomand /> */}
+                    {/* <Reccomand /> */}
                 </View>
             </ScrollView>
             <View style={styles.footer} className="px-6">
+            {/* <Animated.View className="px-6" style={[styles.footer, { transform: [{ translateY: footerTranslateY }] }]}> */}
+
                 <View className="flex flex-row justify-between items-center">
                     <TouchableOpacity activeOpacity={1} style={styles.btnVisible}>
-                    <Text></Text>
+                        <Text></Text>
                     </TouchableOpacity>
                     <TouchableOpacity className="flex flex-row justify-center items-center rounded-[10px] bg-[#d9d9d9] w-3/5 py-2">
-                    <MaterialCommunityIcons name="file-document-edit-outline" color="#373739" size={24}/>
-                    <Text style={{marginLeft: 8, color: "#373739"}}>
-                        Create a new record
-                    </Text>
+                        <MaterialCommunityIcons name="file-document-edit-outline" color="#373739" size={24}/>
+                        <Text style={{marginLeft: 8, color: "#373739"}}>
+                            Create a new record
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.btnSend}>
-                    <Ionicons name="arrow-up-outline" color="white" size={24}/>
+                        <Ionicons name="arrow-up-outline" color="white" size={24}/>
                     </TouchableOpacity>
                 </View>
+            {/* </Animated.View> */}
             </View>
         </View>
     )
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
         // paddingVertical: 16,
         // justifyContent: 'center',
         // alignItems: 'center',
-        backgroundColor: 'blue',
         // gap: 16,
         backgroundColor: "white",
         // width: '100%',
@@ -83,9 +83,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     footer:{
-        // position: 'absolute',
-        // bottom: 48,
+        backgroundColor: 'white',
         width: "100%",
-        paddingVertical: 10
+        paddingVertical: 10,
     }
 });
