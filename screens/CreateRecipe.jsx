@@ -77,6 +77,9 @@ function CreateRecipe() {
         onIndexChange={setActiveTab}
         initialLayout={{ width: WIDTH }}
       />
+      <TouchableOpacity style={{position:"absolute", bottom: 20, right: 20}}>
+        <View style={{backgroundColor: 'red', padding: 10, borderRadius: 45}}></View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
