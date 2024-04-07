@@ -24,7 +24,7 @@ export default function ListDishItem({
         }  `}
       >
         <Text className="text-lg font-semibold">{name}</Text>
-        <View className="flex flex-row justify-between items-center w-2/3">
+        <View className="flex flex-row justify-between items-center w-4/5">
           <View className="w-28 h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
             <Ionicons name="time-outline" size={26} color="white" />
             <Text className="text-white text-base font-medium px-1">
@@ -39,7 +39,7 @@ export default function ListDishItem({
                     setisPlus(false);
                   }}
                 >
-                  <View className="pt-2">
+                  <View className="">
                     <AntIcon name="minuscircle" size={30} color="#40AD53" />
                   </View>
                 </TouchableOpacity>
@@ -49,7 +49,7 @@ export default function ListDishItem({
                     setisPlus(true);
                   }}
                 >
-                  <View className="pt-2">
+                  <View className="">
                     <AntIcon name="pluscircle" size={30} color="#40AD53" />
                   </View>
                 </TouchableOpacity>
