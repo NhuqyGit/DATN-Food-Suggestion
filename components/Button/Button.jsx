@@ -1,16 +1,23 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { Entypo } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import React from 'react'
 
-const Button = ({ title, onPress, icon, color, size }) => {
+const Button = ({ title, onPress, icon, color, size, childrenIcon }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Entypo
-        name={icon}
-        size={size ? size : 28}
-        color={color ? color : '#f1f1f1'}
-      />
-      <Text style={styles.text}>{title}</Text>
+      {childrenIcon ? (
+        childrenIcon
+      ) : (
+        <AntDesign
+          name={icon}
+          size={size ? size : 28}
+          color={color ? color : '#f1f1f1'}
+        />
+      )}
+
+      <Text style={[styles.text, { color: color ? color : '#f1f1f1' }]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   )
 }

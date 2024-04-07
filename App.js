@@ -7,6 +7,7 @@ import * as MediaLibrary from 'expo-media-library'
 import { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from './components/Button/Button'
+import { Entypo } from '@expo/vector-icons'
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null)
@@ -55,20 +56,24 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
-        {image ? (
-          <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
-        ) : (
-          <Camera
-            style={styles.camera}
-            type={type}
-            flashMode={flash}
-            ref={cameraRef}
+        <Camera
+          style={styles.camera}
+          type={type}
+          flashMode={flash}
+          ref={cameraRef}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: image ? 'space-between' : 'flex-end',
+              padding: 20,
+            }}
           >
+            {image && <Button icon={'close'} onPress={() => setImage(null)} />}
+
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: 30,
               }}
             >
               <Button
@@ -85,7 +90,17 @@ export default function App() {
                 color={
                   flash === Camera.Constants.FlashMode.off ? 'gray' : '#f1f1f1'
                 }
-                icon={'flash'}
+                childrenIcon={
+                  <Entypo
+                    name='flash'
+                    size={24}
+                    color={
+                      flash === Camera.Constants.FlashMode.off
+                        ? 'gray'
+                        : '#f1f1f1'
+                    }
+                  />
+                }
                 onPress={() =>
                   setFlash(
                     flash === Camera.Constants.FlashMode.off
@@ -95,31 +110,41 @@ export default function App() {
                 }
               />
             </View>
-          </Camera>
-        )}
+          </View>
+        </Camera>
 
-        <View>
-          {image ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                padding: 16,
-              }}
-            >
-              <Button
-                title={'Retake'}
-                icon={'retweet'}
-                onPress={() => setImage(null)}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: !image ? 'center' : 'space-between',
+            padding: 16,
+          }}
+        >
+          {image && (
+            <View>
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 5,
+                }}
               />
-              <Button title={'Save'} icon={'check'} onPress={saveImage} />
             </View>
-          ) : (
+          )}
+          <View>
             <Button
               title={'Take a picture'}
               onPress={takePicture}
               icon={'camera'}
+              color={'#000'}
             />
+          </View>
+
+          {image && (
+            <View>
+              <Button color={'#000'} icon={'check'} onPress={saveImage} />
+            </View>
           )}
         </View>
 
@@ -134,7 +159,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#000',
-    paddingBottom: 16,
+    paddingBottom: 32,
   },
 
   camera: {
