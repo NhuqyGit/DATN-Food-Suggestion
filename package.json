@@ -30,6 +30,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.1.0",
     "expo": "^50.0.0",
+    "expo-camera": "^14.1.1",
+    "expo-media-library": "^15.9.1",
     "expo-status-bar": "~1.11.1",
     "moment": "^2.29.4",
     "nativewind": "^2.0.11",
