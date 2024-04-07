@@ -74,14 +74,6 @@ function ThisWeek() {
       },
       name: "Add Saved Recipe",
     },
-    {
-      icon: "calendar",
-      onPress: () => {
-        // navigation.navigate("AddScreen");
-        // setModalVisible(false);
-      },
-      name: "Edit schedule",
-    },
   ];
   const toggleBottomSheet = () => {
     setModalVisible(true);
@@ -89,7 +81,9 @@ function ThisWeek() {
 
   return (
     <View className="py-4 h-full bg-white">
-      <PlanDate date={date} />
+      <View className="px-3">
+        <PlanDate date={date} />
+      </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
         {data.map((day, index) => (
@@ -101,8 +95,8 @@ function ThisWeek() {
                 <Text className="text-lg pl-6">{day.title}</Text>
               </View>
 
-              <View className="bg-[#ECE9E9] rounded-[12px] gap-1 flex flex-row pb-1 px-3  items-center">
-                <Text className="text-[#40AD53] text-[18px] font-semibold  ">
+              <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[50px] justify-between  pl-2 pr-2 items-center">
+                <Text className="text-[#40AD53] text-[16px] font-semibold ">
                   2
                 </Text>
                 <TouchableOpacity onPress={() => toggleAccordion(index)}>
@@ -112,14 +106,14 @@ function ThisWeek() {
                         ? "chevron-up"
                         : "chevron-down"
                     }
-                    size={24}
+                    size={18}
                     color="#40AD53"
                   />
                 </TouchableOpacity>
               </View>
             </View>
             {openAccordionIndex === index && (
-              <Animated.View style={animatedStyle}>
+              <Animated.View className=" px-[10px]" style={animatedStyle}>
                 {day.assets.map((asset, assetIndex) => (
                   <ListDishItem
                     key={assetIndex}

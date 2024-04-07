@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { dataAdd } from "../../../constants/Addscreen";
 import ListDishItem from "../../MealPlan/components/ListDishItem";
 import BackButton from "../../BackButton/BackButton";
+import CloseButton from "../../BackButton/CloseButton";
 
 function AddScreen() {
   const navigation = useNavigation();
@@ -69,7 +70,9 @@ function RecipeDetailsScreen({ route }) {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <BackButton />
+      <View className="flex flex-row justify-end mt-4">
+        <CloseButton />
+      </View>
       <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}>
         {item.title}
       </Text>

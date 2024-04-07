@@ -28,7 +28,7 @@ function MainScreen() {
           style={{
             fontSize: 24,
             paddingTop: 5,
-            paddingHorizontal: 20,
+            paddingHorizontal: 10,
             fontWeight: "bold",
             marginBottom: 5,
           }}
