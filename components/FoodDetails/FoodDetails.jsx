@@ -14,39 +14,12 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import { MaterialIcons } from "@expo/vector-icons";
 import MoreByCreator, {
   renderStarRating,
 } from "./components/MoreByCreator";
 import { theme } from "../../theme/index";
 import PopupNotification from "./components/PopupNotification";
-
-// const foodDetails = {
-//   name: "Delicious Dish",
-//   author: "Master Chef :)",
-//   image: require("../../assets/monngon.jpg"),
-//   ingredients: [
-//     "Ingredient 1",
-//     "Ingredient 2",
-//     "Ingredient 3",
-//     "Ingredient 4",
-//     "Ingredient 5",
-//     "Ingredient 6",
-//   ],
-//   reviews: [
-//     { user: "User1", comment: "Delicious!", rating: 1 },
-//     { user: "User2", comment: "Amazing recipe!", rating: 4 },
-//     { user: "User1", comment: "Delicious!", rating: 5 },
-//     { user: "User2", comment: "Amazing recipe!", rating: 4.5 },
-//     { user: "User1", comment: "Delicious!", rating: 2 },
-//     { user: "User2", comment: "Amazing recipe!", rating: 3 },
-//     { user: "User1", comment: "Delicious!", rating: 3.4 },
-//     { user: "User2", comment: "Amazing recipe!", rating: 4 },
-//   ],
-//   rating: 4,
-//   totalTime: 40,
-//   servings: 3,
-//   calories: 80,
-// };
 
 const reportReasons = [
   "Inappropriate Content",
@@ -434,11 +407,20 @@ function FoodDetailsScreen({ navigation , route }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View>
+      
       <Image
         source={foodDetails.image}
         style={{ width: "100%", height: 300 }}
       />
-
+      <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Ionicons name="chevron-back-circle" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
+      
       <View
         style={{
           flexDirection: "row",
@@ -449,12 +431,12 @@ function FoodDetailsScreen({ navigation , route }) {
       >
         <View style={{flex: 7, paddingRight: 5}}>
           <Text
-            style={{ fontSize: 24, fontWeight: "bold", paddingHorizontal: 10 }}
+            style={{ fontSize: 24, fontWeight: "bold", paddingHorizontal: 5}}
           >
             {foodDetails.title}
           </Text>
           <Text
-            style={{ fontSize: 16, paddingHorizontal: 10 }}
+            style={{ fontSize: 16, paddingHorizontal: 5}}
           >{`By ${foodDetails.author}`}</Text>
         </View>
 
@@ -706,6 +688,12 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     justifyContent: "center",
+  },
+  backButton:
+  {
+    position: "absolute",
+    top: 40,
+    left: 20,
   },
   imageNote: {
     width: 60,
