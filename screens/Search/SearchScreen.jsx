@@ -8,6 +8,7 @@ import HistoryItem from '../../components/HistoryItem/HistoryItem'
 import SearchResultItem from '../../components/SearchResultItem/SearchResultItem'
 import SearchHeader from './components/SearchHeader'
 import { AntDesign } from '@expo/vector-icons'
+import Filter from './components/Filter/Filter'
 
 const SearchScreen = () => {
   const mockPopular = [
@@ -46,12 +47,6 @@ const SearchScreen = () => {
       id: 7,
       image: 'https://cdn.tgdd.vn/2020/11/CookProduct/thum-1200x676.jpg',
       title: 'kem',
-    },
-    {
-      id: 8,
-      image:
-        'https://thanhnien.mediacdn.vn/Uploaded/minhnguyet/2022_04_24/qua-viet-quoc-781.jpg',
-      title: 'quả việt quất',
     },
     {
       id: 9,
@@ -193,19 +188,23 @@ const SearchScreen = () => {
         {!isFocusSearch ? (
           <View>
             <View style={styles.popularWrapper}>
-              <Text style={styles.title}>Các nguyên liệu phổ biến nhất</Text>
-              <View style={styles.popularList}>
-                {mockPopular.map((item) => (
-                  <PopularItem key={item.id} item={item} />
-                ))}
+              <View style={styles.padding}>
+                <Text style={styles.title}>Các nguyên liệu phổ biến nhất</Text>
+                <View style={styles.popularList}>
+                  {mockPopular.map((item) => (
+                    <PopularItem key={item.id} item={item} />
+                  ))}
+                </View>
               </View>
-            </View>
-            <View style={styles.popularWrapper}>
-              <Text style={styles.title}>Món Mới Nhất</Text>
-              <View style={styles.popularList}>
-                {mockDish.map((item) => (
-                  <DishItem key={item.id} item={item} />
-                ))}
+              <View style={styles.popularWrapper}>
+                <View style={styles.padding}>
+                  <Text style={styles.title}>Món Mới Nhất</Text>
+                  <View style={styles.dishList}>
+                    {mockDish.map((item) => (
+                      <DishItem key={item.id} item={item} />
+                    ))}
+                  </View>
+                </View>
               </View>
             </View>
           </View>
@@ -213,36 +212,41 @@ const SearchScreen = () => {
           <>
             {!searchText ? (
               <View style={styles.popularWrapper}>
-                <Text style={styles.title}>Tìm kiếm gần đây</Text>
+                <View style={styles.padding}>
+                  <Text style={styles.title}>Tìm kiếm gần đây</Text>
 
-                <View style={styles.historyList}>
-                  {mockHistory.map((item) => (
-                    <HistoryItem key={item.id} item={item} />
-                  ))}
+                  <View style={styles.historyList}>
+                    {mockHistory.map((item) => (
+                      <HistoryItem key={item.id} item={item} />
+                    ))}
+                  </View>
+
+                  <TouchableOpacity style={styles.footer}>
+                    <Text style={styles.removeHistoryButton}>
+                      Xóa lịch sử tìm kiếm
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity style={styles.footer}>
-                  <Text style={styles.removeHistoryButton}>
-                    Xóa lịch sử tìm kiếm
-                  </Text>
-                </TouchableOpacity>
               </View>
             ) : (
               <>
                 <View style={styles.popularWrapper}>
                   <View style={styles.titleContainer}>
                     <Text
-                      style={styles.title}
-                    >{`${mockHistory.length} results`}</Text>
-                    <TouchableOpacity style={styles.titleContainer}>
+                      style={styles.titleResult}
+                    >{`${mockHistory.length}+ RESULT`}</Text>
+                    <TouchableOpacity style={styles.filterContainer}>
                       <Text style={styles.filter}>{'Filter'}</Text>
                       <AntDesign
                         style={styles.searchIcon}
                         name='down'
                         size={22}
+                        color={'#BDBDBD'}
                       />
                     </TouchableOpacity>
                   </View>
+                  <Filter hasButton />
+
                   {mockSearchResult?.map((item) => (
                     <SearchResultItem key={item.id} item={item} />
                   ))}
@@ -266,7 +270,7 @@ const styles = StyleSheet.create({
   },
 
   popularWrapper: {
-    padding: 16,
+    // padding: 16,
     gap: 16,
   },
 
@@ -276,9 +280,9 @@ const styles = StyleSheet.create({
   },
 
   removeHistoryButton: {
-    marginTop: 'auto',
+    marginTop: 32,
     textAlign: 'center',
-    borderRadius: 100,
+    borderRadius: 20,
     borderColor: 'black',
     borderWidth: 2,
     paddingHorizontal: 24,
@@ -288,11 +292,28 @@ const styles = StyleSheet.create({
   popularList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: 8,
+  },
+
+  dishList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 8,
   },
 
   titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#2E2E30',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    marginTop: 16,
+  },
+
+  filterContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -302,11 +323,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 8,
+  },
+
+  titleResult: {
+    fontSize: 20,
+    // fontWeight: 'bold',
+    color: '#BDBDBD',
   },
 
   filter: {
     fontSize: 16,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    color: '#BDBDBD',
+  },
+
+  padding: {
+    padding: 16,
   },
 })
 

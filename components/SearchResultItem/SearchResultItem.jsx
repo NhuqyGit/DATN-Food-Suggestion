@@ -36,6 +36,7 @@ function SearchResultItem({ item }) {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
+    padding: 16,
   },
   image: {
     width: '100%',
