@@ -1,25 +1,69 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Animated } from 'react-native'
-import Reccomand from "../../components/FoodSuggestion/Reccomand";
-import RenderChat from "../../components/FoodSuggestion/RenderChat";
-import { StatusBar } from 'react-native';
-import React, { useRef } from 'react'
+import React, { Component, useState } from "react";
+import { View, Image, Text, TouchableOpacity, StyleSheet, Modal, Animated } from "react-native";
+import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView } from "@react-navigation/drawer";
+// import FoodSuggestionScreen from "./FoodSuggestion/FoodSuggestionScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native";
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
-import { theme } from "../../theme/index";
 import { SIZES } from "../../theme/theme";
-import { translate } from 'react-native-redash';
+import Footer from "../../components/FoodSuggestion/Footer";
+import Reccomand from "../../components/FoodSuggestion/Reccomand";
+const Drawer = createDrawerNavigator();
 
-const FoodSuggestionScreen = () => {
-    const scrollY = useRef(new Animated.Value(0)).current;
+const FoodSuggestion = () =>{
+    const [isFolderOpen, setIsFolderOpen] = useState(false);
+    const folderTranslateX = useState(new Animated.Value(-SIZES.width * 0.7))[0];
+    const opacity = useState(new Animated.Value(0))[0];
 
-    const footerTranslateY = scrollY.interpolate({
-        inputRange: [0, 100], // Giá trị scroll khi footer sẽ hiện và biến mất
-        outputRange: [0, 200], // Giá trị translateY tương ứng
-        extrapolate: 'clamp' // Giữ cho giá trị không vượt ra khỏi phạm vi inputRange
-    });
+    const openFolder = () => {
+    setIsFolderOpen(true);
+    Animated.parallel([
+        Animated.timing(opacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true
+        }),
+        Animated.timing(folderTranslateX, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true
+        })
+    ]).start();
+    };
+
+    const closeFolder = () => {
+        Animated.parallel([
+            Animated.timing(opacity, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true
+            }),
+            Animated.timing(folderTranslateX, {
+            toValue: -SIZES.width * 0.7,
+            duration: 300,
+            useNativeDriver: true
+            })
+        ]).start(() => setIsFolderOpen(false));
+    };
 
     return (
         <View style={{flex: 1}}>
-            <StatusBar backgroundColor="black" barStyle="dark-content" />
+            <TouchableOpacity onPress={openFolder}>
+                <Text>Open Folder</Text>
+            </TouchableOpacity>
+            <Animated.View style={[styles.folder, { transform: [{ translateX: folderTranslateX }] }]}>
+                <TouchableOpacity onPress={closeFolder}>
+                    <Text>Close Folder</Text>
+                </TouchableOpacity>
+                {/* Your folder content here */}
+            </Animated.View>
+
+            {isFolderOpen && (
+                <Animated.View style={[styles.overlay, { opacity }]}>
+                    <TouchableOpacity onPress={closeFolder} style={styles.overlayTouchArea} activeOpacity={1} />
+                </Animated.View>
+            )}
+
             <ScrollView
                 style={styles.container}
                 showsVerticalScrollIndicator={false}
@@ -27,64 +71,45 @@ const FoodSuggestionScreen = () => {
             >
                 <View>
                     <Reccomand />
-                    {/* <Reccomand /> */}
-                    {/* <Reccomand /> */}
+                    <Reccomand />
+                    <Reccomand />
                 </View>
             </ScrollView>
-            <View style={styles.footer} className="px-6">
-            {/* <Animated.View className="px-6" style={[styles.footer, { transform: [{ translateY: footerTranslateY }] }]}> */}
-
-                <View className="flex flex-row justify-between items-center">
-                    <TouchableOpacity activeOpacity={1} style={styles.btnVisible}>
-                        <Text></Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="flex flex-row justify-center items-center rounded-[10px] bg-[#d9d9d9] w-3/5 py-2">
-                        <MaterialCommunityIcons name="file-document-edit-outline" color="#373739" size={24}/>
-                        <Text style={{marginLeft: 8, color: "#373739"}}>
-                            Create a new record
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnSend}>
-                        <Ionicons name="arrow-up-outline" color="white" size={24}/>
-                    </TouchableOpacity>
-                </View>
-            {/* </Animated.View> */}
-            </View>
+            <Footer />
         </View>
-    )
-}
-
-export default FoodSuggestionScreen
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
-        // paddingVertical: 16,
+    //   flex: 1,
+    backgroundColor: 'white',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    },
+    folder: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: SIZES.width * 0.7,
+    height: '100%',
+    padding: 20,
+    left: 0,
+    zIndex: 2,
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1,
+    },
+    overlayTouchArea:{
+        ...StyleSheet.absoluteFillObject,
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
         // justifyContent: 'center',
         // alignItems: 'center',
-        // gap: 16,
-        backgroundColor: "white",
-        // width: '100%',
-        // height: SIZES.height - 118,
-        // height: 'fit-content',
-    },
-    btnSend:{
-        backgroundColor: theme.colors.secondary,
-        height: 40,
-        width: 40,
-        borderRadius: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    btnVisible:{
-        backgroundColor: "transparency",
-        height: 40,
-        width: 40,
-        borderRadius: 10,
-    },
-    footer:{
-        backgroundColor: 'white',
-        width: "100%",
-        paddingVertical: 10,
+        // zIndex: 1,
     }
 });
+
+export default FoodSuggestion;
