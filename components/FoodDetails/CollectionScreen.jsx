@@ -222,13 +222,6 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  // title: {
-  //   fontSize: 20,
-  //   fontWeight: "bold",
-  //   marginTop: "15%",
-  //   alignSelf: "flex-start",
-  //   paddingLeft: 20,
-  // },
   doneButton: {
     backgroundColor: theme.colors.secondary,
     borderRadius: 10,

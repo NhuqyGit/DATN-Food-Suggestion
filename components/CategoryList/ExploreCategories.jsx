@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
       cateTitle: {
         fontSize: 24,
         fontWeight: "bold",
-        paddingLeft: 20,
+        paddingLeft: 5,
       },
       backButton: {
         padding: 20,
