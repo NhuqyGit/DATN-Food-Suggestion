@@ -10,13 +10,15 @@ import {
   ImageBackground,
   Modal,
   Pressable,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../theme/index";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { FlatList } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
+import { Platform } from "react-native";
 
 const IngredientsTab = ({
   ingredientList,
@@ -30,7 +32,7 @@ const IngredientsTab = ({
   const [ingredientID, setIngredientID] = useState(0);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
       <View
         style={{
           position: "absolute",
@@ -42,127 +44,147 @@ const IngredientsTab = ({
           alignItems: "center",
         }}
       >
-        <Text> Create your own</Text>
+        <Text style={{ color: theme.colors.grayBackground }}>
+          Create your own
+        </Text>
       </View>
-
-      <View>
-        <TouchableOpacity
-          onPress={() => {
-            setIngredientInput("");
-            setModalType("create");
-            setModalVisible(true);
-          }}
-        >
-          <View>
-            <Text>Add ingredients</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      {ingredientList && (
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-          <FlatList
-            data={ingredientList}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setIngredientID(item.id);
-                    setIngredientInput(item.name);
-                    setModalType("update");
-                    setModalVisible(true);
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text>{item.name}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        deleteIngredient(item.id);
-                      }}
-                    >
-                      <Text> button</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              );
+      <View style={{ width: "90%", flex: 1, marginBottom: 75 }}>
+        <View>
+          <TouchableOpacity
+            style={{ paddingVertical: 10 }}
+            onPress={() => {
+              setIngredientInput("");
+              setModalType("create");
+              setModalVisible(true);
             }}
+          >
+            <View>
+              <Text style={{ color: theme.colors.secondary, fontSize: 16 }}>
+                Add ingredients
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View
+            style={{ height: 1, backgroundColor: theme.colors.grayBackground }}
           />
         </View>
-      )}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={createVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-        style
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              {modalType == "create"
-                ? "New ingredient"
-                : modalType == "update"
-                  ? "Update ingredient"
-                  : "Undefined Type"}
-            </Text>
-            <TextInput
-              style={styles.input}
-              value={ingredientInput}
-              onChangeText={setIngradientInput}
-            />
-            <View
-              style={{
-                flexDirection: "row-reverse",
-                justifyContent: "center",
-                alignItems: "center",
+        {ingredientList.length > 0 && (
+          <View style={{ flex: 1, backgroundColor: "white" }}>
+            <FlatList
+              data={ingredientList}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    style={{ paddingTop: 10 }}
+                    key={index}
+                    onPress={() => {
+                      setIngredientID(item.id);
+                      setIngredientInput(item.name);
+                      setModalType("update");
+                      setModalVisible(true);
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: 15,
+                        paddingHorizontal: 25,
+                        borderColor: theme.colors.secondary,
+                        borderWidth: 0.5,
+                        borderRadius: 15
+                      }}
+                    >
+                      <Text style={{fontSize: 16}}>{item.name}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          deleteIngredient(item.id);
+                        }}
+                      >
+                        <Text style={{color: 'red'}}>Delete</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                );
               }}
-            >
-              <Pressable
-                style={[styles.button]}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
+            />
+          </View>
+        )}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={[styles.centeredView]}>
+            <View style={[styles.modalView, {}]}>
+              <Text style={{marginTop: -20, paddingBottom: 20, color: theme.colors.secondary, fontWeight:'bold'}}>
+                {modalType == "create"
+                  ? "New ingredient"
+                  : modalType == "update"
+                    ? "Update ingredient"
+                    : "Undefined Type"}
+              </Text>
+              <TextInput
+                style={{paddingHorizontal: 15, paddingVertical: 5, borderRadius: 10, borderColor: theme.colors.secondary, borderWidth: 1, width: "120%"}}
+                value={ingredientInput}
+                onChangeText={setIngredientInput}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 20,
+                  marginBottom: -10,
+                  gap: 20
                 }}
               >
-                <Text
-                  style={[styles.textStyle, { color: theme.colors.secondary }]}
+                <Pressable
+                  style={[styles.button,{backgroundColor:'white'}]}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
                 >
-                  Cancel
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.button,
-                  { backgroundColor: theme.colors.secondary },
-                ]}
-                onPress={() => {
-                  if (modalType == "create") {
-                    createIngredient(ingredientInput);
-                  } else if (modalType == "update") {
-                    updateIngredient(ingredientID, ingredientInput);
-                  }
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text style={styles.textStyle}>
-                  {modalType == "create"
-                    ? "Create"
-                    : modalType == "update"
-                      ? "Update"
-                      : "Undefined"}
-                </Text>
-              </Pressable>
+                  <Text
+                    style={
+                      { color: theme.colors.secondary, fontWeight: 'bold', textAlign: 'center' }
+                    }
+                  >
+                    Cancel
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.button,
+                    { backgroundColor: theme.colors.secondary },
+                  ]}
+                  onPress={() => {
+                    if (modalType == "create") {
+                      createIngredient(ingredientInput);
+                    } else if (modalType == "update") {
+                      updateIngredient(ingredientID, ingredientInput);
+                    }
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {modalType == "create"
+                      ? "Create"
+                      : modalType == "update"
+                        ? "Update"
+                        : "Undefined"}
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
+      
     </View>
   );
 };
@@ -179,10 +201,11 @@ const OverviewTab = ({
     let res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [3, 4],
+      aspect: [1, 1],
     });
     if (!res.canceled) {
       const imguri = res.assets[0].uri;
+      console.log(imguri);
       updateOverviewImage(imguri);
     }
   };
@@ -192,46 +215,94 @@ const OverviewTab = ({
       return (
         <ImageBackground
           source={{ uri: overviewImage }}
-          style={{ justifyContent: "center", alignItems: "center" }}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+          imageStyle={{ borderRadius: 25 }}
           resizeMode="cover"
         >
-          <Text>icon</Text>
+          <Text style={{ color: theme.colors.secondary }}>icon</Text>
         </ImageBackground>
       );
     } else {
-      <Text>icon</Text>;
+      return <Text style={{ color: theme.colors.secondary }}>icon</Text>;
     }
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#673ab7" }}>
-      <TouchableOpacity onPress={importImage}>
-        <View
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        alignItems: "center",
+      }}
+    >
+      <View style={{ width: "90%" }}>
+        <Text
           style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 1,
-            borderStyle: "dashed",
-            borderColor: theme.colors.secondary,
+            color: theme.colors.secondary,
+            fontSize: 16,
+            fontWeight: "bold",
+            paddingTop: 20,
           }}
         >
-          {displayImage()}
-        </View>
-      </TouchableOpacity>
-      <Text>Title</Text>
-      <TextInput
-        value={overviewTitle}
-        onChangeText={(val) => {
-          updateOverviewTitle(val);
-        }}
-      />
-      <Text>URL</Text>
-      <TextInput
-        value={overviewURL}
-        onChangeText={(val) => {
-          updateOverviewURL(val);
-        }}
-      />
+          Title
+        </Text>
+        <TextInput
+          style={{
+            borderRadius: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            borderWidth: 0.5,
+            borderColor: theme.colors.secondary,
+          }}
+          value={overviewTitle}
+          onChangeText={(val) => {
+            updateOverviewTitle(val);
+          }}
+        />
+        <Text
+          style={{
+            color: theme.colors.secondary,
+            fontSize: 16,
+            fontWeight: "bold",
+            paddingTop: 20,
+          }}
+        >
+          URL
+        </Text>
+        <TextInput
+          style={{
+            borderRadius: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            borderWidth: 0.5,
+            borderColor: theme.colors.secondary,
+          }}
+          value={overviewURL}
+          onChangeText={(val) => {
+            updateOverviewURL(val);
+          }}
+        />
+        <TouchableOpacity onPress={importImage} style={{ paddingTop: 20 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 25,
+              borderWidth: 3,
+              borderStyle: "dashed",
+              borderColor: theme.colors.secondary,
+              height: Dimensions.get("window").width * 0.9,
+            }}
+          >
+            {displayImage()}
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -242,27 +313,68 @@ const DirectionsTab = ({
   totalTime,
   updateTotalTime,
 }) => (
-  <View style={{ flex: 1, backgroundColor: "white" }}>
-    <TextInput
-      multiline={true}
-      numberOfLines={6}
-      value={directionsDesc}
-      onChangeText={updateDirectionsDesc}
-    />
-    <Text>Total time</Text>
-    <TextInput value={totalTime} onChangeText={updateTotalTime} />
+  <View style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
+    <View style={{ width: "90%" }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "bold",
+          color: theme.colors.secondary,
+          paddingTop: 20,
+        }}
+      >
+        Instructions
+      </Text>
+
+      <TextInput
+        multiline={true}
+        numberOfLines={10}
+        value={directionsDesc}
+        style={{
+          borderRadius: 10,
+          paddingVertical: 10,
+          paddingHorizontal: 15,
+          borderWidth: 0.5,
+          borderColor: theme.colors.secondary,
+          height: 190,
+          verticalAlign: "top",
+        }}
+        onChangeText={updateDirectionsDesc}
+      />
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "bold",
+          color: theme.colors.secondary,
+          paddingTop: 20,
+        }}
+      >
+        Total time
+      </Text>
+      <TextInput
+        value={totalTime}
+        onChangeText={updateTotalTime}
+        style={{
+          borderRadius: 10,
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          borderWidth: 0.5,
+          borderColor: theme.colors.secondary,
+        }}
+      />
+    </View>
   </View>
 );
 
 function CreateRecipe() {
   const WIDTH = Dimensions.get("window").width;
-  const [activeTab, setActiveTab] = useState(0);
-  const [tabs] = useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "Overview", title: "Overview" },
     { key: "Ingredients", title: "Ingredients" },
-    { key: "Durections", title: "Durections" },
+    { key: "Directions", title: "Directions" },
   ]);
-  const [ingredientList, setIngradientList] = useState([]);
+  const [ingredientList, setIngredientList] = useState([]);
   const [overviewImageUri, setOverviewImageUri] = useState("");
   const [overviewTitle, setOverviewTitle] = useState("");
   const [overviewURL, setOverviewURL] = useState("");
@@ -270,16 +382,24 @@ function CreateRecipe() {
   const [totalTime, setTotalTime] = useState("");
 
   function deleteIngredient(id) {
-    setIngradientList(ingredientList.filter((e) => e.id == id));
+    setIngredientList(ingredientList.filter((e) => e.id != id));
   }
   function createIngredient(ingredientName) {
-    setIngradientList([
+    let index = 0;
+
+    if (ingredientList.length > 0) {
+      index = ingredientList[ingredientList.length - 1].id + 1;
+    }
+    setIngredientList([
       ...ingredientList,
-      { id: ingredientList.slice(-1).id + 1, name: ingredientName },
+      {
+        id: index,
+        name: ingredientName,
+      },
     ]);
   }
   function updateIngredient(id, ingredientName) {
-    setIngradientList(
+    setIngredientList(
       ingredientList.map((ingredient) => {
         if (ingredient.id == id) {
           ingredient.name = ingredientName;
@@ -334,6 +454,7 @@ function CreateRecipe() {
           style={{
             color: focused ? theme.colors.secondary : "black",
             fontSize: 16,
+            fontWeight:'bold'
           }}
         >
           {route.title}
@@ -346,31 +467,61 @@ function CreateRecipe() {
 
   return (
     <SafeAreaView style={{ backgroundColor: theme.colors.secondary, flex: 1 }}>
-      <TabView
-        navigationState={{ activeTab, tabs }}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        onIndexChange={setActiveTab}
-        initialLayout={{ width: WIDTH }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          bottom: 20,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={-100}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <TouchableOpacity
+        <View
           style={{
-            backgroundColor: theme.colors.secondary,
-            padding: 10,
-            borderRadius: 45,
+            padding: 20,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Text style={{ color: "white" }}>Save recipe</Text>{" "}
-        </TouchableOpacity>
-      </View>
+          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+            Top of screen
+          </Text>
+        </View>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{ width: WIDTH }}
+        />
+        <View
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.colors.secondary,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 45,
+            }}
+            onPress={() => {
+              console.log({
+                title: overviewTitle,
+                url: overviewURL,
+                image: overviewImageUri,
+                ingredients: ingredientList,
+                directions: directionsDesc,
+                totalTime: totalTime,
+              });
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 16, fontWeight:'bold' }}>Save recipe</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -409,7 +560,6 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -422,20 +572,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    width: '70%'
   },
   button: {
     borderRadius: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     elevation: 2,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 
