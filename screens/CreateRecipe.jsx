@@ -18,7 +18,7 @@ import { TabView, SceneMap } from "react-native-tab-view";
 import { FlatList } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 
-const FirstTab = ({
+const IngredientsTab = ({
   ingredientList,
   createIngredient,
   deleteIngredient,
@@ -26,42 +26,74 @@ const FirstTab = ({
 }) => {
   const [modalVisible, setModalVisible] = useState("false");
   const [modalType, setModalType] = useState("");
-  const [ingredientInput, setIngradientInput] = useState("");
+  const [ingredientInput, setIngredientInput] = useState("");
   const [ingredientID, setIngredientID] = useState(0);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#ff4081" }}>
-      <FlatList
-        data={ingredientList}
-        renderItem={({ item, index }) => {
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                setIngredientID(item.id);
-                setModalType("update");
-                setModalVisible(true);
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>{item.name}</Text>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text> Create your own</Text>
+      </View>
+
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            setIngredientInput("");
+            setModalType("create");
+            setModalVisible(true);
+          }}
+        >
+          <View>
+            <Text>Add ingredients</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      {ingredientList && (
+        <View style={{ flex: 1, backgroundColor: "white" }}>
+          <FlatList
+            data={ingredientList}
+            renderItem={({ item, index }) => {
+              return (
                 <TouchableOpacity
+                  key={index}
                   onPress={() => {
-                    deleteIngredient(item.id);
+                    setIngredientID(item.id);
+                    setIngredientInput(item.name);
+                    setModalType("update");
+                    setModalVisible(true);
                   }}
                 >
-                  <Text> button</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text>{item.name}</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteIngredient(item.id);
+                      }}
+                    >
+                      <Text> button</Text>
+                    </TouchableOpacity>
+                  </View>
                 </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
+              );
+            }}
+          />
+        </View>
+      )}
       <Modal
         animationType="fade"
         transparent={true}
@@ -90,7 +122,7 @@ const FirstTab = ({
               style={{
                 flexDirection: "row-reverse",
                 justifyContent: "center",
-                alignContent: "center",
+                alignItems: "center",
               }}
             >
               <Pressable
@@ -135,19 +167,70 @@ const FirstTab = ({
   );
 };
 
-const SecondTab = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+const OverviewTab = ({ overviewImage, updateOverviewImage }) => {
+  const importImage = async () => {
+    let res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [3, 4],
+    });
+    if (!res.canceled) {
+      const imguri = res.assets[0].uri;
+    }
+  };
 
-const ThirdTab = () => <View style={{ flex: 1, backgroundColor: "#3ab700" }} />;
+  function displayImage() {
+    if (overviewImage) {
+      return (
+        <ImageBackground
+          source={{ uri: overviewImage }}
+          style={{ justifyContent: "center", alignItems: "center" }}
+          resizeMode="cover"
+        >
+          <Text>icon</Text>
+        </ImageBackground>
+      );
+    } else {
+      <Text>icon</Text>;
+    }
+  }
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#673ab7" }}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: 1,
+          borderStyle: "dashed",
+          borderColor: theme.colors.secondary,
+        }}
+      >
+        {displayImage()}
+      </View>
+      <Text>Title</Text>
+      <TextInput />
+      <Text>URL</Text>
+      <TextInput />
+    </View>
+  );
+};
+
+const DirectionsTab = () => (
+  <View style={{ flex: 1, backgroundColor: "white" }}>
+    <TextInput multiline={true} numberOfLines={6} />
+    <Text>Total time</Text>
+    <TextInput />
+  </View>
+);
 
 function CreateRecipe() {
   const WIDTH = Dimensions.get("window").width;
   const [activeTab, setActiveTab] = useState(0);
   const [tabs] = useState([
-    { key: "first", title: "Ingredients" },
-    { key: "second", title: "Instructions" },
-    { key: "third", title: "Presentation" },
+    { key: "Overview", title: "Overview" },
+    { key: "Ingredients", title: "Ingredients" },
+    { key: "Durections", title: "Durections" },
   ]);
   const [ingredientList, setIngradientList] = useState([]);
   function deleteIngredient(id) {
@@ -172,9 +255,11 @@ function CreateRecipe() {
 
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
-      case "first":
+      case "Overview":
+        return <SecondTab jumpTo={jumpTo} />;
+      case "Ingredients":
         return (
-          <FirstTab
+          <IngredientsTab
             jumpTo={jumpTo}
             ingredientList={ingredientList}
             deleteIngredient={deleteIngredient}
@@ -182,9 +267,7 @@ function CreateRecipe() {
             updateIngredient={updateIngredient}
           />
         );
-      case "second":
-        return <SecondTab jumpTo={jumpTo} />;
-      case "third":
+      case "Directions":
         return <ThirdTab jumpTo={jumpTo} />;
     }
   };
@@ -195,15 +278,15 @@ function CreateRecipe() {
       renderLabel={({ route, focused, color }) => (
         <Text
           style={{
-            color: focused ? theme.colors.primary : "white",
+            color: focused ? theme.colors.secondary : "black",
             fontSize: 16,
           }}
         >
           {route.title}
         </Text>
       )}
-      indicatorStyle={{ backgroundColor: theme.colors.primary }}
-      style={{ backgroundColor: theme.colors.secondary }}
+      indicatorStyle={{ backgroundColor: theme.colors.secondary }}
+      style={{ backgroundColor: "white" }}
     />
   );
 
@@ -216,11 +299,24 @@ function CreateRecipe() {
         onIndexChange={setActiveTab}
         initialLayout={{ width: WIDTH }}
       />
-      <TouchableOpacity style={{ position: "absolute", bottom: 20, right: 20 }}>
-        <View
-          style={{ backgroundColor: "red", padding: 10, borderRadius: 45 }}
-        ></View>
-      </TouchableOpacity>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 20,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            backgroundColor: theme.colors.secondary,
+            padding: 10,
+            borderRadius: 45,
+          }}
+        >
+          <Text style={{ color: "white" }}>Save recipe</Text>{" "}
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
