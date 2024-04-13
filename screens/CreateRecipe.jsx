@@ -167,7 +167,14 @@ const IngredientsTab = ({
   );
 };
 
-const OverviewTab = ({ overviewImage, updateOverviewImage }) => {
+const OverviewTab = ({
+  overviewImage,
+  updateOverviewImage,
+  overviewTitle,
+  updateOverviewTitle,
+  overviewURL,
+  updateOverviewURL,
+}) => {
   const importImage = async () => {
     let res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -176,6 +183,7 @@ const OverviewTab = ({ overviewImage, updateOverviewImage }) => {
     });
     if (!res.canceled) {
       const imguri = res.assets[0].uri;
+      updateOverviewImage(imguri);
     }
   };
 
@@ -197,30 +205,52 @@ const OverviewTab = ({ overviewImage, updateOverviewImage }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#673ab7" }}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 1,
-          borderStyle: "dashed",
-          borderColor: theme.colors.secondary,
-        }}
-      >
-        {displayImage()}
-      </View>
+      <TouchableOpacity onPress={importImage}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 1,
+            borderStyle: "dashed",
+            borderColor: theme.colors.secondary,
+          }}
+        >
+          {displayImage()}
+        </View>
+      </TouchableOpacity>
       <Text>Title</Text>
-      <TextInput />
+      <TextInput
+        value={overviewTitle}
+        onChangeText={(val) => {
+          updateOverviewTitle(val);
+        }}
+      />
       <Text>URL</Text>
-      <TextInput />
+      <TextInput
+        value={overviewURL}
+        onChangeText={(val) => {
+          updateOverviewURL(val);
+        }}
+      />
     </View>
   );
 };
 
-const DirectionsTab = () => (
+const DirectionsTab = ({
+  directionsDesc,
+  updateDirectionsDesc,
+  totalTime,
+  updateTotalTime,
+}) => (
   <View style={{ flex: 1, backgroundColor: "white" }}>
-    <TextInput multiline={true} numberOfLines={6} />
+    <TextInput
+      multiline={true}
+      numberOfLines={6}
+      value={directionsDesc}
+      onChangeText={updateDirectionsDesc}
+    />
     <Text>Total time</Text>
-    <TextInput />
+    <TextInput value={totalTime} onChangeText={updateTotalTime} />
   </View>
 );
 
@@ -233,6 +263,12 @@ function CreateRecipe() {
     { key: "Durections", title: "Durections" },
   ]);
   const [ingredientList, setIngradientList] = useState([]);
+  const [overviewImageUri, setOverviewImageUri] = useState("");
+  const [overviewTitle, setOverviewTitle] = useState("");
+  const [overviewURL, setOverviewURL] = useState("");
+  const [directionsDesc, setDirectionsDesc] = useState("");
+  const [totalTime, setTotalTime] = useState("");
+
   function deleteIngredient(id) {
     setIngradientList(ingredientList.filter((e) => e.id == id));
   }
@@ -256,7 +292,17 @@ function CreateRecipe() {
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
       case "Overview":
-        return <SecondTab jumpTo={jumpTo} />;
+        return (
+          <OverviewTab
+            jumpTo={jumpTo}
+            overviewImage={overviewImageUri}
+            updateOverviewImage={setOverviewImageUri}
+            overviewTitle={overviewTitle}
+            updateOverviewTitle={setOverviewTitle}
+            overviewURL={overviewURL}
+            updateOverviewURL={setOverviewURL}
+          />
+        );
       case "Ingredients":
         return (
           <IngredientsTab
@@ -268,7 +314,15 @@ function CreateRecipe() {
           />
         );
       case "Directions":
-        return <ThirdTab jumpTo={jumpTo} />;
+        return (
+          <DirectionsTab
+            jumpTo={jumpTo}
+            directionsDesc={directionsDesc}
+            updateDirectionsDesc={setDirectionsDesc}
+            totalTime={totalTime}
+            updateTotalTime={setTotalTime}
+          />
+        );
     }
   };
 
