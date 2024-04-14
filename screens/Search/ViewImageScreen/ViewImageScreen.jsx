@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Button from '../../../components/Button/Button'
@@ -13,6 +14,7 @@ import IngredientItem from './IngredientItem'
 import { MotiView } from 'moti'
 import { Skeleton } from 'moti/skeleton'
 import IngredientSkeletonItem from './IngredientSkeletonItem'
+import { firebase } from '../../../config'
 
 const ViewImageScreen = ({ navigation, route }) => {
   const { image } = route.params
@@ -27,11 +29,19 @@ const ViewImageScreen = ({ navigation, route }) => {
   const MODEL_ID = 'food-item-recognition'
   const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'
 
-  const IMAGE_URL =
-    'https://cdn.hita.com.vn/storage/blog/am-thuc-doi-song/cach-nau-pho-3.jpeg'
-
-  const fetchResult = async () => {
+  const fetchResult = async (image) => {
     setLoading(true)
+
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const ref = firebase
+      .storage()
+      .ref()
+      .child('images/' + new Date().toISOString())
+    const snapshot = await ref.put(blob)
+    const url = await snapshot.ref.getDownloadURL()
+
     try {
       const raw = JSON.stringify({
         user_app_id: {
@@ -42,7 +52,7 @@ const ViewImageScreen = ({ navigation, route }) => {
           {
             data: {
               image: {
-                url: IMAGE_URL,
+                url: url,
               },
             },
           },
@@ -98,7 +108,7 @@ const ViewImageScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (image) {
-      fetchResult()
+      fetchResult(image)
     }
   }, [image])
 

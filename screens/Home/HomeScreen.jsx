@@ -5,10 +5,9 @@ import CategoryList from '../../components/CategoryList/CategoryList'
 import ExploreMore from '../../components/ExploreMore/ExploreMore'
 import MealPlanMadeEasy from '../../components/Introduction/MealPlanMadeEasy'
 import RecommendList from '../../components/RecommendList/RecommendList'
+import Header from '../../components/Header/Header'
 
-const AnimatedHeader = forwardRef((props, ref) => (
-  <Animated.View {...props} ref={ref} />
-))
+const AnimatedHeader = Animated.createAnimatedComponent(Header)
 
 const HomeScreen = () => {
   const scrollY = useRef(new Animated.Value(0)).current

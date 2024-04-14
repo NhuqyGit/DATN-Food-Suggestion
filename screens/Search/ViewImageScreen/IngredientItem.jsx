@@ -15,7 +15,7 @@ const IngredientItem = ({ defaultTitle, id, style, onRemove, onEdit }) => {
           onChangeText={(text) => setTitle(text)}
         />
       ) : (
-        <Text>{title}</Text>
+        <Text>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
       )}
       <View style={styles.groupButton}>
         {isEdit ? (
