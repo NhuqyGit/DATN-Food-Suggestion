@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TextInput } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import Button from '../../../components/Button/Button'
 import { Feather } from '@expo/vector-icons'
 
@@ -13,9 +13,6 @@ const IngredientItem = ({ defaultTitle, id, style, onRemove, onEdit }) => {
         <TextInput
           defaultValue={title}
           onChangeText={(text) => setTitle(text)}
-          onFocus={() => {
-            scrollViewRef.current.scrollToEnd({ animated: true })
-          }}
         />
       ) : (
         <Text>{title}</Text>
