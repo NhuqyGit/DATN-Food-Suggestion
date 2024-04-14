@@ -15,7 +15,7 @@ const Search = () => {
       }}
     >
       <Stack.Screen name='SearchScreen' component={SearchScreen} />
-      <Stack.Screen name='CameraScreen' component={CameraScreen} />
+      {/* <Stack.Screen name='CameraScreen' component={CameraScreen} /> */}
       <Stack.Screen name='ViewImageScreen' component={ViewImageScreen} />
       <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
     </Stack.Navigator>

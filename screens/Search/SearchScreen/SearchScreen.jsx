@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import PopularItem from '../../../components/PopularItem/PopularItem'
 import DishItem from '../../../components/DishItem/DishItem'
 import { ScrollView } from 'react-native'
@@ -9,11 +9,12 @@ import SearchResultItem from '../../../components/SearchResultItem/SearchResultI
 import SearchHeader from '../components/SearchHeader'
 import { AntDesign } from '@expo/vector-icons'
 import Filter from '../components/Filter/Filter'
+import CameraScreen from '../CameraScreen/CameraScreen'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
-  const [isFocusSearch, setIsFocusSearch] = useState(true)
-  const [searchText, setSearchText] = useState('')
+  const [isVisible, setIsVisible] = useState(false)
+  const [step, setStep] = useState(1)
 
   const mockPopular = [
     {
@@ -366,13 +367,33 @@ const SearchScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.wrapper} scrollEnabled vertical>
         <SearchHeader
-          setIsFocusSearch={setIsFocusSearch}
-          setSearchText={setSearchText}
           navigation={navigation}
           route={route}
+          setVisible={setIsVisible}
+          setStep={setStep}
         />
 
-        {/* {!isFocusSearch ? (
+        {step === 1 && (
+          <View style={styles.popularWrapper}>
+            <View style={styles.padding}>
+              <Text style={styles.title}>Tìm kiếm gần đây</Text>
+
+              <View style={styles.historyList}>
+                {mockHistory.map((item) => (
+                  <HistoryItem key={item.id} item={item} />
+                ))}
+              </View>
+
+              <TouchableOpacity style={styles.footer}>
+                <Text style={styles.removeHistoryButton}>
+                  Xóa lịch sử tìm kiếm
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {step === 2 && (
           <View>
             <View style={styles.popularWrapper}>
               <View style={styles.padding}>
@@ -395,61 +416,9 @@ const SearchScreen = ({ navigation, route }) => {
               </View>
             </View>
           </View>
-        ) : (
-          <>
-            {!searchText ? (
-              <View style={styles.popularWrapper}>
-                <View style={styles.padding}>
-                  <Text style={styles.title}>Tìm kiếm gần đây</Text>
+        )}
 
-                  <View style={styles.historyList}>
-                    {mockHistory.map((item) => (
-                      <HistoryItem key={item.id} item={item} />
-                    ))}
-                  </View>
-
-                  <TouchableOpacity style={styles.footer}>
-                    <Text style={styles.removeHistoryButton}>
-                      Xóa lịch sử tìm kiếm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ) : (
-              <>
-                <View style={styles.popularWrapper}>
-                  <View style={styles.titleContainer}>
-                    <Text
-                      style={styles.titleResult}
-                    >{`${mockHistory.length}+ RESULT`}</Text>
-                    <TouchableOpacity
-                      style={styles.filterContainer}
-                      onPress={() => {
-                        setIsFilter(!isFilter)
-                      }}
-                    >
-                      <Text style={styles.filter}>{'Filter'}</Text>
-                      <AntDesign
-                        style={styles.searchIcon}
-                        name='down'
-                        size={22}
-                        color={'#BDBDBD'}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  {isFilter && <Filter hasButton />}
-
-                  {mockSearchResult?.map((item) => (
-                    <SearchResultItem key={item.id} item={item} />
-                  ))}
-                </View>
-              </>
-            )}
-          </>
-        )} */}
-
-        <>
+        {step === 3 && (
           <View style={styles.popularWrapper}>
             <View style={styles.titleContainer}>
               <Text
@@ -464,7 +433,7 @@ const SearchScreen = ({ navigation, route }) => {
                 <Text style={styles.filter}>{'Filter'}</Text>
                 <AntDesign
                   style={styles.searchIcon}
-                  name='down'
+                  name={isFilter ? 'up' : 'down'}
                   size={22}
                   color={'#BDBDBD'}
                 />
@@ -477,8 +446,12 @@ const SearchScreen = ({ navigation, route }) => {
               <SearchResultItem key={item.id} item={item} />
             ))}
           </View>
-        </>
+        )}
       </ScrollView>
+
+      <Modal visible={isVisible}>
+        <CameraScreen setVisible={setIsVisible} navigation={navigation} />
+      </Modal>
     </SafeAreaView>
   )
 }
