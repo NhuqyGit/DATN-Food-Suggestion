@@ -8,27 +8,32 @@ import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
 import { SIZES } from "../../theme/theme";
 import Footer from "../../components/FoodSuggestion/Footer";
 import Reccomand from "../../components/FoodSuggestion/Reccomand";
+import { useNavigation } from "@react-navigation/native";
+import { theme } from "../../theme/index";
 const Drawer = createDrawerNavigator();
 
-const FoodSuggestion = () =>{
+const FoodSuggestion = ({name}) =>{
     const [isFolderOpen, setIsFolderOpen] = useState(false);
     const folderTranslateX = useState(new Animated.Value(-SIZES.width * 0.7))[0];
     const opacity = useState(new Animated.Value(0))[0];
+    const navigation = useNavigation()
+
+   
 
     const openFolder = () => {
-    setIsFolderOpen(true);
-    Animated.parallel([
-        Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true
-        }),
-        Animated.timing(folderTranslateX, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true
-        })
-    ]).start();
+        setIsFolderOpen(true);
+        Animated.parallel([
+            Animated.timing(opacity, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true
+            }),
+            Animated.timing(folderTranslateX, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true
+            })
+        ]).start();
     };
 
     const closeFolder = () => {
@@ -46,37 +51,29 @@ const FoodSuggestion = () =>{
         ]).start(() => setIsFolderOpen(false));
     };
 
+    const handleNavigate = (name) =>{
+        closeFolder()
+        navigation.navigate(name)
+    }
+
     return (
-        <View style={{flex: 1}}>
-            <TouchableOpacity onPress={openFolder}>
-                <Text>Open Folder</Text>
-            </TouchableOpacity>
-            <Animated.View style={[styles.folder, { transform: [{ translateX: folderTranslateX }] }]}>
-                <TouchableOpacity onPress={closeFolder}>
-                    <Text>Close Folder</Text>
-                </TouchableOpacity>
-                {/* Your folder content here */}
-            </Animated.View>
-
-            {isFolderOpen && (
-                <Animated.View style={[styles.overlay, { opacity }]}>
-                    <TouchableOpacity onPress={closeFolder} style={styles.overlayTouchArea} activeOpacity={1} />
-                </Animated.View>
-            )}
-
-            <ScrollView
-                style={styles.container}
-                showsVerticalScrollIndicator={false}
-                vertical
-            >
-                <View>
-                    <Reccomand />
-                    <Reccomand />
-                    <Reccomand />
-                </View>
-            </ScrollView>
-            <Footer />
-        </View>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+            <View style={{flex: 1}}>
+                <ScrollView
+                    style={styles.container}
+                    showsVerticalScrollIndicator={false}
+                    vertical
+                >
+                    <View>
+                        {/* <Reccomand />
+                        <Reccomand />
+                        <Reccomand /> */}
+                        <Text>{name}</Text>
+                    </View>
+                </ScrollView>
+                <Footer />
+            </View>
+        </SafeAreaView>
     );
 };
 
@@ -88,13 +85,12 @@ const styles = StyleSheet.create({
     //   alignItems: 'center',
     },
     folder: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    width: SIZES.width * 0.7,
-    height: '100%',
-    padding: 20,
-    left: 0,
-    zIndex: 2,
+        position: 'absolute',
+        backgroundColor: 'white',
+        width: SIZES.width * 0.7,
+        height: '100%',
+        left: 0,
+        zIndex: 2,
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
