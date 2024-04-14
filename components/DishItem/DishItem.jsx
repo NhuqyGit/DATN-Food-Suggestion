@@ -21,10 +21,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    width: '100%',
   },
   image: {
-    width: 160,
-    height: 100,
+    width: '100%',
+    height: 200,
     borderRadius: 20,
     resizeMode: 'cover',
   },

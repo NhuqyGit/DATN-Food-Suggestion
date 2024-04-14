@@ -32,10 +32,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
+    width: '48.5%',
   },
   image: {
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     objectFit: 'cover',
   },
 })
