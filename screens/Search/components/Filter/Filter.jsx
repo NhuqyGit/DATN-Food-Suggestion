@@ -111,6 +111,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#373739',
     paddingVertical: 32,
     gap: 16,
+    position: 'absolute',
+    zIndex: 100,
+    top: 48,
+    height: '100%',
   },
 
   title: {

@@ -5,11 +5,13 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Ionicons, Entypo } from '@expo/vector-icons'
 import Button from '../../../components/Button/Button'
 
-function SearchHeader({ setIsFocusSearch, setSearchText, navigation, route }) {
+function SearchHeader({ setStep, navigation, route, setVisible }) {
+  const [search, setSearch] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -36,6 +38,16 @@ function SearchHeader({ setIsFocusSearch, setSearchText, navigation, route }) {
 
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
+  useEffect(() => {
+    if (search.length > 0) {
+      setStep(3)
+    } else if (search.length === 0 && isFocused) {
+      setStep(1)
+    } else if (search.length === 0 && !isFocused) {
+      setStep(2)
+    }
+  }, [search, isFocused])
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={[boxShadow, styles.searchContainer]}>
@@ -47,13 +59,16 @@ function SearchHeader({ setIsFocusSearch, setSearchText, navigation, route }) {
           color='#9e9e9e'
         />
         <TextInput
+          value={search}
           onFocus={() => {
-            setIsFocusSearch(true)
+            setIsFocused(true)
           }}
           onBlur={() => {
-            setIsFocusSearch(false)
+            setIsFocused(false)
           }}
-          onChangeText={(text) => setSearchText(text)}
+          onChangeText={(text) => {
+            setSearch(text)
+          }}
           style={styles.input}
           placeholder='Search'
         />
@@ -63,7 +78,8 @@ function SearchHeader({ setIsFocusSearch, setSearchText, navigation, route }) {
         <Button
           childrenIcon={<Entypo name='camera' size={24} color='black' />}
           onPress={() => {
-            navigation.navigate('CameraScreen')
+            // navigation.navigate('CameraScreen')
+            setVisible(true)
           }}
         />
       </TouchableOpacity>

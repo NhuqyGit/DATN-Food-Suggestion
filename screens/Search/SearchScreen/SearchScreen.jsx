@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import PopularItem from '../../../components/PopularItem/PopularItem'
 import DishItem from '../../../components/DishItem/DishItem'
 import { ScrollView } from 'react-native'
@@ -9,8 +9,13 @@ import SearchResultItem from '../../../components/SearchResultItem/SearchResultI
 import SearchHeader from '../components/SearchHeader'
 import { AntDesign } from '@expo/vector-icons'
 import Filter from '../components/Filter/Filter'
+import CameraScreen from '../CameraScreen/CameraScreen'
 
 const SearchScreen = ({ navigation, route }) => {
+  const [isFilter, setIsFilter] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [step, setStep] = useState(1)
+
   const mockPopular = [
     {
       id: 1,
@@ -144,50 +149,251 @@ const SearchScreen = ({ navigation, route }) => {
   const mockSearchResult = [
     {
       id: 1,
-      title: 'Breakfast with bread, eggs and bacon',
-      author: 'Tan Sang',
-      image: 'https://cdn.tgdd.vn/2020/12/CookProduct/2-1200x676-1.jpg',
+      title: 'Bun bo Hue with new broth, best recipe from around the world',
+      author: 'Master Chef :)',
+      image: require('../../../assets/images/Home/recommend1.png'),
+      ingredients: [
+        'Ingredient 1',
+        'Ingredient 2',
+        'Ingredient 3',
+        'Ingredient 4',
+        'Ingredient 5',
+        'Ingredient 6',
+      ],
+      reviews: [
+        {
+          user: 'User1',
+          comment:
+            'Following the recipe instructions was a breeze, and the end result was truly satisfying. The creamy Alfredo sauce was velvety smooth, perfectly coating each strand of pasta!',
+          rating: 1,
+        },
+        {
+          user: 'User2',
+          comment:
+            'I appreciated the simplicity of the ingredients list. It made it so easy to throw together a delicious meal without needing to make a trip to the store.',
+          rating: 4,
+        },
+        {
+          user: 'User1',
+          comment:
+            'The cooking times for the chicken and pasta were spot on – everything came together perfectly.',
+          rating: 5,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4.5 },
+        {
+          user: 'User1',
+          comment:
+            'I would recommend adding a squeeze of lemon juice to the sauce to brighten up the flavors.!',
+          rating: 2,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+        { user: 'User1', comment: 'Delicious!', rating: 3.4 },
+        {
+          user: 'User2',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.!',
+          rating: 4,
+        },
+      ],
+      rating: 4,
+      totalTime: 40,
+      servings: 3,
+      calories: 80,
     },
     {
       id: 2,
-      title: 'Bun bo Hue with new broth, best recipe from around the world',
-      author: 'Tan Sang',
-      image: 'https://cdn.tgdd.vn/2020/12/CookProduct/2-1200x676-1.jpg',
+      title: 'Pho with new broth, best recipe from around the world',
+      author: 'Master Chef ;)',
+      image: require('../../../assets/images/Home/recommend2.png'),
+      ingredients: [
+        'Ingredient 1',
+        'Ingredient 2',
+        'Ingredient 3',
+        'Ingredient 4',
+        'Ingredient 5',
+        'Ingredient 6',
+      ],
+      reviews: [
+        {
+          user: 'User1',
+          comment:
+            "Impeccable service and mouthwatering flavors make this a must-visit spot. From the moment you step in, you're treated to a culinary journey that delights the senses!",
+          rating: 3,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+        {
+          user: 'User1',
+          comment:
+            'I would recommend adding a squeeze of lemon juice to the sauce to brighten up the flavors.!',
+          rating: 5,
+        },
+        {
+          user: 'User2',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.',
+          rating: 4.5,
+        },
+        { user: 'User1', comment: 'Delicious!', rating: 2 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+        {
+          user: 'User1',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.!',
+          rating: 3.4,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+      ],
+      rating: 4,
+      totalTime: 40,
+      servings: 3,
+      calories: 80,
     },
     {
       id: 3,
-      title: 'Breakfast with bread, eggs and bacon',
-      author: 'Tan Sang',
-      image: 'https://cdn.tgdd.vn/2020/12/CookProduct/2-1200x676-1.jpg',
+      title: 'Bun bo Hue with new broth, best recipe from around the world',
+      author: 'Master Chef :)',
+      image: require('../../../assets/images/Home/recommend3.png'),
+      ingredients: [
+        'Ingredient 1',
+        'Ingredient 2',
+        'Ingredient 3',
+        'Ingredient 4',
+        'Ingredient 5',
+        'Ingredient 6',
+      ],
+      reviews: [
+        { user: 'User1', comment: 'Delicious!', rating: 1 },
+        {
+          user: 'User2',
+          comment:
+            'I would recommend adding a squeeze of lemon juice to the sauce to brighten up the flavors.!',
+          rating: 4,
+        },
+        {
+          user: 'User1',
+          comment:
+            'The cooking times for the chicken and pasta were spot on – everything came together perfectly.',
+          rating: 5,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4.5 },
+        {
+          user: 'User1',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.',
+          rating: 2,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+        { user: 'User1', comment: 'Delicious!', rating: 3.4 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+      ],
+      rating: 4,
+      totalTime: 40,
+      servings: 3,
+      calories: 80,
     },
     {
       id: 4,
-      title: 'Bun bo Hue with new broth, best recipe from around the world',
-      author: 'Tan Sang',
-      image: 'https://cdn.tgdd.vn/2020/12/CookProduct/2-1200x676-1.jpg',
+      title: 'Delicious Dish',
+      author: 'Master Chef :)',
+      image: require('../../../assets/images/Home/recommend4.png'),
+      ingredients: [
+        'Ingredient 1',
+        'Ingredient 2',
+        'Ingredient 3',
+        'Ingredient 4',
+        'Ingredient 5',
+        'Ingredient 6',
+      ],
+      reviews: [
+        {
+          user: 'User1',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.!',
+          rating: 1,
+        },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+        {
+          user: 'User1',
+          comment:
+            'I would recommend adding a squeeze of lemon juice to the sauce to brighten up the flavors.!',
+          rating: 5,
+        },
+        {
+          user: 'User2',
+          comment:
+            'I loved the creamy texture of the Alfredo sauce, but I felt like it needed a bit more seasoning.',
+          rating: 4.5,
+        },
+        { user: 'User1', comment: 'Delicious!', rating: 2 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+        { user: 'User1', comment: 'Delicious!', rating: 3.4 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+      ],
+      rating: 4,
+      totalTime: 40,
+      servings: 3,
+      calories: 80,
     },
     {
       id: 5,
-      title: 'Breakfast with bread, eggs and bacon',
-      author: 'Tan Sang',
-      image: 'https://cdn.tgdd.vn/2020/12/CookProduct/2-1200x676-1.jpg',
+      title: 'Delicious Dish',
+      author: 'Master Chef :)',
+      image: require('../../../assets/monngon.jpg'),
+      ingredients: [
+        'Ingredient 1',
+        'Ingredient 2',
+        'Ingredient 3',
+        'Ingredient 4',
+        'Ingredient 5',
+        'Ingredient 6',
+      ],
+      reviews: [
+        { user: 'User1', comment: 'Delicious!', rating: 1 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+        { user: 'User1', comment: 'Delicious!', rating: 5 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4.5 },
+        { user: 'User1', comment: 'Delicious!', rating: 2 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 3 },
+        { user: 'User1', comment: 'Delicious!', rating: 3.4 },
+        { user: 'User2', comment: 'Amazing recipe!', rating: 4 },
+      ],
+      rating: 4,
+      totalTime: 40,
+      servings: 3,
+      calories: 80,
     },
   ]
-
-  const [isFocusSearch, setIsFocusSearch] = useState(true)
-  const [searchText, setSearchText] = useState('')
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.wrapper} scrollEnabled vertical>
         <SearchHeader
-          setIsFocusSearch={setIsFocusSearch}
-          setSearchText={setSearchText}
           navigation={navigation}
           route={route}
+          setVisible={setIsVisible}
+          setStep={setStep}
         />
 
-        {!isFocusSearch ? (
+        {step === 1 && (
+          <View style={styles.popularWrapper}>
+            <View style={styles.padding}>
+              <Text style={styles.title}>Tìm kiếm gần đây</Text>
+
+              <View style={styles.historyList}>
+                {mockHistory.map((item) => (
+                  <HistoryItem key={item.id} item={item} />
+                ))}
+              </View>
+
+              <TouchableOpacity style={styles.footer}>
+                <Text style={styles.removeHistoryButton}>
+                  Xóa lịch sử tìm kiếm
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {step === 2 && (
           <View>
             <View style={styles.popularWrapper}>
               <View style={styles.padding}>
@@ -210,54 +416,42 @@ const SearchScreen = ({ navigation, route }) => {
               </View>
             </View>
           </View>
-        ) : (
-          <>
-            {!searchText ? (
-              <View style={styles.popularWrapper}>
-                <View style={styles.padding}>
-                  <Text style={styles.title}>Tìm kiếm gần đây</Text>
+        )}
 
-                  <View style={styles.historyList}>
-                    {mockHistory.map((item) => (
-                      <HistoryItem key={item.id} item={item} />
-                    ))}
-                  </View>
+        {step === 3 && (
+          <View style={styles.popularWrapper}>
+            <View style={styles.titleContainer}>
+              <Text
+                style={styles.titleResult}
+              >{`${mockHistory.length}+ RESULT`}</Text>
+              <TouchableOpacity
+                style={styles.filterContainer}
+                onPress={() => {
+                  setIsFilter(!isFilter)
+                }}
+              >
+                <Text style={styles.filter}>{'Filter'}</Text>
+                <AntDesign
+                  style={styles.searchIcon}
+                  name={isFilter ? 'up' : 'down'}
+                  size={22}
+                  color={'#BDBDBD'}
+                />
+              </TouchableOpacity>
+            </View>
 
-                  <TouchableOpacity style={styles.footer}>
-                    <Text style={styles.removeHistoryButton}>
-                      Xóa lịch sử tìm kiếm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ) : (
-              <>
-                <View style={styles.popularWrapper}>
-                  <View style={styles.titleContainer}>
-                    <Text
-                      style={styles.titleResult}
-                    >{`${mockHistory.length}+ RESULT`}</Text>
-                    <TouchableOpacity style={styles.filterContainer}>
-                      <Text style={styles.filter}>{'Filter'}</Text>
-                      <AntDesign
-                        style={styles.searchIcon}
-                        name='down'
-                        size={22}
-                        color={'#BDBDBD'}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <Filter hasButton />
+            {isFilter && <Filter hasButton />}
 
-                  {mockSearchResult?.map((item) => (
-                    <SearchResultItem key={item.id} item={item} />
-                  ))}
-                </View>
-              </>
-            )}
-          </>
+            {mockSearchResult?.map((item) => (
+              <SearchResultItem key={item.id} item={item} />
+            ))}
+          </View>
         )}
       </ScrollView>
+
+      <Modal visible={isVisible}>
+        <CameraScreen setVisible={setIsVisible} navigation={navigation} />
+      </Modal>
     </SafeAreaView>
   )
 }

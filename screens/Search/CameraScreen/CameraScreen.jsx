@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Button from '../../../components/Button/Button'
 
-const CameraScreen = ({ navigation, route }) => {
+const CameraScreen = ({ navigation, route, setVisible }) => {
   const [hasPermission, setHasPermission] = useState(null)
   const [image, setImage] = useState(null)
   const [type, setType] = useState(Camera.Constants.Type.back)
@@ -71,7 +71,7 @@ const CameraScreen = ({ navigation, route }) => {
           >
             {!image && (
               <Button
-                onPress={() => navigation.goBack()}
+                onPress={() => setVisible(false)}
                 childrenIcon={
                   <MaterialIcons
                     name='keyboard-arrow-left'
@@ -144,14 +144,15 @@ const CameraScreen = ({ navigation, route }) => {
           {image && (
             <TouchableOpacity
               onPress={() => {
+                setVisible(false)
                 navigation.navigate('ViewImageScreen', { image })
               }}
             >
               <Image
                 source={{ uri: image }}
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   borderRadius: 5,
                 }}
               />
