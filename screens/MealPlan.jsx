@@ -6,6 +6,7 @@ import MainMealPlan from "../components/MealPlan/PlanMealScreen/MainScreen";
 import AddScreen from "../components/MealPlan/PlanMealScreen/AddScreen";
 import Instruction from "../components/MealPlan/PlanMealScreen/Instruction";
 import EditSchedule from "../components/MealPlan/PlanMealScreen/EditSchedule";
+import GiveFeedBack from "../components/MealPlan/PlanMealScreen/GiveFeedBack";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function MealPlan() {
       <Stack.Screen name="MainMealPlan" component={MainMealPlan} />
       <Stack.Screen name="AddScreen" component={AddScreen} />
       <Stack.Screen name="Instruction" component={Instruction} />
+      <Stack.Screen name="GiveFeedback" component={GiveFeedBack} />
       <Stack.Screen name="EditSchedule" component={EditSchedule} />
     </Stack.Navigator>
   );

@@ -95,11 +95,11 @@ function ThisWeek() {
                 <Text className="text-lg pl-6">{day.title}</Text>
               </View>
 
-              <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[50px] justify-between  pl-2 pr-2 items-center">
-                <Text className="text-[#40AD53] text-[16px] font-semibold ">
-                  2
-                </Text>
-                <TouchableOpacity onPress={() => toggleAccordion(index)}>
+              <TouchableOpacity onPress={() => toggleAccordion(index)}>
+                <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2  items-center">
+                  <Text className="text-[#40AD53] text-[16px] font-semibold ">
+                    2
+                  </Text>
                   <Feather
                     name={
                       openAccordionIndex === index
@@ -109,8 +109,8 @@ function ThisWeek() {
                     size={18}
                     color="#40AD53"
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
             {openAccordionIndex === index && (
               <Animated.View className=" px-[10px]" style={animatedStyle}>
