@@ -373,7 +373,7 @@ const SearchScreen = ({ navigation, route }) => {
           setStep={setStep}
         />
 
-        {step === 1 && (
+        {/* {step === 1 && (
           <View style={styles.popularWrapper}>
             <View style={styles.padding}>
               <Text style={styles.title}>Tìm kiếm gần đây</Text>
@@ -391,9 +391,9 @@ const SearchScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-        )}
+        )} */}
 
-        {step === 2 && (
+        {step === 1 && (
           <View>
             <View style={styles.popularWrapper}>
               <View style={styles.padding}>
@@ -418,7 +418,7 @@ const SearchScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <View style={styles.popularWrapper}>
             <View style={styles.titleContainer}>
               <Text

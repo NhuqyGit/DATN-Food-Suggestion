@@ -40,11 +40,9 @@ function SearchHeader({ setStep, navigation, route, setVisible }) {
 
   useEffect(() => {
     if (search.length > 0) {
-      setStep(3)
-    } else if (search.length === 0 && isFocused) {
-      setStep(1)
-    } else if (search.length === 0 && !isFocused) {
       setStep(2)
+    } else if (search.length === 0 && !isFocused) {
+      setStep(1)
     }
   }, [search, isFocused])
 
