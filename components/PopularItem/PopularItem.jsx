@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 100,
     paddingVertical: 8,
-    gap: 16,
+    gap: 8,
     alignItems: 'center',
     backgroundColor: 'white',
     shadowColor: '#000',
@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
     elevation: 7,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
     objectFit: 'cover',
   },
 })

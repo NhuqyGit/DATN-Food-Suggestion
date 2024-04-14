@@ -10,33 +10,28 @@ import RecommendList from '../../components/RecommendList/RecommendList'
 const AnimatedHeader = Animated.createAnimatedComponent(Header)
 
 function HomeScreen() {
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current
 
   const headerOpacity = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: [1, 0],
     extrapolate: 'clamp',
-  });
-
+  })
 
   return (
-    <SafeAreaView style={{backgroundColor: '#c4e0e3'}}>
+    <SafeAreaView style={{ backgroundColor: '#c4e0e3' }}>
       <ScrollView
         style={styles.container}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}
         vertical
-
-        onScroll={e =>{
-          const offsetY = e.nativeEvent.contentOffset.y;
-          scrollY.setValue(offsetY);
+        onScroll={(e) => {
+          const offsetY = e.nativeEvent.contentOffset.y
+          scrollY.setValue(offsetY)
         }}
         scrollEventThrottle={16}
       >
-        <AnimatedHeader
-          style={[{ opacity: headerOpacity }]}
-        >
-        </AnimatedHeader>
+        <AnimatedHeader style={[{ opacity: headerOpacity }]}></AnimatedHeader>
         {/* <Header /> */}
         <CategoryList />
         <RecommendList />
@@ -52,8 +47,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     height: 'fit-content',
     gap: 16,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 })
 
 export default HomeScreen
+

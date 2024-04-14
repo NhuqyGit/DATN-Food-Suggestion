@@ -1,7 +1,7 @@
-import { Provider } from "react-redux";
-import { store } from "./context/store";
-import Navigation from "./navigation";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Provider } from 'react-redux'
+import { store } from './context/store'
+import Navigation from './navigation'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export default function App() {
   return (
@@ -10,5 +10,6 @@ export default function App() {
         <Navigation />
       </Provider>
     </GestureHandlerRootView>
-  );
+  )
 }
+

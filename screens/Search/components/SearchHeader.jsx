@@ -1,16 +1,15 @@
 import {
   View,
-  Text,
-  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Platform
+  Platform,
 } from 'react-native'
 import React from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, Entypo } from '@expo/vector-icons'
+import Button from '../../../components/Button/Button'
 
-function SearchHeader({ setIsFocusSearch, setSearchText }) {
+function SearchHeader({ setIsFocusSearch, setSearchText, navigation, route }) {
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -61,9 +60,11 @@ function SearchHeader({ setIsFocusSearch, setSearchText }) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.avatarContainer}>
-        <Image
-          style={styles.avatarImage}
-          source={require('../../../assets/images/Profile/avatarTest.jpg')}
+        <Button
+          childrenIcon={<Entypo name='camera' size={24} color='black' />}
+          onPress={() => {
+            navigation.navigate('CameraScreen')
+          }}
         />
       </TouchableOpacity>
     </View>
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 16,
+    paddingRight: 6,
     paddingVertical: 5,
   },
   avatarContainer: {

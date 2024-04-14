@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    width: 200,
+    width: 160,
     height: 100,
     borderRadius: 20,
     resizeMode: 'cover',
