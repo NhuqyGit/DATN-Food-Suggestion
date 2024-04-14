@@ -6,30 +6,80 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../../../components/Button/Button'
 import { MaterialIcons } from '@expo/vector-icons'
 import IngredientItem from './IngredientItem'
+import { MotiView } from 'moti'
+import { Skeleton } from 'moti/skeleton'
+import IngredientSkeletonItem from './IngredientSkeletonItem'
 
 const ViewImageScreen = ({ navigation, route }) => {
   const { image } = route.params
 
-  const mockOptions = [
-    { id: 1, title: 'Hành tây' },
-    { id: 2, title: 'Trứng gà' },
-    { id: 3, title: 'Thịt bò' },
-    { id: 4, title: 'Tỏi' },
-    { id: 5, title: 'Củ cải trắng' },
-    { id: 6, title: 'Hành lá' },
-    { id: 7, title: 'Giá đỗ' },
-    { id: 8, title: 'Giá đỗ' },
-    { id: 9, title: 'Giá đỗ' },
-    { id: 10, title: 'Giá đỗ' },
-    { id: 11, title: 'Giá đỗ' },
-    { id: 12, title: 'Giá đỗ' },
-  ]
+  const [resultS, setResultS] = useState('')
+  const [options, setOptions] = useState(resultS?.concepts ?? [])
+  const [loading, setLoading] = useState(false)
 
-  const [options, setOptions] = useState(mockOptions)
+  const PAT = '4fcfa4434cae441f90b79c9c2384c56e'
+  const USER_ID = 'clarifai'
+  const APP_ID = 'main'
+  const MODEL_ID = 'food-item-recognition'
+  const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'
+
+  const IMAGE_URL =
+    'https://cdn.hita.com.vn/storage/blog/am-thuc-doi-song/cach-nau-pho-3.jpeg'
+
+  const fetchResult = async () => {
+    setLoading(true)
+    try {
+      const raw = JSON.stringify({
+        user_app_id: {
+          user_id: USER_ID,
+          app_id: APP_ID,
+        },
+        inputs: [
+          {
+            data: {
+              image: {
+                url: IMAGE_URL,
+              },
+            },
+          },
+        ],
+      })
+
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Key ' + PAT,
+        },
+        body: raw,
+      }
+
+      const response = await fetch(
+        'https://api.clarifai.com/v2/models/' +
+          MODEL_ID +
+          '/versions/' +
+          MODEL_VERSION_ID +
+          '/outputs',
+        requestOptions
+      )
+
+      const result = await response.json()
+      if (result && result.outputs && result.outputs.length > 0) {
+        // Accessing data from the first output, modify this based on your actual data structure
+        setResultS(result.outputs[0].data)
+      } else {
+        console.log('No data found in the response')
+      }
+    } catch (error) {
+      console.log('error', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const onRemove = (id) => {
     setOptions((prev) => prev.filter((item) => item.id !== id))
@@ -46,6 +96,16 @@ const ViewImageScreen = ({ navigation, route }) => {
     )
   }
 
+  useEffect(() => {
+    if (image) {
+      fetchResult()
+    }
+  }, [image])
+
+  useEffect(() => {
+    setOptions(resultS?.concepts ?? [])
+  }, [resultS])
+
   return (
     <SafeAreaView style={styles.container}>
       <Button
@@ -57,31 +117,37 @@ const ViewImageScreen = ({ navigation, route }) => {
       />
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.content}>
-        <Text style={styles.title}>XÁC NHẬN NGUYÊN LIỆU CỦA BẠN </Text>
+        <Text style={styles.title}>XÁC NHẬN NGUYÊN LIỆU CỦA BẠN</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {options.map((item, index) => {
-            if (index === options.length - 1) {
-              return (
-                <IngredientItem
-                  key={item.id}
-                  defaultTitle={item.title}
-                  style={styles.borderButton}
-                  onRemove={() => onRemove(item.id)}
-                  id={item.id}
-                  onEdit={onEdit}
-                />
-              )
-            }
-            return (
-              <IngredientItem
-                key={item.id}
-                defaultTitle={item.title}
-                onRemove={() => onRemove(item.id)}
-                id={item.id}
-                onEdit={onEdit}
-              />
-            )
-          })}
+          {loading ? (
+            <IngredientSkeletonItem total={5} />
+          ) : (
+            <>
+              {options?.map((item, index) => {
+                if (index === options.length - 1) {
+                  return (
+                    <IngredientItem
+                      key={item.id}
+                      defaultTitle={item.name}
+                      style={styles.borderButton}
+                      onRemove={() => onRemove(item.id)}
+                      id={item.id}
+                      onEdit={onEdit}
+                    />
+                  )
+                }
+                return (
+                  <IngredientItem
+                    key={item.id}
+                    defaultTitle={item.name}
+                    onRemove={() => onRemove(item.id)}
+                    id={item.id}
+                    onEdit={onEdit}
+                  />
+                )
+              })}
+            </>
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>
