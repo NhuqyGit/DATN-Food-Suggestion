@@ -1,15 +1,16 @@
-import React, { useRef } from 'react'
-import { ScrollView, StyleSheet, View, Animated, Platform } from 'react-native'
+import React, { useRef, forwardRef } from 'react'
+import { ScrollView, StyleSheet, Animated } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CategoryList from '../../components/CategoryList/CategoryList'
 import ExploreMore from '../../components/ExploreMore/ExploreMore'
-import Header from '../../components/Header/Header'
 import MealPlanMadeEasy from '../../components/Introduction/MealPlanMadeEasy'
 import RecommendList from '../../components/RecommendList/RecommendList'
 
-const AnimatedHeader = Animated.createAnimatedComponent(Header)
+const AnimatedHeader = forwardRef((props, ref) => (
+  <Animated.View {...props} ref={ref} />
+))
 
-function HomeScreen() {
+const HomeScreen = () => {
   const scrollY = useRef(new Animated.Value(0)).current
 
   const headerOpacity = scrollY.interpolate({
@@ -32,7 +33,6 @@ function HomeScreen() {
         scrollEventThrottle={16}
       >
         <AnimatedHeader style={[{ opacity: headerOpacity }]}></AnimatedHeader>
-        {/* <Header /> */}
         <CategoryList />
         <RecommendList />
         <MealPlanMadeEasy />
