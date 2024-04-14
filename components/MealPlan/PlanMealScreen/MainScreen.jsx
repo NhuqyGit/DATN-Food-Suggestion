@@ -102,6 +102,7 @@ function MainScreen() {
               </View>
             </TouchableOpacity>
           </View>
+          {/* dss */}
 
           <View className="flex flex-row items-center  mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
             <TouchableOpacity
