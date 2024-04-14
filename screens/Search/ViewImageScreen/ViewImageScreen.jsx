@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Button from '../../../components/Button/Button'
 import { MaterialIcons } from '@expo/vector-icons'
 import IngredientItem from './IngredientItem'
@@ -28,6 +28,24 @@ const ViewImageScreen = ({ navigation, route }) => {
     { id: 11, title: 'Giá đỗ' },
     { id: 12, title: 'Giá đỗ' },
   ]
+
+  const [options, setOptions] = useState(mockOptions)
+
+  const onRemove = (id) => {
+    setOptions((prev) => prev.filter((item) => item.id !== id))
+  }
+
+  const onEdit = (id, title) => {
+    setOptions((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          return { ...item, title: title }
+        }
+        return item
+      })
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Button
@@ -41,17 +59,28 @@ const ViewImageScreen = ({ navigation, route }) => {
       <View style={styles.content}>
         <Text style={styles.title}>XÁC NHẬN NGUYÊN LIỆU CỦA BẠN </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {mockOptions.map((item, index) => {
-            if (index === mockOptions.length - 1) {
+          {options.map((item, index) => {
+            if (index === options.length - 1) {
               return (
                 <IngredientItem
                   key={item.id}
-                  title={item.title}
+                  defaultTitle={item.title}
                   style={styles.borderButton}
+                  onRemove={() => onRemove(item.id)}
+                  id={item.id}
+                  onEdit={onEdit}
                 />
               )
             }
-            return <IngredientItem key={item.id} title={item.title} />
+            return (
+              <IngredientItem
+                key={item.id}
+                defaultTitle={item.title}
+                onRemove={() => onRemove(item.id)}
+                id={item.id}
+                onEdit={onEdit}
+              />
+            )
           })}
         </ScrollView>
       </View>
@@ -66,6 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     position: 'relative',
+    backgroundColor: '#fff',
   },
 
   image: {

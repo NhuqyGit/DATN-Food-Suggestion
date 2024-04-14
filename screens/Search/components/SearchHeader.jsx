@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 16,
+    paddingRight: 6,
     paddingVertical: 5,
   },
   avatarContainer: {

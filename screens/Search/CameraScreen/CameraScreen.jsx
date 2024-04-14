@@ -1,4 +1,4 @@
-import { Entypo, MaterialIcons } from '@expo/vector-icons'
+import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import { Camera, CameraType } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 import { useEffect, useRef, useState } from 'react'
@@ -59,61 +59,68 @@ const CameraScreen = ({ navigation, route }) => {
       >
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 20,
+            backgroundColor: '#000',
           }}
         >
-          {!image && (
-            <Button
-              onPress={() => navigation.goBack()}
-              childrenIcon={
-                <MaterialIcons
-                  name='keyboard-arrow-left'
-                  size={32}
-                  color='white'
-                />
-              }
-            />
-          )}
-          {image && <Button icon={'close'} onPress={() => setImage(null)} />}
-
           <View
             style={{
               flexDirection: 'row',
+              justifyContent: 'space-between',
+              padding: 12,
             }}
           >
-            <Button
-              icon={'retweet'}
-              onPress={() =>
-                setType(
-                  type === CameraType.back ? CameraType.front : CameraType.back
-                )
-              }
-            />
-            <Button
-              color={
-                flash === Camera.Constants.FlashMode.off ? 'gray' : '#f1f1f1'
-              }
-              childrenIcon={
-                <Entypo
-                  name='flash'
-                  size={24}
-                  color={
-                    flash === Camera.Constants.FlashMode.off
-                      ? 'gray'
-                      : '#f1f1f1'
+            {!image && (
+              <Button
+                onPress={() => navigation.goBack()}
+                childrenIcon={
+                  <MaterialIcons
+                    name='keyboard-arrow-left'
+                    size={32}
+                    color='white'
+                  />
+                }
+              />
+            )}
+            {image && (
+              <Button icon={'close'} size={26} onPress={() => setImage(null)} />
+            )}
+
+            <View
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              <Button
+                onPress={() =>
+                  setType(
+                    type === CameraType.back
+                      ? CameraType.front
+                      : CameraType.back
+                  )
+                }
+                childrenIcon={
+                  <MaterialIcons
+                    name='flip-camera-ios'
+                    size={24}
+                    color='#fff'
+                  />
+                }
+              />
+              {flash === Camera.Constants.FlashMode.off ? (
+                <Button
+                  color={'#f1f1f1'}
+                  childrenIcon={
+                    <Ionicons name='flash-off' size={20} color='#fff' />
                   }
+                  onPress={() => setFlash(Camera.Constants.FlashMode.on)}
                 />
-              }
-              onPress={() =>
-                setFlash(
-                  flash === Camera.Constants.FlashMode.off
-                    ? Camera.Constants.FlashMode.on
-                    : Camera.Constants.FlashMode.off
-                )
-              }
-            />
+              ) : (
+                <Button
+                  childrenIcon={<Entypo name='flash' size={20} color='#fff' />}
+                  onPress={() => setFlash(Camera.Constants.FlashMode.off)}
+                />
+              )}
+            </View>
           </View>
         </View>
       </Camera>
@@ -126,7 +133,7 @@ const CameraScreen = ({ navigation, route }) => {
       >
         <View
           style={{
-            backgroundColor: '#f1f1f1',
+            backgroundColor: '#000',
             justifyContent: image ? 'space-between' : 'center',
             alignItems: 'center',
             flexDirection: 'row',
@@ -143,24 +150,18 @@ const CameraScreen = ({ navigation, route }) => {
               <Image
                 source={{ uri: image }}
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 50,
+                  height: 50,
                   borderRadius: 5,
                 }}
               />
             </TouchableOpacity>
           )}
           <View>
-            {/* <Button
-              title={'Take a picture'}
-              onPress={takePicture}
-              icon={'camera'}
-              color={'#000'}
-            /> */}
             <TouchableOpacity onPress={takePicture}>
               <View
                 style={{
-                  backgroundColor: '#000',
+                  backgroundColor: '#fff',
                   height: 60,
                   width: 60,
                   justifyContent: 'center',
@@ -170,7 +171,7 @@ const CameraScreen = ({ navigation, route }) => {
               >
                 <View
                   style={{
-                    backgroundColor: '#fff',
+                    backgroundColor: '#000',
                     height: 50,
                     width: 50,
                     borderRadius: 30,
@@ -180,7 +181,7 @@ const CameraScreen = ({ navigation, route }) => {
                 >
                   <View
                     style={{
-                      backgroundColor: '#000',
+                      backgroundColor: '#fff',
                       height: 40,
                       width: 40,
                       borderRadius: 30,
@@ -193,7 +194,7 @@ const CameraScreen = ({ navigation, route }) => {
 
           {image && (
             <View>
-              <Button color={'#000'} icon={'check'} onPress={saveImage} />
+              <Button color={'#fff'} icon={'check'} onPress={saveImage} />
             </View>
           )}
         </View>
