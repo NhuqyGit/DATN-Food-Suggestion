@@ -7,25 +7,39 @@ import {
   Image,
   StyleSheet,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
+import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
-function SearchResultItem({ item }) {
+function RecommendItem({ item }) {
+  const navigation = useNavigation()
   return (
-    <TouchableOpacity style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: item.image,
-        }}
-      />
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('FoodDetail', { foodDetails: item })
+      }}
+      activeOpacity={1}
+      style={styles.container}
+    >
+      <Image style={styles.image} source={item?.image} />
       <View style={styles.overlay}>
-        <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 3,
+          }}
+        >
+          <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+          <AntDesign name='star' size={20} color='#FF6321' />
+        </View>
         <Text style={styles.title}>{item.title}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>
-            <Icon style={styles.addIcon} name='plus' />
+            {/* <Icon style={styles.addIcon} name='plus' /> */}
+            <MaterialIcons name='add' size={22} color='white' />
           </View>
         </View>
       </View>
@@ -36,11 +50,11 @@ function SearchResultItem({ item }) {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    padding: 16,
+    paddingHorizontal: 16,
   },
   image: {
     width: '100%',
-    height: 300,
+    height: 400,
     borderRadius: 8,
     marginRight: 16,
   },
@@ -48,15 +62,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 20,
+    right: 0,
     bottom: 0,
     justifyContent: 'flex-end',
-    padding: 8,
+    padding: 24,
   },
   title: {
     color: 'white',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   rating: {
     color: 'white',
@@ -69,8 +83,10 @@ const styles = StyleSheet.create({
   },
   author: {
     color: 'white',
-    fontSize: 14,
+    fontWeight: '500',
     marginRight: 4,
+    textTransform: 'uppercase',
+    color: '#9e9e9e',
   },
   iconContainer: {
     backgroundColor: theme.colors.secondary,
@@ -80,7 +96,6 @@ const styles = StyleSheet.create({
       ) / 2,
     width: Dimensions.get('window').width * 0.075,
     height: Dimensions.get('window').width * 0.075,
-    padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -90,5 +105,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SearchResultItem
+export default RecommendItem
 
