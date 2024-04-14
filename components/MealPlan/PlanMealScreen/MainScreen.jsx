@@ -104,8 +104,19 @@ function MainScreen() {
           </View>
 
           <View className="flex flex-row items-center  mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
-            <Feather name="flag" size={24} color="#40AD53" />
-            <Text className="ml-4 text-base font-semibold">Give feedback</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(false);
+                navigation.navigate("GiveFeedback");
+              }}
+            >
+              <View className="flex flex-row items-center">
+                <Feather name="flag" size={24} color="#40AD53" />
+                <Text className="ml-4 text-base font-semibold">
+                  Give feedback
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </BottomSheet>
