@@ -42,7 +42,7 @@ const GiveFeedBack = () => {
               * 1. How likely is it that you would recommended the DATN Meal
               Planner to a friend or colleague?
             </Text>
-            <View className="flex flex-row justify-between w-full pt-6">
+            <View className="flex flex-row justify-between w-full pt-3">
               <Text className="text-base font-normal text-[#232222b3]">
                 NOT AT ALL LIKELY
               </Text>
@@ -54,7 +54,7 @@ const GiveFeedBack = () => {
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                 <TouchableOpacity
                   key={value}
-                  className={`px-[9px] py-2 mr-[9px] border rounded ${
+                  className={`px-[9px] py-2 mr-[9px] border border-[#6e6a6a6d] rounded ${
                     rating === value
                       ? "bg-[#3a9693] text-white"
                       : "bg-transparent"
