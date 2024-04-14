@@ -11,6 +11,7 @@ const IngredientSkeletonItem = ({ total }) => {
     >
       {Array.from({ length: total }).map((_, index) => (
         <View
+          key={index}
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
