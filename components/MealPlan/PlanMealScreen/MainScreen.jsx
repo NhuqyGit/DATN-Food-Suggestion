@@ -24,17 +24,40 @@ function MainScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={{ fontSize: 24, paddingTop: 5, paddingHorizontal: 20, fontWeight: 'bold' }}>
+        <Text
+          style={{
+            fontSize: 24,
+            paddingTop: 5,
+            paddingHorizontal: 10,
+            fontWeight: "bold",
+            marginBottom: 5,
+          }}
+        >
           Meal Planner
         </Text>
       </View>
       <View style={{ flex: 1 }}>
         <Tab.Navigator
           screenOptions={{
-            tabBarActiveTintColor: '#40AD53',
-            tabBarInactiveTintColor: 'gray',
-            tabBarIndicatorStyle: {
+            activeTintColor: '#40AD53',
+            inactiveTintColor: 'gray',
+
+            labelStyle: {
+              fontSize: 16,
+              fontWeight: '600',
+              textTransform: 'none',
+            },
+            tabStyle: {
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 'auto',
+            },
+            style: {
+              backgroundColor: 'white',
+            },
+            indicatorStyle: {
               backgroundColor: '#40AD53',
+              marginHorizontal: 5,
             },
           }}
         >
@@ -48,3 +71,4 @@ function MainScreen() {
 }
 
 export default MainScreen
+
