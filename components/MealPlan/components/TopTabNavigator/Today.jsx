@@ -87,7 +87,7 @@ function Today() {
             </Text>
           </View>
 
-          <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[50px] justify-between py-10  pl-2 pr-2 items-center">
+          <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2 items-center">
             <Text className="text-[#40AD53] text-[16px] font-semibold  ">
               2
             </Text>
