@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import React from 'react'
 
-const Button = ({ title, onPress, icon, color, size, childrenIcon }) => {
+const Button = ({ title, onPress, icon, color, size, childrenIcon, style }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
       {childrenIcon ? (
         childrenIcon
       ) : (

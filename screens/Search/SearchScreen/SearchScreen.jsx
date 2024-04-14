@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import PopularItem from '../../components/PopularItem/PopularItem'
-import DishItem from '../../components/DishItem/DishItem'
+import PopularItem from '../../../components/PopularItem/PopularItem'
+import DishItem from '../../../components/DishItem/DishItem'
 import { ScrollView } from 'react-native'
-import HistoryItem from '../../components/HistoryItem/HistoryItem'
-import SearchResultItem from '../../components/SearchResultItem/SearchResultItem'
-import SearchHeader from './components/SearchHeader'
+import HistoryItem from '../../../components/HistoryItem/HistoryItem'
+import SearchResultItem from '../../../components/SearchResultItem/SearchResultItem'
+import SearchHeader from '../components/SearchHeader'
 import { AntDesign } from '@expo/vector-icons'
-import Filter from './components/Filter/Filter'
+import Filter from '../components/Filter/Filter'
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation, route }) => {
   const mockPopular = [
     {
       id: 1,
@@ -183,6 +183,8 @@ const SearchScreen = () => {
         <SearchHeader
           setIsFocusSearch={setIsFocusSearch}
           setSearchText={setSearchText}
+          navigation={navigation}
+          route={route}
         />
 
         {!isFocusSearch ? (

@@ -7,15 +7,15 @@ import Home from './screens/Home/Home'
 import MealPlan from './screens/MealPlan'
 import Personalization from './screens/Personalization'
 import ProfileStack from './screens/ProfileStack'
-import SearchScreen from './screens/Search/SearchScreen'
+import SearchScreen from './screens/Search/SearchScreen/SearchScreen'
 import Splash from './components/Splash/Spash'
 import FoodSuggestionScreen from './screens/FoodSuggestionScreen'
 import { theme } from './theme/index'
 import { Ionicons } from '@expo/vector-icons'
-import SignInScreen from "./screens/SignInScreen";
-import SignUpScreen from "./screens/SignUpScreen";
-import SplashScreen from "./screens/SplashScreen";
-
+import SignInScreen from './screens/SignInScreen'
+import SignUpScreen from './screens/SignUpScreen'
+import SplashScreen from './screens/SplashScreen'
+import Search from './screens/Search/Search'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -26,35 +26,36 @@ const TabArr = [
     label: 'Home',
     activeIcon: 'home-sharp',
     inActiveIcon: 'home-outline',
-    size: 26
+    size: 26,
   },
   {
-    route: SearchScreen,
+    route: Search,
     label: 'Search',
     activeIcon: 'search-outline',
     inActiveIcon: 'search-outline',
-    size: 26
+    size: 26,
+    tabBarVisible: false, // Thêm dòng này để ẩn tab menu
   },
   {
     route: FoodSuggestionScreen,
     label: 'Per1',
     activeIcon: 'add-circle-sharp',
     inActiveIcon: 'add-circle-outline',
-    size: 40
+    size: 40,
   },
   {
     route: MealPlan,
     label: 'Meal Plan',
     activeIcon: 'calendar-sharp',
     inActiveIcon: 'calendar-outline',
-    size: 26
+    size: 26,
   },
   {
     route: ProfileStack,
     label: 'Profile',
     activeIcon: 'person-sharp',
     inActiveIcon: 'person-outline',
-    size: 26
+    size: 26,
   },
 ]
 
