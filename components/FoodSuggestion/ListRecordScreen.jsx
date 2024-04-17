@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/index'
 import RecordItem from './RecordItem';
 
-const ListRecordScreen = ({closeFolder}) => {
+const ListRecordScreen = () => {
     const [isActive, setIsActive] = useState()
     const navigation = useNavigation()
     const recordData = [
@@ -27,6 +27,50 @@ const ListRecordScreen = ({closeFolder}) => {
             id: 4,
             name: "Record D"
         },
+        {
+            id: 5,
+            name: "Record D"
+        },
+        {
+            id: 6,
+            name: "Record D"
+        },
+        {
+            id: 7,
+            name: "Record D"
+        },
+        {
+            id: 8,
+            name: "Record D"
+        },
+        {
+            id: 9,
+            name: "Record D"
+        },
+        {
+            id: 10,
+            name: "Record D"
+        },
+        {
+            id: 10,
+            name: "Record D"
+        },
+        {
+            id: 11,
+            name: "Record D"
+        },
+        {
+            id: 12,
+            name: "Record D"
+        },
+        {
+            id: 13,
+            name: "Record D"
+        },
+        {
+            id: 14,
+            name: "Record 14"
+        },
     ]
 
     useEffect(()=>{
@@ -41,23 +85,31 @@ const ListRecordScreen = ({closeFolder}) => {
         )
     })
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-                onPress={closeFolder}
-                style={styles.btnBack}>
-                <Ionicons
-                    name='close'
-                    size={22}
-                    color='black'
-                />
-            </TouchableOpacity>
+        // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
+            <View style={styles.container}>
+                <TouchableOpacity
+                    onPress={()=> navigation.goBack()}
+                    style={styles.btnBack}>
+                    <Ionicons
+                        name='close'
+                        size={22}
+                        color='black'
+                    />
+                </TouchableOpacity>
 
-            <Text style={styles.title}>List Records</Text>
+                <Text style={styles.title}>List Records</Text>
 
-            <ScrollView style={styles.recordsContainer}>
-                {listRecord}
-            </ScrollView>
-        </View>
+                <ScrollView style={styles.recordsContainer}>
+                    {listRecord}
+                </ScrollView>
+
+                <View style={styles.footer}>
+                    <TouchableOpacity style={styles.btnSelect}>
+                        <Text style={styles.btnText}>Select</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        // </SafeAreaView>
     )
 }
 
@@ -65,8 +117,9 @@ export default ListRecordScreen
 
 const styles = StyleSheet.create({
     container:{
-        width: '100%',
-        height: '100%',
+        // width: '100%',
+        // height: '100%',
+        flex: 1,
         paddingHorizontal: 20,
         paddingTop: 20,
         backgroundColor:'white',
@@ -91,5 +144,26 @@ const styles = StyleSheet.create({
     },
     recordsContainer:{
 
+    },
+    footer:{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    btnSelect:{
+        backgroundColor: theme.colors.secondary,
+        paddingHorizontal: 30,
+        paddingVertical: 15,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25,
+        width: '30%',
+        marginVertical: 10
+    },
+    btnText:{
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '500'
     }
 })
