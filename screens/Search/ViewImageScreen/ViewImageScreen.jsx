@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
   button: {
     zIndex: 2,
     position: 'absolute',
-    top: 20,
+    top: 40,
     left: 10,
   },
 
   content: {
-    marginTop: '90%',
+    marginTop: '100%',
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const TermsAndPolicies = ({ navigation }) => {
+const FAQTopic = ({ navigation, title }) => {
   return (
     <SafeAreaView
       style={{
@@ -26,14 +26,14 @@ const TermsAndPolicies = ({ navigation }) => {
             <MaterialIcons name='keyboard-arrow-left' size={28} color='black' />
           </TouchableOpacity>
 
-          <Text style={styles.head}>Terms and Policies</Text>
+          <Text style={styles.head}>{`FAQ ${title}`}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-export default TermsAndPolicies
+export default FAQTopic
 
 const styles = StyleSheet.create({
   container: {

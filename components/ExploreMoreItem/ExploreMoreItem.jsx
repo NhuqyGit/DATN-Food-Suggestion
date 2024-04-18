@@ -1,12 +1,17 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native';
 
 function ExploreMoreItem({ item }) {
+  const navigation = useNavigation();
+  const handlePress = (title) => {
+    navigation.navigate('ExploreCategories', {cate: title});
+  };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress= {() => handlePress(item.title)}>
       <Text style={styles.title}>{item?.title}</Text>
       <Image style={styles.image} source={item?.image} />
-    </View>
+    </TouchableOpacity>
   )
 }
 

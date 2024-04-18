@@ -1,7 +1,10 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, Platform} from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native';
+import ExploreCategories from "../CategoryList/ExploreCategories";
 
 function Category({ item }) {
+  const navigation = useNavigation();
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -25,10 +28,13 @@ function Category({ item }) {
           }
       }
   }
+  const handlePress = (title) => {
+    navigation.navigate('ExploreCategories', {cate: title});
+  };
 
   const boxShadow = generateBoxShadowStyle(0, 3, 'black', 0.2, 5, 5, 'black')
   return (
-    <TouchableOpacity style={[boxShadow, styles.container]}>
+    <TouchableOpacity style={[boxShadow, styles.container]} onPress={() => handlePress(item.title)}>
         <Text style={styles.title}>{item.title}</Text>
         <Image
           style={styles.image}
