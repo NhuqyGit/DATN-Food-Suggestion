@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingVertical: 20,
     justifyContent: 'space-between',
+    borderTopColor: '#F1F1F1',
   },
 
   titleContainer: {
@@ -70,8 +71,8 @@ const styles = StyleSheet.create({
   totalTag: {
     borderRadius: 20,
     paddingVertical: 3,
-    paddingLeft: 10,
-    paddingRight: 5,
+    paddingLeft: 15,
+    paddingRight: 10,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.secondary,

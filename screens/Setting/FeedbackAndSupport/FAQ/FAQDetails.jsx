@@ -8,8 +8,14 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
+import RenderHTML from 'react-native-render-html'
+import { useWindowDimensions } from 'react-native'
 
-const TermsAndPolicies = ({ navigation }) => {
+const FAQDetails = ({ navigation, route }) => {
+  const { title, topic } = route.params
+
+  const { width } = useWindowDimensions()
+
   return (
     <SafeAreaView
       style={{
@@ -26,14 +32,20 @@ const TermsAndPolicies = ({ navigation }) => {
             <MaterialIcons name='keyboard-arrow-left' size={28} color='black' />
           </TouchableOpacity>
 
-          <Text style={styles.head}>Terms and Policies</Text>
+          <Text style={styles.head}>{`FAQ - ${title}`}</Text>
+          <Text style={styles.title}>{topic.title}</Text>
+          {topic?.content && (
+            <View>
+              <RenderHTML contentWidth={width} source={topic?.content} />
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-export default TermsAndPolicies
+export default FAQDetails
 
 const styles = StyleSheet.create({
   container: {
@@ -60,6 +72,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#231F20',
     marginBottom: 32,
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#231F20',
+    marginBottom: 16,
   },
 })
 

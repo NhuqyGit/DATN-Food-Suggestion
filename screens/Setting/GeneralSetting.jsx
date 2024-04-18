@@ -25,15 +25,15 @@ function GeneralSetting({ navigation }) {
       action: 'TermsAndPolicies',
     },
     {
-      name: 'Help & Support',
-      action: 'HelpSupport',
+      name: 'Feedback & Support',
+      action: 'FeedbackStack',
     },
     {
       name: 'Report Problems',
       action: 'ReportProblems',
     },
     {
-      name: 'About Nhuqy',
+      name: 'About Suggestion Food',
       action: 'About',
     },
   ]
@@ -51,16 +51,25 @@ function GeneralSetting({ navigation }) {
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.btnBack}
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialIcons name='keyboard-arrow-left' size={28} color='black' />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={styles.btnBack}
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialIcons name='keyboard-arrow-left' size={28} color='black' />
+          </TouchableOpacity>
 
-        <Text style={styles.head}>Settings</Text>
+          <Text style={styles.head}>Settings</Text>
 
-        {listComponentSettingItem}
+          {listComponentSettingItem}
+        </View>
+
+        <View>
+          <Text style={styles.version}>Version 1.0</Text>
+          <Text style={styles.brand}>
+            Part of the Suggestion Food. family of brand
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   )
@@ -71,6 +80,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
     paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   btnBack: {
     width: 35,
@@ -89,6 +99,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontWeight: '700',
     color: '#231F20',
+  },
+
+  version: {
+    fontWeight: 'bold',
   },
 })
 

@@ -1,19 +1,19 @@
 import React from 'react'
 import {
-  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
-import { theme } from '../../theme'
+import { theme } from '../../../theme'
 
-const ReportProblems = ({ navigation }) => {
+const FeedbackScreen = ({ navigation }) => {
   const dismissKeyboard = () => {
     Keyboard.dismiss()
   }
@@ -38,10 +38,10 @@ const ReportProblems = ({ navigation }) => {
               />
             </TouchableOpacity>
 
-            <Text style={styles.head}>Report Problems</Text>
+            <Text style={styles.head}>Submit Feedback</Text>
 
             <TextInput
-              placeholder={`Let us know the issue you're encountering.`}
+              placeholder={`Tell us what's on your mind?`}
               multiline
               style={styles.input}
             />
@@ -56,15 +56,14 @@ const ReportProblems = ({ navigation }) => {
   )
 }
 
-export default ReportProblems
+export default FeedbackScreen
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
     justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   btnBack: {
     width: 35,
