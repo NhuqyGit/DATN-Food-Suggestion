@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import {
+  Ionicons,
+  AntDesign,
+  Entypo,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import {
   StyleSheet,
   Text,
   TextInput,
@@ -44,8 +50,13 @@ const IngredientsTab = ({
           alignItems: "center",
         }}
       >
+        <MaterialCommunityIcons
+          name="food-variant"
+          size={100}
+          color={theme.colors.backgroundColor}
+        />
         <Text style={{ color: theme.colors.grayBackground }}>
-          Create your own
+          Create your ingredient list
         </Text>
       </View>
       <View style={{ width: "90%", flex: 1, marginBottom: 75 }}>
@@ -58,7 +69,12 @@ const IngredientsTab = ({
               setModalVisible(true);
             }}
           >
-            <View>
+            <View style={{ flexDirection: "row" }}>
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={theme.colors.secondary}
+              />
               <Text style={{ color: theme.colors.secondary, fontSize: 16 }}>
                 Add ingredients
               </Text>
@@ -92,16 +108,20 @@ const IngredientsTab = ({
                         paddingHorizontal: 25,
                         borderColor: theme.colors.secondary,
                         borderWidth: 0.5,
-                        borderRadius: 15
+                        borderRadius: 15,
                       }}
                     >
-                      <Text style={{fontSize: 16}}>{item.name}</Text>
+                      <Text style={{ fontSize: 16 }}>{item.name}</Text>
                       <TouchableOpacity
                         onPress={() => {
                           deleteIngredient(item.id);
                         }}
                       >
-                        <Text style={{color: 'red'}}>Delete</Text>
+                        <AntDesign
+                          name="delete"
+                          size={24}
+                          color={theme.colors.primary}
+                        />
                       </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
@@ -121,7 +141,14 @@ const IngredientsTab = ({
         >
           <View style={[styles.centeredView]}>
             <View style={[styles.modalView, {}]}>
-              <Text style={{marginTop: -20, paddingBottom: 20, color: theme.colors.secondary, fontWeight:'bold'}}>
+              <Text
+                style={{
+                  marginTop: -20,
+                  paddingBottom: 20,
+                  color: theme.colors.secondary,
+                  fontWeight: "bold",
+                }}
+              >
                 {modalType == "create"
                   ? "New ingredient"
                   : modalType == "update"
@@ -129,7 +156,14 @@ const IngredientsTab = ({
                     : "Undefined Type"}
               </Text>
               <TextInput
-                style={{paddingHorizontal: 15, paddingVertical: 5, borderRadius: 10, borderColor: theme.colors.secondary, borderWidth: 1, width: "120%"}}
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 5,
+                  borderRadius: 10,
+                  borderColor: theme.colors.secondary,
+                  borderWidth: 1,
+                  width: "120%",
+                }}
                 value={ingredientInput}
                 onChangeText={setIngredientInput}
               />
@@ -140,19 +174,21 @@ const IngredientsTab = ({
                   alignItems: "center",
                   marginTop: 20,
                   marginBottom: -10,
-                  gap: 20
+                  gap: 20,
                 }}
               >
                 <Pressable
-                  style={[styles.button,{backgroundColor:'white'}]}
+                  style={[styles.button, { backgroundColor: "white" }]}
                   onPress={() => {
                     setModalVisible(!modalVisible);
                   }}
                 >
                   <Text
-                    style={
-                      { color: theme.colors.secondary, fontWeight: 'bold', textAlign: 'center' }
-                    }
+                    style={{
+                      color: theme.colors.secondary,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
                   >
                     Cancel
                   </Text>
@@ -171,7 +207,7 @@ const IngredientsTab = ({
                     setModalVisible(!modalVisible);
                   }}
                 >
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
                     {modalType == "create"
                       ? "Create"
                       : modalType == "update"
@@ -184,7 +220,6 @@ const IngredientsTab = ({
           </View>
         </Modal>
       </View>
-      
     </View>
   );
 };
@@ -224,11 +259,19 @@ const OverviewTab = ({
           imageStyle={{ borderRadius: 25 }}
           resizeMode="cover"
         >
-          <Text style={{ color: theme.colors.secondary }}>icon</Text>
+          <Ionicons
+            name="images-outline"
+            size={24}
+            color={theme.colors.secondary}
+          />
         </ImageBackground>
       );
     } else {
-      return <Text style={{ color: theme.colors.secondary }}>icon</Text>;
+      <Ionicons
+        name="images-outline"
+        size={24}
+        color={theme.colors.secondary}
+      />;
     }
   }
 
@@ -241,16 +284,18 @@ const OverviewTab = ({
       }}
     >
       <View style={{ width: "90%" }}>
-        <Text
-          style={{
-            color: theme.colors.secondary,
-            fontSize: 16,
-            fontWeight: "bold",
-            paddingTop: 20,
-          }}
-        >
-          Title
-        </Text>
+        <View style={{ paddingTop: 20, flexDirection: "row" }}>
+          <Ionicons name="text" size={24} color={theme.colors.secondary} />
+          <Text
+            style={{
+              color: theme.colors.secondary,
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            Title
+          </Text>
+        </View>
         <TextInput
           style={{
             borderRadius: 10,
@@ -264,16 +309,18 @@ const OverviewTab = ({
             updateOverviewTitle(val);
           }}
         />
-        <Text
-          style={{
-            color: theme.colors.secondary,
-            fontSize: 16,
-            fontWeight: "bold",
-            paddingTop: 20,
-          }}
-        >
-          URL
-        </Text>
+        <View style={{ paddingTop: 20, flexDirection: "row" }}>
+          <Entypo name="link" size={24} color={theme.colors.secondary} />
+          <Text
+            style={{
+              color: theme.colors.secondary,
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            URL
+          </Text>
+        </View>
         <TextInput
           style={{
             borderRadius: 10,
@@ -341,16 +388,18 @@ const DirectionsTab = ({
         }}
         onChangeText={updateDirectionsDesc}
       />
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "bold",
-          color: theme.colors.secondary,
-          paddingTop: 20,
-        }}
-      >
-        Total time
-      </Text>
+      <View style={{ paddingTop: 20, flexDirection: "row" }}>
+        <AntDesign name="hourglass" size={24} color={theme.colors.secondary} />
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: theme.colors.secondary,
+          }}
+        >
+          Total time
+        </Text>
+      </View>
       <TextInput
         value={totalTime}
         onChangeText={updateTotalTime}
@@ -454,7 +503,7 @@ function CreateRecipe() {
           style={{
             color: focused ? theme.colors.secondary : "black",
             fontSize: 16,
-            fontWeight:'bold'
+            fontWeight: "bold",
           }}
         >
           {route.title}
@@ -475,13 +524,16 @@ function CreateRecipe() {
         <View
           style={{
             padding: 20,
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Top of screen
+            Create personal recipe
           </Text>
+          <TouchableOpacity onPress={() => {}}>
+            <AntDesign name="close" size={24} color="white" />
+          </TouchableOpacity>
         </View>
         <TabView
           navigationState={{ index, routes }}
@@ -518,7 +570,9 @@ function CreateRecipe() {
               });
             }}
           >
-            <Text style={{ color: "white", fontSize: 16, fontWeight:'bold' }}>Save recipe</Text>
+            <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+              Save recipe
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -572,7 +626,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '70%'
+    width: "70%",
   },
   button: {
     borderRadius: 20,
