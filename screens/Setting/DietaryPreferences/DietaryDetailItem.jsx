@@ -28,6 +28,7 @@ const DietaryDetailItem = ({ data, isLastItem = false, selected = false }) => {
       <View
         style={{
           borderBottomWidth: isLastItem ? 0 : 1,
+          borderBottomColor: '#F1f1f1',
         }}
       ></View>
     </View>

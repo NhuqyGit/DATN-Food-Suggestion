@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingVertical: 20,
     justifyContent: 'space-between',
+    borderTopColor: '#F1F1F1',
   },
 
   titleContainer: {
