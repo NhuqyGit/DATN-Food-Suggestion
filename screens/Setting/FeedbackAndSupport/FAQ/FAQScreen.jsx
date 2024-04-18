@@ -221,19 +221,19 @@ const FAQScreen = ({ navigation }) => {
       title: 'Getting Started',
       topics: [
         {
-          id: 1,
+          id: 8,
           title: 'Android app overview',
         },
         {
-          id: 2,
+          id: 9,
           title: 'Getting the Android app',
         },
         {
-          id: 3,
+          id: 10,
           title: 'Recipes page',
         },
         {
-          id: 4,
+          id: 11,
           title: 'Android Recipe search',
         },
       ],
@@ -259,35 +259,32 @@ const FAQScreen = ({ navigation }) => {
           <Text style={styles.head}>FAQ</Text>
           {menu?.map((item, index) => {
             return (
-              <>
-                <View style={[styles.titleWrapper]} key={item.id}>
-                  <Text style={styles.title}>{item?.title}</Text>
-                  {item?.topics?.map((topic) => {
-                    return (
-                      <>
-                        <TouchableOpacity
-                          style={styles.subTitleWrapper}
-                          onPress={() => {
-                            navigation.navigate('FAQDetails', {
-                              title: item?.title,
-                              topic: topic,
-                            })
-                          }}
-                        >
-                          <Text style={styles.subTitle}>{topic?.title}</Text>
-                        </TouchableOpacity>
-                        <View
-                          style={{
-                            borderBottomWidth:
-                              index !== menu?.length - 1 ? 1 : 0,
-                            borderBottomColor: '#F1F1F1',
-                          }}
-                        ></View>
-                      </>
-                    )
-                  })}
-                </View>
-              </>
+              <View style={[styles.titleWrapper]} key={index}>
+                <Text style={styles.title}>{item?.title}</Text>
+                {item?.topics?.map((topic, subIndex) => {
+                  return (
+                    <View key={subIndex}>
+                      <TouchableOpacity
+                        style={styles.subTitleWrapper}
+                        onPress={() => {
+                          navigation.navigate('FAQDetails', {
+                            title: item?.title,
+                            topic: topic,
+                          })
+                        }}
+                      >
+                        <Text style={styles.subTitle}>{topic?.title}</Text>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          borderBottomWidth: index !== menu?.length - 1 ? 1 : 0,
+                          borderBottomColor: '#F1F1F1',
+                        }}
+                      />
+                    </View>
+                  )
+                })}
+              </View>
             )
           })}
         </View>

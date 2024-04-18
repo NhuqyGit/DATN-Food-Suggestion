@@ -58,7 +58,7 @@ const About = ({ navigation }) => {
 
           {topics?.map((topic, index) => {
             return (
-              <>
+              <View key={index}>
                 <TouchableOpacity style={styles.subTitleWrapper}>
                   <Text style={styles.subTitle}>{topic?.title}</Text>
                 </TouchableOpacity>
@@ -68,7 +68,7 @@ const About = ({ navigation }) => {
                     borderBottomColor: '#F1F1F1',
                   }}
                 ></View>
-              </>
+              </View>
             )
           })}
         </View>

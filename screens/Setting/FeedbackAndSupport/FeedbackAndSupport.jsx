@@ -52,10 +52,9 @@ const FeedbackAndSupport = ({ navigation }) => {
           <Text style={styles.head}>Feedback & Support</Text>
           {menu?.map((item, index) => {
             return (
-              <>
+              <View key={item.id}>
                 <TouchableOpacity
                   style={[styles.titleWrapper]}
-                  key={item.id}
                   onPress={() => {
                     navigation.navigate(item.route)
                   }}
@@ -68,7 +67,7 @@ const FeedbackAndSupport = ({ navigation }) => {
                     borderBottomColor: '#F1F1F1',
                   }}
                 ></View>
-              </>
+              </View>
             )
           })}
         </View>
