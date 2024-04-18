@@ -70,15 +70,15 @@ function FoodDetailsScreen({ navigation, route }) {
     scrollY.value = event.contentOffset.y;
   });
 
-  const scrollAnimatedStyles = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 320],
-      [0, -ImageHeight],
-      Extrapolation.CLAMP
-    );
-    return { transform: [{ translateY }] };
-  });
+  // const scrollAnimatedStyles = useAnimatedStyle(() => {
+  //   const translateY = interpolate(
+  //     scrollY.value,
+  //     [0, 320],
+  //     [0, -ImageHeight],
+  //     Extrapolation.CLAMP
+  //   );
+  //   return { transform: [{ translateY }] };
+  // });
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
