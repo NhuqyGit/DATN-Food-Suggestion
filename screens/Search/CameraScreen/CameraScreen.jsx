@@ -66,7 +66,9 @@ const CameraScreen = ({ navigation, route, setVisible }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
+              alignItems: 'center',
               padding: 12,
+              marginTop: 30,
             }}
           >
             {!image && (
@@ -138,6 +140,8 @@ const CameraScreen = ({ navigation, route, setVisible }) => {
             alignItems: 'center',
             flexDirection: 'row',
             padding: 10,
+            paddingVertical: 20,
+            marginBottom: 10,
             flex: 1,
           }}
         >
