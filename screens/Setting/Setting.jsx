@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
-import DietaryPreferences from './DietaryPreferences'
 import TermsAndPolicies from './TermsAndPolicies'
 import HelpAndSupport from './HelpAndSupport'
 import ReportProblems from './ReportProblems'
 import About from './About'
 import MyAccount from './MyAccount'
 import GeneralSetting from './GeneralSetting'
+import DietaryPreferences from './DietaryPreferences/DietaryPreferences'
 
 const Stack = createNativeStackNavigator()
 
@@ -32,3 +32,4 @@ const Setting = () => {
 export default Setting
 
 const styles = StyleSheet.create({})
+
