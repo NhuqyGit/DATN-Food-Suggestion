@@ -1,14 +1,14 @@
-import { MaterialIcons } from '@expo/vector-icons'
-import React from 'react'
+import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
 import {
   ScrollView,
   Text,
   TouchableOpacity,
   StyleSheet,
   View,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import SettingItem from '../../components/Profile/SettingItem'
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import SettingItem from '../../components/Profile/SettingItem';
 
 function GeneralSetting({ navigation }) {
   const listSettingItem = [
@@ -36,7 +36,7 @@ function GeneralSetting({ navigation }) {
       name: 'About Suggestion Food',
       action: 'About',
     },
-  ]
+  ];
 
   const listComponentSettingItem = listSettingItem.map((item, index) => {
     return (
@@ -45,8 +45,8 @@ function GeneralSetting({ navigation }) {
         navigation={navigation}
         key={index.toString()}
       />
-    )
-  })
+    );
+  });
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
@@ -64,7 +64,11 @@ function GeneralSetting({ navigation }) {
           {listComponentSettingItem}
         </View>
 
-        <View>
+        <View
+          style={{
+            marginBottom: 10,
+          }}
+        >
           <Text style={styles.version}>Version 1.0</Text>
           <Text style={styles.brand}>
             Part of the Suggestion Food. family of brand
@@ -72,7 +76,7 @@ function GeneralSetting({ navigation }) {
         </View>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 const styles = StyleSheet.create({
   container: {
@@ -104,7 +108,6 @@ const styles = StyleSheet.create({
   version: {
     fontWeight: 'bold',
   },
-})
+});
 
-export default GeneralSetting
-
+export default GeneralSetting;

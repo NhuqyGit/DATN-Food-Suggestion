@@ -4,69 +4,81 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { theme } from '../theme/index'
-import { useNavigation } from '@react-navigation/native'
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { theme } from '../theme/index';
+import { useNavigation } from '@react-navigation/native';
 
 function SignUpScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>Let’s get started!</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>What is your email address?</Text>
-          <TextInput style={styles.input} placeholder='Enter your email' />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Create a password</Text>
-          <TextInput
-            style={styles.input}
-            type='password'
-            placeholder='Enter your password'
-          />
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
-        </View>
-
-        <View style={styles.warningContainer}>
-          <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
-            <Text style={styles.warningItem}>
-              Must contain at least 8 characters
-            </Text>
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.title}>Let’s get started!</Text>
           </View>
-          <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
-            <Text style={styles.warningItem}>One number</Text>
-          </View>
-          <View style={styles.warningItem}>
-            <View
-              style={{
-                ...styles.warningIcon,
-                backgroundColor: theme.colors.grayBackground,
-              }}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>What is your email address?</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType='email-address'
+              placeholder='Enter your email'
             />
-
-            <Text style={styles.warningItem}>One special character</Text>
           </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Create a password</Text>
+            <TextInput
+              style={styles.input}
+              type='password'
+              placeholder='Enter your password'
+            />
+          </View>
+          <View style={styles.progressBarContainer}>
+            <View style={styles.progressBar} />
+            <View style={styles.progressBar} />
+            <View style={styles.progressBar} />
+          </View>
+
+          <View style={styles.warningContainer}>
+            <View style={styles.warningItem}>
+              <View style={styles.warningIcon} />
+              <Text style={styles.warningItem}>
+                Must contain at least 8 characters
+              </Text>
+            </View>
+            <View style={styles.warningItem}>
+              <View style={styles.warningIcon} />
+              <Text style={styles.warningItem}>One number</Text>
+            </View>
+            <View style={styles.warningItem}>
+              <View
+                style={{
+                  ...styles.warningIcon,
+                  backgroundColor: theme.colors.grayBackground,
+                }}
+              />
+
+              <Text style={styles.warningItem}>One special character</Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('SignInScreen')}
+            style={styles.signUpButtonContainer}
+          >
+            <Text style={styles.signButton}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('SignInScreen')}
-          style={styles.signUpButtonContainer}
-        >
-          <Text style={styles.signButton}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -146,7 +158,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
-})
+});
 
-export default SignUpScreen
-
+export default SignUpScreen;

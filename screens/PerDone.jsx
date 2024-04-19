@@ -5,13 +5,20 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-} from 'react-native'
-import React from 'react'
+} from 'react-native';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectUserInfo,
+  setIsDonePersonalization,
+} from '../slices/UserLoginSlice';
 
-const deviceHeight = Dimensions.get('window').height
-const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
 
 function PerDone({ navigation, setIsDone }) {
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
       <Image
@@ -24,16 +31,21 @@ function PerDone({ navigation, setIsDone }) {
         Visit your personalized home feed of recipe suggestions
       </Text>
 
-      <TouchableOpacity onPress={()=>setIsDone(true)}>
+      <TouchableOpacity
+        onPress={() => {
+          setIsDone(true);
+          dispatch(setIsDonePersonalization(true));
+        }}
+      >
         <View style={styles.btn}>
           <Text style={styles.btnText}>Get Started</Text>
         </View>
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
-export default PerDone
+export default PerDone;
 
 const styles = StyleSheet.create({
   container: {
@@ -71,4 +83,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: deviceWidth * 0.065,
     paddingVertical: deviceWidth * 0.03,
   },
-})
+});
