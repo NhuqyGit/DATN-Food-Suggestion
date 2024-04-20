@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Modal } from "react-native";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../../theme/index";
 import MoreByCreator, { renderStarRating } from "./MoreByCreator";
+import { setCollectionButtonText } from "../../../slices/modalSlice";
 const moreByThisCreator = [
   {
     id: "1",
@@ -54,13 +56,13 @@ const reportReasons = [
   "Others",
 ];
 
-function OverviewTab({ foodDetails }) {
-  const [collectionButtonText, setCollectionButtonText] = useState("Add to Collection");
+function OverviewTab({ foodDetails, navigation}) {
+  const collectionButtonText = useSelector(state => state.modal.collectionButtonText);
   const [isReporting, setReporting] = useState(false);
-
+  const dispatch = useDispatch();
   const [selectedReasons, setSelectedReasons] = useState([]);
   const handleAddToCollection = () => {
-    setCollectionButtonText("Update Collections");
+    dispatch(setCollectionButtonText("Update Collections"));
     navigation.navigate("CollectionScreen");
   };
 

@@ -8,7 +8,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-
+import { useSelector, useDispatch } from "react-redux";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
@@ -26,59 +26,29 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import {
+  toggleModal,
+  togglePopup,
+} from "../../slices/modalSlice";
+import SaveModal from "../SaveModal/SaveModal";
+
 const Tab = createMaterialTopTabNavigator();
-
-//export const { height: sHeight, width: sWidth } = Dimensions.get("screen");
-//const ImageHeight = 280;
-
 function FoodDetailsScreen({ navigation, route }) {
   const { foodDetails } = route.params;
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [collectionButtonText, setCollectionButtonText] =
-    useState("Add to Collection");
-  const [addMealPlanBtnText, setAddMealPlanBtnText] =
-    useState("Add to Meal Plan");
-
-  const [popupMessage, setPopupMessage] = useState("");
-  const togglePopup = () => setShowPopup(!showPopup);
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  const handleAddToMealPlan = () => {
-    if (addMealPlanBtnText === "Add to Meal Plan") {
-      setAddMealPlanBtnText("Remove from Meal Plan");
-      toggleModal();
-      setPopupMessage("Recipe added to your Meal Plan");
-      togglePopup();
-    } else {
-      setAddMealPlanBtnText("Add to Meal Plan");
-      toggleModal();
-      setPopupMessage("Recipe removed from your Meal Plan");
-      togglePopup();
-    }
-  };
-  const handleAddToCollection = () => {
-    setCollectionButtonText("Update Collections");
-    navigation.navigate("CollectionScreen");
-  };
-
+  const isModalVisible = useSelector((state) => state.modal.isModalVisible);
+  const showPopup = useSelector((state) => state.modal.showPopup);
+  const addMealPlanBtnText = useSelector(
+    (state) => state.modal.addMealPlanBtnText
+  );
+  const collectionButtonText = useSelector(
+    (state) => state.modal.collectionButtonText
+  );
+  const popupMessage = useSelector((state) => state.modal.popupMessage);
+  const dispatch = useDispatch();
   const scrollY = useSharedValue(0);
   const handleScroll = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y;
   });
-
-  // const scrollAnimatedStyles = useAnimatedStyle(() => {
-  //   const translateY = interpolate(
-  //     scrollY.value,
-  //     [0, 320],
-  //     [0, -ImageHeight],
-  //     Extrapolation.CLAMP
-  //   );
-  //   return { transform: [{ translateY }] };
-  // });
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -122,7 +92,7 @@ function FoodDetailsScreen({ navigation, route }) {
           style={{
             flex: 1,
           }}
-          onPress={toggleModal}
+          onPress={() => dispatch(toggleModal())}
         >
           {addMealPlanBtnText === "Add to Meal Plan" &&
           collectionButtonText === "Add to Collection" ? (
@@ -154,7 +124,9 @@ function FoodDetailsScreen({ navigation, route }) {
           }}
         >
           <Tab.Screen name="Overview">
-            {() => <OverviewTab foodDetails={foodDetails} />}
+            {() => (
+              <OverviewTab foodDetails={foodDetails} navigation={navigation} />
+            )}
           </Tab.Screen>
           <Tab.Screen name="Ingredients">
             {() => <IngredientsTab foodDetails={foodDetails} />}
@@ -167,41 +139,17 @@ function FoodDetailsScreen({ navigation, route }) {
           </Tab.Screen>
         </Tab.Navigator>
       </View>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.overlay} onPress={toggleModal} />
-          <View style={styles.innerContainer}>
-            <TouchableOpacity style={styles.closeIcon} onPress={toggleModal}>
-              <Icon name="close" size={20} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={handleAddToMealPlan}
-            >
-              <Icon name="file" size={20} color={theme.colors.secondary} />
-              <Text style={styles.modalOptionText}>{addMealPlanBtnText}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={handleAddToCollection}
-            >
-              <AntIcon
-                name="addfolder"
-                size={20}
-                color={theme.colors.secondary}
-              />
-              <Text style={styles.modalOptionText}>{collectionButtonText}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <SaveModal
+        navigation={navigation}
+        isModalVisible={isModalVisible}
+        addMealPlanBtnText={addMealPlanBtnText}
+        collectionButtonText={collectionButtonText}
+      />
       {showPopup && (
-        <PopupNotification message={popupMessage} onClose={togglePopup} />
+        <PopupNotification
+          message={popupMessage}
+          onClose={() => dispatch(togglePopup())}
+        />
       )}
     </View>
   );
@@ -212,41 +160,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 40,
     left: 20,
-  },
-  tabBarLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
-  },
-  innerContainer: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    height: 252,
-  },
-  closeIcon: {
-    position: "absolute",
-    top: 15,
-    right: 20,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-    padding: 5,
-    marginTop: 15,
-  },
-  modalOptionText: {
-    marginLeft: 10,
   },
 });
 
