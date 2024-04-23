@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,15 +8,15 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { MaterialIcons } from '@expo/vector-icons'
-import { theme } from '../../../theme'
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
+import { theme } from '../../../theme';
 
 const FeedbackScreen = ({ navigation }) => {
   const dismissKeyboard = () => {
-    Keyboard.dismiss()
-  }
+    Keyboard.dismiss();
+  };
   return (
     <SafeAreaView
       style={{
@@ -53,10 +53,10 @@ const FeedbackScreen = ({ navigation }) => {
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default FeedbackScreen
+export default FeedbackScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
 
   submitButton: {
-    marginTop: 20,
+    marginVertical: 20,
     backgroundColor: theme.colors.secondary,
     borderRadius: 10,
     paddingVertical: 10,
@@ -107,5 +107,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-})
-
+});
