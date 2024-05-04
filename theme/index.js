@@ -39,5 +39,8 @@ export const theme = {
     primary: '#FF6321',
     grayBackground: '#E2E2E2',
     secondary: '#3a9693',
+    dark: '#373739',
+    lightGray: '#d9d9d9',
+    lightGreen: '#c4e0e3'
   },
 }

@@ -9,23 +9,27 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const About = ({ navigation }) => {
-  const topics = [
+const FeedbackAndSupport = ({ navigation }) => {
+  const menu = [
     {
       id: 1,
-      title: 'Terms of Use',
+      title: 'Feedback',
+      route: 'Feedback',
     },
     {
       id: 2,
-      title: 'Privacy Notice',
+      title: 'Rate Our App',
+      route: 'RateOurApp',
     },
     {
       id: 3,
-      title: 'Copyright Policy',
+      title: 'Love Suggestion Food?',
+      route: 'LoveSuggestionFood',
     },
     {
       id: 4,
-      title: 'Do Not Sell My Personal Information',
+      title: 'FAQ',
+      route: 'FAQStack',
     },
   ]
 
@@ -45,26 +49,21 @@ const About = ({ navigation }) => {
             <MaterialIcons name='keyboard-arrow-left' size={28} color='black' />
           </TouchableOpacity>
 
-          <Text style={styles.head}>About Suggestion Food</Text>
-
-          <Text style={styles.content}>
-            Suggestion Food was launched in 2024 by Student of HCMUS on a{' '}
-            mission to invent the ultimate kitchen tool. Whether it's finding a
-            recipe or going to the store, Suggestion Food wants to make it
-            easier for foodies to do what they love - cook, eat and share!.
-            Suggestion Food's mission is to be the world's largest, most
-            powerful and most helpful food site in the world.
-          </Text>
-
-          {topics?.map((topic, index) => {
+          <Text style={styles.head}>Feedback & Support</Text>
+          {menu?.map((item, index) => {
             return (
-              <View key={index}>
-                <TouchableOpacity style={styles.subTitleWrapper}>
-                  <Text style={styles.subTitle}>{topic?.title}</Text>
+              <View key={item.id}>
+                <TouchableOpacity
+                  style={[styles.titleWrapper]}
+                  onPress={() => {
+                    navigation.navigate(item.route)
+                  }}
+                >
+                  <Text style={styles.title}>{item?.title}</Text>
                 </TouchableOpacity>
                 <View
                   style={{
-                    borderBottomWidth: index !== topics?.length - 1 ? 1 : 0,
+                    borderBottomWidth: index !== menu?.length - 1 ? 1 : 0,
                     borderBottomColor: '#F1F1F1',
                   }}
                 ></View>
@@ -77,7 +76,7 @@ const About = ({ navigation }) => {
   )
 }
 
-export default About
+export default FeedbackAndSupport
 
 const styles = StyleSheet.create({
   container: {
@@ -105,25 +104,14 @@ const styles = StyleSheet.create({
     color: '#231F20',
     marginBottom: 32,
   },
-  content: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 32,
-  },
 
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 24,
-  },
-
-  subTitleWrapper: {
+  titleWrapper: {
     paddingVertical: 20,
   },
 
-  subTitle: {
+  title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })
 

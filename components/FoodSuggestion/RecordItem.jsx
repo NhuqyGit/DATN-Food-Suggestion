@@ -7,14 +7,17 @@ import { theme } from '../../theme/index'
 import React from 'react'
 
 const RecordItem = ({record}) => {
-  return (
-    <TouchableOpacity style={styles.container}>
-        <Text>{record.name}</Text>
-        <TouchableOpacity>
-            <Ionicons name='ellipsis-horizontal' size={24} color="black" />
+    const navigation = useNavigation()
+    return (
+        <TouchableOpacity
+            onPress={()=>navigation.push("RecordDetail")}
+            style={styles.container}>
+            <Text>{record.name}</Text>
+            <TouchableOpacity>
+                <Ionicons name='ellipsis-horizontal' size={24} color="black" />
+            </TouchableOpacity>
         </TouchableOpacity>
-    </TouchableOpacity>
-  )
+    )
 }
 
 export default RecordItem

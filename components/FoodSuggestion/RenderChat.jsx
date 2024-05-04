@@ -1,68 +1,145 @@
-import React from "react";
-import { Image, Text, View } from "react-native";
-import DishRender from "./DishRender";
-const listRender = [
-  {
-    id: "1",
-    name: "Recipe 1",
-    author: "Chef Huu Nien :)",
-    rating: 5,
-    image: require("../../assets/monngon.jpg"),
-  },
-  {
-    id: "2",
-    name: "Recipe 2",
-    author: "Chef Huu Nien :)",
-    rating: 3,
-    image: require("../../assets/monngon.jpg"),
-  },
-  {
-    id: "3",
-    name: "Recipe 3",
-    author: "Chef Huu Nien :)",
-    rating: 4.5,
-    image: require("../../assets/monngon.jpg"),
-  },
-  {
-    id: "4",
-    name: "Recipe 4",
-    author: "Chef Huu Nien :)",
-    rating: 5,
-    image: require("../../assets/monngon.jpg"),
-  },
-  {
-    id: "5",
-    name: "Recipe 5",
-    author: "Chef Huu Nien :)",
-    rating: 3,
-    image: require("../../assets/monngon.jpg"),
-  },
-];
+import { Image, StyleSheet, Text, View } from 'react-native'
+import { MaterialCommunityIcons, Feather, Ionicons, Entypo } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
+import { theme } from '../../theme/index'
+import { useMessage } from './MessageContext'
+import { Skeleton } from 'moti/skeleton'
 
-const RenderChat = () => {
+const RenderChat = ({props}) => {
+  // const [loading, setLoading] = useState(false);
+  const { listMessage, handleNewMessage,  handleNewResponse, fetchData} = useMessage();
+
+  useEffect(() => {
+    if (!props.isSend) {
+        fetchData((response) => {
+            handleNewResponse(props.id, response);
+        });
+    }
+
+  }, []);
+  console.log(props.id, ": RENDER")
   return (
-    <View>
-      <View className="flex flex-row gap-4 ">
-        <View className="flex-1">
-          <Image source={require("../../assets/svgs/chat/cook.svg")} />
-          <View className="w-7 h-7"></View>
-        </View>
-        <View className="flex-9 gap-4">
-          <Text className="text-white font-semibold text-[16px]">duc23ff4</Text>
-          <View className="pr-5">
-            <Text className="text-white  text-[14px]">
-              Contrary to popular belief, Lorem Ipsum is not simply random text.
-              It has roots in a piece of classical Latin literature from 45 BC,
-              making it over 2000 years old.
-            </Text>
-          </View>
-          <View>
-            <DishRender recipes={listRender} />
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-};
+    <View style={styles.container}>
+		<View style={styles.sendContainer}>
+			<View style={styles.avatarUser}>
+			<Image style={styles.imageUser} source={require("../../assets/images/Profile/avatarTest.jpg")} />
+			</View>
+			<View style={styles.sendChat}>
+			<Text style={styles.nameText}>Mr. Bean</Text>
+			<Text style={styles.sendText}>{props.send}</Text>
+			</View>
+		</View>
 
-export default RenderChat;
+		<View style={styles.responseContainer}>
+			<View style={styles.avatarGPT}>
+			{/* <Image style={styles.imageUser} source={require("../../assets/favicon.png")} /> */}
+			<Feather name="slack" size={20} color={theme.colors.dark} />
+			</View>
+			<View style={styles.responseChat}>
+			<Text style={styles.nameText}>Nhuqy</Text>
+			<Skeleton
+				colorMode='light'
+				width={"90%"}
+				height={14}
+				radius={'round'}
+			>
+
+				{props.isSend ? 
+				<Text style={styles.sendResponse}>{props.response}</Text>
+				: null }
+			</Skeleton>
+
+			{props.isSend ? null : 
+				<View style={{marginTop: 5}}>
+					<Skeleton
+						colorMode='light'
+						width={"70%"}
+						height={14}
+						radius={'round'}
+						/>
+				</View>
+			}
+			{props.isSend ? null : 
+				<View style={{marginTop: 5}}>
+					<Skeleton
+						colorMode='light'
+						width={"40%"}
+						height={14}
+						radius={'round'}
+						/>
+				</View>
+			}
+			{props.isSend ? null : 
+				<View style={{marginTop: 5}}>
+					<Skeleton
+						colorMode='light'
+						width={"60%"}
+						height={14}
+						radius={'round'}
+						/>
+				</View>
+			}
+			</View>
+		</View>
+    </View>
+  )
+}
+
+export default RenderChat
+
+const styles = StyleSheet.create({
+	container:{
+		marginTop: 10,
+		display: 'flex',
+		gap: 10
+	},
+	nameText:{
+		fontWeight: "600",
+		marginBottom: 5
+	},
+	avatarUser:{
+		display: 'flex',
+		alignItems: 'center',
+		marginRight: 15
+	},
+	avatarGPT:{
+		width: 30,
+		height: 30,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginRight: 15,
+		borderRadius: 100,
+		borderWidth: 1,
+		borderColor: theme.colors.lightGray
+	},
+	imageUser:{
+		width: 30,
+		height: 30,
+		borderRadius: 100,
+		borderWidth: 1,
+		borderColor: '#5360ac'
+	},
+	sendContainer:{
+		display: 'flex',
+		flexDirection: 'row',
+	},
+	sendChat:{
+		// backgroundColor: 'tomato',
+	},
+	sendText:{
+		marginBottom: 5,
+	},
+	
+	responseContainer:{
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	responseChat:{
+	
+	},
+	sendResponse:{
+
+	},
+  
+})

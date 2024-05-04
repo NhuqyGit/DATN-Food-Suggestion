@@ -1,32 +1,33 @@
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Animated, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { theme } from "../../theme/index";
 import React, { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import ListRecordScreen from './ListRecordScreen';
-
+import { SIZES } from '../../theme/theme';
+import { useMessage } from './MessageContext';
 const Footer = () => {
     const navigation = useNavigation();
+    const { listMessage, isFetchDataCompleted, handleNewMessage, handleNewResponse} = useMessage();
     const [isClick, setIsClick] = useState(false);
     const [isFolderOpen, setIsFolderOpen] = useState(false);
-    // const folderTranslateY = useRef(new Animated.Value(0)).current;
+    const folderTranslateY = useRef(new Animated.Value(0)).current;
 
     const openFolder = () => {
         setIsFolderOpen(true);
-        // Animated.timing(folderTranslateY, {
-        //     toValue: 0,
-        //     duration: 500, // Điều chỉnh giá trị duration ở đây để làm cho nó slide lên chậm hơn
-        //     useNativeDriver: true
-        // }).start();
+        Animated.timing(folderTranslateY, {
+            toValue: 1,
+            duration: 500, // Điều chỉnh giá trị duration ở đây để làm cho nó slide lên chậm hơn
+            useNativeDriver: true
+        }).start();
     };
 
     const closeFolder = () => {
         setIsFolderOpen(false);
-        // Animated.timing(folderTranslateY, {
-        //     toValue: 0,
-        //     duration: 500,
-        //     useNativeDriver: true
-        // }).start(() => setIsFolderOpen(false));
+        Animated.timing(folderTranslateY, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true
+        }).start(() => setIsFolderOpen(false));
     };
     
     return (
@@ -45,27 +46,35 @@ const Footer = () => {
                         <Text></Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={openFolder}
+                        onPress={()=>navigation.push("ListRecords")}
                         className="flex flex-row justify-center items-center rounded-[10px] bg-[#5e5e5e] w-3/5 py-2">
                         <MaterialCommunityIcons name="file-document-edit-outline" color="white" size={24}/>
                         <Text style={{marginLeft: 8, color: "white"}}>
                             Create a new record
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnSend}>
-                        <Ionicons name="arrow-up-outline" color="white" size={24}/>
+                    <TouchableOpacity
+                        onPress={handleNewMessage}
+                        style={[styles.btnSend, {backgroundColor: !isFetchDataCompleted ? "#5e5e5e" : theme.colors.secondary}]}
+                        disabled={!isFetchDataCompleted}
+                    >
+                        {!isFetchDataCompleted ? 
+                            <ActivityIndicator color={theme.colors.lightGray}/> 
+                            :
+                            <Ionicons name="arrow-up-outline" color="white" size={24}/>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <Modal
+            {/* <Modal
                 visible={isFolderOpen}
                 animationType='slide'
                 transparent={true}
                 onRequestClose={closeFolder}
             >
-                <ListRecordScreen closeFolder={closeFolder}/>
-            </Modal>
+                <RecordStack closeFolder={closeFolder}/>
+            </Modal> */}
         </>
     );
 }
@@ -74,7 +83,6 @@ export default Footer;
 
 const styles = StyleSheet.create({
     btnSend:{
-        backgroundColor: theme.colors.secondary,
         height: 40,
         width: 40,
         borderRadius: 10,
