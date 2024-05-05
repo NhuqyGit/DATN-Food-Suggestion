@@ -4,69 +4,192 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { theme } from '../theme/index'
-import { useNavigation } from '@react-navigation/native'
+} from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "../theme/index";
+import { useNavigation } from "@react-navigation/native";
 
 function SignUpScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [validLength, setValidLength] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [hasSpecialCharacter, setHasSpecialCharacter] = useState(false);
+  const [error, setError] = useState();
+
+  const handleEmailChange = (email) => {
+    setEmail(email);
+  };
+
+  const handleSignup = async () => {
+    try {
+      const response = await fetch(
+        "https://datn-admin-be.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: email,
+            password: password,
+          }),
+        }
+      );
+
+      const responseJson = await response.json();
+      if (responseJson.error) {
+        console.log("response object:", responseJson);
+      } else {
+        console.log("fsdf", "sds");
+      }
+    } catch (error) {
+      setError(error);
+      console.error(error);
+    }
+  };
+
+  const handlePasswordChange = (password) => {
+    let pattern = /\d+/;
+    let patternCharacter = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    setPassword(password);
+    if (password.length >= 8) {
+      setValidLength(true);
+    }
+    if (password.match(pattern)) {
+      setHasNumber(true);
+    }
+    if (password.match(patternCharacter)) {
+      setHasSpecialCharacter(true);
+    }
+  };
+
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Let’s get started!</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>What is your email address?</Text>
-          <TextInput style={styles.input} placeholder='Enter your email' />
+          <Text style={styles.inputLabel}>What is your username?</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            placeholder="Enter your username"
+            onChangeText={handleEmailChange}
+          />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Create a password</Text>
           <TextInput
             style={styles.input}
-            type='password'
-            placeholder='Enter your password'
+            type="password"
+            placeholder="Enter your password"
+            onChangeText={handlePasswordChange}
+            value={password}
           />
         </View>
         <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: validLength
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: hasNumber
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: hasSpecialCharacter
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
         </View>
 
         <View style={styles.warningContainer}>
           <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
+            <View
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: validLength
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
+            />
             <Text style={styles.warningItem}>
               Must contain at least 8 characters
             </Text>
           </View>
           <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
+            <View
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: hasNumber
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
+            />
             <Text style={styles.warningItem}>One number</Text>
           </View>
           <View style={styles.warningItem}>
             <View
-              style={{
-                ...styles.warningIcon,
-                backgroundColor: theme.colors.grayBackground,
-              }}
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: hasSpecialCharacter
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
             />
 
             <Text style={styles.warningItem}>One special character</Text>
           </View>
         </View>
+        {/* {error && (
+          <Text className="text-red-500 font-medium text-sm">{error}</Text>
+        )} */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('SignInScreen')}
-          style={styles.signUpButtonContainer}
+          onPress={handleSignup}
+          style={[
+            styles.signUpButtonContainer,
+            {
+              backgroundColor:
+                !password || !email
+                  ? theme?.colors?.grayBackground
+                  : theme.colors.secondary,
+            },
+          ]}
+          disabled={!email || !password}
         >
           <Text style={styles.signButton}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -74,16 +197,16 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   signUpButtonContainer: {
-    marginTop: 'auto',
+    marginTop: "auto",
     backgroundColor: theme.colors.secondary,
     paddingVertical: 15,
     paddingHorizontal: 40,
@@ -91,19 +214,19 @@ const styles = StyleSheet.create({
   },
 
   signButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
 
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
   },
 
   inputLabel: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 16,
   },
 
@@ -111,42 +234,41 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
 
   progressBarContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 6,
   },
 
   progressBar: {
     flex: 1,
-    backgroundColor: theme.colors.primary,
+    // backgroundColor: theme.colors.grayBackground,
     padding: 6,
     borderRadius: 20,
   },
 
   warningContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
   },
 
   warningItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
 
   warningIcon: {
-    backgroundColor: theme.colors.primary,
+    //backgroundColor: theme.colors.grayBackground,
     padding: 10,
     borderRadius: 50,
   },
-})
+});
 
-export default SignUpScreen
-
+export default SignUpScreen;
