@@ -64,12 +64,18 @@ function SignUpScreen() {
     setPassword(password);
     if (password.length >= 8) {
       setValidLength(true);
+    } else {
+      setValidLength(false);
     }
     if (password.match(pattern)) {
       setHasNumber(true);
+    } else {
+      setHasNumber(false);
     }
     if (password.match(patternCharacter)) {
       setHasSpecialCharacter(true);
+    } else {
+      setHasSpecialCharacter(false);
     }
   };
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.23.10",
     "@gorhom/bottom-sheet": "^4.6.1",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/drawer": "^6.6.15",
