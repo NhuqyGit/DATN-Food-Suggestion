@@ -1,62 +1,70 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Icon from 'react-native-vector-icons/FontAwesome'
 // import { theme } from '../theme'
-import { useNavigation } from "@react-navigation/native";
-import { theme } from "../theme/index";
-import { COLORS } from "../theme/theme";
-import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native'
+import { theme } from '../theme/index'
+import { COLORS } from '../theme/theme'
+import { Ionicons } from '@expo/vector-icons'
 
 function SignInScreen() {
-  const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isHide, setIsHide] = useState(true);
+  const navigation = useNavigation()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isHide, setIsHide] = useState(true)
+  const [error, setError] = useState()
 
   const handleEmailChange = (email) => {
-    setEmail(email);
-  };
+    setEmail(email)
+  }
 
   const handlePasswordChange = (password) => {
-    setPassword(password);
-  };
+    setError('')
+    setPassword(password)
+  }
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     try {
-      fetch("https://datn-admin-be.onrender.com/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((responseJson) => {
-          navigation.navigate("Personalization");
-          console.log("response object:", responseJson);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const response = await fetch(
+        'https://datn-admin-be.onrender.com/auth/signin',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: email,
+            password: password,
+          }),
+        }
+      )
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(responseJson.message)
+        if (Array.isArray(responseJson.message)) {
+          setError(responseJson.message.join('\n'))
+        } else {
+          setError(responseJson.message)
+        }
+      } else {
+        navigation.navigate('Personalization')
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
-    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Sign In</Text>
@@ -65,7 +73,7 @@ function SignInScreen() {
           <Text style={styles.label}>Username</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter your username"
+            placeholder='Enter your username'
             value={email}
             onChangeText={handleEmailChange}
           />
@@ -75,9 +83,9 @@ function SignInScreen() {
           <View style={styles.passwordInput}>
             <TextInput
               style={[styles.input, styles.passwordInputLayout]}
-              type="password"
+              type='password'
               secureTextEntry={isHide}
-              placeholder="Enter your password"
+              placeholder='Enter your password'
               value={password}
               onChangeText={handlePasswordChange}
             />
@@ -87,26 +95,27 @@ function SignInScreen() {
               style={styles.iconEye}
             >
               <Ionicons
-                name={isHide ? "eye-off" : "eye"}
+                name={isHide ? 'eye-off' : 'eye'}
                 size={22}
                 color={COLORS.secondary}
               />
             </TouchableOpacity>
           </View>
         </View>
+        {error && password && <Text className='text-red-500'>{error}</Text>}
         <Text style={styles.forgotPassword}>Forgot password?</Text>
         <View style={styles.thirdPartyContainer}>
           <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name="google" size={25} color="#900" />
+            <Icon name='google' size={25} color='#900' />
           </TouchableOpacity>
           <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name="facebook" size={25} color="#900" />
+            <Icon name='facebook' size={25} color='#900' />
           </TouchableOpacity>
           <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name="facebook" size={25} color="#900" />
+            <Icon name='facebook' size={25} color='#900' />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
           <Text style={styles.orLogin}>Or sign up with email</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -117,7 +126,7 @@ function SignInScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -125,12 +134,12 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
 
   title: {
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   signInButtonContainer: {
@@ -142,31 +151,31 @@ const styles = StyleSheet.create({
   },
 
   signButton: {
-    alignSelf: "center",
+    alignSelf: 'center',
     fontSize: 16,
-    color: "#fff",
+    color: '#fff',
   },
 
   inputContainer: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     gap: 10,
   },
 
   passwordInput: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   label: {
-    fontWeight: "500",
+    fontWeight: '500',
   },
 
   input: {
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
   },
 
   passwordInputLayout: {
@@ -177,12 +186,12 @@ const styles = StyleSheet.create({
   },
 
   iconEye: {
-    height: "100%",
+    height: '100%',
     padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
     borderLeftWidth: 0,
     borderTopLeftRadius: 0,
@@ -190,9 +199,9 @@ const styles = StyleSheet.create({
   },
 
   thirdPartyContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 40,
     gap: 10,
   },
@@ -201,9 +210,9 @@ const styles = StyleSheet.create({
     padding: 15,
     minWidth: 60,
     borderRadius: 6,
-    alignItems: "center",
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
   },
 
   forgotPassword: {
@@ -211,8 +220,9 @@ const styles = StyleSheet.create({
   },
 
   orLogin: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
-});
+})
 
-export default SignInScreen;
+export default SignInScreen
+
