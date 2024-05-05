@@ -39,14 +39,20 @@ function SignUpScreen() {
         }
       );
 
-      const responseJson = await response.json();
-      if (responseJson.error) {
-        console.log("response object:", responseJson);
+      if (response.ok) {
+        navigation.navigate("SignInScreen");
       } else {
-        console.log("fsdf", "sds");
+        const responseBlob = await response.blob();
+        const responseData = await new Response(responseBlob).text();
+        const data = JSON.parse(responseData);
+
+        if (Array.isArray(data.message)) {
+          setError(data.message.join("\n"));
+        } else {
+          setError(data.message);
+        }
       }
     } catch (error) {
-      setError(error);
       console.error(error);
     }
   };
@@ -169,9 +175,11 @@ function SignUpScreen() {
             <Text style={styles.warningItem}>One special character</Text>
           </View>
         </View>
-        {/* {error && (
-          <Text className="text-red-500 font-medium text-sm">{error}</Text>
-        )} */}
+        {error && (
+          <View>
+            <Text className="text-red-500 font-medium text-sm">{error}</Text>
+          </View>
+        )}
         <TouchableOpacity
           onPress={handleSignup}
           style={[
