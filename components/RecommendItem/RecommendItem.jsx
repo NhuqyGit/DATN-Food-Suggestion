@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
   View,
   Text,
@@ -15,6 +15,9 @@ import { AntDesign } from '@expo/vector-icons'
 
 function RecommendItem({ item }) {
   const navigation = useNavigation()
+  useEffect(() => {
+    console.log('Item1:', item);
+  });
   return (
     <TouchableOpacity
       onPress={() => {
@@ -23,7 +26,7 @@ function RecommendItem({ item }) {
       activeOpacity={1}
       style={styles.container}
     >
-      <Image style={styles.image} source={item?.image} />
+      <Image style={styles.image} source={{uri: item?.imageUrl}} />
       <View style={styles.overlay}>
         <View
           style={{
@@ -35,7 +38,7 @@ function RecommendItem({ item }) {
           <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
           <AntDesign name='star' size={20} color='#FF6321' />
         </View>
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item.dishName}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>

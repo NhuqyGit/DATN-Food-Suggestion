@@ -169,7 +169,7 @@ function OverviewTab({ foodDetails, navigation}) {
             style={styles.icon}
           />
           <Text style={styles.label}>Total time:</Text>
-          <Text style={styles.value}>{foodDetails.totalTime}m</Text>
+          <Text style={styles.value}>{foodDetails.cookingTime}m</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>

@@ -8,24 +8,24 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
-function IngredientsTab({ foodDetails }) {
+function IngredientsTab({ ingredients }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {foodDetails.ingredients.map((ingredient, index) => (
-          <View key={index.toString()}>
+        {ingredients.map(ingredient => (
+          <View key={ingredient.id}>
             <TouchableOpacity
               onPress={() => alert(`Add ${ingredient} to shopping list!`)}
             >
               <View style={styles.row}>
-                <View key={index} style={styles.rowItem}>
+                <View key={ingredient.id} style={styles.rowItem}>
                   <Icon
                     name="cutlery"
                     size={20}
                     color={theme.colors.secondary}
                     style={{ paddingHorizontal: 10 }}
                   />
-                  <Text style={styles.ingredientText}>{ingredient}</Text>
+                  <Text style={styles.ingredientText}>{ingredient.ingredientName}</Text>
                 </View>
               </View>
             </TouchableOpacity>

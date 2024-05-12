@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,12 +7,14 @@ import {
   StyleSheet,
   Modal,
   TextInput,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
 import StarRating from "react-native-star-rating";
 import { renderStarRating } from "./MoreByCreator";
-function ReviewsTab({ foodDetails }) {
+import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
+function ReviewsTab({ reviews }) {
   const startAddingReview = () => {
     setAddingReview(true);
   };
@@ -30,6 +32,17 @@ function ReviewsTab({ foodDetails }) {
     rating: 0,
     comment: "",
   });
+
+  const { data: users, error: userError, isLoading: userLoading } = useGetUserInfoQuery();
+  useEffect(() => {
+    console.log("Users:", users);
+  }, [users]);
+
+  const getUserById = (userId) => {
+    return users?.find((user) => user.id === userId);
+  };
+  if(userError) return <Text>Error</Text>;
+  if(userLoading) return <Text>Loading</Text>;
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -50,24 +63,32 @@ function ReviewsTab({ foodDetails }) {
       </View>
       <View style={styles.line} />
       <ScrollView style={styles.reriewList}>
-        {foodDetails.reviews.map((review, index) => (
-          <View key={index} style={styles.reviewContainer}>
-            <View style={styles.avatarContainer}>
-              <Text style={styles.avatarText}>{review.user[0]}</Text>
-            </View>
-
-            <View style={styles.reviewDetails}>
-              <Text style={styles.userName}>{review.user}</Text>
-              <View style={styles.ratingContainer}>
-                <View style={styles.ratingContainer}>
-                  {renderStarRating(review.rating)}
+        {reviews?.map((review) => {
+          const user = getUserById(review.userId);
+          return (
+            <View key={review.id} style={styles.reviewContainer}>
+              {user.imgUrl ? (
+                <Image source={{ uri: user.imgUrl }} style={styles.userImage} />
+              ) : (
+                <View style={styles.avatarContainer}>
+                  <Text style={styles.avatarText}>
+                    {user.username.substring(0, 2)}
+                  </Text>
                 </View>
-                <Text style={styles.ratingText}>{review.rating}</Text>
+              )}
+              <View style={styles.reviewDetails}>
+                <Text style={styles.userName}>{user.username}</Text>
+                <View style={styles.ratingContainer}>
+                  <View style={styles.ratingContainer}>
+                    {renderStarRating(review.rating)}
+                  </View>
+                  <Text style={styles.ratingText}>{review?.rating}</Text>
+                </View>
+                <Text>{review.content}</Text>
               </View>
-              <Text>{review.comment}</Text>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
       <Modal
         animationType="slide"
@@ -199,6 +220,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+    marginRight: 10,
+  },
+  userImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     marginRight: 10,
   },
   avatarText: {

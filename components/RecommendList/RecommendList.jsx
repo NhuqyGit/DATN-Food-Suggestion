@@ -5,11 +5,12 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, {useEffect} from "react";
 import RecommendItem from "../RecommendItem/RecommendItem";
 import { theme } from "../../theme";
 import RecommendItemHorizontal from "../RecommendItem/RecommendItemHorizontal";
 import SmallRecommendItem from "../RecommendItem/SmallRecommendItem";
+import { useGetAllFoodDetailsQuery } from '../../slices/foodDetailsSlice';
 
 function RecommendList() {
   const mockData = [
@@ -154,6 +155,15 @@ function RecommendList() {
       calories: 80,
     },
   ];
+
+  const { data: allDishes, error: dishError, isLoading: dishLoading } = useGetAllFoodDetailsQuery();
+  useEffect(() => {
+    console.log('Todos:', allDishes);
+  }, [allDishes]);
+
+  if(dishError) return <Text>Error</Text>;
+  if(dishLoading) return <Text>Loading</Text>;
+
   return (
     <View style={styles.container}>
       {/* <View style={styles.horizontalPadding}> */}
@@ -168,9 +178,14 @@ function RecommendList() {
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {mockData?.map((item) => (
+        {/* {mockData?.map((item) => (
           <RecommendItem key={item.id} item={item} />
-        ))}
+        ))} */}
+
+        {allDishes?.map((item) => (
+        <RecommendItem key={item.id} item={item} />
+      ))}
+      
       </ScrollView>
       {/* </View> */}
 

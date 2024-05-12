@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   Modal,
@@ -50,11 +50,15 @@ function FoodDetailsScreen({ navigation, route }) {
     scrollY.value = event.contentOffset.y;
   });
 
+  useEffect(() => {
+    console.log('Reviews:', foodDetails.reviews);
+  }, [foodDetails.reviews]);
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View>
         <Image
-          source={foodDetails.image}
+          source={{uri: foodDetails.imageUrl}}
           style={{ width: "100%", height: 300 }}
         />
         <TouchableOpacity
@@ -81,7 +85,7 @@ function FoodDetailsScreen({ navigation, route }) {
               paddingHorizontal: 5,
             }}
           >
-            {foodDetails.title}
+            {foodDetails.dishName}
           </Text>
           <Text
             style={{ fontSize: 16, paddingHorizontal: 5 }}
@@ -129,13 +133,13 @@ function FoodDetailsScreen({ navigation, route }) {
             )}
           </Tab.Screen>
           <Tab.Screen name="Ingredients">
-            {() => <IngredientsTab foodDetails={foodDetails} />}
+            {() => <IngredientsTab ingredients={foodDetails.ingredients} />}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
-            {() => <NoteTab foodDetails={foodDetails} />}
+            {() => <NoteTab notes={foodDetails.notes} />}
           </Tab.Screen>
           <Tab.Screen name="Reviews">
-            {() => <ReviewsTab foodDetails={foodDetails} />}
+            {() => <ReviewsTab reviews={foodDetails.reviews}/>}
           </Tab.Screen>
         </Tab.Navigator>
       </View>
