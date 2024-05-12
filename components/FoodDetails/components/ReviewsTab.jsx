@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
-import StarRating from "react-native-star-rating";
+// import StarRating from "react-native-star-rating";
 import { renderStarRating } from "./MoreByCreator";
 function ReviewsTab({ foodDetails }) {
   const startAddingReview = () => {
@@ -89,7 +89,7 @@ function ReviewsTab({ foodDetails }) {
             </TouchableOpacity>
             <View style={styles.addReviewContainer}>
               <View style={styles.starRating}>
-                <StarRating
+                {/* <StarRating
                   maxStars={5}
                   rating={newReview.rating}
                   starSize={20}
@@ -97,7 +97,7 @@ function ReviewsTab({ foodDetails }) {
                   selectedStar={(rating) =>
                     setNewReview({ ...newReview, rating })
                   }
-                />
+                /> */}
               </View>
 
               <TextInput
