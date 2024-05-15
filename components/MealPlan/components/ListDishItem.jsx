@@ -7,6 +7,7 @@ import AntIcon from "react-native-vector-icons/AntDesign.js";
 import Feather from "react-native-vector-icons/Feather";
 import BottomSheet from "../../BottomSheet/BottomSheet";
 import { useNavigation } from "@react-navigation/native";
+import { theme } from "../../../theme/index";
 
 export default function ListDishItem({
   isSelected,
@@ -50,7 +51,7 @@ export default function ListDishItem({
                   }}
                 >
                   <View className="">
-                    <AntIcon name="minuscircle" size={30} color="#40AD53" />
+                    <AntIcon name="minuscircle" size={30} color={theme.colors.secondary} />
                   </View>
                 </TouchableOpacity>
               ) : (
@@ -60,7 +61,7 @@ export default function ListDishItem({
                   }}
                 >
                   <View className="">
-                    <AntIcon name="pluscircle" size={30} color="#40AD53" />
+                    <AntIcon name="pluscircle" size={30} color={theme.colors.secondary} />
                   </View>
                 </TouchableOpacity>
               )}
@@ -88,7 +89,7 @@ export default function ListDishItem({
               }}
             >
               <View className="flex flex-row items-center">
-                <Ionicons name="calendar-sharp" size={24} color="#40AD53" />
+                <Ionicons name="calendar-sharp" size={24} color={theme.colors.secondary} />
                 <Text className="ml-4 text-base font-semibold">
                   Edit schedule
                 </Text>

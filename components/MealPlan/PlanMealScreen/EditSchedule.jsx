@@ -14,6 +14,7 @@ import data from "../../../constants/MealPlan";
 import moment from "moment";
 import Plus from "../components/Plus";
 import { useNavigation } from "@react-navigation/native";
+import { theme } from "../../../theme/index";
 
 const EditSchedule = () => {
   const startDate = moment().startOf("week");
@@ -62,11 +63,11 @@ const EditSchedule = () => {
               </View>
 
               <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[50px] justify-between  pl-3 pr-1 items-center">
-                <Text className="text-[#40AD53] text-[14px] font-semibold  ">
+                <Text style={{color: theme.colors.secondary}} className="text-[14px] font-semibold  ">
                   2
                 </Text>
                 <TouchableOpacity>
-                  <Feather name={"chevron-right"} size={18} color="#40AD53" />
+                  <Feather name={"chevron-right"} size={18} color={theme.colors.secondary} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -74,7 +75,8 @@ const EditSchedule = () => {
         ))}
       </ScrollView>
       <TouchableOpacity
-        className=" rounded-full bg-[#40AD53] w-fit px-10 h-10 mx-auto mt-4 justify-center items-center "
+        style={{backgroundColor: theme.colors.secondary}}
+        className=" rounded-full w-fit px-10 h-10 mx-auto mt-4 justify-center items-center "
         onPress={() => {
           navigation.navigate("MainMealPlan");
         }}
