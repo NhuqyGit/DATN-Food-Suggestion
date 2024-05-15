@@ -6,6 +6,7 @@ import { dataAdd } from "../../../constants/Addscreen";
 import ListDishItem from "../../MealPlan/components/ListDishItem";
 import BackButton from "../../BackButton/BackButton";
 import CloseButton from "../../BackButton/CloseButton";
+import { theme } from "../../../theme/index";
 
 function AddScreen() {
   const navigation = useNavigation();
@@ -88,7 +89,8 @@ function RecipeDetailsScreen({ route }) {
         ))}
       </ScrollView>
       <TouchableOpacity
-        className=" rounded-full bg-[#40AD53] w-2/3 h-12 mx-auto mt-4 justify-center items-center "
+        style={{backgroundColor: theme.colors.secondary}}
+        className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
         onPress={() => {
           navigation.navigate("MainMealPlan");
         }}

@@ -9,6 +9,7 @@ import {
 import BackButton from "../../BackButton/BackButton";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { theme } from "../../../theme/index";
 
 const GiveFeedBack = () => {
   const navigation = useNavigation();
@@ -91,7 +92,8 @@ const GiveFeedBack = () => {
         </View>
       </ScrollView>
       <TouchableOpacity
-        className=" rounded-full bg-[#40AD53] w-2/3 h-12 mb-4 mx-auto mt-4 justify-center items-center "
+        style={{backgroundColor: theme.colors.secondary}}
+        className=" rounded-full w-2/3 h-12 mb-4 mx-auto mt-4 justify-center items-center "
         onPress={() => {
           navigation.navigate("MainMealPlan");
         }}

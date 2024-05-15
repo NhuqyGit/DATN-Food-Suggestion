@@ -41,6 +41,7 @@ export const theme = {
     secondary: '#3a9693',
     dark: '#373739',
     lightGray: '#d9d9d9',
-    lightGreen: '#c4e0e3'
+    lightGreen: '#c4e0e3',
+    darkGray: '#909295'
   },
 }
