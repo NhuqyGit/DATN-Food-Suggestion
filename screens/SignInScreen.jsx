@@ -57,8 +57,8 @@ function SignInScreen() {
           setError(responseJson.message);
         }
       } else {
-        //console.log(">>>,", responseJson);
         await AsyncStorageService.setToken(responseJson?.accessToken);
+        await AsyncStorage.setItem("user_id", responseJson?.id);
 
         navigation.navigate("Personalization");
       }
