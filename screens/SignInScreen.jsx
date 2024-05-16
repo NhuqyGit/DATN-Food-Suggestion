@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,
@@ -58,7 +59,7 @@ function SignInScreen() {
         }
       } else {
         await AsyncStorageService.setToken(responseJson?.accessToken);
-        await AsyncStorage.setItem("user_id", responseJson?.id);
+        await AsyncStorage.setItem("user_id", responseJson?.id.toString());
 
         navigation.navigate("Personalization");
       }
