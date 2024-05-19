@@ -62,12 +62,12 @@ const FoodSuggestionScreen = ({topic, deleteTopic}) =>{
     //     setListMessage([...listMessage, newResponseObj]);
     // }
 
-    const listMessageComponent = listMessage.map((message, index)=>{
+    const listMessageComponent = listMessage?.map((message, index)=>{
         return (
             <RenderChat key={index.toString()} props={message}/>
         )
     })
-    console.log("FS RENDER")
+    console.log("FS RENDER", topic.id)
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
 
@@ -86,7 +86,7 @@ const FoodSuggestionScreen = ({topic, deleteTopic}) =>{
                         {/* <Text>{name}</Text> */}
 
                         {listMessageComponent}
-                        
+                        <Text>{topic.title}</Text>
                     </View>
                 </ScrollView>
                 <Footer />

@@ -1,22 +1,24 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { MaterialCommunityIcons, Feather, Ionicons, Entypo } from '@expo/vector-icons'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { theme } from '../../theme/index'
 import { useMessage } from './MessageContext'
 import { Skeleton } from 'moti/skeleton'
+import { useFocusEffect } from '@react-navigation/native'
 
 const RenderChat = ({props}) => {
-  // const [loading, setLoading] = useState(false);
   const { listMessage, handleNewMessage,  handleNewResponse, fetchData} = useMessage();
 
-  useEffect(() => {
-    if (!props.isSend) {
-        fetchData((response) => {
-            handleNewResponse(props.id, response);
-        });
-    }
+	useFocusEffect(
+		useCallback(()=>{
+			if(!props.isSend){
+				fetchData((response) => {
+					handleNewResponse(props.id, response);
+				});
+			}
+		}, [])
+	)
 
-  }, []);
   console.log(props.id, ": RENDER")
   return (
     <View style={styles.container}>
@@ -26,7 +28,7 @@ const RenderChat = ({props}) => {
 			</View>
 			<View style={styles.sendChat}>
 			<Text style={styles.nameText}>Mr. Bean</Text>
-			<Text style={styles.sendText}>{props.send}</Text>
+			<Text style={styles.sendText}>{props.content}</Text>
 			</View>
 		</View>
 

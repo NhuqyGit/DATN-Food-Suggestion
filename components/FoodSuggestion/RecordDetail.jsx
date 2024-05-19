@@ -1,13 +1,81 @@
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { theme } from '../../theme/index'
 import { MaterialIcons, Feather } from '@expo/vector-icons'
 import Tag from './Tag'
 
 const RecordDetail = () => {
     const navigation = useNavigation()
+    const route = useRoute();
+    const { record, type } = route.params
+
+    const [nameRecord, setNameRecord] = useState(type === "PATCH" ? record.nameRecord : "")
+    const [price, setPrice] = useState(type === "PATCH" ? record.money.toString() : 0)
+    const [diets, setDiets] = useState(null)
+    const [allergies, setAllergies] = useState(null)
+
+    const handleFetchDiets = async () => {
+        try{
+            const response = await fetch(`http://192.168.1.5:3000/diets`)
+            const data = await response.json();
+            console.log("data: ",data)
+            if (data.length > 0){
+                const refactorData = data.map((m) => {
+                    const { id, dietName } = m;
+                    const isExist = type === "PATCH" && record?.diets?.some(item => item.id === id) ? true : false;
+                    return {id, name: dietName, isSelect: isExist}
+                })
+                setDiets(refactorData)
+            }
+        }catch (error) {
+            console.error('Error fetching data record diet:', error);
+        }
+    }
+
+    const handleFetchAllergies = async () => {
+        try{
+            const response = await fetch(`http://192.168.1.5:3000/allergies`)
+            const data = await response.json();
+            console.log("data: ",data)
+            if (data.length > 0){
+                const refactorData = data.map((m) => {
+                    const { id, allergiesName } = m;
+                    const isExist = type === "PATCH" && record?.allergies?.some(item => item.id === id) ? true : false;
+                    return {id, name: allergiesName, isSelect: isExist}
+                })
+                setAllergies(refactorData)
+            }
+        }catch (error) {
+            console.error('Error fetching data record allergies:', error);
+        }
+    }
+
+    useEffect(()=>{
+        handleFetchDiets()
+        handleFetchAllergies()
+        console.log("useEffect")
+    }, [])
+
+    console.log(type)
+    // console.log(nameRecord)
+    // console.log(price)
+    console.log(diets)
+    console.log(allergies)
+
+    const listDiets = diets?.map((d) => {
+        return (
+            <Tag key={d.id.toString()} props={d}/>
+        )
+    })
+
+    const listAllergies = allergies?.map((a) => {
+        return (
+            <Tag key={a.id.toString()} props={a}/>
+        )
+    })
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -27,20 +95,27 @@ const RecordDetail = () => {
                 style={{paddingHorizontal: 15}}>
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Name record</Text>
-                    <TextInput style={styles.inputName} placeholder='Enter your name record'></TextInput>
+                    <TextInput
+                        style={styles.inputName}
+                        value={nameRecord}
+                        placeholder='Enter your name record'/>
                 </View>
 
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Price Range</Text>
-                    <TextInput style={styles.inputName} placeholder='Enter your name record'></TextInput>
+                    <TextInput
+                        style={styles.inputName} 
+                        value={price}
+                        keyboardType='numeric'
+                        placeholder='Enter your price' />
                 </View>
                 
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Meal</Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
-                        <Tag text="Breakfast"/>
+                        {/* <Tag text="Breakfast"/>
                         <Tag text="Lunch"/>
-                        <Tag text="Dinner"/>
+                        <Tag text="Dinner"/> */}
                     </View>
                     <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3}}>
                         <Feather name='plus' size={18} color={theme.colors.secondary} />
@@ -56,13 +131,7 @@ const RecordDetail = () => {
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Allergies</Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
-                        <Tag text="Egg"/>
-                        <Tag text="Milk"/>
-                        <Tag text="Bean"/>
-                        <Tag text="Butter"/>
-                        <Tag text="Shrimp"/>
-                        <Tag text="Fish"/>
-                        <Tag text="Strawberry"/>
+                        {listAllergies}
                     </View>
                     <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3}}>
                         <Feather name='plus' size={18} color={theme.colors.secondary} />
@@ -73,14 +142,15 @@ const RecordDetail = () => {
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Diet</Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
-                        <Tag text="Egg"/>
+                        {/* <Tag text="Egg"/>
                         <Tag text="Beaf"/>
                         <Tag text="Sugar"/>
                         <Tag text="Oil"/>
                         <Tag text="Bread"/>
                         <Tag text="Meat"/>
                         <Tag text="Chicken"/>
-                        <Tag text="Starch"/>
+                        <Tag text="Starch"/> */}
+                        {listDiets}
                     </View>
                     <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3}}>
                         <Feather name='plus' size={18} color={theme.colors.secondary} />

@@ -1,30 +1,41 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+// import axios from 'axios';
 
 const MessageContext = createContext();
 
-export const MessageProvider = ({ children }) => {
-    const [listMessage, setListMessage] = useState([
-        {
-            id: 1,
-            send: "helloadfa df  dfad",
-            response: `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n`,
-            isSend: true
-        },
-        {
-            id: 2,
-            send: "hello adf adf ",
-            response: `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ`,
-            isSend: true
-        },
-    ])
+export const MessageProvider = ({ topic, children }) => {
+    const [listMessage, setListMessage] = useState(null)
     const [isFetchDataCompleted, setIsFetchDataCompleted] = useState(true)
+
+    const handleFetchMessages = async () =>{
+        try{
+            const response = await fetch(`http://10.90.0.31:3000/topics/${topic.id}/messages`)
+            const data = await response.json();
+            console.log(data)
+            if (data.length > 0){
+                const listMessage = data.map((m) => {
+                    return {...m, isSend: true}
+                })
+                setListMessage(listMessage)
+            }
+        }catch (error) {
+            console.error('Error fetching data messages:', error);
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() =>{
+            handleFetchMessages()
+        }, [])
+    )
 
     const handleNewMessage = ()=>{
         console.log("handleNewMessage")
         const newId = listMessage.length + 1; // Tạo id mới bằng cách lấy độ dài hiện tại của danh sách và cộng thêm 1
         const newMessage = `New message ${newId}`; // Tạo tin nhắn mới
         const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`
-        const newMessageObj = { id: newId, send: newMessage, response: null, isSend: false}; // Tạo đối tượng tin nhắn mới
+        const newMessageObj = { id: newId, content: newMessage, response: null, isSend: false}; // Tạo đối tượng tin nhắn mới
         setListMessage([...listMessage, newMessageObj]);
         setIsFetchDataCompleted(false)
     }

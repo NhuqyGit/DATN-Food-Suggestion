@@ -10,9 +10,9 @@ const RecordItem = ({record}) => {
     const navigation = useNavigation()
     return (
         <TouchableOpacity
-            onPress={()=>navigation.push("RecordDetail")}
+            onPress={()=>navigation.push("RecordDetail", {record, type: "PATCH"})}
             style={styles.container}>
-            <Text>{record.name}</Text>
+            <Text>{record.nameRecord}</Text>
             <TouchableOpacity>
                 <Ionicons name='ellipsis-horizontal' size={24} color="black" />
             </TouchableOpacity>

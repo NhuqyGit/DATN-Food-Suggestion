@@ -12,9 +12,9 @@ import { MessageProvider } from "../../components/FoodSuggestion/MessageContext"
 
 const Stack = createNativeStackNavigator()
 
-const FoodSuggesionStack = ({topic, deleteTopic}) => {
+const FoodSuggesionStack = ({focusedItem, topic, deleteTopic}) => {
     return (
-        <MessageProvider>
+        <MessageProvider topic={topic} focusedItem={focusedItem}>
             <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
                 <Stack.Navigator
                     screenOptions={{

@@ -66,15 +66,6 @@ const Footer = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {/* <Modal
-                visible={isFolderOpen}
-                animationType='slide'
-                transparent={true}
-                onRequestClose={closeFolder}
-            >
-                <RecordStack closeFolder={closeFolder}/>
-            </Modal> */}
         </>
     );
 }

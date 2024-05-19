@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, Feather } from '@expo/vector-icons'
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/index'
@@ -9,6 +9,7 @@ import RecordItem from './RecordItem';
 
 const ListRecordScreen = () => {
     const [isActive, setIsActive] = useState()
+    const [listRecord, setListRecord] = useState([])
     const navigation = useNavigation()
     const recordData = [
         {
@@ -73,13 +74,24 @@ const ListRecordScreen = () => {
         },
     ]
 
-    useEffect(()=>{
-        if (recordData === null){
-            
+    const handleFetchListRecord = async () =>{
+        try{
+            const response = await fetch(`http://192.168.1.5:3000/users/1/records`)
+            const data = await response.json();
+            console.log(data)
+            if (data.length > 0){
+                setListRecord(data)
+            }
+        }catch (error) {
+            console.error('Error fetching data:', error);
         }
-    }, [recordData])
+    }
 
-    const listRecord = recordData.map((record, index)=>{
+    useEffect(()=>{
+        handleFetchListRecord()
+    }, [])
+
+    const listRecordComponent = listRecord?.map((record, index)=>{
         return (
             <RecordItem record={record} key={index.toString()}/>
         )
@@ -97,10 +109,17 @@ const ListRecordScreen = () => {
                     />
                 </TouchableOpacity>
 
-                <Text style={styles.title}>List Records</Text>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10}}>
+                    <Text style={styles.title}>List Records</Text>
+                    <TouchableOpacity
+                        onPress={()=>navigation.push("RecordDetail", { type: "POST"})}
+                    >
+                        <Text style={{fontSize: 14, fontWeight: '500', color: theme.colors.secondary}}>Add new record</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <ScrollView style={styles.recordsContainer}>
-                    {listRecord}
+                    {listRecordComponent}
                 </ScrollView>
 
                 <View style={styles.footer}>
