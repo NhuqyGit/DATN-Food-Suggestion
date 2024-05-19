@@ -11,17 +11,19 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
-import StarRating from "react-native-star-rating";
+// import StarRating from "react-native-star-rating";
 import { renderStarRating } from "./MoreByCreator";
 import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
-function ReviewsTab({ reviews }) {
+function ReviewsTab({navigation, reviews }) {
   const startAddingReview = () => {
-    setAddingReview(true);
+    //setAddingReview(true);
+    navigation.navigate("ReviewScreen");
   };
   const addReview = () => {
-    alert(`New Review: ${JSON.stringify(newReview)}`);
-    setNewReview({ user: "", rating: 0, comment: "" });
-    cancelAddingReview();
+    // alert(`New Review: ${JSON.stringify(newReview)}`);
+    // setNewReview({ user: "", rating: 0, comment: "" });
+    // cancelAddingReview();
+   
   };
   const cancelAddingReview = () => {
     setAddingReview(false);
@@ -110,7 +112,7 @@ function ReviewsTab({ reviews }) {
             </TouchableOpacity>
             <View style={styles.addReviewContainer}>
               <View style={styles.starRating}>
-                <StarRating
+                {/*<StarRating
                   maxStars={5}
                   rating={newReview.rating}
                   starSize={20}
@@ -118,7 +120,7 @@ function ReviewsTab({ reviews }) {
                   selectedStar={(rating) =>
                     setNewReview({ ...newReview, rating })
                   }
-                />
+                />*/}
               </View>
 
               <TextInput

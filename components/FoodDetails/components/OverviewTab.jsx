@@ -135,7 +135,7 @@ function OverviewTab({ foodDetails, navigation}) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.addToCollectionButton}
         onPress={handleAddToCollection}
       >
@@ -147,8 +147,8 @@ function OverviewTab({ foodDetails, navigation}) {
         <Text style={styles.collectionButtonText}>
           {collectionButtonText}
         </Text>
-      </TouchableOpacity>
-      <View style={styles.line} />
+      </TouchableOpacity> */}
+      {/* <View style={styles.line} /> */}
       <ScrollView>
         <View style={styles.infoItem}>
           <Icon
