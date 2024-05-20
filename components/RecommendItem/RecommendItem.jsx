@@ -11,20 +11,30 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
-
-function RecommendItem({ item}) {
+function RecommendItem({ item }) {
   const navigation = useNavigation()
   return (
     <TouchableOpacity
-      onPress={()=>{
-        navigation.push('FoodDetail')
+      onPress={() => {
+        navigation.push('FoodDetail', { foodDetails: item })
       }}
       activeOpacity={1}
-      style={styles.container}>
+      style={styles.container}
+    >
       <Image style={styles.image} source={item?.image} />
       <View style={styles.overlay}>
-        <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 3,
+          }}
+        >
+          <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+          <AntDesign name='star' size={20} color='#FF6321' />
+        </View>
         <Text style={styles.title}>{item.title}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginRight: 4,
     textTransform: 'uppercase',
-    color: '#9e9e9e'
+    color: '#9e9e9e',
   },
   iconContainer: {
     backgroundColor: theme.colors.secondary,

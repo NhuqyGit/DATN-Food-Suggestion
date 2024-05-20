@@ -1,7 +1,17 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import ExploreCategories from '../CategoryList/ExploreCategories'
 
 function Category({ item }) {
+  const navigation = useNavigation()
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -9,31 +19,39 @@ function Category({ item }) {
     shadowOpacity,
     shadowRadius,
     elevation,
-    shadowColorAndroid,
+    shadowColorAndroid
   ) => {
-      if (Platform.OS === 'ios') {
-          return {
-              shadowColor: shadowColorIos,
-              shadowOffset: { width: xOffset, height: yOffset },
-              shadowOpacity,
-              shadowRadius,
-          }
-      } else if (Platform.OS === 'android') {
-          return  {
-              elevation,
-              shadowColor: shadowColorAndroid,
-          }
+    if (Platform.OS === 'ios') {
+      return {
+        shadowColor: shadowColorIos,
+        shadowOffset: { width: xOffset, height: yOffset },
+        shadowOpacity,
+        shadowRadius,
       }
+    } else if (Platform.OS === 'android') {
+      return {
+        elevation,
+        shadowColor: shadowColorAndroid,
+      }
+    }
+  }
+  const handlePress = (title) => {
+    navigation.navigate('ExploreCategories', { cate: title })
   }
 
   const boxShadow = generateBoxShadowStyle(0, 3, 'black', 0.2, 5, 5, 'black')
   return (
-    <TouchableOpacity style={[boxShadow, styles.container]}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Image
-          style={styles.image}
-          source={item.image}
-        />
+    <TouchableOpacity
+      style={[boxShadow, styles.container]}
+      onPress={() => handlePress(item.name)}
+    >
+      <Text style={styles.title}>{item.name}</Text>
+      <Image
+        style={styles.image}
+        source={{
+          uri: item.imgUrl,
+        }}
+      />
     </TouchableOpacity>
   )
 }
@@ -52,17 +70,19 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     marginHorizontal: 8,
     marginVertical: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   image: {
     width: 60,
     height: 60,
-    // objectFit: 'cover',
+    borderRadius: 10,
+    objectFit: 'cover',
   },
-  title:{
+  title: {
     fontSize: 16,
-    fontWeight: '500'
-  }
+    fontWeight: '500',
+  },
 })
 
 export default Category
+

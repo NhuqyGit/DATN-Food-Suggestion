@@ -7,15 +7,17 @@ import Home from './screens/Home/Home'
 import MealPlan from './screens/MealPlan'
 import Personalization from './screens/Personalization'
 import ProfileStack from './screens/ProfileStack'
-import SearchScreen from './screens/Search/SearchScreen'
+import SearchScreen from './screens/Search/SearchScreen/SearchScreen'
 import Splash from './components/Splash/Spash'
-import Suggestionchat from './components/SuggestionChat/Suggestionchat'
+import FoodSuggestionScreen from './screens/FoodSuggestionScreen'
 import { theme } from './theme/index'
 import { Ionicons } from '@expo/vector-icons'
-import SignInScreen from "./screens/SignInScreen";
-import SignUpScreen from "./screens/SignUpScreen";
-import SplashScreen from "./screens/SplashScreen";
-
+import SignInScreen from './screens/SignInScreen'
+import SignUpScreen from './screens/SignUpScreen'
+import SplashScreen from './screens/SplashScreen'
+import Search from './screens/Search/Search'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from './slices/userLoginSlice'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -26,39 +28,45 @@ const TabArr = [
     label: 'Home',
     activeIcon: 'home-sharp',
     inActiveIcon: 'home-outline',
+    size: 26,
   },
   {
-    route: SearchScreen,
+    route: Search,
     label: 'Search',
     activeIcon: 'search-outline',
     inActiveIcon: 'search-outline',
+    size: 26,
+    tabBarVisible: false, // Thêm dòng này để ẩn tab menu
   },
   {
-    route: Suggestionchat,
+    route: FoodSuggestionScreen,
     label: 'Per1',
     activeIcon: 'add-circle-sharp',
     inActiveIcon: 'add-circle-outline',
+    size: 40,
   },
   {
     route: MealPlan,
     label: 'Meal Plan',
     activeIcon: 'calendar-sharp',
     inActiveIcon: 'calendar-outline',
+    size: 26,
   },
   {
     route: ProfileStack,
     label: 'Profile',
     activeIcon: 'person-sharp',
     inActiveIcon: 'person-outline',
+    size: 26,
   },
 ]
 
 export default function Navigation() {
-  const [isDone, setIsDone] = useState(false)
+  const userInfo = useSelector(selectUserInfo)
 
   return (
     <NavigationContainer>
-      {!isDone ? (
+      {!userInfo?.isLogin ? (
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
@@ -67,8 +75,9 @@ export default function Navigation() {
           <Stack.Screen name='SplashScreen' component={SplashScreen} />
           <Stack.Screen name='SignInScreen' component={SignInScreen} />
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
+          <Stack.Screen name='Home' component={Home} />
           <Stack.Screen name='Personalization'>
-            {(props) => <Personalization {...props} setIsDone={setIsDone} />}
+            {(props) => <Personalization {...props} />}
           </Stack.Screen>
         </Stack.Navigator>
       ) : (
@@ -88,7 +97,7 @@ export default function Navigation() {
                     return (
                       <Ionicons
                         name={item.activeIcon}
-                        size={26}
+                        size={item.size}
                         color={focused ? theme.colors.secondary : '#9e9e9e'}
                       />
                     )

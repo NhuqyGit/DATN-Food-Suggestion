@@ -7,10 +7,10 @@ const HistoryItem = ({ item, isSearch = false }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <AntDesign name='clockcircleo' size={24} color='black' />
+        <AntDesign name='clockcircleo' size={20} color='black' />
         <Text style={styles.title}>{item.title}</Text>
       </View>
-      {!isSearch && <AntDesign name='closecircleo' size={24} color='red' />}
+      {!isSearch && <AntDesign name='closecircleo' size={20} color='red' />}
     </View>
   )
 }

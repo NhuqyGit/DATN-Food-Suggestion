@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -8,45 +8,50 @@ import { theme } from '../theme/index'
 
 const NewCollection = () => {
     const navigation = useNavigation()
+
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
     return (
         <SafeAreaView style={{backgroundColor: 'white'}}>
             <StatusBar backgroundColor="black" barStyle="dark-content" />
-
-            <View style={styles.container}>
-                <TouchableOpacity
-                    onPress={()=>navigation.goBack()}
-                    style={styles.btnBack}>
-                    <Ionicons
-                        name='close'
-                        size={22}
-                        color='black'
-                    />
-                </TouchableOpacity>
-
-                <Text style={styles.title}>Add Collection</Text>
-
-                <View style={styles.formCollection}>
-                    <View style={styles.input}>
-                        <TextInput placeholder='Name your collection' />
-                    </View>
-
-                    <View style={[styles.input, {height: '40%', paddingTop: 10}]}>
-                        <TextInput
-                            style={{height: '100%'}}
-                            editable
-                            multiline
-                            numberOfLines={4}
-                            placeholder='Add a description (optional)'
+            <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                <View style={styles.container}>
+                    <TouchableOpacity
+                        onPress={()=>navigation.goBack()}
+                        style={styles.btnBack}>
+                        <Ionicons
+                            name='close'
+                            size={22}
+                            color='black'
                         />
+                    </TouchableOpacity>
+
+                    <Text style={styles.title}>Add Collection</Text>
+
+                    <View style={styles.formCollection}>
+                        <View style={styles.input}>
+                            <TextInput placeholder='Name your collection' />
+                        </View>
+
+                        <View style={[styles.input, {height: '40%', paddingTop: 10}]}>
+                            <TextInput
+                                style={{height: '100%'}}
+                                editable
+                                multiline
+                                numberOfLines={4}
+                                placeholder='Add a description (optional)'
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.btnSaveContainer}>
+                        <TouchableOpacity style={styles.btnSave}>
+                            <Text style={styles.btnText}>Save</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-
-                <View style={styles.btnSaveContainer}>
-                    <TouchableOpacity style={styles.btnSave}>
-                        <Text style={styles.btnText}>Save</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     )
 }
@@ -93,14 +98,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     btnSave:{
-       
         backgroundColor: theme.colors.secondary,
         paddingHorizontal: 30,
         paddingVertical: 15,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '25%',
+        borderRadius: 25,
         width: '30%'
     },
     btnText:{

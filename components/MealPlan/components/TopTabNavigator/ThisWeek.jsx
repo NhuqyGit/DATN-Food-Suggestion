@@ -10,8 +10,6 @@ import {
 import Feather from "react-native-vector-icons/Feather.js";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
 import moment from "moment";
-import BottomSheet from "@gorhom/bottom-sheet";
-import BottomSheetComponent from "../../../BottomSheet/BottomSheetComponent.jsx";
 
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
@@ -25,6 +23,8 @@ import data from "../../../../constants/MealPlan";
 import PlanDate from "../PlanDate";
 import Plus from "../Plus";
 import ListDishItem from "../ListDishItem";
+import BottomSheet from "../../../BottomSheet/BottomSheet";
+import { theme } from "../../../../theme/index";
 
 function ThisWeek() {
   const navigation = useNavigation();
@@ -36,6 +36,10 @@ function ThisWeek() {
   const date = `${formattedStartDate.toLocaleString()}  -  ${formattedEndDate.toLocaleString()}`;
 
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   const translateY = useSharedValue(0);
 
@@ -61,50 +65,56 @@ function ThisWeek() {
       animateList();
     }
   }, [openAccordionIndex]);
-  const bottomSheetRef = useRef(null);
+
   const bottomList = [
     {
-      icon: "tag",
+      icon: "plussquareo",
       onPress: () => {
         navigation.navigate("AddScreen");
+        setModalVisible(false);
       },
       name: "Add Saved Recipe",
     },
   ];
   const toggleBottomSheet = () => {
-    bottomSheetRef.current.collapse();
+    setModalVisible(true);
   };
 
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
   return (
     <View className="py-4 h-full bg-white">
-      <PlanDate date={date} />
+      <View className="px-3">
+        <PlanDate date={date} />
+      </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
         {data.map((day, index) => (
           <View key={index}>
-            <View className="flex flex-row justify-between py-3 px-3">
+            <View className="flex flex-row justify-between py-4 px-3">
               <View className="flex flex-row ">
                 <Plus toggleBottomSheet={toggleBottomSheet} />
 
                 <Text className="text-lg pl-6">{day.title}</Text>
               </View>
 
-              <TouchableOpacity
-                onPress={() => toggleAccordion(index)}
-                style={{ paddingRight: 10, paddingTop: 10 }}
-              >
-                <Feather
-                  name={
-                    openAccordionIndex === index ? "chevron-up" : "chevron-down"
-                  }
-                  size={30}
-                  color="#40AD53"
-                />
+              <TouchableOpacity onPress={() => toggleAccordion(index)}>
+                <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2  items-center">
+                  <Text style={{color: theme.colors.secondary}} className="text-[16px] font-semibold ">
+                    2
+                  </Text>
+                  <Feather
+                    name={
+                      openAccordionIndex === index
+                        ? "chevron-up"
+                        : "chevron-down"
+                    }
+                    size={18}
+                    color={theme.colors.secondary}
+                  />
+                </View>
               </TouchableOpacity>
             </View>
             {openAccordionIndex === index && (
-              <Animated.View style={animatedStyle}>
+              <Animated.View className=" px-[10px]" style={animatedStyle}>
                 {day.assets.map((asset, assetIndex) => (
                   <ListDishItem
                     key={assetIndex}
@@ -118,23 +128,27 @@ function ThisWeek() {
           </View>
         ))}
       </ScrollView>
-      <BottomSheet
-        index={1}
-        snapPoints={snapPoints}
-        handleComponent={() => null}
-        ref={bottomSheetRef}
-        enablePanDownToClose={true}
-        backgroundComponent={() => (
-          <Animated.View
-            className="bg-[#F3F4F6] rounded-l-[36px] rounded-r-[36x] "
-            style={[StyleSheet.absoluteFillObject]}
-          />
-        )}
-      >
-        <BottomSheetComponent
-          bottomSheetRef={bottomSheetRef}
-          bottomList={bottomList}
-        />
+      <BottomSheet closePopUp={handleCloseModal} modalVisible={modalVisible}>
+        <View className="h-[150px] flex flex-col gap-4 mx-2 my-2  ">
+          {bottomList?.map((item, index) => {
+            return (
+              <View
+                key={index}
+                className=" mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
+              >
+                <TouchableOpacity
+                  className=" flex flex-row items-center gap-2"
+                  onPress={() => {
+                    item?.onPress();
+                  }}
+                >
+                  <AntIcon name={item?.icon} size={24} color={theme.colors.secondary} />
+                  <Text className="text-base font-semibold">{item?.name}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
       </BottomSheet>
     </View>
   );

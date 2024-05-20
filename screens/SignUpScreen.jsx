@@ -5,13 +5,83 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { theme } from '../theme/index'
 import { useNavigation } from '@react-navigation/native'
+import { Ionicons } from '@expo/vector-icons'
+import { COLORS } from '../theme/theme'
 
 function SignUpScreen() {
   const navigation = useNavigation()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [validLength, setValidLength] = useState(false)
+  const [hasNumber, setHasNumber] = useState(false)
+  const [hasSpecialCharacter, setHasSpecialCharacter] = useState(false)
+  const [error, setError] = useState()
+  const [isHide, setIsHide] = useState(true)
+
+  const handleEmailChange = (email) => {
+    setEmail(email)
+  }
+
+  const handleSignup = async () => {
+    try {
+      const response = await fetch(
+        'https://datn-admin-be.onrender.com/auth/signup',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: email,
+            password: password,
+          }),
+        }
+      )
+
+      if (response.ok) {
+        navigation.navigate('SignInScreen')
+      } else {
+        const responseBlob = await response.blob()
+        const responseData = await new Response(responseBlob).text()
+        const data = JSON.parse(responseData)
+
+        if (Array.isArray(data.message)) {
+          setError(data.message.join('\n'))
+        } else {
+          setError(data.message)
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handlePasswordChange = (password) => {
+    let pattern = /\d+/
+    let patternCharacter = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+
+    setPassword(password)
+    if (password.length >= 8) {
+      setValidLength(true)
+    } else {
+      setValidLength(false)
+    }
+    if (password.match(pattern)) {
+      setHasNumber(true)
+    } else {
+      setHasNumber(false)
+    }
+    if (password.match(patternCharacter)) {
+      setHasSpecialCharacter(true)
+    } else {
+      setHasSpecialCharacter(false)
+    }
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
       <View style={styles.container}>
@@ -19,48 +89,132 @@ function SignUpScreen() {
           <Text style={styles.title}>Let’s get started!</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>What is your email address?</Text>
-          <TextInput style={styles.input} placeholder='Enter your email' />
+          <Text style={styles.inputLabel}>What is your username?</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            placeholder='Enter your username'
+            onChangeText={handleEmailChange}
+          />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Create a password</Text>
-          <TextInput
-            style={styles.input}
-            type='password'
-            placeholder='Enter your password'
-          />
+          <View style={styles.passwordInput}>
+            <TextInput
+              style={[styles.input, styles.passwordInputLayout]}
+              type='password'
+              placeholder='Enter your password'
+              secureTextEntry={isHide}
+              onChangeText={handlePasswordChange}
+              value={password}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setIsHide(!isHide)}
+              style={styles.iconEye}
+            >
+              <Ionicons
+                name={isHide ? 'eye-off' : 'eye'}
+                size={22}
+                color={COLORS.secondary}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: validLength
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: hasNumber
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
+          <View
+            style={[
+              styles.progressBar,
+              {
+                backgroundColor: hasSpecialCharacter
+                  ? theme?.colors?.secondary
+                  : theme?.colors?.grayBackground,
+              },
+            ]}
+          />
         </View>
 
         <View style={styles.warningContainer}>
           <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
+            <View
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: validLength
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
+            />
             <Text style={styles.warningItem}>
               Must contain at least 8 characters
             </Text>
           </View>
           <View style={styles.warningItem}>
-            <View style={styles.warningIcon} />
+            <View
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: hasNumber
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
+            />
             <Text style={styles.warningItem}>One number</Text>
           </View>
           <View style={styles.warningItem}>
             <View
-              style={{
-                ...styles.warningIcon,
-                backgroundColor: theme.colors.grayBackground,
-              }}
+              style={[
+                styles.warningIcon,
+                {
+                  backgroundColor: hasSpecialCharacter
+                    ? theme?.colors?.secondary
+                    : theme?.colors?.grayBackground,
+                },
+              ]}
             />
 
             <Text style={styles.warningItem}>One special character</Text>
           </View>
         </View>
+        {error && (
+          <View>
+            <Text className='text-red-500 font-medium text-sm'>{error}</Text>
+          </View>
+        )}
         <TouchableOpacity
-          onPress={() => navigation.navigate('SignInScreen')}
-          style={styles.signUpButtonContainer}
+          onPress={handleSignup}
+          style={[
+            styles.signUpButtonContainer,
+            {
+              backgroundColor:
+                !password || !email
+                  ? theme?.colors?.grayBackground
+                  : theme.colors.secondary,
+            },
+          ]}
+          disabled={!email || !password}
         >
           <Text style={styles.signButton}>Sign Up</Text>
         </TouchableOpacity>
@@ -112,6 +266,32 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+    height: 50,
+  },
+
+  passwordInputLayout: {
+    flex: 1,
+    borderRightWidth: 0,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+
+  iconEye: {
+    height: '100%',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    borderLeftWidth: 0,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+
+  passwordInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   progressBarContainer: {
@@ -123,7 +303,7 @@ const styles = StyleSheet.create({
 
   progressBar: {
     flex: 1,
-    backgroundColor: theme.colors.primary,
+    // backgroundColor: theme.colors.grayBackground,
     padding: 6,
     borderRadius: 20,
   },
@@ -142,7 +322,7 @@ const styles = StyleSheet.create({
   },
 
   warningIcon: {
-    backgroundColor: theme.colors.primary,
+    //backgroundColor: theme.colors.grayBackground,
     padding: 10,
     borderRadius: 50,
   },

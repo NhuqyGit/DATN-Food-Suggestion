@@ -1,15 +1,43 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
+import { theme } from "../../../theme/index";
 
-function Plus({ navigation, toggleBottomSheet }) {
+function Plus({ isAdd, toggleBottomSheet }) {
+  const [isPlus, setisPlus] = useState(false);
   return (
     <View>
-      <TouchableOpacity onPress={toggleBottomSheet}>
+      {isAdd === true ? (
         <View>
-          <AntIcon name="pluscircle" size={30} color="#40AD53" />
+          {isPlus ? (
+            <TouchableOpacity
+              onPress={() => {
+                setisPlus(false);
+              }}
+            >
+              <View className="">
+                <AntIcon name="minuscircle" size={30} color={theme.colors.secondary} />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setisPlus(true);
+              }}
+            >
+              <View className="">
+                <AntIcon name="pluscircle" size={30} color={theme.colors.secondary} />
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
-      </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={toggleBottomSheet}>
+          <View>
+            <AntIcon name="pluscircle" size={30} color={theme.colors.secondary} />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

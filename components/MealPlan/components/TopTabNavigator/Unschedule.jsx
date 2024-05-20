@@ -8,10 +8,12 @@ import ListDishItem from "../ListDishItem.jsx";
 function Unschedule() {
   return (
     <View className="py-4 h-full bg-white">
-      <PlanDate />
+      <View className="px-3">
+        <PlanDate />
+      </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
-        <View>
+        <View className=" px-[10px]">
           {data.map((asset, assetIndex) => (
             <ListDishItem
               key={assetIndex}

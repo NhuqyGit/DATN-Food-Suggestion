@@ -4,13 +4,21 @@ import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { dataAdd } from "../../../constants/Addscreen";
 import ListDishItem from "../../MealPlan/components/ListDishItem";
+import BackButton from "../../BackButton/BackButton";
+import CloseButton from "../../BackButton/CloseButton";
+import { theme } from "../../../theme/index";
 
 function AddScreen() {
   const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1, padding: 16, backgroundColor: "white" }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>
+      <BackButton />
+
+      <Text
+        className="mt-4"
+        style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}
+      >
         Add Saved Recipe
       </Text>
       <Text style={{ fontSize: 16, color: "#999999", marginBottom: 16 }}>
@@ -32,7 +40,7 @@ function AddScreen() {
                 paddingHorizontal: 16,
                 backgroundColor: "#F3F4F6",
                 borderRadius: 8,
-                alignItems:'center'
+                alignItems: "center",
               }}
             >
               <View className="flex flex-col gap-2">
@@ -63,6 +71,9 @@ function RecipeDetailsScreen({ route }) {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
+      <View className="flex flex-row justify-end mt-4">
+        <CloseButton />
+      </View>
       <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}>
         {item.title}
       </Text>
@@ -78,7 +89,8 @@ function RecipeDetailsScreen({ route }) {
         ))}
       </ScrollView>
       <TouchableOpacity
-        className=" rounded-full bg-[#40AD53] w-2/3 h-12 mx-auto my-8 justify-center items-center "
+        style={{backgroundColor: theme.colors.secondary}}
+        className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
         onPress={() => {
           navigation.navigate("MainMealPlan");
         }}
@@ -95,7 +107,8 @@ function AddStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="AddScreen">
+      initialRouteName="AddScreen"
+    >
       <Stack.Screen name="AddScreen" component={AddScreen} />
       <Stack.Screen name="RecipeDetails" component={RecipeDetailsScreen} />
     </Stack.Navigator>

@@ -1,0 +1,284 @@
+import React, { Component, useEffect, useState } from "react";
+import { View, Image, Text, TouchableOpacity, StyleSheet, Modal, Animated } from "react-native";
+import { createDrawerNavigator, DrawerItemList, DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native";
+import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
+import FoodSuggesionStack from "./FoodSuggestion/FoodSuggesionStack";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { theme } from "../theme/index";
+
+const Drawer = createDrawerNavigator();
+const FoodSuggestion = () =>{
+	const navigation = useNavigation()
+	const [listTopic, setListTopic] = useState([
+		{
+			id: 1,
+			name: "Lorem Ipsum",
+			date: "",
+			message: []
+		},
+		{
+			id: 2,
+			name: "A type specimen book",
+			date: "",
+			message: []
+		},
+		{
+			id: 3,
+			name: "Many desktop publishing package",
+			date: "",
+			message: []
+		},
+		{
+			id: 4,
+			name: "There are many variations of passages",
+			date: "",
+			message: []
+		},
+		{
+			id: 5,
+			name: "All the Lorem Ipsum generators",
+			date: "",
+			message: []
+		},
+		{
+			id: 6,
+			name: "Contrary to popular belief",
+			date: "",
+			message: []
+		},
+		{
+			id: 7,
+			name: "Always free from repetition",
+			date: "",
+			message: []
+		},
+		{
+			id: 8,
+			name: "Always free from epetition",
+			date: "",
+			message: []
+		},
+		{
+			id: 9,
+			name: "Always fre from repetition",
+			date: "",
+			message: []
+		},
+		{
+			id: 10,
+			name: "Always free from repetiion",
+			date: "",
+			message: []
+		},
+		{
+			id: 11,
+			name: "Always ee from repetiion",
+			date: "",
+			message: []
+		},
+		{
+			id: 12,
+			name: "Always free from repetiio",
+			date: "",
+			message: []
+		},
+		{
+			id: 13,
+			name: "Always free fromrepetiion",
+			date: "",
+			message: []
+		},
+		{
+			id: 14,
+			name: "lways free from rwersepetiion",
+			date: "",
+			message: []
+		},
+		{
+			id: 15,
+			name: "lways free fr666om repetiion",
+			date: "",
+			message: []
+		},
+		{
+			id: 16,
+			name: "lways fre234e from repetiion",
+			date: "",
+			message: []
+		},
+	])
+
+	const demoData1 = {
+		"Today": [
+			{
+				id: 1,
+				name: "Lorem Ipsum",
+				date: "",
+				message: []
+			},
+			{
+				id: 2,
+				name: "A type specimen book",
+				date: "",
+				message: []
+			},
+		],
+		"Yesterday": [
+			{
+				id: 3,
+				name: "Many desktop publishing package",
+				date: "",
+				message: []
+			},
+			{
+				id: 4,
+				name: "There are many variations of passages",
+				date: "",
+				message: []
+			},
+			{
+				id: 5,
+				name: "All the Lorem Ipsum generators",
+				date: "",
+				message: []
+			},
+		],
+		"Previous 7 Days": [
+			{
+				id: 6,
+				name: "Contrary to popular belief",
+				date: "",
+				message: []
+			},
+			{
+				id: 7,
+				name: "Always free from repetition",
+				date: "",
+				message: []
+			},
+		],
+	}
+	
+	const [focusedItem, setFocusedItem] = useState(null);
+
+	useEffect(()=>{
+		setFocusedItem(listTopic[0].name)
+	}, [])
+
+
+	const handlePress = (itemLabel) => {
+		navigation.navigate(itemLabel);
+		setFocusedItem(itemLabel); // Cập nhật mục được tập trung
+	};
+	const deleteTopic = (id)=>{
+		console.log("hello", id)
+		const updateListTopic = listTopic.filter(topic => topic.id !== id)
+		setListTopic(updateListTopic)
+	}
+
+	const listScreen = listTopic.map((topic, index)=>{	
+		return(
+			<Drawer.Screen
+				key={index.toString()}
+				name={topic.name}
+			>
+				{(props) => <FoodSuggesionStack {...props} topic={topic} deleteTopic={deleteTopic}/>}
+			</Drawer.Screen>
+		)
+	})
+
+
+	const listScreen1 = Object.keys(demoData1).flatMap(key => {
+		return (
+			<View key={key}>
+				<Text style={{color: "#6e6e6e", paddingHorizontal: 16, marginTop: 20, fontSize: 13}}>{key}</Text>
+				{demoData1[key].map((item, index) => (
+					<DrawerItem
+						key={`${key}_${index.toString()}`}
+						label={item.name}
+						onPress={() => handlePress(item.name)}
+						focused={focusedItem === item.name}
+						activeBackgroundColor={'rgba(196, 224, 227, 0.4)'}
+						labelStyle={{fontWeight: 'bold', fontSize: 15, color: theme.colors.dark}}
+					/>
+				))}
+			</View>
+		)	
+	});
+	console.log("RENDER")
+	return (
+		<Drawer.Navigator
+			drawerContent={(props)=>{
+				return (
+					<SafeAreaView style={{flex: 1}}>
+						<View style={{justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10}}>
+							<TouchableOpacity
+								style={{
+									width: '100%',
+									flexDirection: 'row',
+									alignItems: 'center',
+									padding: 5,
+									// backgroundColor: 'red',
+									borderRadius: 8
+								}}
+							>
+							<Image source={require('../assets/favicon.png')} style={{width: 35, height: 35, marginRight: 10}}/>
+							<Text style={{fontWeight: 'bold'}}>New suggestion</Text>
+							</TouchableOpacity>
+						</View>
+
+						<ScrollView>
+							{/* <DrawerItemList {...props} /> */}
+
+							{/* {
+								listTopic.map((item, index)=>{
+									return(
+										<DrawerItem
+											key={index.toString()}
+											label={item.name}
+											onPress={() => handlePress(item.name)}
+											focused={focusedItem === item.name}
+											activeBackgroundColor='#d9d9d9'
+											activeTintColor={theme.colors.dark}
+										/>
+									)
+								})
+							} */}
+
+							{listScreen1}
+						</ScrollView>
+					</SafeAreaView>
+				)}
+			}
+
+			screenOptions={{
+				drawerType: 'slide',
+				swipeEnabled: false,
+				headerShown: false,
+				headerTintColor: 'black',
+				headerTitle: 'Food Suggestion',
+				drawerActiveBackgroundColor: '#d9d9d9',
+				drawerActiveTintColor: 'black', 
+
+				// headerRight: () => (
+				// 	<TouchableOpacity onPress={() => console.log('Custom Icon Pressed')}>
+				// 		<Ionicons name="ellipsis-horizontal" size={24} color="black" style={{marginRight: 15}} />
+				// 	</TouchableOpacity>
+				// ),
+
+				headerStyle: {
+					borderBottomWidth: 1, // Độ dày của border bottom
+					borderBottomColor: '#d9d9d9', // Màu của border bottom
+				}
+			}}
+
+		>
+			{listScreen}
+			{/* {listScreen1} */}
+		</Drawer.Navigator>
+	);
+}
+
+export default FoodSuggestion;

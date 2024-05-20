@@ -1,15 +1,17 @@
 import {
   View,
-  Text,
-  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Platform,
 } from 'react-native'
-import React from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
+import { Ionicons, Entypo } from '@expo/vector-icons'
+import Button from '../../../components/Button/Button'
 
-function SearchHeader({ setIsFocusSearch, setSearchText }) {
+function SearchHeader({ setStep, navigation, route, setVisible }) {
+  const [search, setSearch] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -36,6 +38,14 @@ function SearchHeader({ setIsFocusSearch, setSearchText }) {
 
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
+  useEffect(() => {
+    if (search.length > 0) {
+      setStep(2)
+    } else if (search.length === 0 && !isFocused) {
+      setStep(1)
+    }
+  }, [search, isFocused])
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={[boxShadow, styles.searchContainer]}>
@@ -47,22 +57,28 @@ function SearchHeader({ setIsFocusSearch, setSearchText }) {
           color='#9e9e9e'
         />
         <TextInput
+          value={search}
           onFocus={() => {
-            setIsFocusSearch(true)
+            setIsFocused(true)
           }}
           onBlur={() => {
-            setIsFocusSearch(false)
+            setIsFocused(false)
           }}
-          onChangeText={(text) => setSearchText(text)}
+          onChangeText={(text) => {
+            setSearch(text)
+          }}
           style={styles.input}
           placeholder='Search'
         />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.avatarContainer}>
-        <Image
-          style={styles.avatarImage}
-          source={require('../../../assets/images/Profile/avatarTest.jpg')}
+        <Button
+          childrenIcon={<Entypo name='camera' size={24} color='black' />}
+          onPress={() => {
+            // navigation.navigate('CameraScreen')
+            setVisible(true)
+          }}
         />
       </TouchableOpacity>
     </View>
@@ -77,6 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 16,
+    paddingRight: 6,
     paddingVertical: 5,
   },
   avatarContainer: {
