@@ -416,6 +416,7 @@ const DirectionsTab = ({
 );
 
 function CreateRecipe() {
+  const navigation = useNavigation();
   const WIDTH = Dimensions.get("window").width;
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -531,7 +532,11 @@ function CreateRecipe() {
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
             Create personal recipe
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
             <AntDesign name="close" size={24} color="white" />
           </TouchableOpacity>
         </View>
@@ -568,6 +573,7 @@ function CreateRecipe() {
                 directions: directionsDesc,
                 totalTime: totalTime,
               });
+              navigation.goBack()
             }}
           >
             <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
