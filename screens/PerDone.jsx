@@ -8,14 +8,15 @@ import {
 } from 'react-native'
 import React from 'react'
 import { AsyncStorageService } from '../utils/AsynStorage'
-import { selectUserInfo } from '../slices/userLoginSlice'
-import { useSelector } from 'react-redux'
+import { selectUserInfo, setUserInfo } from '../slices/userLoginSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
 const deviceHeight = Dimensions.get('window').height
 const deviceWidth = Dimensions.get('window').width
 
 function PerDone({ navigation }) {
   const userInfo = useSelector(selectUserInfo)
+  const dispatch = useDispatch()
 
   const handleLogin = async () => {
     const token = await AsyncStorageService.getAccessToken()
@@ -39,7 +40,8 @@ function PerDone({ navigation }) {
       if (responseJson.error) {
         console.log(responseJson.message)
       } else {
-        navigation.navigate('Home')
+        dispatch(setUserInfo({ ...userInfo, isLogin: true }))
+        // navigation.navigate('Home')
       }
     } catch (error) {
       console.error(error)
