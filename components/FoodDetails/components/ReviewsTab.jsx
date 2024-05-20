@@ -11,22 +11,11 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
-// import StarRating from "react-native-star-rating";
 import { renderStarRating } from "./MoreByCreator";
 import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
-function ReviewsTab({navigation, reviews }) {
+function ReviewsTab({navigation, reviews, userId, dishId, dishInfo}) {
   const startAddingReview = () => {
-    //setAddingReview(true);
-    navigation.navigate("ReviewScreen");
-  };
-  const addReview = () => {
-    // alert(`New Review: ${JSON.stringify(newReview)}`);
-    // setNewReview({ user: "", rating: 0, comment: "" });
-    // cancelAddingReview();
-   
-  };
-  const cancelAddingReview = () => {
-    setAddingReview(false);
+    navigation.push('ReviewScreen', { dishId, userId, dishInfo })
   };
   const [isAddingReview, setAddingReview] = useState(false);
   const [newReview, setNewReview] = useState({
@@ -39,7 +28,9 @@ function ReviewsTab({navigation, reviews }) {
   useEffect(() => {
     console.log("Users:", users);
   }, [users]);
-
+  useEffect(() => {
+    console.log("Info: ", dishInfo );
+  });
   const getUserById = (userId) => {
     return users?.find((user) => user.id === userId);
   };
@@ -92,56 +83,6 @@ function ReviewsTab({navigation, reviews }) {
           );
         })}
       </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isAddingReview}
-        onRequestClose={cancelAddingReview}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={cancelAddingReview}
-          />
-          <View style={styles.innerContainer}>
-            <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={cancelAddingReview}
-            >
-              <Icon name="close" size={20} color="black" />
-            </TouchableOpacity>
-            <View style={styles.addReviewContainer}>
-              <View style={styles.starRating}>
-                {/*<StarRating
-                  maxStars={5}
-                  rating={newReview.rating}
-                  starSize={20}
-                  fullStarColor="#FF6321"
-                  selectedStar={(rating) =>
-                    setNewReview({ ...newReview, rating })
-                  }
-                />*/}
-              </View>
-
-              <TextInput
-                style={styles.yourReview}
-                placeholder="Your Review"
-                multiline
-                value={newReview.comment}
-                onChangeText={(text) =>
-                  setNewReview({ ...newReview, comment: text })
-                }
-              />
-              <TouchableOpacity
-                style={styles.addButtonReview}
-                onPress={addReview}
-              >
-                <Text style={styles.addButtonText}>Add Review</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }

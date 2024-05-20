@@ -1,69 +1,109 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Rating } from 'react-native-ratings';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
+import { Rating } from "react-native-ratings";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
+import { theme } from "../../theme";
+import { useCreateReviewMutation } from "../../slices/reviewSlice";
+import { useGetUserInfoQuery } from "../../slices/userInfoSlice";
 
-const ReviewScreen = () => {
-  const [rating, setRating] = useState(3);
-  const [review, setReview] = useState('');
-  const [imageUri, setImageUri] = useState(null);
+const ReviewScreen = ({ route }) => {
+  const navigation = useNavigation();
+  const { dishId, userId, dishInfo } = route.params || {};
 
-  const handleChoosePhoto = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
-      return;
-    }
+  const [createReview, { isLoading }] = useCreateReviewMutation();
+  const {
+    data: users,
+    error: userError,
+    isLoading: userLoading,
+  } = useGetUserInfoQuery();
+  const [rating, setRating] = useState(1);
+  const [reviewContent, setReview] = useState("");
+  const [errorRating, setErrorRating] = useState("");
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      //aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+  const handleSubmit = async () => {
+    try {
+      if (reviewContent === "") {
+        setErrorRating("* Review required");
+      } else {
+        setErrorRating("");
+        await createReview({
+          dishId: parseInt(dishId),
+          userId: parseInt(userId),
+          content: reviewContent,
+          rating: parseInt(rating),
+        }).unwrap();
+        console.log("Review added:", rating);
+        setRating(1);
+        setReview("");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Failed to add review:", error);
     }
   };
 
-  const handleSubmit = () => {
-    // Handle the submit action
-    console.log('Rating:', rating);
-    console.log('Review:', review);
-    console.log('Image URI:', imageUri);
-  };
+  useEffect(() => {
+    console.log("dishInfo1: ", reviewContent);
+  }, [dishInfo]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>Leave a Review</Text>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.dishInfo}>{dishInfo}</Text>
+          <TouchableOpacity onPress={handleCancel} style={styles.closeButton}>
+            <Ionicons name="close-circle-outline" size={30} color="gray" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.subtitle}>Leave a Review</Text>
 
-      <Rating
-        showRating
-        onFinishRating={setRating}
-        style={styles.rating}
-        startingValue={rating}
-        imageSize={30}
-      />
+        <View style={styles.divider} />
+        <View style={styles.userInfo}>
+          <Image
+            style={styles.avatar}
+            source={{ uri: "https://www.example.com/avatar.png" }}
+          />
+          <View style={styles.userText}>
+            <Text style={styles.userName}>HN</Text>
+            <Text style={styles.posting}>Posting publicly</Text>
+          </View>
+        </View>
+        <View style={styles.divider} />
+        <Rating
+          onFinishRating={setRating}
+          ratingColor={theme.colors.primary}
+          style={styles.rating}
+          startingValue={rating}
+          imageSize={30}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="How did it turn out? Leave your feedback and share your culinary tips! (optional)"
-        multiline
-        numberOfLines={4}
-        onChangeText={setReview}
-        value={review}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Leave your feedback and share your culinary tips!"
+          multiline
+          numberOfLines={4}
+          onChangeText={setReview}
+          value={reviewContent}
+        />
+        {!!errorRating && <Text style={{ color: "red" }}>{errorRating}</Text>}
+      </View>
 
-      <TouchableOpacity style={styles.imageUpload} onPress={handleChoosePhoto}>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.image} />
-        ) : (
-          <Text style={styles.imageUploadText}>Upload Imageg</Text>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleSubmit}
+        disabled={isLoading}
+      >
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>
@@ -74,54 +114,82 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    paddingTop: 50,
+    backgroundColor: "#fff",
+    justifyContent: "space-between",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  content: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  dishInfo: {
+    fontSize: 18,
+    fontWeight: "semibold",
+    flex: 1,
+  },
+  closeButton: {
+    marginLeft: 8,
+  },
+  userInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  userText: {
+    marginLeft: 10,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  posting: {
+    fontSize: 14,
+    color: "grey",
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 22,
     marginBottom: 16,
+    fontWeight: "bold",
   },
   rating: {
-    marginBottom: 16,
+    marginVertical: 16,
+    alignItems: "flex-start",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 8,
     marginBottom: 16,
-    textAlignVertical: 'top',
-  },
-  imageUpload: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  imageUploadText: {
-    color: '#aaa',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    textAlignVertical: "top",
   },
   submitButton: {
-    backgroundColor: '#0288D1',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
+    backgroundColor: theme.colors.secondary,
+    padding: 12,
+    borderRadius: 10,
+    width: "40%",
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: 20,
   },
   submitButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
+  },
+  divider: {
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 1,
+    marginVertical: 16,
   },
 });
 
