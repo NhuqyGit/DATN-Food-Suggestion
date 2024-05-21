@@ -7,6 +7,8 @@ import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
 import FoodSuggesionStack from "./FoodSuggestion/FoodSuggesionStack";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../theme/index";
+import { HOST } from "../config";
+import { AsyncStorageService } from "../utils/AsynStorage";
 
 const Drawer = createDrawerNavigator();
 const FoodSuggestion = () =>{
@@ -110,6 +112,8 @@ const FoodSuggestion = () =>{
 		},
 	])
 
+	const [topicFilter, setTopicFilter] = useState(null)
+
 	const demoData1 = {
 		"Today": [
 			{
@@ -163,14 +167,45 @@ const FoodSuggestion = () =>{
 	
 	const [focusedItem, setFocusedItem] = useState(null);
 
-	useEffect(()=>{
-		setFocusedItem(listTopic[0].name)
-	}, [])
+	useEffect(() => {
+		const getTopics = async () => {
+		  try {
+			const token = await AsyncStorageService.getAccessToken();
+			const userId = await AsyncStorageService.getUserId();
+			const headers = {
+			  Authorization: `Bearer ${token}`,
+			};
+	
+			const [dateFilterResponse, topicsResponse] = await Promise.all([
+			  fetch(`${HOST}/topics/user/${userId}/date-filter`, { headers }),
+			  fetch(`${HOST}/topics/user/${userId}`, { headers }),
+			]);
+	
+			if (!dateFilterResponse.ok) {
+			  throw new Error('Failed to fetch date filter data');
+			}
+			if (!topicsResponse.ok) {
+			  throw new Error('Failed to fetch topics data');
+			}
+	
+			const dateFilterData = await dateFilterResponse.json();
+			const topicsData = await topicsResponse.json();
+	
+			setTopicFilter(dateFilterData);
+			setListTopic(topicsData);
+			setFocusedItem(topicsData[0].id);
+		  } catch (error) {
+			console.error('Error fetching data:', error);
+		  }
+		};
+	
+		getTopics();
+	}, []);
 
-
-	const handlePress = (itemLabel) => {
-		navigation.navigate(itemLabel);
-		setFocusedItem(itemLabel); // Cập nhật mục được tập trung
+	const handlePress = (item) => {
+		const label = item.title + item.id.toString()
+		navigation.navigate(label);
+		setFocusedItem(item.id); // Cập nhật mục được focused
 	};
 	const deleteTopic = (id)=>{
 		console.log("hello", id)
@@ -178,36 +213,41 @@ const FoodSuggestion = () =>{
 		setListTopic(updateListTopic)
 	}
 
-	const listScreen = listTopic.map((topic, index)=>{	
+	const listScreen = listTopic ? listTopic.map((topic, index)=>{	
 		return(
 			<Drawer.Screen
 				key={index.toString()}
-				name={topic.name}
+				name={topic.title + topic.id.toString()}
 			>
-				{(props) => <FoodSuggesionStack {...props} topic={topic} deleteTopic={deleteTopic}/>}
+				{(props) => <FoodSuggesionStack {...props} focusedItem={focusedItem} topic={topic} deleteTopic={deleteTopic}/>}
 			</Drawer.Screen>
 		)
-	})
+	}) : null
 
 
-	const listScreen1 = Object.keys(demoData1).flatMap(key => {
+	const listScreen1 = topicFilter ? Object.keys(topicFilter).flatMap(key => {
 		return (
 			<View key={key}>
-				<Text style={{color: "#6e6e6e", paddingHorizontal: 16, marginTop: 20, fontSize: 13}}>{key}</Text>
-				{demoData1[key].map((item, index) => (
-					<DrawerItem
-						key={`${key}_${index.toString()}`}
-						label={item.name}
-						onPress={() => handlePress(item.name)}
-						focused={focusedItem === item.name}
-						activeBackgroundColor={'rgba(196, 224, 227, 0.4)'}
-						labelStyle={{fontWeight: 'bold', fontSize: 15, color: theme.colors.dark}}
-					/>
-				))}
+				{topicFilter[key]?.length > 0 ? 
+					<>
+						<Text style={{color: "#6e6e6e", paddingHorizontal: 16, marginTop: 20, fontSize: 13}}>{key}</Text>
+						{topicFilter[key]?.map((item, index) => (
+							<DrawerItem
+								key={`${key}_${index.toString()}`}
+								label={item.title}
+								onPress={() => handlePress(item)}
+								focused={focusedItem === item.id}
+								activeBackgroundColor={'rgba(196, 224, 227, 0.4)'}
+								labelStyle={{fontWeight: 'bold', fontSize: 15, color: theme.colors.dark}}
+							/>
+						))}
+					</>
+				: null}
 			</View>
-		)	
-	});
+		)
+	}) : null
 	console.log("RENDER")
+	console.log(focusedItem)
 	return (
 		<Drawer.Navigator
 			drawerContent={(props)=>{

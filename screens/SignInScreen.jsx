@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { AsyncStorageService } from '../utils/AsynStorage'
 import { useDispatch } from 'react-redux'
 import { setUserInfo } from '../slices/userLoginSlice'
+import { HOST } from '../config'
 
 function SignInScreen() {
   const navigation = useNavigation()
@@ -38,7 +39,7 @@ function SignInScreen() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        'https://datn-admin-be.onrender.com/auth/signin',
+        `${HOST}/auth/signin`,
         {
           method: 'POST',
           headers: {
@@ -65,7 +66,7 @@ function SignInScreen() {
         await AsyncStorage.setItem('user_id', responseJson?.id.toString())
 
         const responseGetUserById = await fetch(
-          `https://datn-admin-be.onrender.com/users/${responseJson.id}`,
+          `${HOST}/users/${responseJson.id}`,
           {
             headers: {
               Authorization: `Bearer ${responseJson.accessToken}`,

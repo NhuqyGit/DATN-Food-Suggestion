@@ -1,15 +1,25 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, Feather } from '@expo/vector-icons'
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/index'
 import RecordItem from './RecordItem';
+import { AsyncStorageService } from "../../utils/AsynStorage";
+import { HOST } from "../../config"
+import { useMessage } from './MessageContext';
+import RecordPopUp from './RecordPopUp';
 
 const ListRecordScreen = () => {
-    const [isActive, setIsActive] = useState()
+    const { recordId, handlePatchRecordSelect, listRecord, setListRecord } = useMessage()
+    const [recordSelect, setRecordSelect] = useState(null)
+    const [isSelect, setIsSelect] = useState(recordId)
+    // const [listRecord, setListRecord] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
+
     const navigation = useNavigation()
+    
     const recordData = [
         {
             id: 1,
@@ -72,18 +82,57 @@ const ListRecordScreen = () => {
             name: "Record 14"
         },
     ]
+ 
+    const handleOpenModal = (record) => {
+        setRecordSelect(record)
+        setModalVisible(true)
+    }
+
+    const handleCloseModal = () =>{
+        setModalVisible(false)
+    }
+
+    const handleFetchListRecord = async () =>{
+        const token = await AsyncStorageService.getAccessToken();
+        const userId = await AsyncStorageService.getUserId();
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        try{
+            const response = await fetch(`${HOST}/users/${userId}/records`, { headers })
+            const data = await response.json();
+            console.log(data) 
+            if (data.length > 0){
+                setListRecord(data)
+            }
+        }catch (error) {
+            console.error('Error fetching data record:', error);
+        }
+    }
+
+    const handleSelect = () => {
+        const foundObject = listRecord.find(record => record.id === isSelect);
+        if (foundObject) {
+            // setNameRecord(foundObject.nameRecord)
+            // setRecordId(foundObject.id)
+            handlePatchRecordSelect(foundObject)
+            navigation.goBack()
+        } else {
+            console.log('Object not found');
+        }
+    }
 
     useEffect(()=>{
-        if (recordData === null){
-            
-        }
-    }, [recordData])
+        handleFetchListRecord()
+        console.log("LIST RECORD USEEFFECT")
+    }, [])
 
-    const listRecord = recordData.map((record, index)=>{
+    const listRecordComponent = listRecord?.map((record, index)=>{
         return (
-            <RecordItem record={record} key={index.toString()}/>
+            <RecordItem record={record} key={index.toString()} handleOpenModal={handleOpenModal} isSelect={isSelect} setIsSelect={setIsSelect}/>
         )
     })
+    console.log("LISTRECORD")
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
             <View style={styles.container}>
@@ -97,17 +146,29 @@ const ListRecordScreen = () => {
                     />
                 </TouchableOpacity>
 
-                <Text style={styles.title}>List Records</Text>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10}}>
+                    <Text style={styles.title}>List Records</Text>
+                    <TouchableOpacity
+                        onPress={()=>navigation.push("RecordDetail", { type: "POST"})}
+                    >
+                        <Text style={{fontSize: 14, fontWeight: '500', color: theme.colors.secondary}}>Add new record</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <ScrollView style={styles.recordsContainer}>
-                    {listRecord}
+                    {listRecordComponent}
                 </ScrollView>
 
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.btnSelect}>
-                        <Text style={styles.btnText}>Select</Text>
+                    <TouchableOpacity 
+                        onPress={handleSelect}
+                        disabled={isSelect === recordId}
+                        style={[styles.btnSelect, { backgroundColor: isSelect !== recordId ? theme.colors.secondary : "#ebebeb"}]}>
+                        <Text style={[styles.btnText, {color: isSelect !== recordId ? 'white' : theme.colors.darkGray}]}>Select</Text>
                     </TouchableOpacity>
                 </View>
+
+                <RecordPopUp recordSelect={recordSelect} closePopUp={handleCloseModal} modalVisible={modalVisible}/>
             </View>
         // </SafeAreaView>
     )

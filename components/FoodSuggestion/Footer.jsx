@@ -7,7 +7,7 @@ import { SIZES } from '../../theme/theme';
 import { useMessage } from './MessageContext';
 const Footer = () => {
     const navigation = useNavigation();
-    const { listMessage, isFetchDataCompleted, handleNewMessage, handleNewResponse} = useMessage();
+    const { listMessage, isFetchDataCompleted, nameRecord, handleNewMessage, handleNewResponse} = useMessage();
     const [isClick, setIsClick] = useState(false);
     const [isFolderOpen, setIsFolderOpen] = useState(false);
     const folderTranslateY = useRef(new Animated.Value(0)).current;
@@ -50,7 +50,7 @@ const Footer = () => {
                         className="flex flex-row justify-center items-center rounded-[10px] bg-[#5e5e5e] w-3/5 py-2">
                         <MaterialCommunityIcons name="file-document-edit-outline" color="white" size={24}/>
                         <Text style={{marginLeft: 8, color: "white"}}>
-                            Create a new record
+                            {nameRecord ? nameRecord : "Create a new record"}
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -66,15 +66,6 @@ const Footer = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {/* <Modal
-                visible={isFolderOpen}
-                animationType='slide'
-                transparent={true}
-                onRequestClose={closeFolder}
-            >
-                <RecordStack closeFolder={closeFolder}/>
-            </Modal> */}
         </>
     );
 }
