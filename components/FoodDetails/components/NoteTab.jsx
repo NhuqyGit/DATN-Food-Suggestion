@@ -1,95 +1,3 @@
-// import React, { useEffect, useCallback } from "react";
-// import {
-//   Text,
-//   View,
-//   TouchableOpacity,
-//   Image,
-//   StyleSheet,
-//   ScrollView,
-// } from "react-native";
-// import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-// import { theme } from "../../../theme/index";
-// import Icon from "react-native-vector-icons/FontAwesome";
-// import { useGetNoteByUserIdAndDishIdQuery } from "../../../slices/noteSlice";
-// import { useFocusEffect } from "@react-navigation/native";
-
-// function InitNotTab() {
-//   return (
-//     <View style={styles.containerInitNote}>
-//       <Image
-//         source={require("../../../assets/images/FoodDetails/notesInit.png")}
-//         style={styles.imageNote}
-//       />
-//       <Text style={{ textAlign: "center", fontWeight: "bold", marginTop: 5 }}>
-//         Jot it down
-//       </Text>
-//       <Text style={{ textAlign: "center", color: "gray", marginTop: 10 }}>
-//         Got an idea, reminder, or some inspiration?
-//       </Text>
-//       <Text style={{ textAlign: "center", color: "gray" }}>
-//         {" "}
-//         Save a private note here for next time.
-//       </Text>
-//     </View>
-//   );
-// }
-// function NoteList({notes}) {
-//   return (
-//     <ScrollView>
-//       {notes?.map((note) => (
-//         <View key={note.id} style={styles.component}>
-//           <Text style={styles.mainText}>{note.id}</Text>
-//           <Text style={styles.subText}>{note.noteContent}</Text>
-//           <View style={styles.icons}>
-//           <TouchableOpacity>
-//             <Icon name="pencil" size={18} color="#000" />
-//           </TouchableOpacity>
-//           <TouchableOpacity>
-//             <Icon name="trash" size={18} color="#000" />
-//           </TouchableOpacity>
-//           </View>
-//         </View>
-//       ))}
-//     </ScrollView>
-//   );
-// }
-// function NoteTab({navigation, userId, dishId }) {
-//   useEffect(() => {
-//     console.log("Note tab:", notes);
-//   });
-//   const { data: notes, error: noteError, isLoading: noteLoading, refetch} = useGetNoteByUserIdAndDishIdQuery({userId, dishId});
-//   useFocusEffect(
-//     useCallback(() => {
-//       refetch();
-//     }, [refetch])
-//   );
-//   const handleAddNote = () => {
-//     navigation.navigate("AddNewNote", { dishId, userId });
-//   };
-//   if(noteLoading) return <Text>Loading</Text>;
-//   if(noteError) return <Text>Error</Text>;
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.row}>
-//         <View style={styles.rowItem}>
-//           <TouchableOpacity style={styles.addNoteBtn} onPress={handleAddNote}>
-//             <SimpleLineIcons
-//               name="note"
-//               size={20}
-//               color={theme.colors.secondary}
-//               style={styles.iconAdd}
-//             />
-//             <Text style={[styles.buttonText, styles.text]}>Add Note</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//       <View style={styles.line} />
-//       {notes.length > 0 ? <NoteList notes={notes} /> : InitNotTab()}
-//     </View>
-//   );
-// }
-
 import React, { useEffect, useCallback } from "react";
 import {
   Text,
@@ -289,7 +197,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     backgroundColor: "#F5F5F5",
-  
   },
   mainText: {
     fontSize: 16,

@@ -127,10 +127,23 @@ function FoodDetailsScreen({ navigation, route }) {
             {() => <IngredientsTab ingredients={foodDetails.ingredients} />}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
-            {() => <NoteTab navigation={navigation} userId={1} dishId={foodDetails.id}/>}
+            {() => (
+              <NoteTab
+                navigation={navigation}
+                userId={1}
+                dishId={foodDetails.id}
+              />
+            )}
           </Tab.Screen>
           <Tab.Screen name="Reviews">
-            {() => <ReviewsTab navigation={navigation} reviews={foodDetails.reviews} userId={1} dishId={foodDetails.id} dishInfo={foodDetails.dishName}/>}
+            {() => (
+              <ReviewsTab
+                navigation={navigation}
+                userId={1}
+                dishId={foodDetails.id}
+                dishInfo={foodDetails.dishName}
+              />
+            )}
           </Tab.Screen>
         </Tab.Navigator>
       </View>

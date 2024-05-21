@@ -11,52 +11,66 @@ import { Rating } from "react-native-ratings";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../../theme";
-import { useCreateReviewMutation } from "../../slices/reviewSlice";
-import { useGetUserInfoQuery } from "../../slices/userInfoSlice";
+import {
+  useCreateReviewMutation,
+  useUpdateReviewMutation,
+} from "../../slices/reviewSlice";
+import { useGetUserByIdQuery } from "../../slices/userInfoSlice";
 
 const ReviewScreen = ({ route }) => {
   const navigation = useNavigation();
-  const { dishId, userId, dishInfo } = route.params || {};
+  const { dishId, userId, dishInfo, review } = route.params || {};
 
-  const [createReview, { isLoading }] = useCreateReviewMutation();
-  const {
-    data: users,
-    error: userError,
-    isLoading: userLoading,
-  } = useGetUserInfoQuery();
-  const [rating, setRating] = useState(1);
-  const [reviewContent, setReview] = useState("");
+  const [createReview, { isLoading: isCreating }] = useCreateReviewMutation();
+  const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
+  const [rating, setRating] = useState(review ? review.rating : 1);
+  const [reviewContent, setReview] = useState(review ? review.content : "");
   const [errorRating, setErrorRating] = useState("");
-
+  const {
+    data: userInf,
+    error: userErr,
+    isLoading: userLoading,
+  } = useGetUserByIdQuery(userId);
   const handleCancel = () => {
     navigation.goBack();
   };
+
   const handleSubmit = async () => {
     try {
       if (reviewContent === "") {
         setErrorRating("* Review required");
       } else {
         setErrorRating("");
-        await createReview({
-          dishId: parseInt(dishId),
-          userId: parseInt(userId),
-          content: reviewContent,
-          rating: parseInt(rating),
-        }).unwrap();
-        console.log("Review added:", rating);
+        if (review) {
+          await updateReview({
+            id: review.id,
+            dishId: parseInt(dishId),
+            userId: parseInt(userId),
+            content: reviewContent,
+            rating: parseInt(rating),
+          }).unwrap();
+        } else {
+          await createReview({
+            dishId: parseInt(dishId),
+            userId: parseInt(userId),
+            content: reviewContent,
+            rating: parseInt(rating),
+          }).unwrap();
+        }
         setRating(1);
         setReview("");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Failed to add review:", error);
+      console.error("Failed to submit review:", error);
     }
   };
 
   useEffect(() => {
-    console.log("dishInfo1: ", reviewContent);
-  }, [dishInfo]);
-
+    console.log("dishInfo1: ", userInf);
+  });
+  if (userErr) return <Text>Get user err</Text>;
+  if (userLoading) return <Text>Loading current user</Text>;
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -66,16 +80,23 @@ const ReviewScreen = ({ route }) => {
             <Ionicons name="close-circle-outline" size={30} color="gray" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.subtitle}>Leave a Review</Text>
+        <Text style={styles.subtitle}>
+          {review ? "Edit Review" : "Leave a review"}
+        </Text>
 
         <View style={styles.divider} />
         <View style={styles.userInfo}>
-          <Image
-            style={styles.avatar}
-            source={{ uri: "https://www.example.com/avatar.png" }}
-          />
+          {userInf?.imgUrl ? (
+            <Image source={{ uri: userInf.imgUrl }} style={styles.userImage} />
+          ) : (
+            <View style={styles.avatarContainer}>
+              <Text style={styles.avatarText}>
+                {userInf?.username.substring(0, 2)}
+              </Text>
+            </View>
+          )}
           <View style={styles.userText}>
-            <Text style={styles.userName}>HN</Text>
+            <Text style={styles.userName}>{userInf.username}</Text>
             <Text style={styles.posting}>Posting publicly</Text>
           </View>
         </View>
@@ -102,7 +123,7 @@ const ReviewScreen = ({ route }) => {
       <TouchableOpacity
         style={styles.submitButton}
         onPress={handleSubmit}
-        disabled={isLoading}
+        disabled={isCreating || isUpdating}
       >
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
@@ -138,7 +159,6 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
   },
   avatar: {
     width: 40,
@@ -190,6 +210,24 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ddd",
     borderBottomWidth: 1,
     marginVertical: 16,
+  },
+  avatarContainer: {
+    backgroundColor: "lightgray",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  userImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  avatarText: {
+    fontSize: 16,
   },
 });
 

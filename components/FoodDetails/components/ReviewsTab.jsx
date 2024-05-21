@@ -1,84 +1,154 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
   Text,
   View,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Modal,
-  TextInput,
   Image,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
 import { renderStarRating } from "./MoreByCreator";
 import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
-function ReviewsTab({navigation, reviews, userId, dishId, dishInfo}) {
-  const startAddingReview = () => {
-    navigation.push('ReviewScreen', { dishId, userId, dishInfo })
-  };
-  const [isAddingReview, setAddingReview] = useState(false);
-  const [newReview, setNewReview] = useState({
-    user: "",
-    rating: 0,
-    comment: "",
-  });
+import {
+  useGetReviewsByDishIdQuery,
+  useDeleteReviewMutation,
+} from "../../../slices/reviewSlice";
+import { useFocusEffect } from "@react-navigation/native";
 
-  const { data: users, error: userError, isLoading: userLoading } = useGetUserInfoQuery();
-  useEffect(() => {
-    console.log("Users:", users);
-  }, [users]);
-  useEffect(() => {
-    console.log("Info: ", dishInfo );
-  });
+function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
+  const {
+    data: reviews,
+    error: reviewError,
+    isLoading: reviewLoading,
+    refetch,
+  } = useGetReviewsByDishIdQuery(dishId);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
+  const [deleteReview] = useDeleteReviewMutation();
+
+  const userReview = reviews?.find((review) => review.userId === userId);
+
+  const startAddingReview = () => {
+    navigation.push("ReviewScreen", { dishId, userId, dishInfo });
+  };
+
+  const handleEditReview = (review) => {
+    navigation.navigate("ReviewScreen", { review, dishId, userId, dishInfo });
+  };
+
+  const confirmDeleteReview = (id) => {
+    Alert.alert(
+      "Delete Review",
+      "Are you sure you want to delete this review?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => handleDeleteReview(id),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleDeleteReview = async (id) => {
+    try {
+      await deleteReview(id).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+    }
+  };
+
+  const {
+    data: users,
+    error: userError,
+    isLoading: userLoading,
+  } = useGetUserInfoQuery();
+
   const getUserById = (userId) => {
     return users?.find((user) => user.id === userId);
   };
-  if(userError) return <Text>Error</Text>;
-  if(userLoading) return <Text>Loading</Text>;
+
+  if (reviewLoading || userLoading) return <Text>Loading...</Text>;
+  if (reviewError || userError) return <Text>Error</Text>;
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.rowItem}>
           <TouchableOpacity
             style={styles.addReviewButton}
-            onPress={startAddingReview}
+            onPress={
+              userReview
+                ? () => handleEditReview(userReview)
+                : startAddingReview
+            }
           >
             <Icon
-              name="comment"
+              name={userReview ? "pencil" : "comment"}
               size={20}
               color={theme.colors.secondary}
               style={{ paddingLeft: 10 }}
             />
-            <Text style={styles.addReviewText}>Add Review</Text>
+            <Text style={styles.addReviewText}>
+              {userReview ? "Edit Review" : "Add Review"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.line} />
-      <ScrollView style={styles.reriewList}>
+      <ScrollView>
         {reviews?.map((review) => {
           const user = getUserById(review.userId);
           return (
-            <View key={review.id} style={styles.reviewContainer}>
-              {user.imgUrl ? (
-                <Image source={{ uri: user.imgUrl }} style={styles.userImage} />
-              ) : (
-                <View style={styles.avatarContainer}>
-                  <Text style={styles.avatarText}>
-                    {user.username.substring(0, 2)}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.reviewDetails}>
-                <Text style={styles.userName}>{user.username}</Text>
-                <View style={styles.ratingContainer}>
+            <View key={review.id} style={styles.component}>
+              <View style={styles.reviewContainer}>
+                {user?.imgUrl ? (
+                  <Image
+                    source={{ uri: user.imgUrl }}
+                    style={styles.userImage}
+                  />
+                ) : (
+                  <View style={styles.avatarContainer}>
+                    <Text style={styles.avatarText}>
+                      {user?.username.substring(0, 2)}
+                    </Text>
+                  </View>
+                )}
+                <View style={styles.reviewDetails}>
+                  <Text style={styles.userName}>{user?.username}</Text>
                   <View style={styles.ratingContainer}>
                     {renderStarRating(review.rating)}
+                    <Text style={styles.ratingText}>{review?.rating}</Text>
                   </View>
-                  <Text style={styles.ratingText}>{review?.rating}</Text>
+                  <Text>{review.content}</Text>
                 </View>
-                <Text>{review.content}</Text>
               </View>
+              {review.userId === userId && (
+                <View style={styles.icons}>
+                  <TouchableOpacity onPress={() => handleEditReview(review)}>
+                    <Icon name="pencil" size={18} color="#000" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => confirmDeleteReview(review.id)}
+                  >
+                    <Icon name="trash" size={18} color="#000" />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           );
         })}
@@ -89,6 +159,14 @@ function ReviewsTab({navigation, reviews, userId, dishId, dishInfo}) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+    flex: 1,
+  },
+  component: {
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 10,
+    marginHorizontal: 10,
+    backgroundColor: "#F5F5F5",
   },
   row: {
     flexDirection: "row",
@@ -195,6 +273,12 @@ const styles = StyleSheet.create({
   },
   yourReview: {
     marginTop: 25,
+  },
+  icons: {
+    paddingRight: 10,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 25,
   },
 });
 export default ReviewsTab;
