@@ -7,6 +7,8 @@ import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
 import FoodSuggesionStack from "./FoodSuggestion/FoodSuggesionStack";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../theme/index";
+import { HOST } from "../config";
+import { AsyncStorageService } from "../utils/AsynStorage";
 
 const Drawer = createDrawerNavigator();
 const FoodSuggestion = () =>{
@@ -165,30 +167,40 @@ const FoodSuggestion = () =>{
 	
 	const [focusedItem, setFocusedItem] = useState(null);
 
-	useEffect(()=>{
-		fetch('http://192.168.1.5:3000/topics/date-filter')
-		.then(response => response.json())
-		.then(data => {
-			// console.log("DATE-FILTER", data); // Xử lý dữ liệu nhận được ở đây
-			setTopicFilter(data)
-		})
-		.catch(error => {
-			console.error('Error fetching data date-filter:', error);
-		});
-
-		fetch('http://192.168.1.5:3000/topics')
-		.then(response => response.json())
-		.then(data => {
-			// console.log("TOPICS", data); // Xử lý dữ liệu nhận được ở đây
-			setListTopic(data)
-			setFocusedItem(data[0].id)
-		})
-		.catch(error => {
-			console.error('Error fetching data topics:', error);
-		});
-
-	}, [])
-
+	useEffect(() => {
+		const getTopics = async () => {
+		  try {
+			const token = await AsyncStorageService.getAccessToken();
+			const userId = await AsyncStorageService.getUserId();
+			const headers = {
+			  Authorization: `Bearer ${token}`,
+			};
+	
+			const [dateFilterResponse, topicsResponse] = await Promise.all([
+			  fetch(`${HOST}/topics/user/${userId}/date-filter`, { headers }),
+			  fetch(`${HOST}/topics/user/${userId}`, { headers }),
+			]);
+	
+			if (!dateFilterResponse.ok) {
+			  throw new Error('Failed to fetch date filter data');
+			}
+			if (!topicsResponse.ok) {
+			  throw new Error('Failed to fetch topics data');
+			}
+	
+			const dateFilterData = await dateFilterResponse.json();
+			const topicsData = await topicsResponse.json();
+	
+			setTopicFilter(dateFilterData);
+			setListTopic(topicsData);
+			setFocusedItem(topicsData[0].id);
+		  } catch (error) {
+			console.error('Error fetching data:', error);
+		  }
+		};
+	
+		getTopics();
+	}, []);
 
 	const handlePress = (item) => {
 		const label = item.title + item.id.toString()
@@ -216,10 +228,10 @@ const FoodSuggestion = () =>{
 	const listScreen1 = topicFilter ? Object.keys(topicFilter).flatMap(key => {
 		return (
 			<View key={key}>
-				{topicFilter[key].length > 0 ? 
+				{topicFilter[key]?.length > 0 ? 
 					<>
 						<Text style={{color: "#6e6e6e", paddingHorizontal: 16, marginTop: 20, fontSize: 13}}>{key}</Text>
-						{topicFilter[key].map((item, index) => (
+						{topicFilter[key]?.map((item, index) => (
 							<DrawerItem
 								key={`${key}_${index.toString()}`}
 								label={item.title}

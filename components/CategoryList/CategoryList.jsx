@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import Category from '../Category/Category'
 import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
 
 function CategoryList() {
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -12,7 +13,7 @@ function CategoryList() {
       try {
         const token = await AsyncStorageService.getAccessToken()
         const response = await fetch(
-          'https://datn-admin-be.onrender.com/categories',
+          `${HOST}/categories`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

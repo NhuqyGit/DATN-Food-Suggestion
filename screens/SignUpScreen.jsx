@@ -11,6 +11,7 @@ import { theme } from '../theme/index'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '../theme/theme'
+import { HOST } from '../config'
 
 function SignUpScreen() {
   const navigation = useNavigation()
@@ -29,7 +30,7 @@ function SignUpScreen() {
   const handleSignup = async () => {
     try {
       const response = await fetch(
-        'https://datn-admin-be.onrender.com/auth/signup',
+        `${HOST}/auth/signup`,
         {
           method: 'POST',
           headers: {

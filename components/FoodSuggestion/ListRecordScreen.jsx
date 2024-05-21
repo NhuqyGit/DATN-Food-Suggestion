@@ -6,11 +6,20 @@ import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/index'
 import RecordItem from './RecordItem';
+import { AsyncStorageService } from "../../utils/AsynStorage";
+import { HOST } from "../../config"
+import { useMessage } from './MessageContext';
+import RecordPopUp from './RecordPopUp';
 
 const ListRecordScreen = () => {
-    const [isActive, setIsActive] = useState()
-    const [listRecord, setListRecord] = useState([])
+    const { recordId, handlePatchRecordSelect, listRecord, setListRecord } = useMessage()
+    const [recordSelect, setRecordSelect] = useState(null)
+    const [isSelect, setIsSelect] = useState(recordId)
+    // const [listRecord, setListRecord] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
+
     const navigation = useNavigation()
+    
     const recordData = [
         {
             id: 1,
@@ -73,29 +82,57 @@ const ListRecordScreen = () => {
             name: "Record 14"
         },
     ]
+ 
+    const handleOpenModal = (record) => {
+        setRecordSelect(record)
+        setModalVisible(true)
+    }
+
+    const handleCloseModal = () =>{
+        setModalVisible(false)
+    }
 
     const handleFetchListRecord = async () =>{
+        const token = await AsyncStorageService.getAccessToken();
+        const userId = await AsyncStorageService.getUserId();
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
         try{
-            const response = await fetch(`http://192.168.1.5:3000/users/1/records`)
+            const response = await fetch(`${HOST}/users/${userId}/records`, { headers })
             const data = await response.json();
-            console.log(data)
+            console.log(data) 
             if (data.length > 0){
                 setListRecord(data)
             }
         }catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data record:', error);
+        }
+    }
+
+    const handleSelect = () => {
+        const foundObject = listRecord.find(record => record.id === isSelect);
+        if (foundObject) {
+            // setNameRecord(foundObject.nameRecord)
+            // setRecordId(foundObject.id)
+            handlePatchRecordSelect(foundObject)
+            navigation.goBack()
+        } else {
+            console.log('Object not found');
         }
     }
 
     useEffect(()=>{
         handleFetchListRecord()
+        console.log("LIST RECORD USEEFFECT")
     }, [])
 
     const listRecordComponent = listRecord?.map((record, index)=>{
         return (
-            <RecordItem record={record} key={index.toString()}/>
+            <RecordItem record={record} key={index.toString()} handleOpenModal={handleOpenModal} isSelect={isSelect} setIsSelect={setIsSelect}/>
         )
     })
+    console.log("LISTRECORD")
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
             <View style={styles.container}>
@@ -123,10 +160,15 @@ const ListRecordScreen = () => {
                 </ScrollView>
 
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.btnSelect}>
-                        <Text style={styles.btnText}>Select</Text>
+                    <TouchableOpacity 
+                        onPress={handleSelect}
+                        disabled={isSelect === recordId}
+                        style={[styles.btnSelect, { backgroundColor: isSelect !== recordId ? theme.colors.secondary : "#ebebeb"}]}>
+                        <Text style={[styles.btnText, {color: isSelect !== recordId ? 'white' : theme.colors.darkGray}]}>Select</Text>
                     </TouchableOpacity>
                 </View>
+
+                <RecordPopUp recordSelect={recordSelect} closePopUp={handleCloseModal} modalVisible={modalVisible}/>
             </View>
         // </SafeAreaView>
     )

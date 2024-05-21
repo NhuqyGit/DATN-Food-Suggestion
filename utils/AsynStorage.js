@@ -18,9 +18,12 @@ export const AsyncStorageService = (function () {
   async function _setRefreshToken(tokenData) {
     await AsyncStorage.setItem("refreshToken", tokenData);
   }
-
   async function _getAccessToken() {
     return await AsyncStorage.getItem("accessToken");
+  }
+
+  async function _getUserId() {
+    return await AsyncStorage.getItem("user_id");
   }
 
   function _getRefreshToken() {
@@ -36,6 +39,7 @@ export const AsyncStorageService = (function () {
     setToken: _setToken,
     setRefreshToken: _setRefreshToken,
     getAccessToken: _getAccessToken,
+    getUserId: _getUserId,
 
     getRefreshToken: _getRefreshToken,
     clearToken: _clearToken,
