@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FontAweSomeIcon from 'react-native-vector-icons/FontAwesome'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useNavigation } from '@react-navigation/native'
+import { theme } from '../../../theme/index'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntIcon from 'react-native-vector-icons/AntDesign.js'
 
@@ -53,7 +54,7 @@ function MainScreen() {
       <View style={{ flex: 1, paddingHorizontal: 6 }}>
         <Tab.Navigator
           tabBarOptions={{
-            activeTintColor: '#40AD53',
+            activeTintColor: theme.colors.secondary,
             inactiveTintColor: 'gray',
 
             labelStyle: {
@@ -70,7 +71,7 @@ function MainScreen() {
               backgroundColor: 'white',
             },
             indicatorStyle: {
-              backgroundColor: '#40AD53',
+              backgroundColor: theme.colors.secondary,
               marginHorizontal: 5,
             },
           }}
@@ -94,7 +95,7 @@ function MainScreen() {
                 <FontAweSomeIcon
                   name='question-circle-o'
                   size={24}
-                  color='#40AD53'
+                  color={theme.colors.secondary}
                 />
                 <Text className='ml-4 text-base font-semibold'>
                   Meal planner help
@@ -112,7 +113,7 @@ function MainScreen() {
               }}
             >
               <View className='flex flex-row items-center'>
-                <Feather name='flag' size={24} color='#40AD53' />
+                <Feather name='flag' size={24} color={theme.colors.secondary} />
                 <Text className='ml-4 text-base font-semibold'>
                   Give feedback
                 </Text>

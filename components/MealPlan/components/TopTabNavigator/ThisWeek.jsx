@@ -24,6 +24,7 @@ import PlanDate from "../PlanDate";
 import Plus from "../Plus";
 import ListDishItem from "../ListDishItem";
 import BottomSheet from "../../../BottomSheet/BottomSheet";
+import { theme } from "../../../../theme/index";
 
 function ThisWeek() {
   const navigation = useNavigation();
@@ -97,7 +98,7 @@ function ThisWeek() {
 
               <TouchableOpacity onPress={() => toggleAccordion(index)}>
                 <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2  items-center">
-                  <Text className="text-[#40AD53] text-[16px] font-semibold ">
+                  <Text style={{color: theme.colors.secondary}} className="text-[16px] font-semibold ">
                     2
                   </Text>
                   <Feather
@@ -107,7 +108,7 @@ function ThisWeek() {
                         : "chevron-down"
                     }
                     size={18}
-                    color="#40AD53"
+                    color={theme.colors.secondary}
                   />
                 </View>
               </TouchableOpacity>
@@ -141,7 +142,7 @@ function ThisWeek() {
                     item?.onPress();
                   }}
                 >
-                  <AntIcon name={item?.icon} size={24} color="#40AD53" />
+                  <AntIcon name={item?.icon} size={24} color={theme.colors.secondary} />
                   <Text className="text-base font-semibold">{item?.name}</Text>
                 </TouchableOpacity>
               </View>

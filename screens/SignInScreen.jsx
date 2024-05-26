@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   StyleSheet,
   Text,
@@ -13,26 +14,82 @@ import { useNavigation } from '@react-navigation/native'
 import { theme } from '../theme/index'
 import { COLORS } from '../theme/theme'
 import { Ionicons } from '@expo/vector-icons'
+import { AsyncStorageService } from '../utils/AsynStorage'
+import { useDispatch } from 'react-redux'
+import { setUserInfo } from '../slices/userLoginSlice'
+import { HOST } from '../config'
 
 function SignInScreen() {
   const navigation = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isHide, setIsHide] = useState(true)
+  const [error, setError] = useState()
+  const dispatch = useDispatch()
 
   const handleEmailChange = (email) => {
     setEmail(email)
   }
 
   const handlePasswordChange = (password) => {
+    setError('')
     setPassword(password)
   }
 
-  const handleLogin = () => {
-    if (password === 'admin' && email === 'admin') {
-      navigation.navigate('Personalization')
-    } else {
-      console.log('Wrong email or password')
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(
+        `${HOST}/auth/signin`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: email,
+            password: password,
+          }),
+        }
+      )
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(responseJson.message)
+        if (Array.isArray(responseJson.message)) {
+          setError(responseJson.message.join('\n'))
+        } else {
+          setError(responseJson.message)
+        }
+      } else {
+        await AsyncStorageService.setToken(responseJson?.accessToken)
+        await AsyncStorage.setItem('user_id', responseJson?.id.toString())
+
+        const responseGetUserById = await fetch(
+          `${HOST}/users/${responseJson.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${responseJson.accessToken}`,
+            },
+          }
+        )
+
+        const responseGetUserByIdJson = await responseGetUserById.json()
+
+        dispatch(setUserInfo(responseGetUserByIdJson))
+
+        if (responseGetUserByIdJson.error) {
+          console.error(responseGetUserByIdJson.message)
+        } else {
+          if (responseGetUserByIdJson?.isLogin === true) {
+            navigation.navigate('Home')
+          } else {
+            navigation.navigate('Personalization')
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -43,10 +100,10 @@ function SignInScreen() {
           <Text style={styles.title}>Sign In</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>Username</Text>
           <TextInput
             style={styles.input}
-            placeholder='Enter your email'
+            placeholder='Enter your username'
             value={email}
             onChangeText={handleEmailChange}
           />
@@ -75,6 +132,7 @@ function SignInScreen() {
             </TouchableOpacity>
           </View>
         </View>
+        {error && password && <Text className='text-red-500'>{error}</Text>}
         <Text style={styles.forgotPassword}>Forgot password?</Text>
         <View style={styles.thirdPartyContainer}>
           <TouchableOpacity style={styles.thirdPartyButton}>
@@ -148,6 +206,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+    height: 50,
   },
 
   passwordInputLayout: {

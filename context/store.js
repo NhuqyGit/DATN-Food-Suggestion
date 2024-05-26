@@ -7,10 +7,12 @@ import userInfoSlice from '../slices/userInfoSlice';
 import collectionApi from '../slices/collectionSlice'
 import noteApi from '../slices/noteSlice'
 import reviewApi from '../slices/reviewSlice';
+import UserLoginReducer from '../slices/userLoginSlice'
 
 export const store = configureStore({
   reducer: {
     counter: CounterReducer,
+    userLogin: UserLoginReducer,
     modal: modalReducer,
     [foodDetailsSlice.reducerPath]: foodDetailsSlice.reducer,
     [userInfoSlice.reducerPath]: userInfoSlice.reducer,
@@ -23,4 +25,5 @@ export const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
 

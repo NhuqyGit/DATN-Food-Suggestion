@@ -7,6 +7,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAweSomeIcon from "react-native-vector-icons/FontAwesome6";
 import BackButton from "../../BackButton/BackButton";
 import { useState } from "react";
+import { theme } from "../../../theme/index";
 
 function Instruction() {
   const navigation = useNavigation();
@@ -77,7 +78,7 @@ function Instruction() {
         </View>
         <View className="flex gap-3">
           <View>
-            <MaterialIcons name="restaurant-menu" size={44} color="#40AD53" />
+            <MaterialIcons name="restaurant-menu" size={44} color={theme.colors.secondary} />
           </View>
           <Text className="text-[22px] font-semibold leading-normal text-[#000000]">
             Create Your Menu
@@ -92,7 +93,7 @@ function Instruction() {
         </View>
         <View className="flex gap-3">
           <View>
-            <FontAweSomeIcon name="bowl-food" size={40} color="#40AD53" />
+            <FontAweSomeIcon name="bowl-food" size={40} color={theme.colors.secondary} />
           </View>
           <Text className="text-[22px] font-semibold leading-normal text-[#000000]">
             Cook, Review, Recipes!
@@ -120,9 +121,9 @@ function Instruction() {
                     <View className="flex flex-row items-center gap-2 py-5">
                       <View className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F3F3F3]">
                         {openAccordionIndex === index + 1 ? (
-                          <AntDesign name="minus" size={20} color="#40AD53" />
+                          <AntDesign name="minus" size={20} color={theme.colors.secondary} />
                         ) : (
-                          <AntDesign name="plus" size={20} color="#40AD53" />
+                          <AntDesign name="plus" size={20} color={theme.colors.secondary} />
                         )}
                       </View>
                       <View>

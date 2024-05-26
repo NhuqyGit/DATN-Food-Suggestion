@@ -153,6 +153,56 @@ function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
           );
         })}
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isAddingReview}
+        onRequestClose={cancelAddingReview}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={cancelAddingReview}
+          />
+          <View style={styles.innerContainer}>
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={cancelAddingReview}
+            >
+              <Icon name="close" size={20} color="black" />
+            </TouchableOpacity>
+            <View style={styles.addReviewContainer}>
+              <View style={styles.starRating}>
+                <StarRating
+                  maxStars={5}
+                  rating={newReview.rating}
+                  starSize={20}
+                  fullStarColor="#FF6321"
+                  selectedStar={(rating) =>
+                    setNewReview({ ...newReview, rating })
+                  }
+                />
+              </View>
+
+              <TextInput
+                style={styles.yourReview}
+                placeholder="Your Review"
+                multiline
+                value={newReview.comment}
+                onChangeText={(text) =>
+                  setNewReview({ ...newReview, comment: text })
+                }
+              />
+              <TouchableOpacity
+                style={styles.addButtonReview}
+                onPress={addReview}
+              >
+                <Text style={styles.addButtonText}>Add Review</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

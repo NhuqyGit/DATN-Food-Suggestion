@@ -16,6 +16,8 @@ import SignInScreen from './screens/SignInScreen'
 import SignUpScreen from './screens/SignUpScreen'
 import SplashScreen from './screens/SplashScreen'
 import Search from './screens/Search/Search'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from './slices/userLoginSlice'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -60,11 +62,11 @@ const TabArr = [
 ]
 
 export default function Navigation() {
-  const [isDone, setIsDone] = useState(true)
+  const userInfo = useSelector(selectUserInfo)
 
   return (
     <NavigationContainer>
-      {!isDone ? (
+      {!userInfo?.isLogin ? (
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
@@ -73,8 +75,9 @@ export default function Navigation() {
           <Stack.Screen name='SplashScreen' component={SplashScreen} />
           <Stack.Screen name='SignInScreen' component={SignInScreen} />
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
+          <Stack.Screen name='Home' component={Home} />
           <Stack.Screen name='Personalization'>
-            {(props) => <Personalization {...props} setIsDone={setIsDone} />}
+            {(props) => <Personalization {...props} />}
           </Stack.Screen>
         </Stack.Navigator>
       ) : (

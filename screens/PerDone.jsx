@@ -7,11 +7,47 @@ import {
   Dimensions,
 } from 'react-native'
 import React from 'react'
+import { AsyncStorageService } from '../utils/AsynStorage'
+import { selectUserInfo, setUserInfo } from '../slices/userLoginSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
 const deviceHeight = Dimensions.get('window').height
 const deviceWidth = Dimensions.get('window').width
 
-function PerDone({ navigation, setIsDone }) {
+function PerDone({ navigation }) {
+  const userInfo = useSelector(selectUserInfo)
+  const dispatch = useDispatch()
+
+  const handleLogin = async () => {
+    const token = await AsyncStorageService.getAccessToken()
+    try {
+      const response = await fetch(
+        `https://datn-admin-be.onrender.com/users/${userInfo?.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            isLogin: true,
+          }),
+        }
+      )
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        console.log(responseJson.message)
+      } else {
+        dispatch(setUserInfo({ ...userInfo, isLogin: true }))
+        // navigation.navigate('Home')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -24,7 +60,7 @@ function PerDone({ navigation, setIsDone }) {
         Visit your personalized home feed of recipe suggestions
       </Text>
 
-      <TouchableOpacity onPress={()=>setIsDone(true)}>
+      <TouchableOpacity onPress={handleLogin}>
         <View style={styles.btn}>
           <Text style={styles.btnText}>Get Started</Text>
         </View>
@@ -72,3 +108,4 @@ const styles = StyleSheet.create({
     paddingVertical: deviceWidth * 0.03,
   },
 })
+

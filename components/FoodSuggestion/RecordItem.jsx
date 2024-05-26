@@ -4,16 +4,18 @@ import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/index'
-import React from 'react'
+import { useMessage } from './MessageContext';
+import React, { useState } from 'react'
 
-const RecordItem = ({record}) => {
-    const navigation = useNavigation()
+const RecordItem = ({isSelect, record, handleOpenModal, setIsSelect}) => {
     return (
         <TouchableOpacity
-            onPress={()=>navigation.push("RecordDetail")}
-            style={styles.container}>
-            <Text>{record.name}</Text>
-            <TouchableOpacity>
+            onPress={()=>setIsSelect(record.id)}
+            style={[styles.container, {backgroundColor: isSelect === record.id ? theme.colors.secondary: "white"}]}>
+            <Text>{record.nameRecord}</Text>
+            <TouchableOpacity
+                onPress={() => handleOpenModal(record)}
+            >
                 <Ionicons name='ellipsis-horizontal' size={24} color="black" />
             </TouchableOpacity>
         </TouchableOpacity>

@@ -11,9 +11,12 @@ const firebaseConfig = {
   measurementId: 'G-29FLQPCZZK',
 }
 
+// const HOST = "http://10.90.0.44:3000"
+const HOST = "https://datn-admin-be.onrender.com"
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
 }
 
-export { firebase }
+export { firebase, HOST }
 
