@@ -12,20 +12,20 @@ function IngredientsTab({ ingredients }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {ingredients.map(ingredient => (
-          <View key={ingredient.id}>
+        {ingredients.map(ingredientType => (
+          <View key={ingredientType.id}>
             <TouchableOpacity
-              onPress={() => alert(`Add ${ingredient} to shopping list!`)}
+              onPress={() => alert(`Add ${ingredientType} to shopping list!`)}
             >
               <View style={styles.row}>
-                <View key={ingredient.id} style={styles.rowItem}>
+                <View key={ingredientType.id} style={styles.rowItem}>
                   <Icon
                     name="cutlery"
                     size={20}
                     color={theme.colors.secondary}
                     style={{ paddingHorizontal: 10 }}
                   />
-                  <Text style={styles.ingredientText}>{ingredient.ingredientName}</Text>
+                  <Text style={styles.ingredientText}>{ingredientType.mass} {ingredientType.ingredient.ingredientName}</Text>
                 </View>
               </View>
             </TouchableOpacity>

@@ -124,7 +124,7 @@ function FoodDetailsScreen({ navigation, route }) {
             )}
           </Tab.Screen>
           <Tab.Screen name="Ingredients">
-            {() => <IngredientsTab ingredients={foodDetails.ingredients} />}
+            {() => <IngredientsTab ingredients={foodDetails.dishToIngredients} />}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
             {() => (

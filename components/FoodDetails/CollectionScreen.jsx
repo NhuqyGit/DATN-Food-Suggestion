@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,56 +12,52 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../theme/index";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {useGetCollectionsByUserIdQuery, useAddDishToCollectionsMutation } from "../../slices/collectionSlice"
+import { useFocusEffect } from "@react-navigation/native";
 
-const CollectionScreen = ({ navigation }) => {
-  const [isAddingNewCollection, setIsAddingNewCollection] = useState(false);
-  const [newCollectionName, setNewCollectionName] = useState("");
-  const [newCollectionDes, setNewCollectionDes] = useState("");
+  // TODO:adjust other to have dishId and userId
+  //const { dishId } = route.params; 
+const CollectionScreen = ({ navigation, route }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const dishId = 2;
+  const userId = 1; 
+  const {
+    data: optionsCollection,
+    error: optionsCollectionError,
+    isLoading: optionsCollectionLoading,
+    refetch,
+  } = useGetCollectionsByUserIdQuery(userId);
 
-  const options = [
-    { label: "All Saved Recipe" },
-    { label: "Schedule and Made" },
-    { label: "Dinner" },
-    { label: "Breakfasts" },
-    { label: "Drinks" },
-    { label: "Side" },
-    { label: "All Saved Recipe" },
-    { label: "Schedule and Made" },
-    { label: "Dinner" },
-    { label: "Breakfasts" },
-    { label: "Drinks" },
-  ];
+  const [addDishToCollections, { isLoading: isAdding }] = useAddDishToCollectionsMutation();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   const handleAddNewCollection = () => {
     navigation.navigate("AddNewCollection");
   };
 
-  const handleOk = () => {
-    console.log("Add new collection:", newCollectionName);
-    setNewCollectionName("");
-    setNewCollectionDes("");
-    setIsAddingNewCollection(false);
-  };
-
-  const handleCancel = () => {
-    setIsAddingNewCollection(false);
-    setNewCollectionDes("");
-  };
-
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (collectionId) => {
     const updatedOptions = [...selectedOptions];
-    if (updatedOptions.includes(index)) {
-      updatedOptions.splice(updatedOptions.indexOf(index), 1);
+    if (updatedOptions.includes(collectionId)) {
+      updatedOptions.splice(updatedOptions.indexOf(collectionId), 1);
     } else {
-      updatedOptions.push(index);
+      updatedOptions.push(collectionId);
     }
     setSelectedOptions(updatedOptions);
   };
 
-  const handleDone = () => {
-    console.log("Selected option:", selectedOptions);
-    navigation.goBack();
+  const handleDone = async () => {
+    try {
+      await addDishToCollections({ userId, dishId, collectionIds: selectedOptions }).unwrap();
+      console.log("Dish added to collections:", selectedOptions);
+      navigation.goBack();
+    } catch (error) {
+      console.error("Failed to add dish to collections:", error);
+    }
   };
 
   return (
@@ -90,34 +86,33 @@ const CollectionScreen = ({ navigation }) => {
 
       <View style={styles.line} />
       <ScrollView>
-        {options.map((option, index) => (
+        {optionsCollection?.map((option) => (
           <TouchableOpacity
-            key={index}
+            key={option.id}
             style={styles.checkboxContainer}
-            onPress={() => handleCheckboxChange(index)}
+            onPress={() => handleCheckboxChange(option.id)}
           >
             <View
               style={[
                 styles.checkbox,
-                selectedOptions.includes(index) && styles.checkedCheckbox,
+                selectedOptions.includes(option.id) && styles.checkedCheckbox,
               ]}
             >
-              {selectedOptions.includes(index) && (
+              {selectedOptions.includes(option.id) && (
                 <Icon name="check" size={15} color="white" />
               )}
             </View>
-            <Text style={styles.checkboxLabel}>{option.label}</Text>
+            <Text style={styles.checkboxLabel}>{option.collectionName}</Text>
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
-          <Text style={styles.buttonText}>Done</Text>
+        <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
+          <Text style={styles.buttonText}>{isAdding ? 'Saving...' : 'Done'}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

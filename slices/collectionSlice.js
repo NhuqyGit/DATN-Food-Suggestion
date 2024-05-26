@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const collectionApi = createApi({
   reducerPath: 'collectionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://192.168.1.8:3000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://10.0.2.106:3000' }),
   endpoints: (builder) => ({
     getCollections: builder.query({
       query: () => '/collections',
@@ -36,6 +36,16 @@ export const collectionApi = createApi({
     isDishInCollection: builder.query({
       query: ({ userId, dishId }) => `/collections/user/${userId}/dish/${dishId}`,
     }),
+    isCollectionNameExists: builder.query({
+      query: ({userId, collectionName}) => `/collections/exists/${userId}/${collectionName}`,
+    }),
+    addDishToCollections: builder.mutation({
+      query: ({ userId, dishId, collectionIds }) => ({
+        url: `/collections/user/${userId}/dishes/${dishId}`,
+        method: 'POST',
+        body: { collectionIds },
+      }),
+    }),
   }),
 });
 
@@ -47,6 +57,8 @@ export const {
   useUpdateCollectionMutation,
   useDeleteCollectionMutation,
   useIsDishInCollectionQuery,
+  useIsCollectionNameExistsQuery,
+  useAddDishToCollectionsMutation 
 } = collectionApi;
 
 export default collectionApi;

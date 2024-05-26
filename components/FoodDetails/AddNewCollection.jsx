@@ -13,40 +13,51 @@ import { useCreateCollectionMutation } from "../../slices/collectionSlice";
 const AddCollectionScreen = ({ navigation }) => {
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDes, setNewCollectionDes] = useState("");
+  const [error, setError] = useState("");
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
+
+  const userId = 1;
 
   const handleOk = async () => {
     try {
-      await createCollection({ collectionName: newCollectionName, collectionDcrpt: newCollectionDes }).unwrap();
-      console.log("Collection added:", newCollectionName);
+      await createCollection({ userId, name: newCollectionName, description: newCollectionDes }).unwrap();
       setNewCollectionName("");
       setNewCollectionDes("");
+      setError("");  
       navigation.goBack();
     } catch (error) {
-      console.error("Failed to create collection:", error);
+      if (error?.data?.message && typeof error.data.message === 'string' && error.data.message.includes('Collection already exists')) {
+        setError('Collection name already exists.\nPlease choose a different name for your collection.');
+      } else {
+        setError('Failed to create collection. Please try again.');
+      }
+      //console.error("Failed to create collection:", error.data.message);
     }
   };
 
   const handleCancel = () => {
+    setNewCollectionName("");
     setNewCollectionDes("");
+    setError(""); 
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.header}
-      >
+      <TouchableOpacity onPress={handleCancel} style={styles.header}>
         <Ionicons name="close-circle-outline" size={30} color="gray" />
       </TouchableOpacity>
       <Text style={styles.title}>Add collection</Text>
       <View style={styles.subcontainer}>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Name your collection"
           value={newCollectionName}
-          onChangeText={setNewCollectionName}
+          onChangeText={(text) => {
+            setError(""); // Clear error when changing text
+            setNewCollectionName(text);
+          }}
         />
         <TextInput
           style={[styles.input, styles.descriptionInput]}
@@ -118,6 +129,11 @@ const styles = StyleSheet.create({
     width: "40%",
     alignItems: "center",
     justifyContent: "center",
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 
