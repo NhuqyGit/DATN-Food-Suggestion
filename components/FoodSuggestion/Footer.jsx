@@ -33,14 +33,14 @@ const Footer = () => {
     return (
         <>
             <View style={styles.footer} className="px-6">
-                <View style={{display: 'flex', position: 'absolute', top: -20, left: 10}}>
+                {/* <View style={{display: 'flex', position: 'absolute', top: -20, left: 10}}>
                     <TouchableOpacity
                         activeOpacity={1} 
                         onPress={()=> setIsClick(!isClick)}
                         style={{width: 45, height: 20, borderTopLeftRadius: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 10, backgroundColor: '#373739', borderWidth: 1, borderBottomWidth: 0, borderColor: '#d9d9d9'}}>
                         <Ionicons name='reorder-two-outline' color="white" size={24} />
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 <View style={isClick ? {display: 'none'} : null} className="flex flex-row justify-between items-center">
                     <TouchableOpacity activeOpacity={1} style={styles.btnVisible}>
                         <Text></Text>

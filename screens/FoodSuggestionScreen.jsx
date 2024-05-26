@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet, Modal, Animated } from "react-native";
-import { createDrawerNavigator, DrawerItemList, DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
+import { View, Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { createDrawerNavigator, DrawerItemList, DrawerItem, } from "@react-navigation/drawer";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
@@ -113,6 +113,7 @@ const FoodSuggestion = () =>{
 	])
 
 	const [topicFilter, setTopicFilter] = useState(null)
+	const [loading, setLoading] = useState(true);
 
 	const demoData1 = {
 		"Today": [
@@ -194,9 +195,11 @@ const FoodSuggestion = () =>{
 			setTopicFilter(dateFilterData);
 			setListTopic(topicsData);
 			setFocusedItem(topicsData[0].id);
-		  } catch (error) {
+		} catch (error) {
 			console.error('Error fetching data:', error);
-		  }
+		} finally {
+			setLoading(false);
+		}
 		};
 	
 		getTopics();
@@ -205,7 +208,7 @@ const FoodSuggestion = () =>{
 	const handlePress = (item) => {
 		const label = item.title + item.id.toString()
 		navigation.navigate(label);
-		setFocusedItem(item.id); // Cập nhật mục được focused
+		setFocusedItem(item.id);
 	};
 	const deleteTopic = (id)=>{
 		console.log("hello", id)
@@ -246,8 +249,15 @@ const FoodSuggestion = () =>{
 			</View>
 		)
 	}) : null
-	console.log("RENDER")
-	console.log(focusedItem)
+	
+	if (loading) {
+        return (
+            <View style={styles.loadingOverlay}>
+				<ActivityIndicator size="large" color={"black"} />
+			</View>
+        );
+    }
+
 	return (
 		<Drawer.Navigator
 			drawerContent={(props)=>{
@@ -320,5 +330,18 @@ const FoodSuggestion = () =>{
 		</Drawer.Navigator>
 	);
 }
+
+const styles = StyleSheet.create({
+    loadingOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',  // Màu nền tối mờ
+    },
+});
 
 export default FoodSuggestion;

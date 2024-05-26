@@ -11,8 +11,9 @@ export const MessageProvider = ({ topic, children }) => {
     const [isFetchDataCompleted, setIsFetchDataCompleted] = useState(true)
     const [nameRecord, setNameRecord] = useState(null)
     const [recordId, setRecordId] = useState(null)
-
+    const [recordActive, setRecordActive] = useState(topic.record)
     const [listRecord, setListRecord] = useState([])
+    const [newMessage, setNewMessage] = useState(null)
 
     const handleFetchMessages = async () =>{
         try{
@@ -49,6 +50,7 @@ export const MessageProvider = ({ topic, children }) => {
                 { headers },
             )
             console.log('Response data:', response.data);
+            setRecordActive(response.data.record)
         }catch (error) {
             console.error('Error updating topic', error);
         }
@@ -65,59 +67,133 @@ export const MessageProvider = ({ topic, children }) => {
         );
     }
 
+    const handleCreateMessage = () =>{
+        let count = 1;
+        const { meal, money, numberOfDiners, diets, allergies } = recordActive;
+        let newMessage = "";
+        const formatJson = "{khaiVi: [{food: món 1, price: giá 1}, {food: món 2,price: giá 2}, ...],\n monChinh: [{food: món 1, price: giá 1}, {food: món 2, price: giá 2}, ...],\n trangMieng: [{food: món 1, price: giá 1}, {food: món 2, price: giá 2}, ...]\n }\n"
+        if (meal !== undefined && meal !== null) {
+            const listMeal = ["sáng", "trưa", "tối"];
+            newMessage += `Đề xuất cho tôi một bữa ăn ${listMeal[meal]} (khác) với tiêu chí:\n `;
+        }
+        if (numberOfDiners !== undefined && numberOfDiners !== null) {
+            newMessage += `${count}. Số lượng người ăn: ${numberOfDiners}\n `;
+            count += 1;
+        }
+        if (money !== undefined && money !== null) {
+            newMessage += `${count}. Lượng tiền cho bữa ăn: ${money} vnđ\n `;
+            count += 1;
+        }
+        if (diets && diets.length > 0) {
+            newMessage += `${count}. Cần ăn kiêng theo: ${diets.map(diet => diet.dietName).join(', ')}\n `;
+            count += 1;
+        }
+        if (allergies && allergies.length > 0) {
+            newMessage += `${count}. Có người bị dị ứng: ${allergies.map(allergy => allergy.allergiesName).join(', ')}\n `;
+            count += 1;
+        }
+        newMessage += `${count}. Hiển thị số tiền tương đương với từng món\n `
+        count += 1
+        newMessage += `${count}. Có đầy đủ khai vị, món chính và món tráng miệng\n `
+        count += 1
+        newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJson} và chỉ cần nội dụng json, không cần nội dung khác."`
+
+        return newMessage
+    }
+
     useFocusEffect(
         useCallback(() =>{
-            if (topic.record){
-                setNameRecord(topic.record.nameRecord)
-                setRecordId(topic.record.id)
-            }
             handleFetchMessages()
         }, [])
     )
-    console.log(nameRecord)
+    useFocusEffect(
+        useCallback(() =>{
+            if (recordActive){
+                setNameRecord(recordActive.nameRecord)
+                setRecordId(recordActive.id)
+                const newMessage = handleCreateMessage()
+                setNewMessage(newMessage)
+            }
+        }, [recordActive])
+    )
+    // console.log(newMessage)
 
     const handleNewMessage = ()=>{
         console.log("handleNewMessage")
-        const newId = listMessage.length + 1; // Tạo id mới bằng cách lấy độ dài hiện tại của danh sách và cộng thêm 1
-        const newMessage = `New message ${newId}`; // Tạo tin nhắn mới
-        const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`
-        const newMessageObj = { id: newId, content: newMessage, response: null, isSend: false}; // Tạo đối tượng tin nhắn mới
+        const newMessageObj = { id: null, content: nameRecord, response: null, isSend: false}; // Tạo đối tượng tin nhắn mới
         setListMessage([...listMessage, newMessageObj]);
         setIsFetchDataCompleted(false)
     }
 
-    const handleNewResponse = (id, newResponse)=>{
-        // Tìm tin nhắn gửi đi tương ứng với id
-        const sendMessageIndex = listMessage.findIndex(message => message.id === id);
-        if (sendMessageIndex === -1) {
-            console.error('Tin nhắn không tồn tại');
-            return;
+    const handleNewResponse = async (newResponse)=>{
+        try{
+            const sendMessageIndex = listMessage.findIndex(message => message.isSend === false);
+            if (sendMessageIndex === -1) {
+                console.error('Tin nhắn không tồn tại');
+                return;
+            }
+            
+            // Sao chép danh sách tin nhắn hiện có
+            const updatedListMessage = [...listMessage];
+            
+            // Cập nhật tin nhắn phản hồi vào tin nhắn gửi đi
+            updatedListMessage[sendMessageIndex].response = newResponse;
+            updatedListMessage[sendMessageIndex].isSend = true;
+
+            const token = await AsyncStorageService.getAccessToken();
+			const headers = {
+			  Authorization: `Bearer ${token}`,
+			};
+            console.log(newMessage)
+            const body = {
+                "content": updatedListMessage[sendMessageIndex].content,
+                "response": updatedListMessage[sendMessageIndex].response,
+                "topicBelong": topic.id,
+            }
+            const response = await axios.post(
+                `${HOST}/messages`,
+                body,
+                { headers }
+            )
+            const data = await response.data;
+            updatedListMessage[sendMessageIndex].id = data.id
+            setListMessage(updatedListMessage);
+        }catch (error) {
+            console.error('Error posting new message:', error);
         }
 
-        // Sao chép danh sách tin nhắn hiện có
-        const updatedListMessage = [...listMessage];
-        // Tạo tin nhắn phản hồi mới
-        // const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`;
         
-        // Cập nhật tin nhắn phản hồi vào tin nhắn gửi đi
-        updatedListMessage[sendMessageIndex].response = newResponse;
-        updatedListMessage[sendMessageIndex].isSend = true;
-
-        // Cập nhật danh sách tin nhắn với tin nhắn phản hồi mới
-        setListMessage(updatedListMessage);
     }
-
-    const fetchData = (callback) => {
-        setTimeout(() => {
-            const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`;
-            callback(newResponse); // Gọi hàm callback với dữ liệu mới nhận được
+    console.log("LIST-MESSAGE: ", listMessage)
+    const fetchData = async (callback) => {
+        // setTimeout(() => {
+        // const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`;
+        try{
+            const token = await AsyncStorageService.getAccessToken();
+			const headers = {
+			  Authorization: `Bearer ${token}`,
+			};
+            console.log(newMessage)
+            const body = {
+                "prompt": newMessage
+            }
+            const response = await axios.post(
+                `${HOST}/openai/generate`,
+                body,
+                { headers }
+            )
+            const data = await response.data;
+            console.log(data)
+            callback(data);
             setIsFetchDataCompleted(true)
-        }, 4000); // Delay 2 giây để giả lập việc lấy dữ liệu
+        }catch (error) {
+            console.error('Error fetching openai response:', error);
+        }
     };
     
 
     return (
-        <MessageContext.Provider value={{ listMessage, isFetchDataCompleted, nameRecord, recordId, listRecord, handleNewMessage,  handleNewResponse, fetchData, handlePatchRecordSelect, setListRecord, handleSetListRecord}}>
+        <MessageContext.Provider value={{ listMessage, isFetchDataCompleted, nameRecord, recordId, listRecord, newMessage, recordActive, handleNewMessage,  handleNewResponse, fetchData, handlePatchRecordSelect, setListRecord, handleSetListRecord}}>
             {children}
         </MessageContext.Provider>
     );
