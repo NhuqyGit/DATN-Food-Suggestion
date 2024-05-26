@@ -80,13 +80,7 @@ const FoodSuggestionScreen = ({topic, deleteTopic}) =>{
                     vertical
                 >
                     <View style={{paddingLeft: 15, paddingVertical: 5}}>
-                        {/* <Reccomand />
-                        <Reccomand />
-                        <Reccomand /> */}
-                        {/* <Text>{name}</Text> */}
-
                         {listMessageComponent}
-                        <Text>{topic.title}</Text>
                     </View>
                 </ScrollView>
                 <Footer />
