@@ -104,7 +104,6 @@ function ThisWeek() {
 
     if (response) {
       const responseJson = await response.json();
-      console.log(">>>", responseJson);
 
       const data = responseJson.map((item) => ({
         title: item.day,

@@ -52,6 +52,24 @@ function Today() {
     },
   ];
 
+  function getDayOfWeek(dateString) {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
+    const date = new Date(dateString);
+
+    const dayIndex = date.getDay();
+
+    return daysOfWeek[dayIndex];
+  }
+
   const handleCloseModal = () => {
     setModalVisible(false);
   };
@@ -102,7 +120,7 @@ function Today() {
       const responseJson = await response.json();
 
       const data = {
-        title: responseJson.day,
+        title: getDayOfWeek(responseJson.day),
         assets: responseJson.dishes.map((dishItem) => ({
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} mins`,
@@ -122,6 +140,8 @@ function Today() {
     fetchData();
   }, [offsetWeek]);
 
+  console.log(">>>", dataDish);
+
   return (
     <View className="py-4 h-full bg-white">
       <View className="px-3">
@@ -132,12 +152,12 @@ function Today() {
         />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
-      {/* <ScrollView>
+      <ScrollView>
         <View className="flex flex-row justify-between items-center py-3 px-3">
           <View className="flex flex-row items-center">
             <Plus toggleBottomSheet={toggleBottomSheet} />
             <Text style={{ fontSize: 18, paddingLeft: 10 }}>
-              {dayInfo.title}
+              {dataDish.title}
             </Text>
           </View>
 
@@ -173,7 +193,7 @@ function Today() {
             ))}
           </Animated.View>
         )}
-      </ScrollView> */}
+      </ScrollView>
       <BottomSheet closePopUp={handleCloseModal} modalVisible={modalVisible}>
         <View className="h-[150px] flex flex-col gap-4 mx-2 my-2">
           {bottomList?.map((item, index) => (
