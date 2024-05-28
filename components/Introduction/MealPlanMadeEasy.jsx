@@ -1,7 +1,10 @@
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 function MealPlanMadeEasy() {
+  const navigator = useNavigation()
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -15,7 +18,11 @@ function MealPlanMadeEasy() {
         style={styles.image}
         source={require('../../assets/mealPlanMadeEasy.png')}
       />
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigator.push('MealPlan')
+        }}
+      >
         <View style={styles.startButton}>
           <Text style={styles.startButtonText}>Start Planning</Text>
         </View>
@@ -66,3 +73,4 @@ const styles = StyleSheet.create({
 })
 
 export default MealPlanMadeEasy
+
