@@ -21,6 +21,7 @@ import BottomSheet from "../../../BottomSheet/BottomSheet.jsx";
 import { theme } from "../../../../theme/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HOST } from "../../../../config.js";
+import { AsyncStorageService } from "../../../../utils/AsynStorage.js";
 
 function Today() {
   const [offsetWeek, setOffsetWeek] = useState(0);
@@ -83,6 +84,8 @@ function Today() {
 
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
+    const token = await AsyncStorageService.getAccessToken();
+    console.log(">>>", token);
 
     const response = await fetch(
       `${HOST}/mealplan/${user_id}/today?dayOffset=${offsetWeek}`,
@@ -90,6 +93,7 @@ function Today() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -128,7 +132,7 @@ function Today() {
         />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
-      <ScrollView>
+      {/* <ScrollView>
         <View className="flex flex-row justify-between items-center py-3 px-3">
           <View className="flex flex-row items-center">
             <Plus toggleBottomSheet={toggleBottomSheet} />
@@ -169,7 +173,7 @@ function Today() {
             ))}
           </Animated.View>
         )}
-      </ScrollView>
+      </ScrollView> */}
       <BottomSheet closePopUp={handleCloseModal} modalVisible={modalVisible}>
         <View className="h-[150px] flex flex-col gap-4 mx-2 my-2">
           {bottomList?.map((item, index) => (

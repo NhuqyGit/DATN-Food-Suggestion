@@ -28,6 +28,7 @@ import { theme } from "../../../../theme/index";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HOST } from "../../../../config";
+import { AsyncStorageService } from "../../../../utils/AsynStorage";
 
 function ThisWeek() {
   const navigation = useNavigation();
@@ -88,6 +89,7 @@ function ThisWeek() {
 
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
+    const token = await AsyncStorageService.getAccessToken();
 
     const response = await fetch(
       `${HOST}/mealplan/${user_id}?weekOffset=${offsetWeek}`,
@@ -95,12 +97,14 @@ function ThisWeek() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
 
     if (response) {
       const responseJson = await response.json();
+      console.log(">>>", responseJson);
 
       const data = responseJson.map((item) => ({
         title: item.day,
