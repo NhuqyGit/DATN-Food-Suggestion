@@ -1,26 +1,39 @@
+import { AntDesign, MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
 import {
-  View,
-  Text,
   Dimensions,
-  TouchableOpacity,
   Image,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
-import { MaterialIcons } from '@expo/vector-icons'
 
 function SmallRecommendItem({ item }) {
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={styles.container}>
-      <Image style={styles.image} source={item?.image} />
+    <TouchableOpacity activeOpacity={1} style={styles.container}>
+      <Image
+        style={styles.image}
+        source={{
+          uri: item?.imageUrl,
+        }}
+      />
       <View>
-        <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 5,
+            marginTop: 5,
+          }}
+        >
+          <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
+          <AntDesign name='star' size={20} color='#FF6321' />
+        </View>
         <View style={styles.authorContainer}>
-          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.title}>{item?.dishName}</Text>
           <View style={styles.iconContainer}>
             {/* <Icon style={styles.addIcon} name='plus' /> */}
             <MaterialIcons name='add' size={22} color='white' />
@@ -46,7 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   rating: {
-    color: 'white',
+    color: '#FF6321',
     fontSize: 14,
   },
   authorContainer: {
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     borderRadius:
       Math.round(
-        Dimensions.get('window').width + Dimensions.get('window').height,
+        Dimensions.get('window').width + Dimensions.get('window').height
       ) / 2,
     width: Dimensions.get('window').width * 0.065,
     height: Dimensions.get('window').width * 0.065,
@@ -80,3 +93,4 @@ const styles = StyleSheet.create({
 })
 
 export default SmallRecommendItem
+
