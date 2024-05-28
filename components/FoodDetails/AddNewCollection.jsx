@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,21 +9,46 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../theme/index";
 import { useCreateCollectionMutation } from "../../slices/collectionSlice";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddCollectionScreen = ({ navigation }) => {
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDes, setNewCollectionDes] = useState("");
   const [error, setError] = useState("");
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
+  const [userId, setUserId] = useState(null);
 
-  const userId = 1;
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('user_id');
+        if (storedUserId) {
+          console.log("User id: ", storedUserId);
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error('Failed to fetch userId from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   const handleOk = async () => {
     try {
-      await createCollection({ userId, name: newCollectionName, description: newCollectionDes }).unwrap();
+      if (!userId) {
+        setError("User is not identified. Please try again later.");
+        return;
+      }
+
+      console.log("new collection name: ", newCollectionName);
+
+      const idUser = parseInt(userId);
+      await createCollection({ idUser, name: newCollectionName, description: newCollectionDes }).unwrap();
+
       setNewCollectionName("");
       setNewCollectionDes("");
-      setError("");  
+      setError("");
       navigation.goBack();
     } catch (error) {
       if (error?.data?.message && typeof error.data.message === 'string' && error.data.message.includes('Collection already exists')) {
@@ -31,14 +56,13 @@ const AddCollectionScreen = ({ navigation }) => {
       } else {
         setError('Failed to create collection. Please try again.');
       }
-      //console.error("Failed to create collection:", error.data.message);
     }
   };
 
   const handleCancel = () => {
     setNewCollectionName("");
     setNewCollectionDes("");
-    setError(""); 
+    setError("");
     navigation.goBack();
   };
 
@@ -55,7 +79,7 @@ const AddCollectionScreen = ({ navigation }) => {
           placeholder="Name your collection"
           value={newCollectionName}
           onChangeText={(text) => {
-            setError(""); // Clear error when changing text
+            setError("");
             setNewCollectionName(text);
           }}
         />

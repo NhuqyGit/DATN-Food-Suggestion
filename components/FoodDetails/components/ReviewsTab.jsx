@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   Text,
   View,
@@ -12,13 +12,31 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
 import { renderStarRating } from "./MoreByCreator";
 import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   useGetReviewsByDishIdQuery,
   useDeleteReviewMutation,
 } from "../../../slices/reviewSlice";
 import { useFocusEffect } from "@react-navigation/native";
 
-function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
+function ReviewsTab({ navigation, dishId, dishInfo }) {
+  const [userID, setUserID] = useState(null);
+
+  useEffect(() => {
+    const fetchUserID = async () => {
+      try {
+        const storedUserID = await AsyncStorage.getItem("user_id");
+        if (storedUserID) {
+          setUserID(storedUserID);
+        }
+      } catch (error) {
+        console.error("Failed to fetch userID from AsyncStorage:", error);
+      }
+    };
+
+    fetchUserID();
+  }, []);
+
   const {
     data: reviews,
     error: reviewError,
@@ -28,20 +46,22 @@ function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [refetch])
+      if (userID) {
+        refetch();
+      }
+    }, [refetch, userID])
   );
 
   const [deleteReview] = useDeleteReviewMutation();
 
-  const userReview = reviews?.find((review) => review.userId === userId);
+  const userReview = reviews?.find((review) => review.userId === userID);
 
   const startAddingReview = () => {
-    navigation.push("ReviewScreen", { dishId, userId, dishInfo });
+    navigation.push("ReviewScreen", { dishId, dishInfo });
   };
 
   const handleEditReview = (review) => {
-    navigation.navigate("ReviewScreen", { review, dishId, userId, dishInfo });
+    navigation.navigate("ReviewScreen", { review, dishId, dishInfo });
   };
 
   const confirmDeleteReview = (id) => {
@@ -82,7 +102,7 @@ function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
     return users?.find((user) => user.id === userId);
   };
 
-  if (reviewLoading || userLoading) return <Text>Loading...</Text>;
+  if (!userID || reviewLoading || userLoading) return <Text>Loading...</Text>;
   if (reviewError || userError) return <Text>Error</Text>;
 
   return (
@@ -137,7 +157,7 @@ function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
                   <Text>{review.content}</Text>
                 </View>
               </View>
-              {review.userId === userId && (
+              {review.userId === userID && (
                 <View style={styles.icons}>
                   <TouchableOpacity onPress={() => handleEditReview(review)}>
                     <Icon name="pencil" size={18} color="#000" />
@@ -153,59 +173,10 @@ function ReviewsTab({ navigation, userId, dishId, dishInfo }) {
           );
         })}
       </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isAddingReview}
-        onRequestClose={cancelAddingReview}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={cancelAddingReview}
-          />
-          <View style={styles.innerContainer}>
-            <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={cancelAddingReview}
-            >
-              <Icon name="close" size={20} color="black" />
-            </TouchableOpacity>
-            <View style={styles.addReviewContainer}>
-              <View style={styles.starRating}>
-                <StarRating
-                  maxStars={5}
-                  rating={newReview.rating}
-                  starSize={20}
-                  fullStarColor="#FF6321"
-                  selectedStar={(rating) =>
-                    setNewReview({ ...newReview, rating })
-                  }
-                />
-              </View>
-
-              <TextInput
-                style={styles.yourReview}
-                placeholder="Your Review"
-                multiline
-                value={newReview.comment}
-                onChangeText={(text) =>
-                  setNewReview({ ...newReview, comment: text })
-                }
-              />
-              <TouchableOpacity
-                style={styles.addButtonReview}
-                onPress={addReview}
-              >
-                <Text style={styles.addButtonText}>Add Review</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -331,4 +302,5 @@ const styles = StyleSheet.create({
     gap: 25,
   },
 });
+
 export default ReviewsTab;

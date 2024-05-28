@@ -1,11 +1,26 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const collectionApi = createApi({
-  reducerPath: 'collectionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://10.0.2.106:3000' }),
+  reducerPath: "collectionApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://datn-admin-be.onrender.com",
+    prepareHeaders: async (headers) => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        if (token) {
+          console.log("Authorization Tok:", token);
+          headers.set("Authorization", `Bearer ${token}`);
+        }
+      } catch (error) {
+        console.error("Error fetching token from AsyncStorage:", error);
+      }
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getCollections: builder.query({
-      query: () => '/collections',
+      query: () => "/collections",
     }),
     getCollectionById: builder.query({
       query: (id) => `/collections/${id}`,
@@ -15,34 +30,36 @@ export const collectionApi = createApi({
     }),
     createCollection: builder.mutation({
       query: (newCollection) => ({
-        url: '/collections',
-        method: 'POST',
+        url: "/collections",
+        method: "POST",
         body: newCollection,
       }),
     }),
     updateCollection: builder.mutation({
       query: ({ id, ...updatedCollection }) => ({
         url: `/collections/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body: updatedCollection,
       }),
     }),
     deleteCollection: builder.mutation({
       query: (id) => ({
         url: `/collections/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
     }),
     isDishInCollection: builder.query({
-      query: ({ userId, dishId }) => `/collections/user/${userId}/dish/${dishId}`,
+      query: ({ userId, dishId }) =>
+        `/collections/user/${userId}/dish/${dishId}`,
     }),
     isCollectionNameExists: builder.query({
-      query: ({userId, collectionName}) => `/collections/exists/${userId}/${collectionName}`,
+      query: ({ userId, collectionName }) =>
+        `/collections/exists/${userId}/${collectionName}`,
     }),
     addDishToCollections: builder.mutation({
       query: ({ userId, dishId, collectionIds }) => ({
         url: `/collections/user/${userId}/dishes/${dishId}`,
-        method: 'POST',
+        method: "POST",
         body: { collectionIds },
       }),
     }),
@@ -58,7 +75,7 @@ export const {
   useDeleteCollectionMutation,
   useIsDishInCollectionQuery,
   useIsCollectionNameExistsQuery,
-  useAddDishToCollectionsMutation 
+  useAddDishToCollectionsMutation,
 } = collectionApi;
 
 export default collectionApi;

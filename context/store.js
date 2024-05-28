@@ -8,6 +8,7 @@ import collectionApi from '../slices/collectionSlice'
 import noteApi from '../slices/noteSlice'
 import reviewApi from '../slices/reviewSlice';
 import UserLoginReducer from '../slices/userLoginSlice'
+import mealPlanSlice from '../slices/mealPlanSlice'
 
 export const store = configureStore({
   reducer: {
@@ -19,9 +20,10 @@ export const store = configureStore({
     [collectionApi.reducerPath]: collectionApi.reducer,
     [noteApi.reducerPath]: noteApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
+    [mealPlanSlice.reducerPath]: mealPlanSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(foodDetailsSlice.middleware, userInfoSlice.middleware, collectionApi.middleware, noteApi.middleware, reviewApi.middleware,),
+    getDefaultMiddleware().concat(foodDetailsSlice.middleware, userInfoSlice.middleware, collectionApi.middleware, noteApi.middleware, reviewApi.middleware, mealPlanSlice.middleware,),
 });
 
 setupListeners(store.dispatch);

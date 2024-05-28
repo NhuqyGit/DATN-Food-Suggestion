@@ -1,66 +1,24 @@
 import React from "react";
 import { Modal, TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import AntIcon from "react-native-vector-icons/AntDesign.js";
+import AntIcon from "react-native-vector-icons/AntDesign";
 import { theme } from "../../theme";
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleModal, togglePopup, setAddMealPlanBtnText, setPopupMessage, setCollectionButtonText } from '../../slices/modalSlice';
 
-function SaveModal({
-  navigation,
-  isModalVisible,
-  collectionButtonText,
-  addMealPlanBtnText,
-}) {
-const dispatch = useDispatch();
-  const handleAddToMealPlan = () => {
-    if (addMealPlanBtnText === "Add to Meal Plan") {
-      dispatch(setAddMealPlanBtnText("Remove from Meal Plan"));
-      dispatch(toggleModal());
-      dispatch(setPopupMessage("Recipe added to your Meal Plan"));
-      dispatch(togglePopup());
-    } else {
-      dispatch(setAddMealPlanBtnText("Add to Meal Plan"));
-      dispatch(toggleModal());
-      dispatch(setPopupMessage("Recipe removed from your Meal Plan"));
-      dispatch(togglePopup());
-    }
-  };
-
-  const handleAddToCollection = () => {
-    dispatch(setCollectionButtonText("Update Collections"));
-    navigation.navigate("CollectionScreen");
-  };
-
+function SaveModal({ isVisible, onClose, addMealPlanBtnText, collectionButtonText, onAddToMealPlan, onAddToCollection }) {
   return (
-    <Modal
-      animationType="slide"
-      transparent
-      visible={isModalVisible}
-      onRequestClose={toggleModal}
-    >
+    <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
       <View style={styles.modalContainer}>
-        <TouchableOpacity style={styles.overlay} onPress={toggleModal} />
+        <TouchableOpacity style={styles.overlay} onPress={onClose} />
         <View style={styles.innerContainer}>
-          <TouchableOpacity style={styles.closeIcon} onPress={toggleModal}>
+          <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
             <Icon name="close" size={20} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalOption}
-            onPress={handleAddToMealPlan}
-          >
+          <TouchableOpacity style={styles.modalOption} onPress={onAddToMealPlan}>
             <Icon name="file" size={20} color={theme.colors.secondary} />
             <Text style={styles.modalOptionText}>{addMealPlanBtnText}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalOption}
-            onPress={handleAddToCollection}
-          >
-           <AntIcon
-                name="addfolder"
-                size={20}
-                color={theme.colors.secondary}
-              />
+          <TouchableOpacity style={styles.modalOption} onPress={onAddToCollection}>
+            <AntIcon name="addfolder" size={20} color={theme.colors.secondary} />
             <Text style={styles.modalOptionText}>{collectionButtonText}</Text>
           </TouchableOpacity>
         </View>

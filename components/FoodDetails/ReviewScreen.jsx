@@ -10,6 +10,7 @@ import {
 import { Rating } from "react-native-ratings";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "../../theme";
 import {
   useCreateReviewMutation,
@@ -19,18 +20,35 @@ import { useGetUserByIdQuery } from "../../slices/userInfoSlice";
 
 const ReviewScreen = ({ route }) => {
   const navigation = useNavigation();
-  const { dishId, userId, dishInfo, review } = route.params || {};
-
+  const { dishId, dishInfo, review } = route.params || {};
+  const [userId, setUserId] = useState(null);
   const [createReview, { isLoading: isCreating }] = useCreateReviewMutation();
   const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
   const [rating, setRating] = useState(review ? review.rating : 1);
   const [reviewContent, setReview] = useState(review ? review.content : "");
   const [errorRating, setErrorRating] = useState("");
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem("user_id");
+        if (storedUserId) {
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch userId from AsyncStorage:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
   const {
     data: userInf,
     error: userErr,
     isLoading: userLoading,
   } = useGetUserByIdQuery(userId);
+
   const handleCancel = () => {
     navigation.goBack();
   };
@@ -66,11 +84,9 @@ const ReviewScreen = ({ route }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("dishInfo1: ", userInf);
-  });
   if (userErr) return <Text>Get user err</Text>;
   if (userLoading) return <Text>Loading current user</Text>;
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>

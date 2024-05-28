@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,13 +14,30 @@ import { theme } from "../../theme/index";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {useGetCollectionsByUserIdQuery, useAddDishToCollectionsMutation } from "../../slices/collectionSlice"
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-  // TODO:adjust other to have dishId and userId
-  //const { dishId } = route.params; 
 const CollectionScreen = ({ navigation, route }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const dishId = 2;
-  const userId = 1; 
+  const [userId, setUserId] = useState(null);
+  const {dishId} = route.params;
+  
+  console.log("DishID", dishId);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('user_id');
+        if (storedUserId) {
+          console.log("User id: ", storedUserId);
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error('Failed to fetch userId from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
   const {
     data: optionsCollection,
     error: optionsCollectionError,
@@ -105,11 +122,10 @@ const CollectionScreen = ({ navigation, route }) => {
             <Text style={styles.checkboxLabel}>{option.collectionName}</Text>
           </TouchableOpacity>
         ))}
-
-        <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
+      </ScrollView>
+      <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
           <Text style={styles.buttonText}>{isAdding ? 'Saving...' : 'Done'}</Text>
         </TouchableOpacity>
-      </ScrollView>
     </View>
   );
 };

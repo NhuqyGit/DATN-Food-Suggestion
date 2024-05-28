@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   Text,
   View,
@@ -16,6 +16,7 @@ import {
   useDeleteNoteMutation,
 } from "../../../slices/noteSlice";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function InitNotTab() {
   return (
@@ -59,7 +60,24 @@ function NoteList({ notes, onDeleteNote, onEditNote }) {
   );
 }
 
-function NoteTab({ navigation, userId, dishId }) {
+function NoteTab({ navigation, dishId }) {
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('user_id');
+        if (storedUserId) {
+          console.log("User id: ", storedUserId);
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error('Failed to fetch userId from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
   const { data: notes, error: noteError, isLoading: noteLoading, refetch } =
     useGetNoteByUserIdAndDishIdQuery({ userId, dishId });
 
