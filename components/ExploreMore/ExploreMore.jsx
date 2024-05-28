@@ -1,39 +1,39 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { HOST } from '../../config'
+import { AsyncStorageService } from '../../utils/AsynStorage'
 import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
 
 function ExploreMore() {
-  const mockData = [
-    {
-      id: 1,
-      title: 'Breakfast',
-      image: require('../../assets/recommendImage.jpg'),
-    },
-    {
-      id: 2,
-      title: 'Vegetarian',
-      image: require('../../assets/recommendImage.jpg'),
-    },
-    {
-      id: 3,
-      title: 'Beverage',
-      image: require('../../assets/recommendImage.jpg'),
-    },
-    {
-      id: 4,
-      title: 'Dessert',
-      image: require('../../assets/recommendImage.jpg'),
-    },
-    {
-      id: 5,
-      title: 'Trending',
-      image: require('../../assets/recommendImage.jpg'),
-    },
-  ]
+  const [cuisines, setCuisines] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const getCuisines = async () => {
+      try {
+        const token = await AsyncStorageService.getAccessToken()
+        const response = await fetch(`${HOST}/cuisines`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        const json = await response.json()
+        setCuisines(json)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getCuisines()
+  }, [])
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ExploreMore</Text>
-      {mockData?.map((item) => (
+      <Text style={styles.title}>Explore More</Text>
+      {cuisines?.map((item) => (
         <ExploreMoreItem key={item.id} item={item} />
       ))}
     </View>
@@ -55,3 +55,4 @@ const styles = StyleSheet.create({
 })
 
 export default ExploreMore
+

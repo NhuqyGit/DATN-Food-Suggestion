@@ -5,6 +5,8 @@ import FoodDetailsScreen from '../../components/FoodDetails/FoodDetails'
 import CollectionScreen from '../../components/FoodDetails/CollectionScreen'
 import ExploreCategories from '../../components/CategoryList/ExploreCategories'
 import AddNewCollection from '../../components/FoodDetails/AddNewCollection'
+import MealPlan from '../MealPlan'
+
 const Stack = createNativeStackNavigator()
 function Home() {
   return (
@@ -16,10 +18,12 @@ function Home() {
       <Stack.Screen name='HomeScreen' component={HomeScreen} />
       <Stack.Screen name='ExploreCategories' component={ExploreCategories} />
       <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
-      <Stack.Screen name="CollectionScreen" component={CollectionScreen} />
-      <Stack.Screen name="AddNewCollection" component={AddNewCollection} />
+      <Stack.Screen name='CollectionScreen' component={CollectionScreen} />
+      <Stack.Screen name='AddNewCollection' component={AddNewCollection} />
+      <Stack.Screen name='MealPlan' component={MealPlan} />
     </Stack.Navigator>
   )
 }
 
 export default Home
+
