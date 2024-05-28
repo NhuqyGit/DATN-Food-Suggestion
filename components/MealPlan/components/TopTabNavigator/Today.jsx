@@ -103,7 +103,6 @@ function Today() {
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
-    console.log(">>>", token);
 
     const response = await fetch(
       `${HOST}/mealplan/${user_id}/today?dayOffset=${offsetWeek}`,
@@ -140,8 +139,6 @@ function Today() {
     fetchData();
   }, [offsetWeek]);
 
-  console.log(">>>", dataDish);
-
   return (
     <View className="py-4 h-full bg-white">
       <View className="px-3">
@@ -157,7 +154,7 @@ function Today() {
           <View className="flex flex-row items-center">
             <Plus toggleBottomSheet={toggleBottomSheet} />
             <Text style={{ fontSize: 18, paddingLeft: 10 }}>
-              {dataDish.title}
+              {dataDish?.title}
             </Text>
           </View>
 
@@ -167,7 +164,7 @@ function Today() {
                 style={{ color: theme.colors.secondary }}
                 className="text-[16px] font-semibold"
               >
-                {dataDish.assets?.length}
+                {dataDish?.assets?.length}
               </Text>
               <Feather
                 name={
@@ -183,7 +180,7 @@ function Today() {
         </View>
         {openAccordionIndex === dayOfWeekNumber && (
           <Animated.View className="px-[10px]" style={animatedStyle}>
-            {dataDish.assets.map((asset, assetIndex) => (
+            {dataDish?.assets.map((asset, assetIndex) => (
               <ListDishItem
                 key={assetIndex}
                 name={asset.name}
