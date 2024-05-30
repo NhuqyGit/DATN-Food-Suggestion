@@ -18,7 +18,7 @@ function AddScreen() {
     const user_id = await AsyncStorage.getItem("user_id");
     // console.log("🚀 ~ handleFetchListCollection ~ user_id:", user_id);
     const token = await AsyncStorageService.getAccessToken();
-    // console.log("🚀 ~ handleFetchListCollection ~ token:", token);
+    //console.log("🚀 ~ handleFetchListCollection ~ token:", token);
 
     const response = await fetch(
       `https://datn-admin-be.onrender.com/collections/user/${user_id}`,
@@ -29,10 +29,6 @@ function AddScreen() {
         },
       }
     );
-    // console.log(
-    //   "🚀 ~ handleFetchListCollection ~ response:",
-    //   await response.json()
-    // );
 
     if (response) {
       const responseJson = await response.json();
@@ -49,6 +45,7 @@ function AddScreen() {
             ? item.dishes[0].imageUrl
             : "https://img.freepik.com/free-vector/food-dishes-collection_52683-2957.jpg",
         assets: item.dishes.map((dishItem) => ({
+          dish_id: dishItem?.id,
           name: dishItem.dishName,
           time: `${dishItem.cookingTime} mins`,
           imgUri: { uri: dishItem.imageUrl },
@@ -124,6 +121,27 @@ function AddScreen() {
 function RecipeDetailsScreen({ route }) {
   const navigation = useNavigation();
   const { item } = route.params;
+  //console.log(">>>", item);
+  const [selectedDishes, setSelectedDishes] = useState([]);
+
+  const handleSelectDish = (dishId) => {
+    //console.log("<<<", dishId);
+    setSelectedDishes((prevSelected) => {
+      if (prevSelected.includes(dishId)) {
+        return prevSelected.filter((id) => id !== dishId);
+      } else {
+        return [...prevSelected, dishId];
+      }
+    });
+  };
+
+  const handleAddDishes = async () => {
+    const user_id = await AsyncStorage.getItem("user_id");
+    const token = await AsyncStorageService.getAccessToken();
+    console.log("🚀 ~ handleAddDishes ~ token:", token);
+
+    console.log("Selected Dishes:", selectedDishes);
+  };
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
@@ -137,10 +155,13 @@ function RecipeDetailsScreen({ route }) {
         {item.assets.map((asset, assetIndex) => (
           <ListDishItem
             key={assetIndex}
+            id={asset.dish_id}
             name={asset.name}
             time={asset.time}
             imgUri={asset.imgUri}
             isAdd={true}
+            isSelected={selectedDishes.includes(asset.dish_id)}
+            onSelectItem={handleSelectDish}
           />
         ))}
       </ScrollView>
@@ -148,7 +169,8 @@ function RecipeDetailsScreen({ route }) {
         style={{ backgroundColor: theme.colors.secondary }}
         className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
         onPress={() => {
-          navigation.navigate("MainMealPlan");
+          handleAddDishes();
+          //navigation.navigate("MainMealPlan");
         }}
       >
         <Text className="text-white text-xl font-bold">Add to your plan</Text>
