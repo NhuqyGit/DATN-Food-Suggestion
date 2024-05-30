@@ -11,7 +11,7 @@ const firebaseConfig = {
   measurementId: 'G-29FLQPCZZK',
 }
 
-// const HOST = "http://10.90.0.44:3000"
+// const HOST = "http://10.0.3.2:3000"
 const HOST = "https://datn-admin-be.onrender.com"
 
 if (!firebase.apps.length) {

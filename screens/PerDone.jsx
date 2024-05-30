@@ -10,6 +10,7 @@ import React from 'react'
 import { AsyncStorageService } from '../utils/AsynStorage'
 import { selectUserInfo, setUserInfo } from '../slices/userLoginSlice'
 import { useSelector, useDispatch } from 'react-redux'
+import { HOST } from '../config'
 
 const deviceHeight = Dimensions.get('window').height
 const deviceWidth = Dimensions.get('window').width
@@ -22,7 +23,7 @@ function PerDone({ navigation }) {
     const token = await AsyncStorageService.getAccessToken()
     try {
       const response = await fetch(
-        `https://datn-admin-be.onrender.com/users/${userInfo?.id}`,
+        `${HOST}/users/${userInfo?.id}`,
         {
           method: 'PUT',
           headers: {

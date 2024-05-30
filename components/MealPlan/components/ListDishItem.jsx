@@ -34,7 +34,7 @@ export default function ListDishItem({
           isSelected && "bg-gray-200 rounded-r-lg"
         }  `}
       >
-        <Text className="text-lg font-semibold">{name}</Text>
+        <Text className="text-base font-semibold">{name}</Text>
         <View className="flex flex-row justify-between items-center w-4/5">
           <View className="w-28 h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
             <Ionicons name="time-outline" size={26} color="white" />
@@ -51,7 +51,11 @@ export default function ListDishItem({
                   }}
                 >
                   <View className="">
-                    <AntIcon name="minuscircle" size={30} color={theme.colors.secondary} />
+                    <AntIcon
+                      name="minuscircle"
+                      size={30}
+                      color={theme.colors.secondary}
+                    />
                   </View>
                 </TouchableOpacity>
               ) : (
@@ -61,7 +65,11 @@ export default function ListDishItem({
                   }}
                 >
                   <View className="">
-                    <AntIcon name="pluscircle" size={30} color={theme.colors.secondary} />
+                    <AntIcon
+                      name="pluscircle"
+                      size={30}
+                      color={theme.colors.secondary}
+                    />
                   </View>
                 </TouchableOpacity>
               )}
@@ -89,7 +97,11 @@ export default function ListDishItem({
               }}
             >
               <View className="flex flex-row items-center">
-                <Ionicons name="calendar-sharp" size={24} color={theme.colors.secondary} />
+                <Ionicons
+                  name="calendar-sharp"
+                  size={24}
+                  color={theme.colors.secondary}
+                />
                 <Text className="ml-4 text-base font-semibold">
                   Edit schedule
                 </Text>

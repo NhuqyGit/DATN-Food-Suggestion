@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View, Text } from 'react-native'
 import Category from '../Category/Category'
 import { AsyncStorageService } from '../../utils/AsynStorage'
 import { HOST } from '../../config'
+import CategorySkeleton from '../../screens/Search/ViewImageScreen/CategorySkeleton'
 
 function CategoryList() {
   const [categories, setCategories] = useState(null)
@@ -12,14 +13,11 @@ function CategoryList() {
     const getCategories = async () => {
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(
-          `${HOST}/categories`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        const response = await fetch(`${HOST}/categories`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
 
         const json = await response.json()
         setCategories(json)
@@ -33,14 +31,6 @@ function CategoryList() {
     getCategories()
   }, [])
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    )
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Good afternoon!</Text>
@@ -49,9 +39,15 @@ function CategoryList() {
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {categories.map((item) => (
-          <Category key={item.id} item={item} />
-        ))}
+        {loading ? (
+          <CategorySkeleton total={3} />
+        ) : (
+          <>
+            {categories.map((item) => (
+              <Category key={item.id} item={item} />
+            ))}
+          </>
+        )}
       </ScrollView>
     </View>
   )

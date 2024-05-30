@@ -19,17 +19,22 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import data from "../../../../constants/MealPlan";
+
 import PlanDate from "../PlanDate";
 import Plus from "../Plus";
 import ListDishItem from "../ListDishItem";
 import BottomSheet from "../../../BottomSheet/BottomSheet";
 import { theme } from "../../../../theme/index";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HOST } from "../../../../config";
+import { AsyncStorageService } from "../../../../utils/AsynStorage";
+
 function ThisWeek() {
   const navigation = useNavigation();
-  const startDate = moment().startOf("week");
-  const endDate = moment().endOf("week");
+  const [offsetWeek, setOffsetWeek] = useState(0);
+  const startDate = moment().startOf("week").add(offsetWeek, "weeks");
+  const endDate = moment().endOf("week").add(offsetWeek, "weeks");
 
   const formattedStartDate = startDate.format("MMM Do");
   const formattedEndDate = endDate.format("MMM Do");
@@ -80,14 +85,59 @@ function ThisWeek() {
     setModalVisible(true);
   };
 
+  const [dataDish, setDataDish] = useState();
+
+  const handleFetchListDish = async () => {
+    const user_id = await AsyncStorage.getItem("user_id");
+    const token = await AsyncStorageService.getAccessToken();
+
+    const response = await fetch(
+      `${HOST}/mealplan/${user_id}?weekOffset=${offsetWeek}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response) {
+      const responseJson = await response.json();
+
+      const data = responseJson.map((item) => ({
+        title: item.day,
+        assets: item.dishes.map((dishItem) => ({
+          name: dishItem.dish.dishName,
+          time: `${dishItem.dish.cookingTime} mins`,
+          imgUri: { uri: dishItem.dish.imageUrl },
+        })),
+      }));
+
+      setDataDish(data);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleFetchListDish();
+    };
+
+    fetchData();
+  }, [offsetWeek]);
+
   return (
     <View className="py-4 h-full bg-white">
       <View className="px-3">
-        <PlanDate date={date} />
+        <PlanDate
+          date={date}
+          setOffsetWeek={setOffsetWeek}
+          offsetWeek={offsetWeek}
+        />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
-        {data.map((day, index) => (
+        {dataDish?.map((day, index) => (
           <View key={index}>
             <View className="flex flex-row justify-between py-4 px-3">
               <View className="flex flex-row ">
@@ -98,8 +148,11 @@ function ThisWeek() {
 
               <TouchableOpacity onPress={() => toggleAccordion(index)}>
                 <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2  items-center">
-                  <Text style={{color: theme.colors.secondary}} className="text-[16px] font-semibold ">
-                    2
+                  <Text
+                    style={{ color: theme.colors.secondary }}
+                    className="text-[16px] font-semibold "
+                  >
+                    {day.assets?.length}
                   </Text>
                   <Feather
                     name={
@@ -142,7 +195,11 @@ function ThisWeek() {
                     item?.onPress();
                   }}
                 >
-                  <AntIcon name={item?.icon} size={24} color={theme.colors.secondary} />
+                  <AntIcon
+                    name={item?.icon}
+                    size={24}
+                    color={theme.colors.secondary}
+                  />
                   <Text className="text-base font-semibold">{item?.name}</Text>
                 </TouchableOpacity>
               </View>

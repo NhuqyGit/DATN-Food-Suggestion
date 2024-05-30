@@ -113,8 +113,6 @@ const ListRecordScreen = () => {
     const handleSelect = () => {
         const foundObject = listRecord.find(record => record.id === isSelect);
         if (foundObject) {
-            // setNameRecord(foundObject.nameRecord)
-            // setRecordId(foundObject.id)
             handlePatchRecordSelect(foundObject)
             navigation.goBack()
         } else {

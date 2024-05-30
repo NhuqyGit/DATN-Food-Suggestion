@@ -38,7 +38,7 @@ function RecommendItem({ item }) {
           <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
           <AntDesign name='star' size={20} color='#FF6321' />
         </View>
-        <Text style={styles.title}>{item.dishName}</Text>
+        <Text style={styles.title}>{item?.dishName}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
           <View style={styles.iconContainer}>
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginRight: 4,
     textTransform: 'uppercase',
-    color: '#9e9e9e',
   },
   iconContainer: {
     backgroundColor: theme.colors.secondary,

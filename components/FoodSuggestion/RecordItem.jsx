@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         // backgroundColor: 'tomato',
-        marginVertical: 5,
-        paddingVertical: 8,
-        paddingHorizontal: 5,
+        // marginVertical: 5,
+        paddingVertical: 12,
+        paddingHorizontal: 8,
         borderBottomWidth: 1,
     }
 })
