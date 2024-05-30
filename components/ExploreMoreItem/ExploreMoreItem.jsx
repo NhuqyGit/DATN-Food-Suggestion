@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 function ExploreMoreItem({ item }) {
   const navigation = useNavigation()
   const handlePress = (item) => {
-    navigation.navigate('ExploreCategories', {
+    navigation.navigate('ExploreCuisine', {
       cuisine: item,
     })
   }
@@ -14,7 +14,7 @@ function ExploreMoreItem({ item }) {
       style={styles.container}
       onPress={() => handlePress(item)}
     >
-      <Text style={styles.title}>{item?.cuisineName}</Text>
+      <Text style={styles.title}>{item?.name}</Text>
       <Image
         style={styles.image}
         source={{

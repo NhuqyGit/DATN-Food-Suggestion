@@ -35,15 +35,15 @@ function Category({ item }) {
       }
     }
   }
-  const handlePress = (title) => {
-    navigation.navigate('ExploreCategories', { cate: title })
+  const handlePress = (item) => {
+    navigation.navigate('ExploreCategories', { category: item })
   }
 
   const boxShadow = generateBoxShadowStyle(0, 3, 'black', 0.2, 5, 5, 'black')
   return (
     <TouchableOpacity
       style={[boxShadow, styles.container]}
-      onPress={() => handlePress(item.name)}
+      onPress={() => handlePress(item)}
     >
       <Text style={styles.title}>{item.name}</Text>
       <Image
