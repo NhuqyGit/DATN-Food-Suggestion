@@ -43,7 +43,7 @@ function CategoryList() {
           <CategorySkeleton total={3} />
         ) : (
           <>
-            {categories.map((item) => (
+            {categories?.map((item) => (
               <Category key={item.id} item={item} />
             ))}
           </>
