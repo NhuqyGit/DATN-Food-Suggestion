@@ -26,7 +26,7 @@ function Unschedule() {
     if (response) {
       const responseJson = await response.json();
 
-      const data = responseJson[responseJson.length - 1].dishes.map(
+      const data = responseJson[responseJson.length - 1].dishes?.map(
         (dishItem) => ({
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} mins`,
@@ -50,7 +50,7 @@ function Unschedule() {
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
         <View className=" px-[10px]">
-          {dataDish.map((asset, assetIndex) => (
+          {dataDish?.map((asset, assetIndex) => (
             <ListDishItem
               key={assetIndex}
               name={asset.name}

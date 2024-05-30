@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,9 +7,65 @@ import ListDishItem from "../../MealPlan/components/ListDishItem";
 import BackButton from "../../BackButton/BackButton";
 import CloseButton from "../../BackButton/CloseButton";
 import { theme } from "../../../theme/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageService } from "../../../utils/AsynStorage";
 
 function AddScreen() {
   const navigation = useNavigation();
+  const [dataCollection, setDataCollection] = useState();
+
+  const handleFetchListCollection = async () => {
+    const user_id = await AsyncStorage.getItem("user_id");
+    // console.log("🚀 ~ handleFetchListCollection ~ user_id:", user_id);
+    const token = await AsyncStorageService.getAccessToken();
+    // console.log("🚀 ~ handleFetchListCollection ~ token:", token);
+
+    const response = await fetch(
+      `https://datn-admin-be.onrender.com/collections/user/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    // console.log(
+    //   "🚀 ~ handleFetchListCollection ~ response:",
+    //   await response.json()
+    // );
+
+    if (response) {
+      const responseJson = await response.json();
+      // console.log(
+      //   "🚀 ~ handleFetchListCollection ~ responseJson:",
+      //   responseJson
+      // );
+
+      const data = responseJson?.map((item) => ({
+        title: item?.collectionName,
+        recipes: item?.dishes?.length || 0,
+        img:
+          item.dishes.length > 0
+            ? item.dishes[0].imageUrl
+            : "https://img.freepik.com/free-vector/food-dishes-collection_52683-2957.jpg",
+        assets: item.dishes.map((dishItem) => ({
+          name: dishItem.dishName,
+          time: `${dishItem.cookingTime} mins`,
+          imgUri: { uri: dishItem.imageUrl },
+        })),
+      }));
+      setDataCollection(data);
+      //console.log(">>>", data);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleFetchListCollection();
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <View style={{ flex: 1, padding: 16, backgroundColor: "white" }}>
@@ -26,7 +82,7 @@ function AddScreen() {
       </Text>
 
       <ScrollView>
-        {dataAdd.map((day, index) => (
+        {dataCollection?.map((day, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => navigation.navigate("RecipeDetails", { item: day })}
@@ -89,7 +145,7 @@ function RecipeDetailsScreen({ route }) {
         ))}
       </ScrollView>
       <TouchableOpacity
-        style={{backgroundColor: theme.colors.secondary}}
+        style={{ backgroundColor: theme.colors.secondary }}
         className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
         onPress={() => {
           navigation.navigate("MainMealPlan");
