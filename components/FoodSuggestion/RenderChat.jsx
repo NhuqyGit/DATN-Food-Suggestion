@@ -6,24 +6,24 @@ import { useMessage } from './MessageContext'
 import { Skeleton } from 'moti/skeleton'
 import { useFocusEffect } from '@react-navigation/native'
 import DishMessage from './DishMessage'
+import ListDishMessage from './ListDishMessage'
 import * as Animatable from 'react-native-animatable';
 
 
 const RenderChat = ({props}) => {
-	const { recordActive,  handleNewResponse, fetchData} = useMessage();
+	const { recordActive, isError, handleNewResponse, fetchData} = useMessage();
 
 	useFocusEffect(
 		useCallback(()=>{
 			if(!props.isSend){
-				fetchData((response) => {
-					handleNewResponse(response);
-				});
+				if(!isError){
+					fetchData((response) => {
+						handleNewResponse(response);
+					});
+				}
 			}
 		}, [])
 	)
-	console.log(props.response)
-	console.log(typeof(props.response))
-
 	const convertKeyToDisplayName = (key) => {
 		switch (key) {
 		  case "khaiVi":
@@ -39,24 +39,24 @@ const RenderChat = ({props}) => {
 
 	const listDishMessage = props.response && (typeof props.response === 'object' ? 
 		Object.entries(props.response).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={500}>
+		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
 			<Text style={styles.sectionTitle}>
 				{convertKeyToDisplayName(key)}
 			</Text>
 			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={800 * (index + 1)}>
+				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
 					<DishMessage item={item} />
 				</Animatable.View>
 			))}
 		</Animatable.View>
 		)) : 
 		Object.entries(JSON.parse(props.response)).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={500}>
+		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
 			<Text style={styles.sectionTitle}>
 				{convertKeyToDisplayName(key)}
 			</Text>
 			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={800 * (index + 1)}>
+				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
 					<DishMessage item={item} />
 				</Animatable.View>
 			))}
@@ -64,27 +64,30 @@ const RenderChat = ({props}) => {
 		))
 	);
 
-	const formatPrice = (price) => {
-        return new Intl.NumberFormat('vi-VN').format(price);
-    };
+	// const formatPrice = (price) => {
+    //     return new Intl.NumberFormat('vi-VN').format(price);
+    // };
 
-	const GenerateHeaderMessage = () => {
-		const { meal, money, numberOfDiners } = recordActive;
-		const listMeal = ["bữa sáng", "bữa trưa", "bữa tối"];
-	  
-		return (
-			<Animatable.View animation="fadeIn" delay={300}>
-				<Text style={{marginBottom: 10}}>
-					Dựa trên tiêu chí của bạn, đây là một gợi ý 
-					<Text style={{ fontWeight: '700' }}> `{listMeal[meal]}` </Text>
-					cho 
-					<Text style={{ fontWeight: '700' }}> `{numberOfDiners} người` </Text>
-					với giá 
-					<Text style={{ fontWeight: '700' }}> `{formatPrice(money)} VND`</Text>:
-				</Text>
-			</Animatable.View>
-		);
-	};
+	// const GenerateHeaderMessage = () => {
+	// 	if (recordActive === undefined || recordActive === null){
+	// 		return
+	// 	}
+	// 	const { meal, money, numberOfDiners } = recordActive;
+	// 	const listMeal = ["bữa sáng", "bữa trưa", "bữa tối"];
+	  	
+	// 	return (
+	// 		<Animatable.View animation="fadeIn" delay={300}>
+	// 			<Text style={{marginBottom: 10}}>
+	// 				Dựa trên tiêu chí của bạn, đây là một gợi ý 
+	// 				<Text style={{ fontWeight: '700' }}> `{listMeal[meal]}` </Text>
+	// 				cho 
+	// 				<Text style={{ fontWeight: '700' }}> `{numberOfDiners} người` </Text>
+	// 				với giá 
+	// 				<Text style={{ fontWeight: '700' }}> `{formatPrice(money)} VND`</Text>:
+	// 			</Text>
+	// 		</Animatable.View>
+	// 	);
+	// };
 
 	console.log(props.id, ": RENDER")
 	return (
@@ -106,51 +109,58 @@ const RenderChat = ({props}) => {
 				</View>
 				<View style={styles.responseChat}>
 				<Text style={styles.nameText}>Nhuqy</Text>
-				<Skeleton
-					colorMode='light'
-					width={"90%"}
-					height={14}
-					radius={'round'}
-				>
-					{props.isSend ? 
-						<>
-							<GenerateHeaderMessage />
-							<View style={{backgroundColor: '#232325', paddingVertical: 5, paddingHorizontal: 15, paddingBottom: 10, borderRadius: 8}}>
-								{listDishMessage}
-							</View>
-						</>
-					: null }
-				</Skeleton>
+				{
+					isError ? <Text>Error</Text> : 
+					<>
+					<Skeleton
+						colorMode='light'
+						width={"90%"}
+						height={14}
+						radius={'round'}
+					>
+						{props.isSend ? 
+							<>
+								{/* <GenerateHeaderMessage /> */}
+								<Text>{props.header}</Text>
+								<View style={{backgroundColor: '#232325', paddingVertical: 5, paddingHorizontal: 15, paddingBottom: 10, borderRadius: 8}}>
+									{listDishMessage}
+									{/* <ListDishMessage response={props.response} isSend={props.isSend}/> */}
+								</View>
+							</>
+						: null }
+					</Skeleton>
 
-				{props.isSend ? null : 
-					<View style={{marginTop: 5}}>
-						<Skeleton
-							colorMode='light'
-							width={"70%"}
-							height={14}
-							radius={'round'}
-							/>
-					</View>
-				}
-				{props.isSend ? null : 
-					<View style={{marginTop: 5}}>
-						<Skeleton
-							colorMode='light'
-							width={"40%"}
-							height={14}
-							radius={'round'}
-							/>
-					</View>
-				}
-				{props.isSend ? null : 
-					<View style={{marginTop: 5}}>
-						<Skeleton
-							colorMode='light'
-							width={"60%"}
-							height={14}
-							radius={'round'}
-							/>
-					</View>
+					{props.isSend ? null : 
+						<View style={{marginTop: 5}}>
+							<Skeleton
+								colorMode='light'
+								width={"70%"}
+								height={14}
+								radius={'round'}
+								/>
+						</View>
+					}
+					{props.isSend ? null : 
+						<View style={{marginTop: 5}}>
+							<Skeleton
+								colorMode='light'
+								width={"40%"}
+								height={14}
+								radius={'round'}
+								/>
+						</View>
+					}
+					{props.isSend ? null : 
+						<View style={{marginTop: 5}}>
+							<Skeleton
+								colorMode='light'
+								width={"60%"}
+								height={14}
+								radius={'round'}
+								/>
+						</View>
+					}
+					</>
 				}
 				</View>
 			</View>

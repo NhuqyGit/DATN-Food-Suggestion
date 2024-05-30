@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const MessageContext = createContext();
 
-export const MessageProvider = ({ topic, children }) => {
+export const MessageProvider = ({ topic, children, handleAddNewMessage, handleChangeRecordActie }) => {
     const [listMessage, setListMessage] = useState([])
     const [isFetchDataCompleted, setIsFetchDataCompleted] = useState(true)
     const [nameRecord, setNameRecord] = useState(null)
@@ -14,6 +14,7 @@ export const MessageProvider = ({ topic, children }) => {
     const [recordActive, setRecordActive] = useState(topic.record)
     const [listRecord, setListRecord] = useState([])
     const [newMessage, setNewMessage] = useState(null)
+    const [isError, setIsError] = useState(false)
 
     const handleFetchMessages = async () =>{
         try{
@@ -26,7 +27,6 @@ export const MessageProvider = ({ topic, children }) => {
                 { headers }
             )
             const data = await response.json();
-            console.log(data)
             if (data.length > 0){
                 const listMessage = data.map((m) => {
                     return {...m, isSend: true}
@@ -49,8 +49,8 @@ export const MessageProvider = ({ topic, children }) => {
                 { "recordId": record.id },
                 { headers },
             )
-            console.log('Response data:', response.data);
             setRecordActive(response.data.record)
+            handleChangeRecordActie(topic.id, response.data.record)
         }catch (error) {
             console.error('Error updating topic', error);
         }
@@ -58,38 +58,55 @@ export const MessageProvider = ({ topic, children }) => {
         setRecordId(record.id)
     }
 
-    const handleSetListRecord = (recordId, updateData) => {
-        console.log(updateData)
+    const handleUpdateListRecord = (recordId, updateData) => {
         setListRecord(prevList =>
             prevList.map(record =>
                 record.id === recordId ? { ...record, ...updateData } : record
             )
         );
+
+        if (recordId === recordActive.id) {
+            setRecordActive(prevRecord => ({ ...prevRecord, ...updateData }));
+        }
     }
+
+    const handleSetListRecord = (newRecord) => {
+        setListRecord(prevList => [...prevList, newRecord]);
+    };
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN').format(price);
+    };
 
     const handleCreateMessage = () =>{
         let count = 1;
         const { meal, money, numberOfDiners, diets, allergies } = recordActive;
         let newMessage = "";
-        const formatJson = "{khaiVi: [{food: món 1, price: giá 1}, {food: món 2,price: giá 2}, ...],\n monChinh: [{food: món 1, price: giá 1}, {food: món 2, price: giá 2}, ...],\n trangMieng: [{food: món 1, price: giá 1}, {food: món 2, price: giá 2}, ...]\n }\n"
+        let messageHeader = "Sau đây là các món ăn dựa trên các tiêu chí của bạn: \n";
+        const formatJson = "{\"khaiVi\": [{\"food\": món 1, \"price\": giá 1}, {\"food\": món 2, \"price\": giá 2}, ...],\n \"monChinh\": [{\"food\": món 1, \"price\": giá 1}, {\"food\": món 2, \"price\": giá 2}, ...],\n \"trangMieng\": [{\"food\": món 1, \"price\": giá 1}, {\"food\": món 2, \"price\": giá 2}, ...]\n }\n"
         if (meal !== undefined && meal !== null) {
             const listMeal = ["sáng", "trưa", "tối"];
             newMessage += `Đề xuất cho tôi một bữa ăn ${listMeal[meal]} (khác) với tiêu chí:\n `;
+            messageHeader += `- Bữa ${listMeal[meal]}\n`
         }
-        if (numberOfDiners !== undefined && numberOfDiners !== null) {
+        if (numberOfDiners !== undefined && numberOfDiners !== null && numberOfDiners > 1) {
             newMessage += `${count}. Số lượng người ăn: ${numberOfDiners}\n `;
+            messageHeader += `- Số lượng người ăn: ${numberOfDiners}\n`
             count += 1;
         }
         if (money !== undefined && money !== null) {
             newMessage += `${count}. Lượng tiền cho bữa ăn: ${money} vnđ\n `;
+            messageHeader += `- Lượng tiền cho bữa ăn: ${formatPrice(money)} vnđ\n`; 
             count += 1;
         }
         if (diets && diets.length > 0) {
             newMessage += `${count}. Cần ăn kiêng theo: ${diets.map(diet => diet.dietName).join(', ')}\n `;
+            messageHeader += `- Cần ăn kiêng theo: ${diets.map(diet => diet.dietName).join(', ')}\n`; 
             count += 1;
         }
         if (allergies && allergies.length > 0) {
             newMessage += `${count}. Có người bị dị ứng: ${allergies.map(allergy => allergy.allergiesName).join(', ')}\n `;
+            messageHeader += `- Có người bị dị ứng: ${allergies.map(allergy => allergy.allergiesName).join(', ')}\n`; 
             count += 1;
         }
         newMessage += `${count}. Hiển thị số tiền tương đương với từng món\n `
@@ -98,12 +115,21 @@ export const MessageProvider = ({ topic, children }) => {
         count += 1
         newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJson} và chỉ cần nội dụng json, không cần nội dung khác."`
 
-        return newMessage
+        return [newMessage, messageHeader]
     }
 
     useFocusEffect(
         useCallback(() =>{
-            handleFetchMessages()
+            // handleFetchMessages()
+            console.log("sdfdfsdfsdfsdfsdfsdfdsfsdfsdfdfs")
+            if (topic.messageList !== undefined){
+                if (topic.messageList.length > 0){
+                    const listMessage = topic.messageList.map((m) => {
+                        return {...m, isSend: true}
+                    })
+                    setListMessage(listMessage)
+                }
+            }
         }, [])
     )
     useFocusEffect(
@@ -116,7 +142,6 @@ export const MessageProvider = ({ topic, children }) => {
             }
         }, [recordActive])
     )
-    // console.log(newMessage)
 
     const handleNewMessage = ()=>{
         console.log("handleNewMessage")
@@ -137,6 +162,7 @@ export const MessageProvider = ({ topic, children }) => {
             const updatedListMessage = [...listMessage];
             
             // Cập nhật tin nhắn phản hồi vào tin nhắn gửi đi
+            updatedListMessage[sendMessageIndex].header = newMessage[1]
             updatedListMessage[sendMessageIndex].response = newResponse;
             updatedListMessage[sendMessageIndex].isSend = true;
 
@@ -144,8 +170,8 @@ export const MessageProvider = ({ topic, children }) => {
 			const headers = {
 			  Authorization: `Bearer ${token}`,
 			};
-            console.log(newMessage)
             const body = {
+                "header": updatedListMessage[sendMessageIndex].header,
                 "content": updatedListMessage[sendMessageIndex].content,
                 "response": updatedListMessage[sendMessageIndex].response,
                 "topicBelong": topic.id,
@@ -158,24 +184,22 @@ export const MessageProvider = ({ topic, children }) => {
             const data = await response.data;
             updatedListMessage[sendMessageIndex].id = data.id
             setListMessage(updatedListMessage);
+            handleAddNewMessage(topic.id, updatedListMessage[sendMessageIndex])
         }catch (error) {
             console.error('Error posting new message:', error);
         }
 
         
     }
-    console.log("LIST-MESSAGE: ", listMessage)
+
     const fetchData = async (callback) => {
-        // setTimeout(() => {
-        // const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`;
         try{
             const token = await AsyncStorageService.getAccessToken();
 			const headers = {
 			  Authorization: `Bearer ${token}`,
 			};
-            console.log(newMessage)
             const body = {
-                "prompt": newMessage
+                "prompt": newMessage[0]
             }
             const response = await axios.post(
                 `${HOST}/openai/generate`,
@@ -183,17 +207,18 @@ export const MessageProvider = ({ topic, children }) => {
                 { headers }
             )
             const data = await response.data;
-            console.log(data)
             callback(data);
-            setIsFetchDataCompleted(true)
         }catch (error) {
             console.error('Error fetching openai response:', error);
+            setIsError(true)
+        }finally{
+            setIsFetchDataCompleted(true)
         }
     };
     
 
     return (
-        <MessageContext.Provider value={{ listMessage, isFetchDataCompleted, nameRecord, recordId, listRecord, newMessage, recordActive, handleNewMessage,  handleNewResponse, fetchData, handlePatchRecordSelect, setListRecord, handleSetListRecord}}>
+        <MessageContext.Provider value={{ isError, topic, listMessage, isFetchDataCompleted, nameRecord, recordId, listRecord, newMessage, recordActive, handleNewMessage, handleNewResponse, fetchData, handlePatchRecordSelect, setListRecord, handleUpdateListRecord, handleSetListRecord}}>
             {children}
         </MessageContext.Provider>
     );

@@ -84,6 +84,7 @@ const ListRecordScreen = () => {
     ]
  
     const handleOpenModal = (record) => {
+        console.log("MODAL: ", record.id)
         setRecordSelect(record)
         setModalVisible(true)
     }
@@ -101,7 +102,6 @@ const ListRecordScreen = () => {
         try{
             const response = await fetch(`${HOST}/users/${userId}/records`, { headers })
             const data = await response.json();
-            console.log(data) 
             if (data.length > 0){
                 setListRecord(data)
             }
@@ -122,7 +122,6 @@ const ListRecordScreen = () => {
 
     useEffect(()=>{
         handleFetchListRecord()
-        console.log("LIST RECORD USEEFFECT")
     }, [])
 
     const listRecordComponent = listRecord?.map((record, index)=>{
@@ -130,7 +129,6 @@ const ListRecordScreen = () => {
             <RecordItem record={record} key={index.toString()} handleOpenModal={handleOpenModal} isSelect={isSelect} setIsSelect={setIsSelect}/>
         )
     })
-    console.log("LISTRECORD")
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
             <View style={styles.container}>
