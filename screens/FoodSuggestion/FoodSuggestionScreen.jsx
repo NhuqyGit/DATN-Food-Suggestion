@@ -12,78 +12,59 @@ import { theme } from "../../theme/index";
 import Header from "../../components/FoodSuggestion/Header";
 import RenderChat from "../../components/FoodSuggestion/RenderChat";
 import { useMessage } from "../../components/FoodSuggestion/MessageContext";
+import ModalRename from "../../components/FoodSuggestion/ModalRename";
 
-const FoodSuggestionScreen = ({topic, deleteTopic}) =>{
+const FoodSuggestionScreen = ({topic, handleDeleteTopic, handleChangeNameTopic}) =>{
     const navigation = useNavigation()
     const scrollViewRef = useRef();
     const { listMessage, handleNewMessage,  handleNewResponse} = useMessage();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [menuItem,  setMenuItem]  = useState(null)
 
+    const handleOpenModal = (item) => {
+        setMenuItem(item)
+        setModalVisible(true)
+    }
 
-    // const [listMessage, setListMessage] = useState([
-    //     {
-    //         id: 1,
-    //         send: "helloadfa df  dfad",
-    //         response: `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n`
-    //     },
-    //     // {
-    //     //     id: 2,
-    //     //     send: "hello adf adf ",
-    //     //     response: `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`
-            
-    //     // },
-    // ])
+    const handleCloseModal = () =>{
+        setModalVisible(false)
+    }
+
     useEffect(() => {
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollToEnd({ animated: true });
         }
     }, [listMessage]);
 
-    // const handleNewMessage = ()=>{
-    //     const newId = listMessage.length + 1; // Tạo id mới bằng cách lấy độ dài hiện tại của danh sách và cộng thêm 1
-    //     const newMessage = `New message ${newId}`; // Tạo tin nhắn mới
-    //     const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`
-    //     const newMessageObj = { id: newId, send: newMessage}; // Tạo đối tượng tin nhắn mới
-    //     setListMessage([...listMessage, newMessageObj]);
-    // }
-
-    // const handleNewResponse = (sendId)=>{
-    //     // Tìm tin nhắn gửi đi tương ứng với sendId
-    //     const sendMessage = listMessage.find(message => message.id === sendId);
-    //     if (!sendMessage) {
-    //         console.error('Tin nhắn không tồn tại');
-    //         return;
-    //     }
-
-    //     // Tạo tin nhắn phản hồi mới
-    //     const newResponse = `1. Gỏi cuốn - 100.000 VNĐ\n2. Cà tím nướng mỡ hành - 150.000 VND\n3. Bún chả giò chay - 200.000 VNĐ\n4. Canh chua rau cải - 100.000 VNĐ\n5. Xà lách trộn - 150.000 VNĐ\n`;
-    //     const newResponseObj = { ...sendMessage, response: newResponse }; // Tin nhắn phản hồi sẽ có nội dung gửi tương tự tin nhắn gửi đi
-
-    //     // Thêm tin nhắn phản hồi mới vào danh sách tin nhắn
-    //     setListMessage([...listMessage, newResponseObj]);
-    // }
-
     const listMessageComponent = listMessage?.map((message, index)=>{
         return (
             <RenderChat key={index.toString()} props={message}/>
         )
     })
-    console.log("FS RENDER", topic.id)
+    // console.log("TOPIC: ", topic.id, topic)
+    // console.log("LIST_MESSAGE: ", topic.id, listMessage)
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
 
             <View style={{flex: 1}}>
-                <Header topic={topic} deleteTopic={deleteTopic}/>
+                <Header topic={topic} handleOpenModal={handleOpenModal}/>
                 <ScrollView
                     ref={scrollViewRef}
                     style={styles.container}
                     showsVerticalScrollIndicator={false}
                     vertical
                 >
-                    <View style={{paddingLeft: 15, paddingVertical: 5}}>
-                        {listMessageComponent}
-                    </View>
+                    {
+                        listMessage.length !== 0 ? 
+                        <View style={{paddingLeft: 15, paddingVertical: 5}}>
+                            {listMessageComponent}
+                        </View> : 
+                        <Reccomand />
+                    }
                 </ScrollView>
                 <Footer />
+
+                <ModalRename menuItem={menuItem} modalVisible={modalVisible} handleCloseModal={handleCloseModal} handleChangeNameTopic={handleChangeNameTopic} handleDeleteTopic={handleDeleteTopic}/>
             </View>
         // </SafeAreaView>
     );
