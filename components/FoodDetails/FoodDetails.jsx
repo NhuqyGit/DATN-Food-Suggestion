@@ -21,6 +21,7 @@ import {
   useDeleteDishFromMealPlanMutation,
 } from "../../slices/mealPlanSlice";
 import { useFocusEffect } from "@react-navigation/native";
+import SkeletonFoodDetails from "./components/SkeletonFoodDetails"
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -93,8 +94,8 @@ function FoodDetailsScreen({ navigation, route }) {
     setModalVisible(false);
   };
 
-  if (isCollectionLoading || isMealPlanLoading) return <Text>Loading...</Text>;
-  if (isCollectionError || isMealPlanError) return <Text>Error loading data</Text>;
+  //if (isCollectionLoading || isMealPlanLoading) return <SkeletonFoodDetails />;
+ // if (isCollectionError || isMealPlanError) return <Text>Error loading data</Text>;
 
   return (
     <View style={styles.foodDetailsScreen}>
@@ -112,11 +113,14 @@ function FoodDetailsScreen({ navigation, route }) {
         </View>
 
         <TouchableOpacity onPress={handleToggleModal} style={styles.saveIconContainer}>
-          {isDishInCollection?.isInCollection || isDishInMealPlan?.isInMealPlan ? (
+          {isCollectionLoading || isMealPlanLoading || isCollectionError || isMealPlanError ?
+          (<AntIcon name="questioncircle" size={40} color={theme.colors.secondary} />) :
+          isDishInCollection?.isInCollection || isDishInMealPlan?.isInMealPlan ? (
             <AntIcon name="minuscircle" size={40} color="gray" />
           ) : (
             <AntIcon name="pluscircle" size={40} color={theme.colors.secondary} />
-          )}
+          )
+          }
         </TouchableOpacity>
       </View>
 
@@ -209,6 +213,11 @@ const styles = StyleSheet.create({
   },
   saveIconContainer: {
     flex: 1,
+  },
+  containerSkeleton: {
+    flex: 1,
+    padding: 5,
+    backgroundColor: 'gray',
   },
 });
 

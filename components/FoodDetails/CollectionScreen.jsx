@@ -107,19 +107,19 @@ const CollectionScreen = ({ navigation, route }) => {
           <TouchableOpacity
             key={option.id}
             style={styles.checkboxContainer}
-            onPress={() => handleCheckboxChange(option.id)}
+            onPress={() => handleCheckboxChange(option?.id)}
           >
             <View
               style={[
                 styles.checkbox,
-                selectedOptions.includes(option.id) && styles.checkedCheckbox,
+                selectedOptions.includes(option?.id) && styles.checkedCheckbox,
               ]}
             >
-              {selectedOptions.includes(option.id) && (
+              {selectedOptions.includes(option?.id) && (
                 <Icon name="check" size={15} color="white" />
               )}
             </View>
-            <Text style={styles.checkboxLabel}>{option.collectionName}</Text>
+            <Text style={styles.checkboxLabel}>{option?.collectionName}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

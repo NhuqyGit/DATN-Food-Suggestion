@@ -14,9 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AddCollectionScreen = ({ navigation }) => {
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDes, setNewCollectionDes] = useState("");
-  const [error, setError] = useState("");
+  const [errorTxt, setError] = useState("");
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
-  const [userId, setUserId] = useState(null);
+  const [userID, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -34,17 +34,17 @@ const AddCollectionScreen = ({ navigation }) => {
     fetchUserId();
   }, []);
 
+  const idUser = parseInt(userID)
   const handleOk = async () => {
     try {
-      if (!userId) {
+      if (!idUser) {
         setError("User is not identified. Please try again later.");
         return;
       }
 
       console.log("new collection name: ", newCollectionName);
 
-      const idUser = parseInt(userId);
-      await createCollection({ idUser, name: newCollectionName, description: newCollectionDes }).unwrap();
+      await createCollection({ userId: idUser, name: newCollectionName, description: newCollectionDes }).unwrap();
 
       setNewCollectionName("");
       setNewCollectionDes("");
@@ -73,7 +73,7 @@ const AddCollectionScreen = ({ navigation }) => {
       </TouchableOpacity>
       <Text style={styles.title}>Add collection</Text>
       <View style={styles.subcontainer}>
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {errorTxt ? <Text style={styles.errorText}>{errorTxt}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Name your collection"
