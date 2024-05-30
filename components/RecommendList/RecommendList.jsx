@@ -13,10 +13,12 @@ import RecommendItem from '../RecommendItem/RecommendItem'
 import SmallRecommendItem from '../RecommendItem/SmallRecommendItem'
 import RecommendLargeSkeleton from '../../screens/Search/ViewImageScreen/RecommendLargeSkeleton'
 import RecommendSmallSkeleton from '../../screens/Search/ViewImageScreen/RecommendSmallSkeleton'
+import { useNavigation } from '@react-navigation/native'
 
 function RecommendList() {
   const [dish, setDish] = useState(null)
   const [loading, setLoading] = useState(true)
+  const navigation = useNavigation()
 
   useEffect(() => {
     const getAllDish = async () => {
@@ -40,12 +42,23 @@ function RecommendList() {
     getAllDish()
   }, [])
 
+  const handleClickVieAll = (item) => {
+    navigation.navigate('ExploreCuisine', { cuisine: item })
+  }
+
   return (
     <View style={styles.container}>
       {/* <View style={styles.horizontalPadding}> */}
       <View style={styles.header}>
         <Text style={styles.title}>Yours recommendations</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleClickVieAll({
+              name: 'Yours recommendations',
+              dishes: dish,
+            })
+          }}
+        >
           <Text style={styles.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>
@@ -68,7 +81,14 @@ function RecommendList() {
       <View style={[styles.healthyList, styles.horizontalPadding]}>
         <View style={styles.header}>
           <Text style={styles.title}>Healthy recipes</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              handleClickVieAll({
+                name: 'Healthy recipes',
+                dishes: dish,
+              })
+            }}
+          >
             <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         </View>
@@ -90,7 +110,14 @@ function RecommendList() {
 
         <View style={styles.header}>
           <Text style={styles.title}>Quick recipes</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              handleClickVieAll({
+                name: 'Quick recipes',
+                dishes: dish,
+              })
+            }}
+          >
             <Text style={styles.viewAll}>View all</Text>
           </TouchableOpacity>
         </View>
