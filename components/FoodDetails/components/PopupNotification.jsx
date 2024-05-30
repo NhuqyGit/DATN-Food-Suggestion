@@ -6,7 +6,7 @@ const PopupNotification = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 2000);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [onClose]);

@@ -9,8 +9,15 @@ import React, { useEffect, useState } from 'react'
 import { Ionicons, Entypo } from '@expo/vector-icons'
 import Button from '../../../components/Button/Button'
 
-function SearchHeader({ setStep, navigation, route, setVisible }) {
-  const [search, setSearch] = useState('')
+function SearchHeader({
+  setStep,
+  navigation,
+  route,
+  setVisible,
+  setSearchText,
+  searchText,
+}) {
+  // const [search, setSearch] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const generateBoxShadowStyle = (
     xOffset,
@@ -39,12 +46,12 @@ function SearchHeader({ setStep, navigation, route, setVisible }) {
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
   useEffect(() => {
-    if (search.length > 0) {
+    if (searchText.length > 0) {
       setStep(2)
-    } else if (search.length === 0 && !isFocused) {
+    } else if (searchText.length === 0 && !isFocused) {
       setStep(1)
     }
-  }, [search, isFocused])
+  }, [searchText, isFocused])
 
   return (
     <View style={styles.container}>
@@ -57,7 +64,7 @@ function SearchHeader({ setStep, navigation, route, setVisible }) {
           color='#9e9e9e'
         />
         <TextInput
-          value={search}
+          value={searchText}
           onFocus={() => {
             setIsFocused(true)
           }}
@@ -65,7 +72,7 @@ function SearchHeader({ setStep, navigation, route, setVisible }) {
             setIsFocused(false)
           }}
           onChangeText={(text) => {
-            setSearch(text)
+            setSearchText(text)
           }}
           style={styles.input}
           placeholder='Search'

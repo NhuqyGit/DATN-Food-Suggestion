@@ -1,16 +1,25 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 const DishItem = ({ item }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: item.image,
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('FoodDetail', { foodDetails: item })
         }}
-      />
-      <Text style={styles.title}>{item.title}</Text>
+        style={styles.container}
+      >
+        <Image
+          style={styles.image}
+          source={{
+            uri: item.imageUrl,
+          }}
+        />
+        <Text style={styles.title}>{item.dishName}</Text>
+      </TouchableOpacity>
     </View>
   )
 }

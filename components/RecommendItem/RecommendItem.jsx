@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { AntDesign } from '@expo/vector-icons'
 
 function RecommendItem({ item }) {
   const navigation = useNavigation()
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -23,12 +24,7 @@ function RecommendItem({ item }) {
       activeOpacity={1}
       style={styles.container}
     >
-      <Image
-        style={styles.image}
-        source={{
-          uri: item.imageUrl,
-        }}
-      />
+      <Image style={styles.image} source={{ uri: item?.imageUrl }} />
       <View style={styles.overlay}>
         <View
           style={{

@@ -5,21 +5,21 @@ import { AsyncStorageService } from '../../utils/AsynStorage'
 import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
 
 function ExploreMore() {
-  const [cuisines, setCuisines] = useState(null)
+  const [categories, setCategories] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const getCuisines = async () => {
+    const getCategories = async () => {
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/cuisines`, {
+        const response = await fetch(`${HOST}/categories`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
         const json = await response.json()
-        setCuisines(json)
+        setCategories(json)
       } catch (error) {
         console.error(error)
       } finally {
@@ -27,13 +27,13 @@ function ExploreMore() {
       }
     }
 
-    getCuisines()
+    getCategories()
   }, [])
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Explore More</Text>
-      {cuisines?.map((item) => (
+      {categories?.map((item) => (
         <ExploreMoreItem key={item.id} item={item} />
       ))}
     </View>

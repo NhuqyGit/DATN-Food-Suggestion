@@ -22,7 +22,12 @@ function RecommendItem({ item }) {
       activeOpacity={1}
       style={styles.container}
     >
-      <Image style={styles.image} source={item?.image} />
+      <Image
+        style={styles.image}
+        source={{
+          uri: item?.imageUrl,
+        }}
+      />
       <View style={styles.overlay}>
         <View
           style={{
@@ -31,12 +36,12 @@ function RecommendItem({ item }) {
             gap: 3,
           }}
         >
-          <Text style={styles.rating}>{`Rating: ${item.rating}`}</Text>
+          <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
           <AntDesign name='star' size={20} color='#FF6321' />
         </View>
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item?.dishName}</Text>
         <View style={styles.authorContainer}>
-          <Text style={styles.author}>{item.author}</Text>
+          <Text style={styles.author}>{item?.author}</Text>
           <View style={styles.iconContainer}>
             {/* <Icon style={styles.addIcon} name='plus' /> */}
             <MaterialIcons name='add' size={22} color='white' />

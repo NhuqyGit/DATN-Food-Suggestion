@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,38 +8,80 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../theme/index";
+import { useCreateCollectionMutation } from "../../slices/collectionSlice";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddCollectionScreen = ({ navigation }) => {
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDes, setNewCollectionDes] = useState("");
+  const [error, setError] = useState("");
+  const [createCollection, { isLoading }] = useCreateCollectionMutation();
+  const [userId, setUserId] = useState(null);
 
-  const handleOk = () => {
-    console.log("Add new collection:", newCollectionName);
-    setNewCollectionName("");
-    setNewCollectionDes("");
-    navigation.goBack();
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('user_id');
+        if (storedUserId) {
+          console.log("User id: ", storedUserId);
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error('Failed to fetch userId from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  const handleOk = async () => {
+    try {
+      if (!userId) {
+        setError("User is not identified. Please try again later.");
+        return;
+      }
+
+      console.log("new collection name: ", newCollectionName);
+
+      const idUser = parseInt(userId);
+      await createCollection({ idUser, name: newCollectionName, description: newCollectionDes }).unwrap();
+
+      setNewCollectionName("");
+      setNewCollectionDes("");
+      setError("");
+      navigation.goBack();
+    } catch (error) {
+      if (error?.data?.message && typeof error.data.message === 'string' && error.data.message.includes('Collection already exists')) {
+        setError('Collection name already exists.\nPlease choose a different name for your collection.');
+      } else {
+        setError('Failed to create collection. Please try again.');
+      }
+    }
   };
 
   const handleCancel = () => {
+    setNewCollectionName("");
     setNewCollectionDes("");
+    setError("");
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.header}
-      >
+      <TouchableOpacity onPress={handleCancel} style={styles.header}>
         <Ionicons name="close-circle-outline" size={30} color="gray" />
       </TouchableOpacity>
       <Text style={styles.title}>Add collection</Text>
       <View style={styles.subcontainer}>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Name your collection"
           value={newCollectionName}
-          onChangeText={setNewCollectionName}
+          onChangeText={(text) => {
+            setError("");
+            setNewCollectionName(text);
+          }}
         />
         <TextInput
           style={[styles.input, styles.descriptionInput]}
@@ -49,8 +91,8 @@ const AddCollectionScreen = ({ navigation }) => {
           value={newCollectionDes}
           onChangeText={setNewCollectionDes}
         />
-        <TouchableOpacity style={styles.saveButton} onPress={handleOk}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={styles.saveButton} onPress={handleOk} disabled={isLoading}>
+          <Text style={styles.buttonText}>{isLoading ? 'Saving...' : 'Save'}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -93,9 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  closeButton: {
-    paddingVertical: 30,
-  },
   saveButton: {
     backgroundColor: theme.colors.secondary,
     borderRadius: 10,
@@ -104,6 +143,21 @@ const styles = StyleSheet.create({
     width: "40%",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 10,
+  },
+  cancelButton: {
+    backgroundColor: "gray",
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    width: "40%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 

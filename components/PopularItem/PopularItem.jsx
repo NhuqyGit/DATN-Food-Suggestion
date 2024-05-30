@@ -7,10 +7,10 @@ const PopularItem = ({ item }) => {
       <Image
         style={styles.image}
         source={{
-          uri: item.image,
+          uri: item.imageUrl,
         }}
       />
-      <Text>{item.title}</Text>
+      <Text>{item.ingredientName}</Text>
     </View>
   )
 }

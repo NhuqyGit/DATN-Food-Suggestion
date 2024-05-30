@@ -14,11 +14,11 @@ import axios from 'axios'
 const RecordDetail = () => {
     const navigation = useNavigation()
     const route = useRoute();
-    const { handleSetListRecord } = useMessage()
+    const { handleUpdateListRecord, handleSetListRecord } = useMessage()
     const { recordSelect, type } = route.params
-
+    console.log("RECORD-SELECT: ", recordSelect)
     const [nameRecord, setNameRecord] = useState(type === "PATCH" ? recordSelect.nameRecord : "")
-    const [price, setPrice] = useState(type === "PATCH" ? recordSelect.money.toString() : "")
+    const [price, setPrice] = useState(type === "PATCH" ? (recordSelect.money !== null ? recordSelect.money?.toString() : "") : "")
     const [meal, setMeal] = useState(type === "PATCH" ? recordSelect.meal.toString() : "0")
     const [diner, setDiner] = useState(type === "PATCH" ? recordSelect.numberOfDiners.toString() : "1")
     const [diets, setDiets] = useState(null)
@@ -97,29 +97,49 @@ const RecordDetail = () => {
         if (!diets || !allergies) {
             return false;
         }
-
-        const isNameRecordChange = recordSelect.nameRecord === nameRecord
-        const isMoneyChange = recordSelect.money.toString() === price
-        const isMealChange = recordSelect.meal.toString() === meal
-        const isDinerChange = recordSelect.numberOfDiners.toString() === diner
-
-        //diets
-        const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
-        const recordDietsIds = recordSelect.diets.map(diet => diet.id);
-
-        //allergies
-        const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
-        const recordAllergiesIds = recordSelect.allergies.map(allergy => allergy.id);
-        console.log(allergiesIds)
-        console.log(recordAllergiesIds)
+        if (type === "PATCH"){
+            const isNameRecordChange = recordSelect.nameRecord === nameRecord
+            
+            const isMoneyChange = recordSelect.money !== null ? (recordSelect.money.toString() === price) : ("" === price)
+            const isMealChange = recordSelect.meal.toString() === meal
+            const isDinerChange = recordSelect.numberOfDiners.toString() === diner
     
-        // Compare 2 array diets id
-        const areDietsSame = dietsIds.length === recordDietsIds.length && dietsIds.every(id => recordDietsIds.includes(id));
+            //diets
+            const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
+            const recordDietsIds = recordSelect.diets.map(diet => diet.id);
+    
+            //allergies
+            const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
+            const recordAllergiesIds = recordSelect.allergies.map(allergy => allergy.id);
         
-        // Compare 2 array allergies id
-        const areAllergiesSame = allergiesIds.length === recordAllergiesIds.length && allergiesIds.every(id => recordAllergiesIds.includes(id));
+            // Compare 2 array diets id
+            const areDietsSame = dietsIds.length === recordDietsIds.length && dietsIds.every(id => recordDietsIds.includes(id));
+            
+            // Compare 2 array allergies id
+            const areAllergiesSame = allergiesIds.length === recordAllergiesIds.length && allergiesIds.every(id => recordAllergiesIds.includes(id));
+    
+            return isNameRecordChange && isMoneyChange && isMealChange && isDinerChange && areDietsSame && areAllergiesSame
+        }
 
-        return isNameRecordChange && isMoneyChange && isMealChange && isDinerChange && areDietsSame && areAllergiesSame
+        else if (type === "POST"){
+            const isNameRecordChange = nameRecord === ""
+            const isMoneyChange = price === ""
+            const isMealChange = meal === "0"
+            const isDinerChange = diner === "1"
+    
+            //diets
+            const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
+    
+            //allergies
+            const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
+        
+            // Compare 2 array diets id
+            const isHasDiet = dietsIds.length === 0
+            
+            // Compare 2 array allergies id
+            const isHasAllergy = allergiesIds.length === 0
+            return isNameRecordChange && isMoneyChange && isMealChange && isDinerChange && isHasDiet && isHasAllergy
+        }
     }
 
     const handleChangeName = (name) => {
@@ -162,6 +182,21 @@ const RecordDetail = () => {
     const handlePress = async () =>{
         console.log("PRESS")
         if (type === "PATCH"){
+            if (nameRecord === ""){
+                alert("Name record null")
+                setLoading(false);
+                return
+            }
+            if (diner === "" || diner === "0"){
+                alert("Number of diners must larger than 0")
+                setLoading(false);
+                return
+            }
+            if (price !== "" && parseInt(price) < 10000){
+                alert("Money have to larger than 10000 or null")
+                setLoading(false);
+                return
+            }
             setLoading(true);
             try{
                 const token = await AsyncStorageService.getAccessToken();
@@ -173,7 +208,7 @@ const RecordDetail = () => {
                 const bodyData = {
                     "nameRecord": nameRecord,
                     "meal": parseInt(meal, 10),
-                    "money": parseInt(price, 10),
+                    "money": price !== "" ? parseInt(price, 10) : null,
                     "numberOfDiners": parseInt(diner, 10),
                     "diets": dietsIds,
                     "allergies": allergiesIds
@@ -183,11 +218,59 @@ const RecordDetail = () => {
                     bodyData,
                     { headers },
                 )
-                handleSetListRecord(recordSelect.id, response.data)
+                handleUpdateListRecord(recordSelect.id, response.data)
                 setLoading(false)
                 navigation.goBack()
             }catch (error) {
                 console.error('Error updating record', error);
+            }
+        }
+        else if (type === "POST"){
+            if (nameRecord === ""){
+                alert("Name record null")
+                setLoading(false);
+                return
+            }
+            if (diner === "" || diner === "0"){
+                alert("Number of diners must larger than 0")
+                setLoading(false);
+                return
+            }
+            if (price !== "" && parseInt(price) < 10000){
+                alert("Money have to larger than 10000 or null")
+                setLoading(false);
+                return
+            }
+            setLoading(true);
+            try{
+                const token = await AsyncStorageService.getAccessToken();
+                const userId = await AsyncStorageService.getUserId();
+                const headers = {
+                  Authorization: `Bearer ${token}`,
+                };
+                const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
+                const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
+                const bodyData = {
+                    "userId": parseInt(userId, 10),
+                    "nameRecord": nameRecord,
+                    "meal": parseInt(meal, 10),
+                    "money": price !== "" ? parseInt(price, 10) : null,
+                    "numberOfDiners": parseInt(diner, 10),
+                    "cuisines": [],
+                    "diets": dietsIds,
+                    "allergies": allergiesIds
+                }
+                const response = await axios.post(
+                    `${HOST}/record`,
+                    bodyData,
+                    { headers },
+                )
+                console.log(response.data)
+                handleSetListRecord(response.data)
+                setLoading(false)
+                navigation.goBack()
+            }catch (error) {
+                console.error('Error posting record', error);
             }
         }
     }
@@ -215,7 +298,6 @@ const RecordDetail = () => {
     })
 
     console.log(type)
-    console.log(recordSelect)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -243,7 +325,7 @@ const RecordDetail = () => {
                     <Text style={styles.title}>Name record</Text>
                     <TextInput
                         style={styles.inputName}
-                        value={nameRecord}
+                        value={nameRecord ? nameRecord : ""}
                         onChangeText={handleChangeName}
                         placeholder='Enter your name record'/>
                 </View>
