@@ -1,138 +1,121 @@
-import React, { useState } from "react";
-import {
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Dimensions,
-} from "react-native";
-
-import Icon from "react-native-vector-icons/FontAwesome";
+import React, { useEffect, useState, useCallback } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import AntIcon from "react-native-vector-icons/AntDesign.js";
+import AntIcon from "react-native-vector-icons/AntDesign";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { theme } from "../../theme/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { theme } from "../../theme";
 import PopupNotification from "./components/PopupNotification";
 import OverviewTab from "../../components/FoodDetails/components/OverviewTab";
 import NoteTab from "../../components/FoodDetails/components/NoteTab";
 import ReviewsTab from "../../components/FoodDetails/components/ReviewsTab";
 import IngredientsTab from "../../components/FoodDetails/components/IngredientsTab";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
-const Tab = createMaterialTopTabNavigator();
+import SaveModal from "../SaveModal/SaveModal";
+import {
+  useIsDishInCollectionQuery,
+  useAddDishToCollectionsMutation,
+} from "../../slices/collectionSlice";
+import {
+  useIsDishInMealPlanQuery,
+  useAddDishToMealPlanMutation,
+  useDeleteDishFromMealPlanMutation,
+} from "../../slices/mealPlanSlice";
+import { useFocusEffect } from "@react-navigation/native";
 
-//export const { height: sHeight, width: sWidth } = Dimensions.get("screen");
-//const ImageHeight = 280;
+const Tab = createMaterialTopTabNavigator();
 
 function FoodDetailsScreen({ navigation, route }) {
   const { foodDetails } = route.params;
+  const [userId, setUserId] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [collectionButtonText, setCollectionButtonText] =
-    useState("Add to Collection");
-  const [addMealPlanBtnText, setAddMealPlanBtnText] =
-    useState("Add to Meal Plan");
+  const [addDishToMealPlan] = useAddDishToMealPlanMutation();
+  const [deleteDishFromMealPlan] = useDeleteDishFromMealPlanMutation();
+  const [addDishToCollections] = useAddDishToCollectionsMutation();
 
-  const [popupMessage, setPopupMessage] = useState("");
-  const togglePopup = () => setShowPopup(!showPopup);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem("user_id");
+        if (storedUserId) {
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch userId from AsyncStorage:", error);
+      }
+    };
 
-  const toggleModal = () => {
+    fetchUserId();
+  }, []);
+
+  const {
+    data: isDishInCollection,
+    isLoading: isCollectionLoading,
+    isError: isCollectionError,
+    refetch: refetchCollection,
+  } = useIsDishInCollectionQuery({ userId, dishId: foodDetails.id });
+
+  const mealId = 3;
+  const {
+    data: isDishInMealPlan,
+    isLoading: isMealPlanLoading,
+    isError: isMealPlanError,
+    refetch: refetchMealPlan,
+  } = useIsDishInMealPlanQuery({ mealPlanId: mealId, dishId: foodDetails.id });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchCollection();
+      refetchMealPlan();
+    }, [refetchCollection, refetchMealPlan])
+  );
+
+  const handleNavigateBack = () => {
+    navigation.goBack();
+  };
+
+  const handleToggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const handleAddToMealPlan = () => {
-    if (addMealPlanBtnText === "Add to Meal Plan") {
-      setAddMealPlanBtnText("Remove from Meal Plan");
-      toggleModal();
-      setPopupMessage("Recipe added to your Meal Plan");
-      togglePopup();
+  const handleAddToMealPlan = async () => {
+    if (!isDishInMealPlan?.isInMealPlan) {
+      await addDishToMealPlan({ mealPlanId: mealId, dishId: foodDetails.id });
     } else {
-      setAddMealPlanBtnText("Add to Meal Plan");
-      toggleModal();
-      setPopupMessage("Recipe removed from your Meal Plan");
-      togglePopup();
+      await deleteDishFromMealPlan({ dishId: foodDetails.id, mealPlanId: mealId });
     }
-  };
-  const handleAddToCollection = () => {
-    setCollectionButtonText("Update Collections");
-    navigation.navigate("CollectionScreen");
+    refetchMealPlan();
+    setModalVisible(false);
   };
 
-  const scrollY = useSharedValue(0);
-  const handleScroll = useAnimatedScrollHandler((event) => {
-    scrollY.value = event.contentOffset.y;
-  });
+  const handleAddToCollection = async () => {
+    navigation.navigate("CollectionScreen", {dishId: foodDetails.id});
+    refetchCollection();
+    setModalVisible(false);
+  };
 
-  // const scrollAnimatedStyles = useAnimatedStyle(() => {
-  //   const translateY = interpolate(
-  //     scrollY.value,
-  //     [0, 320],
-  //     [0, -ImageHeight],
-  //     Extrapolation.CLAMP
-  //   );
-  //   return { transform: [{ translateY }] };
-  // });
+  if (isCollectionLoading || isMealPlanLoading) return <Text>Loading...</Text>;
+  if (isCollectionError || isMealPlanError) return <Text>Error loading data</Text>;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={styles.foodDetailsScreen}>
       <View>
-        <Image
-          source={foodDetails.image}
-          style={{ width: "100%", height: 300 }}
-        />
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
+        <Image source={{ uri: foodDetails.imageUrl }} style={styles.image} />
+        <TouchableOpacity onPress={handleNavigateBack} style={styles.backButtonContainer}>
           <Ionicons name="chevron-back-circle" size={30} color="white" />
         </TouchableOpacity>
       </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: 10,
-        }}
-      >
-        <View style={{ flex: 7, paddingRight: 5 }}>
-          <Text
-            style={{
-              fontSize: 24,
-              fontWeight: "bold",
-              paddingHorizontal: 5,
-            }}
-          >
-            {foodDetails.title}
-          </Text>
-          <Text
-            style={{ fontSize: 16, paddingHorizontal: 5 }}
-          >{`By ${foodDetails.author}`}</Text>
+      <View style={styles.header}>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.title}>{foodDetails.dishName}</Text>
+          <Text style={styles.author}>By {foodDetails.author}</Text>
         </View>
 
-        <TouchableOpacity
-          style={{
-            flex: 1,
-          }}
-          onPress={toggleModal}
-        >
-          {addMealPlanBtnText === "Add to Meal Plan" &&
-          collectionButtonText === "Add to Collection" ? (
-            <AntIcon
-              name="pluscircle"
-              size={40}
-              color={theme.colors.secondary}
-            />
-          ) : (
+        <TouchableOpacity onPress={handleToggleModal} style={styles.saveIconContainer}>
+          {isDishInCollection?.isInCollection || isDishInMealPlan?.isInMealPlan ? (
             <AntIcon name="minuscircle" size={40} color="gray" />
+          ) : (
+            <AntIcon name="pluscircle" size={40} color={theme.colors.secondary} />
           )}
         </TouchableOpacity>
       </View>
@@ -154,99 +137,78 @@ function FoodDetailsScreen({ navigation, route }) {
           }}
         >
           <Tab.Screen name="Overview">
-            {() => <OverviewTab foodDetails={foodDetails} />}
+            {() => <OverviewTab foodDetails={foodDetails} navigation={navigation} />}
           </Tab.Screen>
           <Tab.Screen name="Ingredients">
-            {() => <IngredientsTab foodDetails={foodDetails} />}
+            {() => <IngredientsTab ingredients={foodDetails.dishToIngredients} />}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
-            {() => <NoteTab foodDetails={foodDetails} />}
+            {() => <NoteTab navigation={navigation} dishId={foodDetails.id} />}
           </Tab.Screen>
           <Tab.Screen name="Reviews">
-            {() => <ReviewsTab foodDetails={foodDetails} />}
+            {() => (
+              <ReviewsTab
+                navigation={navigation}
+                dishId={foodDetails.id}
+                dishInfo={foodDetails.dishName}
+              />
+            )}
           </Tab.Screen>
         </Tab.Navigator>
       </View>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.overlay} onPress={toggleModal} />
-          <View style={styles.innerContainer}>
-            <TouchableOpacity style={styles.closeIcon} onPress={toggleModal}>
-              <Icon name="close" size={20} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={handleAddToMealPlan}
-            >
-              <Icon name="file" size={20} color={theme.colors.secondary} />
-              <Text style={styles.modalOptionText}>{addMealPlanBtnText}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={handleAddToCollection}
-            >
-              <AntIcon
-                name="addfolder"
-                size={20}
-                color={theme.colors.secondary}
-              />
-              <Text style={styles.modalOptionText}>{collectionButtonText}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      {showPopup && (
-        <PopupNotification message={popupMessage} onClose={togglePopup} />
-      )}
+
+      <SaveModal
+        isVisible={isModalVisible}
+        onClose={handleToggleModal}
+        addMealPlanBtnText={
+          isDishInMealPlan?.isInMealPlan ? "Remove from Meal Plan" : "Add to Meal Plan"
+        }
+        collectionButtonText={
+          isDishInCollection?.isInCollection ? "Update Collections" : "Add to Collections"
+        }
+        onAddToMealPlan={handleAddToMealPlan}
+        onAddToCollection={handleAddToCollection}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  backButton: {
+  foodDetailsScreen: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  backButtonContainer: {
     position: "absolute",
     top: 40,
     left: 20,
+    zIndex: 10,
   },
-  tabBarLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
+  image: {
+    width: "100%",
+    height: 300,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
-  },
-  innerContainer: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    height: 252,
-  },
-  closeIcon: {
-    position: "absolute",
-    top: 15,
-    right: 20,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalOption: {
+  header: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 10,
-    padding: 5,
-    marginTop: 15,
+    margin: 10,
   },
-  modalOptionText: {
-    marginLeft: 10,
+  headerTextContainer: {
+    flex: 7,
+    paddingRight: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    paddingHorizontal: 5,
+  },
+  author: {
+    fontSize: 16,
+    paddingHorizontal: 5,
+  },
+  saveIconContainer: {
+    flex: 1,
   },
 });
 

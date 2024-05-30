@@ -1,130 +1,193 @@
-import React, { useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   Text,
   View,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Modal,
-  TextInput,
+  Image,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
-// import StarRating from "react-native-star-rating";
 import { renderStarRating } from "./MoreByCreator";
-function ReviewsTab({ foodDetails }) {
+import { useGetUserInfoQuery } from "../../../slices/userInfoSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  useGetReviewsByDishIdQuery,
+  useDeleteReviewMutation,
+} from "../../../slices/reviewSlice";
+import { useFocusEffect } from "@react-navigation/native";
+
+function ReviewsTab({ navigation, dishId, dishInfo }) {
+  const [userID, setUserID] = useState(null);
+
+  useEffect(() => {
+    const fetchUserID = async () => {
+      try {
+        const storedUserID = await AsyncStorage.getItem("user_id");
+        if (storedUserID) {
+          setUserID(storedUserID);
+        }
+      } catch (error) {
+        console.error("Failed to fetch userID from AsyncStorage:", error);
+      }
+    };
+
+    fetchUserID();
+  }, []);
+
+  const {
+    data: reviews,
+    error: reviewError,
+    isLoading: reviewLoading,
+    refetch,
+  } = useGetReviewsByDishIdQuery(dishId);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (userID) {
+        refetch();
+      }
+    }, [refetch, userID])
+  );
+
+  const [deleteReview] = useDeleteReviewMutation();
+
+  const userReview = reviews?.find((review) => review.userId === userID);
+
   const startAddingReview = () => {
-    setAddingReview(true);
+    navigation.push("ReviewScreen", { dishId, dishInfo });
   };
-  const addReview = () => {
-    alert(`New Review: ${JSON.stringify(newReview)}`);
-    setNewReview({ user: "", rating: 0, comment: "" });
-    cancelAddingReview();
+
+  const handleEditReview = (review) => {
+    navigation.navigate("ReviewScreen", { review, dishId, dishInfo });
   };
-  const cancelAddingReview = () => {
-    setAddingReview(false);
+
+  const confirmDeleteReview = (id) => {
+    Alert.alert(
+      "Delete Review",
+      "Are you sure you want to delete this review?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => handleDeleteReview(id),
+        },
+      ],
+      { cancelable: true }
+    );
   };
-  const [isAddingReview, setAddingReview] = useState(false);
-  const [newReview, setNewReview] = useState({
-    user: "",
-    rating: 0,
-    comment: "",
-  });
+
+  const handleDeleteReview = async (id) => {
+    try {
+      await deleteReview(id).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+    }
+  };
+
+  const {
+    data: users,
+    error: userError,
+    isLoading: userLoading,
+  } = useGetUserInfoQuery();
+
+  const getUserById = (userId) => {
+    return users?.find((user) => user.id === userId);
+  };
+
+  if (!userID || reviewLoading || userLoading) return <Text>Loading...</Text>;
+  if (reviewError || userError) return <Text>Error</Text>;
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.rowItem}>
           <TouchableOpacity
             style={styles.addReviewButton}
-            onPress={startAddingReview}
+            onPress={
+              userReview
+                ? () => handleEditReview(userReview)
+                : startAddingReview
+            }
           >
             <Icon
-              name="comment"
+              name={userReview ? "pencil" : "comment"}
               size={20}
               color={theme.colors.secondary}
               style={{ paddingLeft: 10 }}
             />
-            <Text style={styles.addReviewText}>Add Review</Text>
+            <Text style={styles.addReviewText}>
+              {userReview ? "Edit Review" : "Add Review"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.line} />
-      <ScrollView style={styles.reriewList}>
-        {foodDetails.reviews.map((review, index) => (
-          <View key={index} style={styles.reviewContainer}>
-            <View style={styles.avatarContainer}>
-              <Text style={styles.avatarText}>{review.user[0]}</Text>
-            </View>
-
-            <View style={styles.reviewDetails}>
-              <Text style={styles.userName}>{review.user}</Text>
-              <View style={styles.ratingContainer}>
-                <View style={styles.ratingContainer}>
-                  {renderStarRating(review.rating)}
+      <ScrollView>
+        {reviews?.map((review) => {
+          const user = getUserById(review.userId);
+          return (
+            <View key={review.id} style={styles.component}>
+              <View style={styles.reviewContainer}>
+                {user?.imgUrl ? (
+                  <Image
+                    source={{ uri: user.imgUrl }}
+                    style={styles.userImage}
+                  />
+                ) : (
+                  <View style={styles.avatarContainer}>
+                    <Text style={styles.avatarText}>
+                      {user?.username.substring(0, 2)}
+                    </Text>
+                  </View>
+                )}
+                <View style={styles.reviewDetails}>
+                  <Text style={styles.userName}>{user?.username}</Text>
+                  <View style={styles.ratingContainer}>
+                    {renderStarRating(review.rating)}
+                    <Text style={styles.ratingText}>{review?.rating}</Text>
+                  </View>
+                  <Text>{review.content}</Text>
                 </View>
-                <Text style={styles.ratingText}>{review.rating}</Text>
               </View>
-              <Text>{review.comment}</Text>
+              {review.userId === userID && (
+                <View style={styles.icons}>
+                  <TouchableOpacity onPress={() => handleEditReview(review)}>
+                    <Icon name="pencil" size={18} color="#000" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => confirmDeleteReview(review.id)}
+                  >
+                    <Icon name="trash" size={18} color="#000" />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isAddingReview}
-        onRequestClose={cancelAddingReview}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={cancelAddingReview}
-          />
-          <View style={styles.innerContainer}>
-            <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={cancelAddingReview}
-            >
-              <Icon name="close" size={20} color="black" />
-            </TouchableOpacity>
-            <View style={styles.addReviewContainer}>
-              <View style={styles.starRating}>
-                {/* <StarRating
-                  maxStars={5}
-                  rating={newReview.rating}
-                  starSize={20}
-                  fullStarColor="#FF6321"
-                  selectedStar={(rating) =>
-                    setNewReview({ ...newReview, rating })
-                  }
-                /> */}
-              </View>
-
-              <TextInput
-                style={styles.yourReview}
-                placeholder="Your Review"
-                multiline
-                value={newReview.comment}
-                onChangeText={(text) =>
-                  setNewReview({ ...newReview, comment: text })
-                }
-              />
-              <TouchableOpacity
-                style={styles.addButtonReview}
-                onPress={addReview}
-              >
-                <Text style={styles.addButtonText}>Add Review</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+    flex: 1,
+  },
+  component: {
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 10,
+    marginHorizontal: 10,
+    backgroundColor: "#F5F5F5",
   },
   row: {
     flexDirection: "row",
@@ -201,6 +264,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 10,
   },
+  userImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
   avatarText: {
     fontSize: 16,
   },
@@ -226,5 +295,12 @@ const styles = StyleSheet.create({
   yourReview: {
     marginTop: 25,
   },
+  icons: {
+    paddingRight: 10,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 25,
+  },
 });
+
 export default ReviewsTab;
