@@ -16,7 +16,7 @@ const RecordDetail = () => {
     const route = useRoute();
     const { handleUpdateListRecord, handleSetListRecord } = useMessage()
     const { recordSelect, type } = route.params
-    console.log("RECORD-SELECT: ", recordSelect)
+    // console.log("RECORD-SELECT: ", recordSelect)
     const [nameRecord, setNameRecord] = useState(type === "PATCH" ? recordSelect.nameRecord : "")
     const [price, setPrice] = useState(type === "PATCH" ? (recordSelect.money !== null ? recordSelect.money?.toString() : "") : "")
     const [meal, setMeal] = useState(type === "PATCH" ? recordSelect.meal.toString() : "0")
@@ -51,13 +51,13 @@ const RecordDetail = () => {
         try{
             const response = await fetch(`${HOST}/diets`, {headers})
             const data = await response.json();
-            // console.log("data: ",data)
             if (data.length > 0){
                 const refactorData = data.map((m) => {
-                    const { id, dietName } = m;
+                    const { id, name } = m;
                     const isExist = type === "PATCH" && recordSelect?.diets?.some(item => item.id === id) ? true : false;
-                    return {id, name: dietName, isSelect: isExist}
+                    return {id, name: name, isSelect: isExist}
                 })
+                // console.log("TEST: ", refactorData)
                 setDiets(refactorData)
             }
         }catch (error) {
@@ -223,6 +223,7 @@ const RecordDetail = () => {
                 navigation.goBack()
             }catch (error) {
                 console.error('Error updating record', error);
+                setLoading(false)
             }
         }
         else if (type === "POST"){
@@ -265,7 +266,6 @@ const RecordDetail = () => {
                     bodyData,
                     { headers },
                 )
-                console.log(response.data)
                 handleSetListRecord(response.data)
                 setLoading(false)
                 navigation.goBack()
@@ -297,7 +297,6 @@ const RecordDetail = () => {
         )
     })
 
-    console.log(type)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
