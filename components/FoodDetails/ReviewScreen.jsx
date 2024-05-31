@@ -103,16 +103,16 @@ const ReviewScreen = ({ route }) => {
         <View style={styles.divider} />
         <View style={styles.userInfo}>
           {userInf?.imgUrl ? (
-            <Image source={{ uri: userInf.imgUrl }} style={styles.userImage} />
+            <Image source={{ uri: userInf?.imgUrl }} style={styles.userImage} />
           ) : (
             <View style={styles.avatarContainer}>
               <Text style={styles.avatarText}>
-                {userInf?.username.substring(0, 2)}
+                {userInf?.username?.substring(0, 2)}
               </Text>
             </View>
           )}
           <View style={styles.userText}>
-            <Text style={styles.userName}>{userInf.username}</Text>
+            <Text style={styles.userName}>{userInf?.username}</Text>
             <Text style={styles.posting}>Posting publicly</Text>
           </View>
         </View>

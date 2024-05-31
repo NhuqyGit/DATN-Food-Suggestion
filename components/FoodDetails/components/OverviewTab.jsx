@@ -1,49 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Modal } from "react-native";
-import AntIcon from "react-native-vector-icons/AntDesign.js";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../../theme/index";
-import MoreByCreator, { renderStarRating } from "./MoreByCreator";
 import { setCollectionButtonText } from "../../../slices/modalSlice";
-const moreByThisCreator = [
-  {
-    id: "1",
-    title: "Recipe 1",
-    author: "Chef Huu Nien :)",
-    rating: 5,
-    image: require("../../../assets/monngon.jpg"),
-  },
-  {
-    id: "2",
-    title: "Recipe 2",
-    author: "Chef Huu Nien :)",
-    rating: 3,
-    image: require("../../../assets/monngon.jpg"),
-  },
-  {
-    id: "3",
-    title: "Recipe 3",
-    author: "Chef Huu Nien :)",
-    rating: 4.5,
-    image: require("../../../assets/monngon.jpg"),
-  },
-  {
-    id: "4",
-    title: "Recipe 4",
-    author: "Chef Huu Nien :)",
-    rating: 5,
-    image: require("../../../assets/monngon.jpg"),
-  },
-  {
-    id: "5",
-    title: "Recipe 5",
-    author: "Chef Huu Nien :)",
-    rating: 3,
-    image: require("../../../assets/monngon.jpg"),
-  },
-];
+import { useGetAllFoodDetailsQuery } from "../../../slices/foodDetailsSlice"
+import SmallRecommendItem from "../../RecommendItem/SmallRecommendItem";
+import RecommendSmallSkeleton from "../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton";
+
 const reportReasons = [
   "Inappropriate Content",
   "Spam",
@@ -65,6 +30,12 @@ function OverviewTab({ foodDetails, navigation}) {
     dispatch(setCollectionButtonText("Update Collections"));
     navigation.navigate("CollectionScreen");
   };
+
+  const {
+    data: relatedDishs,
+    isLoading: relatedLoading,
+    isError: relatedError,
+  } = useGetAllFoodDetailsQuery()
 
   const cancelReporting = () => {
     setReporting(false);
@@ -100,7 +71,7 @@ function OverviewTab({ foodDetails, navigation}) {
             <Icon name="close" size={20} color="black" />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>Select Reasons for Report</Text>
-          {reportReasons.map((reason, index) => (
+          {reportReasons?.map((reason, index) => (
             <TouchableOpacity
               key={index}
               style={styles.reasonOptionContainer}
@@ -149,7 +120,7 @@ function OverviewTab({ foodDetails, navigation}) {
         </Text>
       </TouchableOpacity> */}
       {/* <View style={styles.line} /> */}
-      <ScrollView>
+      <ScrollView style={{marginTop: 5}}>
         <View style={styles.infoItem}>
           <Icon
             name="star"
@@ -158,7 +129,7 @@ function OverviewTab({ foodDetails, navigation}) {
             style={styles.icon}
           />
           <Text style={styles.label}>Rating:</Text>
-          <Text style={styles.value}>{foodDetails.rating}</Text>
+          <Text style={styles.value}>{foodDetails?.rating}</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -169,7 +140,7 @@ function OverviewTab({ foodDetails, navigation}) {
             style={styles.icon}
           />
           <Text style={styles.label}>Total time:</Text>
-          <Text style={styles.value}>{foodDetails.cookingTime}m</Text>
+          <Text style={styles.value}>{foodDetails?.cookingTime}m</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -180,7 +151,7 @@ function OverviewTab({ foodDetails, navigation}) {
             style={styles.icon}
           />
           <Text style={styles.label}>Servings:</Text>
-          <Text style={styles.value}>{foodDetails.servings}</Text>
+          <Text style={styles.value}>{foodDetails?.servings}</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -191,9 +162,24 @@ function OverviewTab({ foodDetails, navigation}) {
             style={styles.icon}
           />
           <Text style={styles.label}>Calories per serving:</Text>
-          <Text style={styles.value}>{foodDetails.calories}</Text>
+          <Text style={styles.value}>{foodDetails?.calories}</Text>
         </View>
-        <MoreByCreator author={foodDetails.author} recipes={moreByThisCreator} />
+
+        <ScrollView
+          style={styles.listItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {relatedLoading ? (
+            <RecommendSmallSkeleton total={5} />
+          ) : (
+            <>
+              {relatedDishs?.map((item) => (
+                <SmallRecommendItem key={item.id} item={item} />
+              ))}
+            </>
+          )}
+        </ScrollView>
         <TouchableOpacity onPress={startReporting}>
           <Text style={styles.reportIssuer}>Report Issuer</Text>
         </TouchableOpacity>
@@ -310,6 +296,10 @@ const styles = StyleSheet.create({
     reportButtonText: {
       color: "white",
       fontSize: 16,
+    },
+    listItem: {
+      marginTop: 10,
+      paddingLeft: 5,
     },
   });
 export default OverviewTab;

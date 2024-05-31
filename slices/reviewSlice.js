@@ -9,7 +9,6 @@ export const reviewApi = createApi({
       try {
         const token = await AsyncStorage.getItem("accessToken");
         if (token) {
-          console.log("Authorization Tok:", token);
           headers.set("Authorization", `Bearer ${token}`);
         }
       } catch (error) {
