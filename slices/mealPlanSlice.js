@@ -37,12 +37,12 @@ export const mealPlanSlice = createApi({
           `/mealplan/in-mealplan/${mealPlanId}/dish/${dishId}`,
       }),
       getMealplanIdByUserId: builder.query({
-        query: ({ mealPlanId, dishId }) =>
-          `/mealplan/in-mealplan/${mealPlanId}/dish/${dishId}`,
+        query: ({ userId }) =>
+          `/mealplan/user/${userId}`,
       }),
   }),
 });
 
-export const { useIsDishInMealPlanQuery, useAddDishToMealPlanMutation, useDeleteDishFromMealPlanMutation } = mealPlanSlice;
+export const { useIsDishInMealPlanQuery, useAddDishToMealPlanMutation, useDeleteDishFromMealPlanMutation, useGetMealplanIdByUserIdQuery } = mealPlanSlice;
 
 export default mealPlanSlice;

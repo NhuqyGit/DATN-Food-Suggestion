@@ -19,9 +19,9 @@ import {
   useIsDishInMealPlanQuery,
   useAddDishToMealPlanMutation,
   useDeleteDishFromMealPlanMutation,
+  useGetMealplanIdByUserIdQuery,
 } from "../../slices/mealPlanSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import SkeletonFoodDetails from "./components/SkeletonFoodDetails"
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -55,14 +55,22 @@ function FoodDetailsScreen({ navigation, route }) {
     refetch: refetchCollection,
   } = useIsDishInCollectionQuery({ userId, dishId: foodDetails.id });
 
-  const mealId = 3;
+  const {
+    data: mealPlanID,
+    isLoading: mealLoading,
+    isError: mealError,
+  } = useGetMealplanIdByUserIdQuery({ userId });
+
+  const mealID = parseInt(mealPlanID?.mealplanId);
+
   const {
     data: isDishInMealPlan,
     isLoading: isMealPlanLoading,
     isError: isMealPlanError,
     refetch: refetchMealPlan,
-  } = useIsDishInMealPlanQuery({ mealPlanId: mealId, dishId: foodDetails.id });
+  } = useIsDishInMealPlanQuery({ mealPlanId: mealID, dishId: foodDetails.id });
 
+  console.log(mealPlanID);
   useFocusEffect(
     useCallback(() => {
       refetchCollection();
@@ -78,30 +86,34 @@ function FoodDetailsScreen({ navigation, route }) {
     setModalVisible(!isModalVisible);
   };
 
+  console.log(mealID);
   const handleAddToMealPlan = async () => {
     if (!isDishInMealPlan?.isInMealPlan) {
-      await addDishToMealPlan({ mealPlanId: mealId, dishId: foodDetails.id });
+      await addDishToMealPlan({ mealPlanId: mealID, dishId: foodDetails.id });
     } else {
-      await deleteDishFromMealPlan({ dishId: foodDetails.id, mealPlanId: mealId });
+      await deleteDishFromMealPlan({
+        dishId: foodDetails.id,
+        mealPlanId: mealID,
+      });
     }
     refetchMealPlan();
     setModalVisible(false);
   };
 
   const handleAddToCollection = async () => {
-    navigation.navigate("CollectionScreen", {dishId: foodDetails.id});
+    navigation.navigate("CollectionScreen", { dishId: foodDetails.id });
     refetchCollection();
     setModalVisible(false);
   };
-
-  //if (isCollectionLoading || isMealPlanLoading) return <SkeletonFoodDetails />;
- // if (isCollectionError || isMealPlanError) return <Text>Error loading data</Text>;
 
   return (
     <View style={styles.foodDetailsScreen}>
       <View>
         <Image source={{ uri: foodDetails.imageUrl }} style={styles.image} />
-        <TouchableOpacity onPress={handleNavigateBack} style={styles.backButtonContainer}>
+        <TouchableOpacity
+          onPress={handleNavigateBack}
+          style={styles.backButtonContainer}
+        >
           <Ionicons name="chevron-back-circle" size={30} color="white" />
         </TouchableOpacity>
       </View>
@@ -112,16 +124,34 @@ function FoodDetailsScreen({ navigation, route }) {
           <Text style={styles.author}>By {foodDetails.author}</Text>
         </View>
 
-        <TouchableOpacity onPress={handleToggleModal} style={styles.saveIconContainer}>
-          {isCollectionLoading || isMealPlanLoading || isCollectionError || isMealPlanError ?
-          (<AntIcon name="questioncircle" size={40} color={theme.colors.secondary} />) :
-          isDishInCollection?.isInCollection || isDishInMealPlan?.isInMealPlan ? (
-            <AntIcon name="minuscircle" size={40} color="gray" />
-          ) : (
-            <AntIcon name="pluscircle" size={40} color={theme.colors.secondary} />
-          )
-          }
-        </TouchableOpacity>
+        {isCollectionLoading ||
+        isMealPlanLoading ||
+        isCollectionError ||
+        isMealPlanError ||
+        mealLoading ||
+        mealError ? (
+          <AntIcon
+            name="questioncircle"
+            size={40}
+            color={theme.colors.secondary}
+          />
+        ) : (
+          <TouchableOpacity
+            onPress={handleToggleModal}
+            style={styles.saveIconContainer}
+          >
+            {isDishInCollection?.isInCollection ||
+            isDishInMealPlan?.isInMealPlan ? (
+              <AntIcon name="minuscircle" size={40} color="gray" />
+            ) : (
+              <AntIcon
+                name="pluscircle"
+                size={40}
+                color={theme.colors.secondary}
+              />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={{ flex: 1 }}>
@@ -141,10 +171,14 @@ function FoodDetailsScreen({ navigation, route }) {
           }}
         >
           <Tab.Screen name="Overview">
-            {() => <OverviewTab foodDetails={foodDetails} navigation={navigation} />}
+            {() => (
+              <OverviewTab foodDetails={foodDetails} navigation={navigation} />
+            )}
           </Tab.Screen>
           <Tab.Screen name="Ingredients">
-            {() => <IngredientsTab ingredients={foodDetails.dishToIngredients} />}
+            {() => (
+              <IngredientsTab ingredients={foodDetails.dishToIngredients} />
+            )}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
             {() => <NoteTab navigation={navigation} dishId={foodDetails.id} />}
@@ -165,10 +199,14 @@ function FoodDetailsScreen({ navigation, route }) {
         isVisible={isModalVisible}
         onClose={handleToggleModal}
         addMealPlanBtnText={
-          isDishInMealPlan?.isInMealPlan ? "Remove from Meal Plan" : "Add to Meal Plan"
+          isDishInMealPlan?.isInMealPlan
+            ? "Remove from Meal Plan"
+            : "Add to Meal Plan"
         }
         collectionButtonText={
-          isDishInCollection?.isInCollection ? "Update Collections" : "Add to Collections"
+          isDishInCollection?.isInCollection
+            ? "Update Collections"
+            : "Add to Collections"
         }
         onAddToMealPlan={handleAddToMealPlan}
         onAddToCollection={handleAddToCollection}
@@ -217,7 +255,7 @@ const styles = StyleSheet.create({
   containerSkeleton: {
     flex: 1,
     padding: 5,
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
   },
 });
 
