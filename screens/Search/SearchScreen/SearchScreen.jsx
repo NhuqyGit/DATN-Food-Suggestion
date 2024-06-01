@@ -12,6 +12,8 @@ import Filter from '../components/Filter/Filter'
 import CameraScreen from '../CameraScreen/CameraScreen'
 import { AsyncStorageService } from '../../../utils/AsynStorage'
 import { HOST } from '../../../config'
+import LatestDishSkeleton from '../ViewImageScreen/LatestDishSkeleton'
+import IngredientSkeleton from '../ViewImageScreen/IngredientSkeleton'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
@@ -255,10 +257,12 @@ const SearchScreen = ({ navigation, route }) => {
   const [dish, setDish] = useState([])
   const [searchText, setSearchText] = useState('')
   const [loading, setLoading] = useState(true)
+  const [loadingDish, setLoadingDish] = useState(true)
   const [dishBySearchText, setDishBySearchText] = useState([])
 
   useEffect(() => {
     const getIngredients = async () => {
+      setLoading(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
         const response = await fetch(`${HOST}/ingredient`, {
@@ -277,9 +281,10 @@ const SearchScreen = ({ navigation, route }) => {
     }
 
     const getAllDish = async () => {
+      setLoadingDish(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/dish`, {
+        const response = await fetch(`${HOST}/dish?sort=desc`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -290,7 +295,7 @@ const SearchScreen = ({ navigation, route }) => {
       } catch (error) {
         console.error(error)
       } finally {
-        setLoading(false)
+        setLoadingDish(false)
       }
     }
 
@@ -339,20 +344,43 @@ const SearchScreen = ({ navigation, route }) => {
             <View style={styles.popularWrapper}>
               <View style={styles.padding}>
                 <Text style={styles.title}>The most common ingredients</Text>
-                <View style={styles.popularList}>
-                  {ingredients?.map((item) => (
-                    <PopularItem key={item.id} item={item} />
-                  ))}
-                </View>
+                {loading ? (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      flexWrap: 'wrap',
+                      gap: 8,
+                    }}
+                  >
+                    <IngredientSkeleton total={2} />
+                  </View>
+                ) : (
+                  <View style={styles.popularList}>
+                    {ingredients?.map((item) => (
+                      <PopularItem key={item.id} item={item} />
+                    ))}
+                  </View>
+                )}
               </View>
               <View style={styles.popularWrapper}>
                 <View style={styles.padding}>
                   <Text style={styles.title}>Latest dish</Text>
-                  <View style={styles.dishList}>
-                    {dish?.map((item) => (
-                      <DishItem key={item.id} item={item} />
-                    ))}
-                  </View>
+                  {loadingDish ? (
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
+                      <LatestDishSkeleton total={5} />
+                    </View>
+                  ) : (
+                    <View style={styles.dishList}>
+                      {dish?.map((item) => (
+                        <DishItem key={item.id} item={item} />
+                      ))}
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
