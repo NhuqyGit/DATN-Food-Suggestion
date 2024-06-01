@@ -44,7 +44,7 @@ function Unschedule() {
     };
 
     fetchData();
-  }, []);
+  }, [dataDish]);
   return (
     <View className="py-4 h-full bg-white">
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />

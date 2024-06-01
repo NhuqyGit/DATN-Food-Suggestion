@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { dataAdd } from "../../../constants/Addscreen";
 import ListDishItem from "../../MealPlan/components/ListDishItem";
 import BackButton from "../../BackButton/BackButton";
 import CloseButton from "../../BackButton/CloseButton";
 import { theme } from "../../../theme/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
+import moment from "moment";
 
 function AddScreen() {
   const navigation = useNavigation();
@@ -16,9 +16,7 @@ function AddScreen() {
 
   const handleFetchListCollection = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
-    // console.log("🚀 ~ handleFetchListCollection ~ user_id:", user_id);
     const token = await AsyncStorageService.getAccessToken();
-    //console.log("🚀 ~ handleFetchListCollection ~ token:", token);
 
     const response = await fetch(
       `https://datn-admin-be.onrender.com/collections/user/${user_id}`,
@@ -32,11 +30,6 @@ function AddScreen() {
 
     if (response) {
       const responseJson = await response.json();
-      // console.log(
-      //   "🚀 ~ handleFetchListCollection ~ responseJson:",
-      //   responseJson
-      // );
-
       const data = responseJson?.map((item) => ({
         title: item?.collectionName,
         recipes: item?.dishes?.length || 0,
@@ -52,7 +45,6 @@ function AddScreen() {
         })),
       }));
       setDataCollection(data);
-      //console.log(">>>", data);
     }
   };
 
@@ -121,11 +113,9 @@ function AddScreen() {
 function RecipeDetailsScreen({ route }) {
   const navigation = useNavigation();
   const { item } = route.params;
-  //console.log(">>>", item);
   const [selectedDishes, setSelectedDishes] = useState([]);
 
   const handleSelectDish = (dishId) => {
-    //console.log("<<<", dishId);
     setSelectedDishes((prevSelected) => {
       if (prevSelected.includes(dishId)) {
         return prevSelected.filter((id) => id !== dishId);
@@ -138,9 +128,51 @@ function RecipeDetailsScreen({ route }) {
   const handleAddDishes = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
-    console.log("🚀 ~ handleAddDishes ~ token:", token);
+    const date = await AsyncStorage.getItem("planDate");
+    const dateFormat = moment(date, "YYYY MMMM Do").toDate();
+    // console.log("🚀 ~ handleAddDishes ~ date:", dated);
 
-    console.log("Selected Dishes:", selectedDishes);
+    const response = await fetch(
+      `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const mealplanJson = await response.json();
+    const mealplanId = mealplanJson?.mealplanId;
+
+    for (const dish of selectedDishes) {
+      const mealPlanIdInt = parseInt(mealplanId, 10);
+      const dishIdInt = parseInt(dish, 10);
+
+      const response = await fetch(
+        `https://datn-admin-be.onrender.com/mealplan`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            mealPlanId: mealPlanIdInt,
+            dishId: dishIdInt,
+            planDate: dateFormat,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Error:", errorResponse);
+      }
+    }
+
+    navigation.navigate("MainMealPlan", { addedDishes: true });
   };
 
   return (
@@ -168,10 +200,7 @@ function RecipeDetailsScreen({ route }) {
       <TouchableOpacity
         style={{ backgroundColor: theme.colors.secondary }}
         className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
-        onPress={() => {
-          handleAddDishes();
-          //navigation.navigate("MainMealPlan");
-        }}
+        onPress={handleAddDishes}
       >
         <Text className="text-white text-xl font-bold">Add to your plan</Text>
       </TouchableOpacity>
@@ -185,9 +214,9 @@ function AddStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="AddScreen"
+      initialRouteName="AddScreens"
     >
-      <Stack.Screen name="AddScreen" component={AddScreen} />
+      <Stack.Screen name="AddScreens" component={AddScreen} />
       <Stack.Screen name="RecipeDetails" component={RecipeDetailsScreen} />
     </Stack.Navigator>
   );
