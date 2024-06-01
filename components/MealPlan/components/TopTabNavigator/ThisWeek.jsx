@@ -1,17 +1,9 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import Feather from "react-native-vector-icons/Feather.js";
 import AntIcon from "react-native-vector-icons/AntDesign.js";
 import moment from "moment";
-
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -19,13 +11,11 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-
 import PlanDate from "../PlanDate";
 import Plus from "../Plus";
 import ListDishItem from "../ListDishItem";
 import BottomSheet from "../../../BottomSheet/BottomSheet";
 import { theme } from "../../../../theme/index";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HOST } from "../../../../config";
 import { AsyncStorageService } from "../../../../utils/AsynStorage";
@@ -35,13 +25,14 @@ function ThisWeek() {
   const [offsetWeek, setOffsetWeek] = useState(0);
   const startDate = moment().startOf("week").add(offsetWeek, "weeks");
   const endDate = moment().endOf("week").add(offsetWeek, "weeks");
-
+  const formattedStartDateYear = startDate.format("YYYY MMM Do");
   const formattedStartDate = startDate.format("MMM Do");
   const formattedEndDate = endDate.format("MMM Do");
+  const [indexDay, setIndexDate] = useState(0);
   const date = `${formattedStartDate.toLocaleString()}  -  ${formattedEndDate.toLocaleString()}`;
-
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
   const handleCloseModal = () => {
     setModalVisible(false);
   };
@@ -53,12 +44,14 @@ function ThisWeek() {
       transform: [{ translateY: withSpring(translateY.value) }],
     };
   });
+
   const animateList = () => {
     translateY.value = withTiming(0, {
       duration: 300,
       easing: Easing.inOut(Easing.ease),
     });
   };
+
   const toggleAccordion = (index) => {
     setOpenAccordionIndex(openAccordionIndex === index ? null : index);
     animateList();
@@ -76,13 +69,19 @@ function ThisWeek() {
       icon: "plussquareo",
       onPress: () => {
         navigation.navigate("AddScreen");
+        const planDate = startDate.clone().add(indexDay + 1, "days");
+        const formattedPlanDate = planDate.format("YYYY MMM Do");
+        const date = `${formattedPlanDate} `;
+        AsyncStorage.setItem("planDate", date);
         setModalVisible(false);
       },
       name: "Add Saved Recipe",
     },
   ];
-  const toggleBottomSheet = () => {
+
+  const toggleBottomSheet = (index) => {
     setModalVisible(true);
+    setIndexDate(index);
   };
 
   const [dataDish, setDataDish] = useState();
@@ -90,7 +89,6 @@ function ThisWeek() {
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
-
     const response = await fetch(
       `${HOST}/mealplan/${user_id}?weekOffset=${offsetWeek}`,
       {
@@ -104,7 +102,6 @@ function ThisWeek() {
 
     if (response) {
       const responseJson = await response.json();
-
       const data = responseJson.map((item) => ({
         title: item.day,
         assets: item.dishes.map((dishItem) => ({
@@ -113,18 +110,27 @@ function ThisWeek() {
           imgUri: { uri: dishItem.dish.imageUrl },
         })),
       }));
-
       setDataDish(data);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await handleFetchListDish();
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await handleFetchListDish();
+      };
+      fetchData();
+    }, [offsetWeek])
+  );
 
-    fetchData();
-  }, [offsetWeek]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await handleFetchListDish();
+      };
+      fetchData();
+    }, [navigation])
+  );
 
   return (
     <View className="py-4 h-full bg-white">
@@ -137,15 +143,13 @@ function ThisWeek() {
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
-        {dataDish?.map((day, index) => (
+        {dataDish?.slice(0, -1)?.map((day, index) => (
           <View key={index}>
             <View className="flex flex-row justify-between py-4 px-3">
               <View className="flex flex-row ">
-                <Plus toggleBottomSheet={toggleBottomSheet} />
-
+                <Plus toggleBottomSheet={() => toggleBottomSheet(index)} />
                 <Text className="text-lg pl-6">{day.title}</Text>
               </View>
-
               <TouchableOpacity onPress={() => toggleAccordion(index)}>
                 <View className="bg-[#ECE9E9] rounded-[12px]  flex flex-row  w-[60px] gap-x-[6px] py-[6px]  px-2  items-center">
                   <Text
@@ -183,28 +187,24 @@ function ThisWeek() {
       </ScrollView>
       <BottomSheet closePopUp={handleCloseModal} modalVisible={modalVisible}>
         <View className="h-[150px] flex flex-col gap-4 mx-2 my-2  ">
-          {bottomList?.map((item, index) => {
-            return (
-              <View
-                key={index}
-                className=" mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
+          {bottomList?.map((item, index) => (
+            <View
+              key={index}
+              className=" mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
+            >
+              <TouchableOpacity
+                className=" flex flex-row items-center gap-2"
+                onPress={item?.onPress}
               >
-                <TouchableOpacity
-                  className=" flex flex-row items-center gap-2"
-                  onPress={() => {
-                    item?.onPress();
-                  }}
-                >
-                  <AntIcon
-                    name={item?.icon}
-                    size={24}
-                    color={theme.colors.secondary}
-                  />
-                  <Text className="text-base font-semibold">{item?.name}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+                <AntIcon
+                  name={item?.icon}
+                  size={24}
+                  color={theme.colors.secondary}
+                />
+                <Text className="text-base font-semibold">{item?.name}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
       </BottomSheet>
     </View>
