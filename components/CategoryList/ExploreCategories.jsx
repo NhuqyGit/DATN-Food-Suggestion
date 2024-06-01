@@ -1,17 +1,17 @@
+import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import {
-  View,
-  Text,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
-import RecipeCard from './components/RecipeCard'
-import { useNavigation } from '@react-navigation/native'
-import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
-import { AsyncStorageService } from '../../utils/AsynStorage'
 import { HOST } from '../../config'
+import CuisineSkeleton from '../../screens/Search/ViewImageScreen/CuisineSkeleton'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
 
 const ExploreCategories = ({ route }) => {
   const navigation = useNavigation()
@@ -55,11 +55,15 @@ const ExploreCategories = ({ route }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <View style={styles.section}>
-          {items?.map((item) => (
-            <ExploreMoreItem key={item.id} item={item} />
-          ))}
-        </View>
+        {loading ? (
+          <CuisineSkeleton total={5} />
+        ) : (
+          <View style={styles.section}>
+            {items?.map((item) => (
+              <ExploreMoreItem key={item.id} item={item} />
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   )

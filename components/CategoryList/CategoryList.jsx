@@ -8,6 +8,7 @@ import CategorySkeleton from '../../screens/Search/ViewImageScreen/CategorySkele
 function CategoryList() {
   const [categories, setCategories] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [greeting, setGreeting] = useState('')
 
   useEffect(() => {
     const getCategories = async () => {
@@ -28,12 +29,24 @@ function CategoryList() {
       }
     }
 
+    const setGreetingMessage = () => {
+      const currentHour = new Date().getHours()
+      if (currentHour < 12) {
+        setGreeting('Good morning!')
+      } else if (currentHour < 18) {
+        setGreeting('Good afternoon!')
+      } else {
+        setGreeting('Good evening!')
+      }
+    }
+
     getCategories()
+    setGreetingMessage()
   }, [])
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Good afternoon!</Text>
+      <Text style={styles.title}>{greeting}</Text>
       <ScrollView
         style={styles.list}
         horizontal

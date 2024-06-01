@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { MotiView } from 'moti';
+import { View, StyleSheet, Dimensions } from 'react-native'
+import { MotiView } from 'moti'
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('window')
 
 const SkeletonFoodDetails = () => {
   return (
@@ -42,8 +41,8 @@ const SkeletonFoodDetails = () => {
         />
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -92,6 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     borderRadius: 4,
   },
-});
+})
 
-export default SkeletonFoodDetails;
+export default SkeletonFoodDetails
+

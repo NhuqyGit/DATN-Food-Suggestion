@@ -57,7 +57,12 @@ function Header() {
         <Text style={styles.searchPlaceHolder}> Search...</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.avatarContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Profile')
+        }}
+        style={styles.avatarContainer}
+      >
         <Image
           style={styles.avatarImage}
           source={require('../../assets/images/Profile/avatarTest.jpg')}
