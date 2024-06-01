@@ -65,8 +65,10 @@ export const MessageProvider = ({ topic, children, handleAddNewMessage, handleCh
             )
         );
 
-        if (recordId === recordActive.id) {
-            setRecordActive(prevRecord => ({ ...prevRecord, ...updateData }));
+        if (recordActive != null){
+            if (recordId === recordActive?.id) {
+                setRecordActive(prevRecord => ({ ...prevRecord, ...updateData }));
+            }
         }
     }
 
@@ -216,7 +218,7 @@ export const MessageProvider = ({ topic, children, handleAddNewMessage, handleCh
         }
     };
     
-
+    console.log(newMessage)
     return (
         <MessageContext.Provider value={{ isError, topic, listMessage, isFetchDataCompleted, nameRecord, recordId, listRecord, newMessage, recordActive, handleNewMessage, handleNewResponse, fetchData, handlePatchRecordSelect, setListRecord, handleUpdateListRecord, handleSetListRecord}}>
             {children}

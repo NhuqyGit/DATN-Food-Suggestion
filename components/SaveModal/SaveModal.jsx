@@ -4,21 +4,43 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import { theme } from "../../theme";
 
-function SaveModal({ isVisible, onClose, addMealPlanBtnText, collectionButtonText, onAddToMealPlan, onAddToCollection }) {
+function SaveModal({
+  isVisible,
+  onClose,
+  addMealPlanBtnText,
+  collectionButtonText,
+  onAddToMealPlan,
+  onAddToCollection,
+}) {
   return (
-    <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent
+      visible={isVisible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalContainer}>
         <TouchableOpacity style={styles.overlay} onPress={onClose} />
         <View style={styles.innerContainer}>
           <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
             <Icon name="close" size={20} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.modalOption} onPress={onAddToMealPlan}>
+          <TouchableOpacity
+            style={styles.modalOption}
+            onPress={onAddToMealPlan}
+          >
             <Icon name="file" size={20} color={theme.colors.secondary} />
             <Text style={styles.modalOptionText}>{addMealPlanBtnText}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.modalOption} onPress={onAddToCollection}>
-            <AntIcon name="addfolder" size={20} color={theme.colors.secondary} />
+          <TouchableOpacity
+            style={styles.modalOption}
+            onPress={onAddToCollection}
+          >
+            <AntIcon
+              name="addfolder"
+              size={20}
+              color={theme.colors.secondary}
+            />
             <Text style={styles.modalOptionText}>{collectionButtonText}</Text>
           </TouchableOpacity>
         </View>

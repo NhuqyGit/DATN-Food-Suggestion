@@ -9,7 +9,6 @@ export const mealPlanSlice = createApi({
       try {
         const token = await AsyncStorage.getItem('accessToken');
         if (token) {
-          console.log('Authorization Tok:', token);
           headers.set('Authorization', `Bearer ${token}`);
         }
       } catch (error) {
@@ -33,14 +32,17 @@ export const mealPlanSlice = createApi({
           body: { dishId, mealPlanId },
         }),
       }),
-
       isDishInMealPlan: builder.query({
         query: ({ mealPlanId, dishId }) =>
           `/mealplan/in-mealplan/${mealPlanId}/dish/${dishId}`,
       }),
+      getMealplanIdByUserId: builder.query({
+        query: ({ userId }) =>
+          `/mealplan/user/${userId}`,
+      }),
   }),
 });
 
-export const { useIsDishInMealPlanQuery, useAddDishToMealPlanMutation, useDeleteDishFromMealPlanMutation } = mealPlanSlice;
+export const { useIsDishInMealPlanQuery, useAddDishToMealPlanMutation, useDeleteDishFromMealPlanMutation, useGetMealplanIdByUserIdQuery } = mealPlanSlice;
 
 export default mealPlanSlice;

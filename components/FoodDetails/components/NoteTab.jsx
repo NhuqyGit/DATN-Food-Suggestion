@@ -44,8 +44,8 @@ function NoteList({ notes, onDeleteNote, onEditNote }) {
     <ScrollView>
       {notes?.map((note) => (
         <View key={note.id} style={styles.component}>
-          <Text style={styles.mainText}>{note.noteTitle}</Text>
-          <Text style={styles.subText}>{note.noteContent}</Text>
+          <Text style={styles.mainText}>{note?.noteTitle}</Text>
+          <Text style={styles.subText}>{note?.noteContent}</Text>
           <View style={styles.icons}>
             <TouchableOpacity onPress={() => onEditNote(note)}>
               <Icon name="pencil" size={18} color="#000" />
@@ -144,7 +144,7 @@ function NoteTab({ navigation, dishId }) {
         </View>
       </View>
       <View style={styles.line} />
-      {notes.length > 0 ? (
+      {notes?.length > 0 ? (
         <NoteList
           notes={notes}
           onDeleteNote={confirmDeleteNote}

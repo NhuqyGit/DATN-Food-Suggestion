@@ -18,7 +18,34 @@ import {
   useDeleteReviewMutation,
 } from "../../../slices/reviewSlice";
 import { useFocusEffect } from "@react-navigation/native";
+import { MotiView } from "moti";
 
+const ReviewSkeleton = () => {
+  return (
+    <View style={{paddingTop: 20}}>
+      <MotiView
+        from={{ opacity: 1 }}
+        animate={{ opacity: 0.3 }}
+        transition={{ loop: true, type: "timing", duration: 1000 }}
+        style={styles.imagePlaceholder}
+      />
+      <View style={styles.textContainer}>
+        <MotiView
+          from={{ opacity: 1 }}
+          animate={{ opacity: 0.3 }}
+          transition={{ loop: true, type: "timing", duration: 1000 }}
+          style={styles.title}
+        />
+        <MotiView
+          from={{ opacity: 1 }}
+          animate={{ opacity: 0.3 }}
+          transition={{ loop: true, type: "timing", duration: 1000 }}
+          style={styles.subtitle}
+        />
+      </View>
+    </View>
+  );
+};
 function ReviewsTab({ navigation, dishId, dishInfo }) {
   const [userID, setUserID] = useState(null);
 
@@ -53,8 +80,6 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
   );
 
   const [deleteReview] = useDeleteReviewMutation();
-
-  const userReview = reviews?.find((review) => review.userId === userID);
 
   const startAddingReview = () => {
     navigation.push("ReviewScreen", { dishId, dishInfo });
@@ -102,8 +127,16 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
     return users?.find((user) => user.id === userId);
   };
 
-  if (!userID || reviewLoading || userLoading) return <Text>Loading...</Text>;
+  if (!userID || reviewLoading || userLoading) return <ReviewSkeleton />;
   if (reviewError || userError) return <Text>Error</Text>;
+
+  // Separate the current user's review from the rest
+  const userReview = reviews?.find(
+    (review) => review?.userId?.toString() === userID?.toString()
+  );
+  const otherReviews = reviews?.filter(
+    (review) => review?.userId?.toString() !== userID?.toString()
+  );
 
   return (
     <View style={styles.container}>
@@ -131,33 +164,34 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
       </View>
       <View style={styles.line} />
       <ScrollView>
-        {reviews?.map((review) => {
-          const user = getUserById(review.userId);
+        {[userReview, ...otherReviews]?.map((review) => {
+          if (!review) return null;
+          const user = getUserById(review?.userId);
           return (
             <View key={review.id} style={styles.component}>
               <View style={styles.reviewContainer}>
                 {user?.imgUrl ? (
                   <Image
-                    source={{ uri: user.imgUrl }}
+                    source={{ uri: user?.imgUrl }}
                     style={styles.userImage}
                   />
                 ) : (
                   <View style={styles.avatarContainer}>
                     <Text style={styles.avatarText}>
-                      {user?.username.substring(0, 2)}
+                      {user?.username?.substring(0, 2)}
                     </Text>
                   </View>
                 )}
                 <View style={styles.reviewDetails}>
                   <Text style={styles.userName}>{user?.username}</Text>
                   <View style={styles.ratingContainer}>
-                    {renderStarRating(review.rating)}
+                    {renderStarRating(review?.rating)}
                     <Text style={styles.ratingText}>{review?.rating}</Text>
                   </View>
-                  <Text>{review.content}</Text>
+                  <Text>{review?.content}</Text>
                 </View>
               </View>
-              {review.userId === userID && (
+              {review?.userId?.toString() === userID.toString() && (
                 <View style={styles.icons}>
                   <TouchableOpacity onPress={() => handleEditReview(review)}>
                     <Icon name="pencil" size={18} color="#000" />
@@ -300,6 +334,30 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     gap: 25,
+  },
+
+  textContainer: {
+    paddingHorizontal: 16,
+  },
+  title: {
+    width: "70%",
+    height: 20,
+    backgroundColor: "gray",
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  subtitle: {
+    width: "50%",
+    height: 20,
+    backgroundColor: "gray",
+    borderRadius: 4,
+  },
+  imagePlaceholder: {
+    width: '100%',
+    height: 60,
+    backgroundColor: "gray",
+    borderRadius: 8,
+    marginBottom: 16,
   },
 });
 

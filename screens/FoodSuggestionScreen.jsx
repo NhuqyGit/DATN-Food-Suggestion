@@ -205,13 +205,16 @@ const FoodSuggestion = () =>{
 			await handleDeleteAllMessage(topicId)
 			console.log("DELETE")
 			// Update listTopic state
-			setListTopic([{
+			setListTopic(prevTopics => {
+				const newTopics = [{
 					"id": topicId,
 					"title": "New suggestion",
 					"isActive": true,
 					"record": null,
 					"messageList": []
-				}])
+				}]
+				return newTopics;
+			})
 		
 			// Update topicFilter state
 			setTopicFilter(prevFilter => {
@@ -271,8 +274,8 @@ const FoodSuggestion = () =>{
 		}
 	};
 
-	console.log("TOPIC: ", listTopic)
-	console.log("TOPIC-FILTER: ", topicFilter)
+	// console.log("TOPIC: ", listTopic)
+	// console.log("TOPIC-FILTER: ", topicFilter)
 	const handleChangeNameTopic = async (topicId, newName) => {
 		try {
 			const token = await AsyncStorageService.getAccessToken();
