@@ -73,7 +73,7 @@ export default function ListDishItem({
                 <AntIcon
                   name={isPlus ? "minuscircle" : "pluscircle"}
                   size={30}
-                  color={theme.colors.secondary}
+                  color={!isPlus ? theme.colors.secondary : "gray"}
                 />
               </TouchableOpacity>
             ) : (

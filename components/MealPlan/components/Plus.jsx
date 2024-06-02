@@ -12,7 +12,7 @@ function Plus({ isAdd, toggleBottomSheet, onToggle, isSelected }) {
             <AntIcon
               name={isSelected ? "minuscircle" : "pluscircle"}
               size={30}
-              color={theme.colors.secondary}
+              color={!isSelected ? theme.colors.secondary : "gray"}
             />
           </View>
         </TouchableOpacity>
