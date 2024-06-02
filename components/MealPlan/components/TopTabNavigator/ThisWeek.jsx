@@ -133,6 +133,7 @@ function ThisWeek() {
           date={date}
           setOffsetWeek={setOffsetWeek}
           offsetWeek={offsetWeek}
+          setRandom={setRandom}
         />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
