@@ -8,14 +8,17 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../theme/index";
-import { useCreateNoteMutation, useUpdateNoteMutation } from "../../slices/noteSlice";
+import {
+  useCreateNoteMutation,
+  useUpdateNoteMutation,
+} from "../../slices/noteSlice";
 
 const AddNoteScreen = ({ navigation, route }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
   const [createNote, { isLoading: isCreating }] = useCreateNoteMutation();
   const [updateNote, { isLoading: isUpdating }] = useUpdateNoteMutation();
-  
+
   const { dishId, userId, note } = route.params || {};
 
   useEffect(() => {
@@ -33,7 +36,7 @@ const AddNoteScreen = ({ navigation, route }) => {
           noteTitle,
           noteContent,
         }).unwrap();
-        console.log("Note updated:", noteTitle);
+        //console.log("Note updated:", noteTitle);
       } else {
         await createNote({
           noteTitle,
@@ -41,7 +44,7 @@ const AddNoteScreen = ({ navigation, route }) => {
           dishId,
           userId,
         }).unwrap();
-        console.log("Note added:", noteTitle);
+        //console.log("Note added:", noteTitle);
       }
       setNoteTitle("");
       setNoteContent("");

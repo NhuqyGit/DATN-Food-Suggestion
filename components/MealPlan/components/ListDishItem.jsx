@@ -10,6 +10,7 @@ import { theme } from "../../../theme/index";
 export default function ListDishItem({
   id,
   isSelected,
+  day,
   name,
   time,
   imgUri,
@@ -44,7 +45,7 @@ export default function ListDishItem({
       >
         <Text className="text-base font-semibold">{name}</Text>
         <View className="flex flex-row justify-between items-center w-4/5">
-          <View className="w-28 h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
+          <View className=" h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
             <Ionicons name="time-outline" size={26} color="white" />
             <Text className="text-white text-base font-medium px-1">
               {time}
@@ -73,7 +74,12 @@ export default function ListDishItem({
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(false);
-                navigation.navigate("EditSchedule");
+                navigation.navigate("EditSchedule", {
+                  id,
+                  imgUri,
+                  name: name,
+                  day,
+                });
               }}
             >
               <View className="flex flex-row items-center">

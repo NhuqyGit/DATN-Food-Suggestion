@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, ScrollView } from "react-native";
-import PlanDate from "../PlanDate";
-
+import { View, ScrollView } from "react-native";
 import ListDishItem from "../ListDishItem.jsx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../../utils/AsynStorage.js";
 import { HOST } from "../../../../config.js";
 
 function Unschedule() {
-  const [dataDish, setDataDish] = useState();
+  const [dataDish, setDataDish] = useState([]);
 
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
@@ -25,26 +22,22 @@ function Unschedule() {
 
     if (response) {
       const responseJson = await response.json();
+      const unscheduledDishes = responseJson[
+        responseJson.length - 1
+      ].dishes?.map((dishItem) => ({
+        name: dishItem.dish.dishName,
+        time: `${dishItem.dish.cookingTime} mins`,
+        imgUri: { uri: dishItem.dish.imageUrl },
+      }));
 
-      const data = responseJson[responseJson.length - 1].dishes?.map(
-        (dishItem) => ({
-          name: dishItem.dish.dishName,
-          time: `${dishItem.dish.cookingTime} mins`,
-          imgUri: { uri: dishItem.dish.imageUrl },
-        })
-      );
-
-      setDataDish(data);
+      setDataDish(unscheduledDishes || []);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await handleFetchListDish();
-    };
+    handleFetchListDish();
+  }, []);
 
-    fetchData();
-  }, [dataDish]);
   return (
     <View className="py-4 h-full bg-white">
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />

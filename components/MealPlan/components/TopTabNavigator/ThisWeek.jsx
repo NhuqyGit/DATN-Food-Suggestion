@@ -102,9 +102,11 @@ function ThisWeek() {
 
     if (response) {
       const responseJson = await response.json();
+
       const data = responseJson.map((item) => ({
         title: item.day,
         assets: item.dishes.map((dishItem) => ({
+          dishId: dishItem.dishId,
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} mins`,
           imgUri: { uri: dishItem.dish.imageUrl },
@@ -120,16 +122,7 @@ function ThisWeek() {
         await handleFetchListDish();
       };
       fetchData();
-    }, [offsetWeek])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await handleFetchListDish();
-      };
-      fetchData();
-    }, [navigation])
+    }, [offsetWeek, navigation])
   );
 
   return (
@@ -174,6 +167,8 @@ function ThisWeek() {
               <Animated.View className=" px-[10px]" style={animatedStyle}>
                 {day.assets.map((asset, assetIndex) => (
                   <ListDishItem
+                    day={day.title}
+                    id={asset.dishId}
                     key={assetIndex}
                     name={asset.name}
                     time={asset.time}

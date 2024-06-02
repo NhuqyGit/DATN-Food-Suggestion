@@ -70,7 +70,7 @@ function FoodDetailsScreen({ navigation, route }) {
     refetch: refetchMealPlan,
   } = useIsDishInMealPlanQuery({ mealPlanId: mealID, dishId: foodDetails.id });
 
-  console.log(mealPlanID);
+  //(mealPlanID);
   useFocusEffect(
     useCallback(() => {
       refetchCollection();
@@ -86,7 +86,7 @@ function FoodDetailsScreen({ navigation, route }) {
     setModalVisible(!isModalVisible);
   };
 
-  console.log(mealID);
+  // console.log(mealID);
   const handleAddToMealPlan = async () => {
     if (!isDishInMealPlan?.isInMealPlan) {
       await addDishToMealPlan({ mealPlanId: mealID, dishId: foodDetails.id });

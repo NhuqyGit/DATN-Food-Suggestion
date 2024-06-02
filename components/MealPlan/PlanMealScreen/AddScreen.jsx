@@ -129,8 +129,7 @@ function RecipeDetailsScreen({ route }) {
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
     const date = await AsyncStorage.getItem("planDate");
-    const dateFormat = moment(date, "YYYY MMMM Do").toDate();
-    // console.log("🚀 ~ handleAddDishes ~ date:", dated);
+    const dateFormat = moment.utc(date, "YYYY MMMM Do").toDate();
 
     const response = await fetch(
       `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
