@@ -40,7 +40,6 @@ function Unschedule() {
 
   return (
     <View className="py-4 h-full bg-white">
-      <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
         <View className=" px-[10px]">
           {dataDish?.map((asset, assetIndex) => (

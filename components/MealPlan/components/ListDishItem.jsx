@@ -6,11 +6,14 @@ import Feather from "react-native-vector-icons/Feather";
 import BottomSheet from "../../BottomSheet/BottomSheet";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../../../theme/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageService } from "../../../utils/AsynStorage";
 
 export default function ListDishItem({
   id,
   isSelected,
   day,
+  setRandom,
   name,
   time,
   imgUri,
@@ -94,11 +97,51 @@ export default function ListDishItem({
               </View>
             </TouchableOpacity>
           </View>
-          <View className="flex flex-row items-center mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
-            <Feather name="trash-2" size={24} color="red" />
-            <Text className="ml-4 text-base font-semibold">
-              Remove from Meal Plan
-            </Text>
+          <View className=" ">
+            <TouchableOpacity
+              className="flex flex-row items-center mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
+              onPress={async () => {
+                const user_id = await AsyncStorage.getItem("user_id");
+                const token = await AsyncStorageService.getAccessToken();
+                const response = await fetch(
+                  `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                const mealplanJson = await response.json();
+                const mealplanId = mealplanJson?.mealplanId;
+                const mealPlanIdInt = parseInt(mealplanId, 10);
+                const dishIdInt = parseInt(id, 10);
+                const res = await fetch(
+                  `https://datn-admin-be.onrender.com/mealplan`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      mealPlanId: mealPlanIdInt,
+                      dishId: dishIdInt,
+                    }),
+                  }
+                );
+                setRandom(Math.random(0, 10) + 1);
+
+                handleCloseModal();
+              }}
+            >
+              <Feather name="trash-2" size={24} color="red" />
+              <Text className="ml-4 text-base font-semibold">
+                Remove from Meal Plan
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </BottomSheet>

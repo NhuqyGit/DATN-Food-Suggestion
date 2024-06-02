@@ -25,7 +25,7 @@ function Today() {
   const [offsetDays, setOffsetDays] = useState(0);
   const navigation = useNavigation();
 
-  const getCurrentDate = () => moment().add(offsetDays, "days");
+  const getCurrentDate = () => moment.utc().add(offsetDays, "days");
 
   const startDate = getCurrentDate().startOf("day");
   const endDate = getCurrentDate().endOf("day");
@@ -37,7 +37,8 @@ function Today() {
   const formattedStartDate = startDate.format("MMM Do");
   const formattedStartDateYear = startDate.format("YYYY MMM Do");
 
-  const date = today.format("MMM Do");
+  const date = moment.utc().add(offsetDays, "days").format("MMM Do");
+  const [random, setRandom] = useState(0);
 
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -141,25 +142,7 @@ function Today() {
       };
 
       fetchData();
-    }, [offsetDays])
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await handleFetchListDish();
-    };
-
-    fetchData();
-  }, [offsetDays]);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await handleFetchListDish();
-      };
-
-      fetchData();
-    }, [navigation])
+    }, [offsetDays, navigation, random])
   );
 
   return (
@@ -210,6 +193,7 @@ function Today() {
                 name={asset.name}
                 time={asset.time}
                 imgUri={asset.imgUri}
+                setRandom={setRandom}
               />
             ))}
           </Animated.View>

@@ -137,8 +137,6 @@ const EditSchedule = () => {
             ? moment.utc(selectedDay).toDate()
             : null;
 
-          console.log(mealPlanIdInt, dishIdInt, selectedDayAsDate);
-
           const res = await fetch(
             `https://datn-admin-be.onrender.com/mealplan/update-plan-date`,
             {
