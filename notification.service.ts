@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { useState, useEffect, useRef } from "react";
 import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface PushNotificationState {
   notification?: Notifications.Notification;
@@ -56,6 +57,7 @@ export const usePushNotification = (): PushNotificationState => {
       token = await Notifications.getExpoPushTokenAsync({
         projectId,
       });
+      await AsyncStorage.setItem("expoPushToken", token.data)
       console.log(token);
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
