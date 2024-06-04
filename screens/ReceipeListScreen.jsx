@@ -90,7 +90,7 @@ function ReceipeListScreen({ route, navigation }) {
     const fetchDishes = async () => {
       const token = await AsyncStorageService.getAccessToken();
       try {
-        const response = await fetch(`${HOST}/collections/${id}`, {
+        const response = await fetch(`${HOST}/collections/${collectionId}/dishes`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -103,31 +103,30 @@ function ReceipeListScreen({ route, navigation }) {
         if (responseJson.error) {
           console.log(responseJson.message);
         } else {
-          setDishes(responseJson.dishes);
+          setDishes(responseJson);
         }
       } catch (error) {
         console.error(error);
       }
     };
-    //fetchDishes()
+    fetchDishes()
   }, []);
 
   const removeDishFromCollection = async (dishId) => {
     const token = await AsyncStorageService.getAccessToken();
     try {
-      // const response = await fetch(`${HOST}/collections/${id}`, {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+      const response = await fetch(
+        `${HOST}/collections/${collectionId}/removeDish/${dishId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const responseJson = await response.json();
-
-      if (responseJson.error) {
-        console.log(responseJson.message);
-      } else {
+      if (response.ok) {
         //remove dish from [dishes]
         setDishes((prev) => {
           return prev.filter((dish) => dish.id != dishId);
@@ -149,12 +148,7 @@ function ReceipeListScreen({ route, navigation }) {
         },
       });
 
-      const responseJson = await response.json();
-
-      if (responseJson.error) {
-        console.log(responseJson.message);
-      } else {
-        //dispatch(setUserInfo({ ...userInfo, isLogin: true }));
+      if (response.ok) {
         navigation.goBack();
       }
     } catch (error) {

@@ -357,8 +357,7 @@ function Profile({ navigation }) {
           if (responseJson.error) {
             console.log(responseJson.message);
           } else {
-            //dispatch(setUserInfo({ ...userInfo, isLogin: true }));
-            // navigation.navigate('Home')
+           
             setCollections(responseJson.collections);
           }
         } catch (error) {
