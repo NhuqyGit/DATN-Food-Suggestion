@@ -22,10 +22,10 @@ import { HOST } from "../../../../config.js";
 import { AsyncStorageService } from "../../../../utils/AsynStorage.js";
 
 function Today() {
-  const [offsetDays, setOffsetDays] = useState(0); // Changed to offsetDays
+  const [offsetDays, setOffsetDays] = useState(0);
   const navigation = useNavigation();
 
-  const getCurrentDate = () => moment().add(offsetDays, "days"); // Changed to days
+  const getCurrentDate = () => moment.utc().add(offsetDays, "days");
 
   const startDate = getCurrentDate().startOf("day");
   const endDate = getCurrentDate().endOf("day");
@@ -37,7 +37,8 @@ function Today() {
   const formattedStartDate = startDate.format("MMM Do");
   const formattedStartDateYear = startDate.format("YYYY MMM Do");
 
-  const date = today.format("MMM Do");
+  const date = moment.utc().add(offsetDays, "days").format("MMM Do");
+  const [random, setRandom] = useState(0);
 
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -123,6 +124,7 @@ function Today() {
       const data = {
         title: getDayOfWeek(responseJson.day),
         assets: responseJson.dishes.map((dishItem) => ({
+          dish_id: dishItem?.dish?.id,
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} mins`,
           imgUri: { uri: dishItem.dish.imageUrl },
@@ -140,25 +142,7 @@ function Today() {
       };
 
       fetchData();
-    }, [offsetDays])
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await handleFetchListDish();
-    };
-
-    fetchData();
-  }, [offsetDays]);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await handleFetchListDish();
-      };
-
-      fetchData();
-    }, [navigation])
+    }, [offsetDays, navigation, random])
   );
 
   return (
@@ -168,6 +152,7 @@ function Today() {
           date={date}
           setOffsetWeek={setOffsetDays}
           offsetWeek={offsetDays}
+          setRandom={setRandom}
         />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
@@ -204,10 +189,12 @@ function Today() {
           <Animated.View className="px-[10px]" style={animatedStyle}>
             {dataDish?.assets.map((asset, assetIndex) => (
               <ListDishItem
+                id={asset.dish_id}
                 key={assetIndex}
                 name={asset.name}
                 time={asset.time}
                 imgUri={asset.imgUri}
+                setRandom={setRandom}
               />
             ))}
           </Animated.View>

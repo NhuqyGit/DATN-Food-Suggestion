@@ -23,15 +23,16 @@ import { AsyncStorageService } from "../../../../utils/AsynStorage";
 function ThisWeek() {
   const navigation = useNavigation();
   const [offsetWeek, setOffsetWeek] = useState(0);
-  const startDate = moment().startOf("week").add(offsetWeek, "weeks");
-  const endDate = moment().endOf("week").add(offsetWeek, "weeks");
+  const startDate = moment.utc().startOf("week").add(offsetWeek, "weeks");
+  const endDate = moment.utc().endOf("week").add(offsetWeek, "weeks");
   const formattedStartDateYear = startDate.format("YYYY MMM Do");
-  const formattedStartDate = startDate.format("MMM Do");
+  const formattedStartDate = startDate.utc().format("MMM Do");
   const formattedEndDate = endDate.format("MMM Do");
   const [indexDay, setIndexDate] = useState(0);
   const date = `${formattedStartDate.toLocaleString()}  -  ${formattedEndDate.toLocaleString()}`;
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [random, setRandom] = useState(0);
 
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -69,7 +70,7 @@ function ThisWeek() {
       icon: "plussquareo",
       onPress: () => {
         navigation.navigate("AddScreen");
-        const planDate = startDate.clone().add(indexDay + 1, "days");
+        const planDate = startDate.clone().add(indexDay, "days");
         const formattedPlanDate = planDate.format("YYYY MMM Do");
         const date = `${formattedPlanDate} `;
         AsyncStorage.setItem("planDate", date);
@@ -102,9 +103,11 @@ function ThisWeek() {
 
     if (response) {
       const responseJson = await response.json();
+
       const data = responseJson.map((item) => ({
         title: item.day,
         assets: item.dishes.map((dishItem) => ({
+          dishId: dishItem.dishId,
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} mins`,
           imgUri: { uri: dishItem.dish.imageUrl },
@@ -120,16 +123,7 @@ function ThisWeek() {
         await handleFetchListDish();
       };
       fetchData();
-    }, [offsetWeek])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await handleFetchListDish();
-      };
-      fetchData();
-    }, [navigation])
+    }, [offsetWeek, navigation, random])
   );
 
   return (
@@ -139,6 +133,7 @@ function ThisWeek() {
           date={date}
           setOffsetWeek={setOffsetWeek}
           offsetWeek={offsetWeek}
+          setRandom={setRandom}
         />
       </View>
       <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
@@ -174,10 +169,13 @@ function ThisWeek() {
               <Animated.View className=" px-[10px]" style={animatedStyle}>
                 {day.assets.map((asset, assetIndex) => (
                   <ListDishItem
+                    day={day.title}
+                    id={asset.dishId}
                     key={assetIndex}
                     name={asset.name}
                     time={asset.time}
                     imgUri={asset.imgUri}
+                    setRandom={setRandom}
                   />
                 ))}
               </Animated.View>

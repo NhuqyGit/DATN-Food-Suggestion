@@ -12,26 +12,29 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../theme/index";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {useGetCollectionsByUserIdQuery, useAddDishToCollectionsMutation } from "../../slices/collectionSlice"
+import {
+  useGetCollectionsByUserIdQuery,
+  useAddDishToCollectionsMutation,
+} from "../../slices/collectionSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CollectionScreen = ({ navigation, route }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userId, setUserId] = useState(null);
-  const {dishId} = route.params;
-  
-  console.log("DishID", dishId);
+  const { dishId } = route.params;
+
+  // console.log("DishID", dishId);
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem('user_id');
+        const storedUserId = await AsyncStorage.getItem("user_id");
         if (storedUserId) {
-          console.log("User id: ", storedUserId);
+          // console.log("User id: ", storedUserId);
           setUserId(storedUserId);
         }
       } catch (error) {
-        console.error('Failed to fetch userId from AsyncStorage:', error);
+        console.error("Failed to fetch userId from AsyncStorage:", error);
       }
     };
 
@@ -45,7 +48,8 @@ const CollectionScreen = ({ navigation, route }) => {
     refetch,
   } = useGetCollectionsByUserIdQuery(userId);
 
-  const [addDishToCollections, { isLoading: isAdding }] = useAddDishToCollectionsMutation();
+  const [addDishToCollections, { isLoading: isAdding }] =
+    useAddDishToCollectionsMutation();
 
   useFocusEffect(
     useCallback(() => {
@@ -69,8 +73,12 @@ const CollectionScreen = ({ navigation, route }) => {
 
   const handleDone = async () => {
     try {
-      await addDishToCollections({ userId, dishId, collectionIds: selectedOptions }).unwrap();
-      console.log("Dish added to collections:", selectedOptions);
+      await addDishToCollections({
+        userId,
+        dishId,
+        collectionIds: selectedOptions,
+      }).unwrap();
+      // console.log("Dish added to collections:", selectedOptions);
       navigation.goBack();
     } catch (error) {
       console.error("Failed to add dish to collections:", error);
@@ -123,9 +131,13 @@ const CollectionScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
-          <Text style={styles.buttonText}>{isAdding ? 'Saving...' : 'Done'}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.doneButton}
+        onPress={handleDone}
+        disabled={isAdding}
+      >
+        <Text style={styles.buttonText}>{isAdding ? "Saving..." : "Done"}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
