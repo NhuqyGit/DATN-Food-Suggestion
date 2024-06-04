@@ -65,10 +65,6 @@ function SignInScreen() {
         await AsyncStorageService.setToken(responseJson?.accessToken)
         await AsyncStorage.setItem('user_id', responseJson?.id.toString())
 
-        // Update user notificationToken
-        const token = await AsyncStorage.getItem("expoPushToken")
-        
-
         // Get user
         const responseGetUserById = await fetch(
           `${HOST}/users/${responseJson.id}`,
