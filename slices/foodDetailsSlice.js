@@ -21,9 +21,12 @@ export const foodDetailsSlice = createApi({
     getAllFoodDetails: builder.query({
       query: () => '/dish',
     }),
+    getRelatedDish: builder.query({
+      query: (dishId) => `/dish/related/${dishId}`
+    })
   }),
 });
 
-export const { useGetAllFoodDetailsQuery } = foodDetailsSlice;
+export const { useGetAllFoodDetailsQuery, useGetRelatedDishQuery } = foodDetailsSlice;
 
 export default foodDetailsSlice;

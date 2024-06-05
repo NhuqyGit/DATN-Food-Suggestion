@@ -5,13 +5,18 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../theme/index";
 import { useCreateCollectionMutation } from "../../slices/collectionSlice";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddCollectionScreen = ({ navigation }) => {
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDes, setNewCollectionDes] = useState("");
   const [errorTxt, setError] = useState("");
@@ -21,20 +26,19 @@ const AddCollectionScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem('user_id');
+        const storedUserId = await AsyncStorage.getItem("user_id");
         if (storedUserId) {
-          console.log("User id: ", storedUserId);
           setUserId(storedUserId);
         }
       } catch (error) {
-        console.error('Failed to fetch userId from AsyncStorage:', error);
+        console.error("Failed to fetch userId from AsyncStorage:", error);
       }
     };
 
     fetchUserId();
   }, []);
 
-  const idUser = parseInt(userID)
+  const idUser = parseInt(userID);
   const handleOk = async () => {
     try {
       if (!idUser) {
@@ -42,19 +46,27 @@ const AddCollectionScreen = ({ navigation }) => {
         return;
       }
 
-      console.log("new collection name: ", newCollectionName);
-
-      await createCollection({ userId: idUser, name: newCollectionName, description: newCollectionDes }).unwrap();
+      await createCollection({
+        userId: idUser,
+        name: newCollectionName,
+        description: newCollectionDes,
+      }).unwrap();
 
       setNewCollectionName("");
       setNewCollectionDes("");
       setError("");
       navigation.goBack();
     } catch (error) {
-      if (error?.data?.message && typeof error.data.message === 'string' && error.data.message.includes('Collection already exists')) {
-        setError('Collection name already exists.\nPlease choose a different name for your collection.');
+      if (
+        error?.data?.message &&
+        typeof error.data.message === "string" &&
+        error.data.message.includes("Collection already exists")
+      ) {
+        setError(
+          "Collection name already exists.\nPlease choose a different name for your collection."
+        );
       } else {
-        setError('Failed to create collection. Please try again.');
+        setError("Failed to create collection. Please try again.");
       }
     }
   };
@@ -67,35 +79,43 @@ const AddCollectionScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleCancel} style={styles.header}>
-        <Ionicons name="close-circle-outline" size={30} color="gray" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Add collection</Text>
-      <View style={styles.subcontainer}>
-        {errorTxt ? <Text style={styles.errorText}>{errorTxt}</Text> : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Name your collection"
-          value={newCollectionName}
-          onChangeText={(text) => {
-            setError("");
-            setNewCollectionName(text);
-          }}
-        />
-        <TextInput
-          style={[styles.input, styles.descriptionInput]}
-          placeholder="Add a description (optional)"
-          multiline={true}
-          numberOfLines={6}
-          value={newCollectionDes}
-          onChangeText={setNewCollectionDes}
-        />
-        <TouchableOpacity style={styles.saveButton} onPress={handleOk} disabled={isLoading}>
-          <Text style={styles.buttonText}>{isLoading ? 'Saving...' : 'Save'}</Text>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleCancel} style={styles.header}>
+          <Ionicons name="close-circle-outline" size={30} color="gray" />
         </TouchableOpacity>
+        <Text style={styles.title}>Add collection</Text>
+        <View style={styles.subcontainer}>
+          {errorTxt ? <Text style={styles.errorText}>{errorTxt}</Text> : null}
+          <TextInput
+            style={styles.input}
+            placeholder="Name your collection"
+            value={newCollectionName}
+            onChangeText={(text) => {
+              setError("");
+              setNewCollectionName(text);
+            }}
+          />
+          <TextInput
+            style={[styles.input, styles.descriptionInput]}
+            placeholder="Add a description (optional)"
+            multiline={true}
+            numberOfLines={6}
+            value={newCollectionDes}
+            onChangeText={setNewCollectionDes}
+          />
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleOk}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? "Saving..." : "Save"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -155,9 +175,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

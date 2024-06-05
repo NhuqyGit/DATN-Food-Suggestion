@@ -9,6 +9,13 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { theme } from "../../../theme/index";
 function IngredientsTab({ ingredients }) {
+  if (!ingredients || ingredients?.length === 0) {
+    return (
+      <View style={styles.noDirectionsContainer}>
+        <Text style={styles.noDirectionsText}>No ingredients available</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -41,7 +48,6 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
     paddingHorizontal: 15,
-    //marginBottom: 12,
     backgroundColor: "white",
     flex: 1,
   },
@@ -63,6 +69,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     fontSize: 16,
+  },
+  noDirectionsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "white",
+    padding: 16,
+  },
+  noDirectionsText: {
+    fontSize: 16,
+    color: 'gray',
   },
 });
 export default IngredientsTab;

@@ -21,13 +21,11 @@ const CollectionScreen = ({ navigation, route }) => {
   const [userId, setUserId] = useState(null);
   const {dishId} = route.params;
   
-  console.log("DishID", dishId);
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const storedUserId = await AsyncStorage.getItem('user_id');
         if (storedUserId) {
-          console.log("User id: ", storedUserId);
           setUserId(storedUserId);
         }
       } catch (error) {
@@ -125,7 +123,7 @@ const CollectionScreen = ({ navigation, route }) => {
       </ScrollView>
       <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
           <Text style={styles.buttonText}>{isAdding ? 'Saving...' : 'Done'}</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 };
