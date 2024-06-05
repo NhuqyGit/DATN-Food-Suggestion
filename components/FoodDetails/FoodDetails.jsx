@@ -175,7 +175,18 @@ function FoodDetailsScreen({ navigation, route }) {
               <OverviewTab foodDetails={foodDetails} navigation={navigation} />
             )}
           </Tab.Screen>
-          <Tab.Screen name="Ingredients">
+          <Tab.Screen name="Ingredients"
+            options={{
+              tabBarLabel: ({ focused }) => {
+               return(
+                <View>
+                  <Text style={{color: focused ? "red": "gray"}}>Ingredients</Text>
+                  <Text>2 Items</Text>
+                </View>
+               )  
+              },
+            }}
+          >
             {() => (
               <IngredientsTab ingredients={foodDetails.dishToIngredients} />
             )}

@@ -6,11 +6,11 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native'
-import React from 'react'
+import React, {forwardRef} from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 
-function Header() {
+function Header(props, ref) {
   const navigation = useNavigation()
 
   const generateBoxShadowStyle = (
@@ -40,7 +40,7 @@ function Header() {
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
   return (
-    <View style={styles.container}>
+    <View ref={ref} style={[styles.container, props.style]}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Search')
@@ -109,5 +109,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Header
+export default forwardRef(Header)
 

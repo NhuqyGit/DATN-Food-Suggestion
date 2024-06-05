@@ -7,185 +7,150 @@ import SvgPer4 from "../assets/svgs/Personalize/per4";
 import PerDone from "./PerDone";
 import PerScreen from "./PerScreen";
 import { AsyncStorageService } from "../utils/AsynStorage";
+import { useEffect, useState } from "react";
+import { HOST } from "../config";
 
 const Stack = createNativeStackNavigator();
 
-const step1 = [
-  {
-    id: 1,
-    name: "???",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 2,
-    name: "Việt Nam",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 3,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 4,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 5,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 6,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 7,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 8,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 9,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 10,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 11,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 12,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-];
-const step2 = [
-  {
-    id: 1,
-    name: "Concak",
-    image: require("../assets/images/PersonalizeScreen/deep-dish-pizza-chicago.png"),
-    status: false,
-  },
-  {
-    id: 2,
-    name: "Việt Nam",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 3,
-    name: "Loremadf",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 4,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 5,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 6,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 7,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 8,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 9,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 10,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 11,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-  {
-    id: 12,
-    name: "Lorem",
-    image: require("../assets/images/PersonalizeScreen/tasty-butter-chicken-curry-dish-from-indian-cuisine-1277362334.jpg"),
-    status: false,
-  },
-];
-const ques = [
-  {
-    id: 0,
-    question: "What are your favorite cuisines?",
-    listAns: step1,
-    svg: SvgPer1,
-  },
-  {
-    id: 1,
-    question: "What are your favorite cuisidfasdfnes?",
-    listAns: step2,
-    svg: SvgPer2,
-  },
-  {
-    id: 2,
-    question: "What are your favorite cuisidfasdfnes?",
-    listAns: step1,
-    svg: SvgPer3,
-  },
-  {
-    id: 3,
-    question: "What are your favorite cuisidfasdfnes?",
-    listAns: step2,
-    svg: SvgPer4,
-  },
-];
-
 export default function Personalization({ setIsDone }) {
+  const [diets, setDiets] = useState(null)
+  const [allergies, setAllergies] = useState(null)
+  const [cuisines, setCuisines] = useState(null)
+
+  const [ques, setQues] = useState([
+    {
+      id: 0,
+      question: "What are your favorite cuisines?",
+      listAns: null,
+      svg: SvgPer1,
+    },
+    {
+      id: 1,
+      question: "What are your favorite cuisidfasdfnes?",
+      listAns: null,
+      svg: SvgPer2,
+    },
+    {
+      id: 2,
+      question: "What are your favorite cuisidfasdfnes?",
+      listAns: null,
+      svg: SvgPer3,
+    },
+    // {
+    //   id: 3,
+    //   question: "What are your favorite cuisidfasdfnes?",
+    //   listAns: step2,
+    //   svg: SvgPer4,
+    // },
+  ]);
+
+
+  const handleFetchDiets = async () => {
+    const token = await AsyncStorageService.getAccessToken();
+    // const userId = await AsyncStorageService.getUserId();
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    };
+    try{
+        const response = await fetch(`${HOST}/diets`, {headers})
+        const data = await response.json();
+        if (data.length > 0){
+            const refactorData = data.map((m) => {
+                const { id, name, imgUrl } = m;
+                return {id, name: name, imgUrl, isSelect: false}
+            })
+            // ques[0].listAns = refactorData
+            setQues((prevQues) => {
+              const updatedQues = [...prevQues];
+              updatedQues[1].listAns = refactorData;
+              return updatedQues;
+            });
+            // setDiets(refactorData)
+        }
+    }catch (error) {
+        console.error('Error fetching data record diet:', error);
+    }
+  }
+  
+  const handleFetchAllergies = async () => {
+    const token = await AsyncStorageService.getAccessToken();
+    // const userId = await AsyncStorageService.getUserId();
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    };
+    try{
+        const response = await fetch(`${HOST}/allergies`, {headers})
+        const data = await response.json();
+        // console.log("data: ",data)
+        if (data.length > 0){
+            const refactorData = data.map((m) => {
+                const { id, allergiesName, imgUrl } = m;
+                return {id, name: allergiesName, imgUrl, isSelect: false}
+            })
+            // ques[1].listAns = refactorData
+            setQues((prevQues) => {
+              const updatedQues = [...prevQues];
+              updatedQues[2].listAns = refactorData;
+              return updatedQues;
+            });
+            // setAllergies(refactorData)
+        }
+    }catch (error) {
+        console.error('Error fetching data record allergies:', error);
+    }
+  }
+
+  const handleFetchCuisines = async () => {
+    const token = await AsyncStorageService.getAccessToken();
+    // const userId = await AsyncStorageService.getUserId();
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    };
+    try{
+        const response = await fetch(`${HOST}/cuisines`, {headers})
+        const data = await response.json();
+        // console.log("data: ",data)
+        if (data.length > 0){
+            const refactorData = data.map((m) => {
+                const { id, name, imgUrl } = m;
+                return {id, name: name, imgUrl, isSelect: false}
+            })
+            // ques[1].listAns = refactorData
+            setQues((prevQues) => {
+              const updatedQues = [...prevQues];
+              updatedQues[0].listAns = refactorData;
+              return updatedQues;
+            });
+            // setAllergies(refactorData)
+        }
+    }catch (error) {
+        console.error('Error fetching data record allergies:', error);
+    }
+  }
+
+  const handleAnswerChange = (updatedAnswer, quesId) => {
+    setQues(prevQues =>
+      prevQues.map(q =>
+        q.id === quesId
+          ? {
+              ...q,
+              listAns: q.listAns.map(ans =>
+                ans.id === updatedAnswer.id ? updatedAnswer : ans
+              )
+            }
+          : q
+      )
+    );
+    
+  }
+
+  // console.log(ques[0].listAns)
+  useEffect(()=>{
+    handleFetchDiets()
+    handleFetchAllergies()
+    handleFetchCuisines()
+  }, [])
+
   const listStackPer = ques.map((s, i) => {
     return (
       <Stack.Screen
@@ -195,7 +160,7 @@ export default function Personalization({ setIsDone }) {
           headerShown: false,
         }}
       >
-        {(props) => <PerScreen {...props} ques={s} quesLen={ques.length} />}
+        {(props) => <PerScreen {...props} listQues={ques} ques={s} quesLen={ques.length} handleAnswerChange={handleAnswerChange}/>}
       </Stack.Screen>
     );
   });
