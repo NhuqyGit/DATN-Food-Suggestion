@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, Image, View, Platform } from 'react-native'
 import React from 'react'
 
-const Collection = ({props, navigation}) => {
+const Collection = ({props, navigation, isProtected = false}) => {
     const generateBoxShadowStyle = (
         xOffset,
         yOffset,
@@ -31,14 +31,14 @@ const Collection = ({props, navigation}) => {
     return (
         <TouchableOpacity
             onPress={() => {
-                navigation.navigate('PersonalList', { id: 1, name: 'My recipes' })
+                navigation.navigate(isProtected?'PersonalList':'List', { id: props.id, name: props.collectionName })
             }}
             style={[boxShadow, {backgroundColor: 'white', borderRadius: 10, marginBottom: 15}]}>
             <View style={{paddingHorizontal: 20, paddingVertical: 8}}>
                 <View style={[styles.container]}>
                     <View style={styles.infoCollection}>
-                        <Text style={styles.title}>{props.nameCollection}</Text>
-                        <Text style={styles.des}>{props.num} RECIPES</Text>
+                        <Text style={styles.title}>{props.collectionName}</Text>
+                        <Text style={styles.des}>{props.id} RECIPES</Text>
                     </View>
                     <Image style={styles.imageCollection} source={require('../../assets/images/Profile/avatarDefault.png')}/>
                 </View>
