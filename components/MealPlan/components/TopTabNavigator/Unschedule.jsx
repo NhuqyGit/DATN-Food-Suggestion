@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, ScrollView } from "react-native";
-import PlanDate from "../PlanDate";
-
+import React, { useCallback, useEffect, useState } from "react";
+import { View, ScrollView } from "react-native";
 import ListDishItem from "../ListDishItem.jsx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../../utils/AsynStorage.js";
 import { HOST } from "../../../../config.js";
+import { useFocusEffect } from "@react-navigation/native";
 
 function Unschedule() {
-  const [dataDish, setDataDish] = useState();
+  const [dataDish, setDataDish] = useState([]);
+  const [random, setRandom] = useState(0);
 
   const handleFetchListDish = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
@@ -26,36 +25,41 @@ function Unschedule() {
     if (response) {
       const responseJson = await response.json();
 
-      const data = responseJson[responseJson.length - 1].dishes?.map(
-        (dishItem) => ({
-          name: dishItem.dish.dishName,
-          time: `${dishItem.dish.cookingTime} mins`,
-          imgUri: { uri: dishItem.dish.imageUrl },
-        })
-      );
+      const unscheduledDishes = responseJson[
+        responseJson.length - 1
+      ].dishes?.map((dishItem) => ({
+        dish_id: dishItem?.dish?.id,
+        name: dishItem.dish.dishName,
+        time: `${dishItem.dish.cookingTime} mins`,
+        imgUri: { uri: dishItem.dish.imageUrl },
+      }));
 
-      setDataDish(data);
+      setDataDish(unscheduledDishes || []);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await handleFetchListDish();
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await handleFetchListDish();
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, [random])
+  );
+
   return (
     <View className="py-4 h-full bg-white">
-      <View className="bg-[#ECE9E9] w-full h-[1] mt-4" />
       <ScrollView>
         <View className=" px-[10px]">
           {dataDish?.map((asset, assetIndex) => (
             <ListDishItem
+              id={asset.dish_id}
               key={assetIndex}
               name={asset.name}
               time={asset.time}
               imgUri={asset.imgUri}
+              setRandom={setRandom}
             />
           ))}
         </View>

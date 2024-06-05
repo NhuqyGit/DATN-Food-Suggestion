@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import {
   Menu,
@@ -57,7 +57,7 @@ function RecipeListItem({ item }) {
               </View>
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption onSelect={() => alert(`Save`)} text='Save' />
+              <MenuOption onSelect={() => alert(`Edit`)} text='Edit' />
               <MenuOption onSelect={() => alert(`Delete`)}>
                 <Text style={{ color: 'red' }}>{item.name}</Text>
               </MenuOption>
@@ -75,9 +75,15 @@ function RecipeListItem({ item }) {
 }
 
 function PersonalReceipeList({ route, navigation }) {
-  const ListID = route.params.id
-  const listName = route.params.name
+  const collectionID = route.params.id
+  const collectionName = route.params.name
 
+  useEffect(()=>{
+    const fetch = async()=>{
+
+    }
+    fetch()
+  },[])
   // get data
   data = [
     { id: 0, name: 'a', date: '12/54/8' },
@@ -133,7 +139,7 @@ function PersonalReceipeList({ route, navigation }) {
             <MaterialIcons name='add' size={35} color='white' />
           </TouchableOpacity>
           <Text style={{ ...FONTS.h1, paddingVertical: 20, color: 'white' }}>
-            {listName}
+            {collectionName}
           </Text>
         </View>
 

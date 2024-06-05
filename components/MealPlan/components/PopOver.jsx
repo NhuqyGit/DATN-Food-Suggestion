@@ -4,8 +4,11 @@ import { View, Text, TouchableOpacity } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 import BottomSheet from "../../BottomSheet/BottomSheet";
+import { AsyncStorageService } from "../../../utils/AsynStorage";
+import { HOST } from "../../../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function PopOver() {
+function PopOver({ setRandom }) {
   const [modalVisible, setModalVisible] = useState(false);
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -25,11 +28,33 @@ function PopOver() {
 
       <BottomSheet closePopUp={handleCloseModal} modalVisible={modalVisible}>
         <View className="px-4 pb-3 pt-2 h-[150px]">
-          <View className="flex flex-row justify-between mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
-            <Text className="text-red-600 text-lg font-semibold">
-              Delete All
-            </Text>
-            <Feather name="trash-2" size={26} color="red" />
+          <View>
+            <TouchableOpacity
+              onPress={async () => {
+                const user_id = await AsyncStorage.getItem("user_id");
+
+                const token = await AsyncStorageService.getAccessToken();
+                const response = await fetch(
+                  `${HOST}/mealplan/user/${user_id}`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                setRandom(Math.random(0, 10) + 1);
+                handleCloseModal();
+              }}
+              className="flex flex-row justify-between mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
+            >
+              <Text className="text-red-600 text-lg font-semibold">
+                Delete All
+              </Text>
+              <Feather name="trash-2" size={26} color="red" />
+            </TouchableOpacity>
           </View>
           <View className="flex flex-row justify-between mt-3 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
             <Text className="text-lg font-semibold">Sort by cooking time</Text>
