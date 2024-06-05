@@ -25,7 +25,8 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.anonymous.client"
+      "package": "com.anonymous.client",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,7 +37,6 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-
       ],
       [
         "expo-build-properties",
@@ -48,8 +48,12 @@
             "newArchEnabled": true
           }
         }
-
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f7fa849b-b647-48b9-a495-7f13704a4389"
+      }
+    }
   }
 }
