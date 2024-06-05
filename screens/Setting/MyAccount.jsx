@@ -11,6 +11,35 @@ const MyAccount = ({ navigation }) => {
   const userInfo = useSelector(selectUserInfo);
   const dispatch = useDispatch();
 
+  const cancelNotification = async()=>{
+    const token = await AsyncStorageService.getAccessToken();
+    try {
+      const response = await fetch(`${HOST}/users/${userInfo?.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          notificationToken: '',
+        }),
+      });
+
+      const responseJson = await response.json();
+
+      if (responseJson.error) {
+        console.log(responseJson.message);
+      } else {
+        // dispatch(setUserInfo({ ...userInfo, isLogin: true }));
+        // navigation.navigate('Home')
+        AsyncStorageService.clearToken()
+        useDispatch(setUserInfo(null));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <View style={styles.container}>
@@ -65,9 +94,8 @@ const MyAccount = ({ navigation }) => {
         <TouchableOpacity
           style={styles.deleteAccount}
           onPress={() => {
-            useDispatch(setUserInfo({ ...userInfo, isLogin: false }));
-            AsyncStorageService.clearToken()
-          }}
+            cancelNotification()
+      }}
         >
           <MaterialIcons name="delete-forever" size={24} color="red" />
           <Text style={{ fontWeight: "500", marginLeft: 5, color: "#231F20" }}>
