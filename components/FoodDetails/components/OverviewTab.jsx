@@ -1,13 +1,27 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Modal,
+  TextInput,
+  Alert,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../../theme/index";
 import { setCollectionButtonText } from "../../../slices/modalSlice";
-import { useGetAllFoodDetailsQuery } from "../../../slices/foodDetailsSlice"
+import { useGetRelatedDishQuery } from "../../../slices/foodDetailsSlice";
 import SmallRecommendItem from "../../RecommendItem/SmallRecommendItem";
 import RecommendSmallSkeleton from "../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton";
+import {
+  useCreateReportMutation,
+  useGetReportByUserIdAndDishIdQuery,
+} from "../../../slices/reportSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const reportReasons = [
   "Inappropriate Content",
@@ -21,42 +35,85 @@ const reportReasons = [
   "Others",
 ];
 
-function OverviewTab({ foodDetails, navigation}) {
-  const collectionButtonText = useSelector(state => state.modal.collectionButtonText);
+function OverviewTab({ foodDetails, navigation }) {
+  const collectionButtonText = useSelector(
+    (state) => state.modal.collectionButtonText
+  );
   const [isReporting, setReporting] = useState(false);
-  const dispatch = useDispatch();
-  const [selectedReasons, setSelectedReasons] = useState([]);
-  const handleAddToCollection = () => {
-    dispatch(setCollectionButtonText("Update Collections"));
-    navigation.navigate("CollectionScreen");
-  };
+  const [selectedReason, setSelectedReason] = useState(null);
+  const [otherReason, setOtherReason] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [createReport] = useCreateReportMutation();
+  const { data: existingReport, refetch } = useGetReportByUserIdAndDishIdQuery(
+    { userId: parseInt(userId), dishId: foodDetails?.id },
+    { skip: !userId }
+  );
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem("user_id");
+        if (storedUserId) {
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch userId from AsyncStorage:", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      refetch();
+    }
+  }, [userId, refetch]);
 
   const {
     data: relatedDishs,
     isLoading: relatedLoading,
     isError: relatedError,
-  } = useGetAllFoodDetailsQuery()
+  } = useGetRelatedDishQuery(foodDetails?.id);
 
   const cancelReporting = () => {
     setReporting(false);
-    setSelectedReasons([]);
+    setSelectedReason([]);
+    setOtherReason("");
+    refetch();
   };
 
   const toggleReason = (reason) => {
-    if (selectedReasons.includes(reason)) {
-      setSelectedReasons(selectedReasons.filter((r) => r !== reason));
-    } else {
-      setSelectedReasons([...selectedReasons, reason]);
-    }
+    setSelectedReason(reason === selectedReason ? null : reason);
   };
-  const handleReportSubmission = () => {
-    alert(`Report Issued for Reasons: ${selectedReasons.join(", ")}`);
+
+  const handleReportSubmission = async () => {
+    if (selectedReason?.length === 0) {
+      Alert.alert("Please select at least one reason.");
+      return;
+    }
+    refetch();
+    if (existingReport && existingReport?.length > 0) {
+      Alert.alert("You have already reported this dish.");
+      cancelReporting();
+      return;
+    }
+    const content =
+      selectedReason === "Others"
+        ? `${selectedReason}: ${otherReason}`
+        : selectedReason;
+    await createReport({
+      userId: parseInt(userId),
+      dishId: parseInt(foodDetails?.id),
+      content,
+    });
+    Alert.alert("Report issued successfully.");
     cancelReporting();
   };
 
   const startReporting = () => {
     setReporting(true);
   };
+
   const renderReportModal = () => (
     <Modal
       animationType="slide"
@@ -67,32 +124,32 @@ function OverviewTab({ foodDetails, navigation}) {
       <View style={styles.modalContainer}>
         <TouchableOpacity style={styles.overlay} onPress={cancelReporting} />
         <View style={styles.innerReportContainer}>
-          <TouchableOpacity style={styles.closeIcon} onPress={cancelReporting}>
-            <Icon name="close" size={20} color="black" />
-          </TouchableOpacity>
           <Text style={styles.modalTitle}>Select Reasons for Report</Text>
-          {reportReasons?.map((reason, index) => (
+          <TouchableOpacity style={styles.closeIcon} onPress={cancelReporting}>
+            <Icon name="close" size={22} color="black" />
+          </TouchableOpacity>
+          {reportReasons.map((reason, index) => (
             <TouchableOpacity
               key={index}
               style={styles.reasonOptionContainer}
               onPress={() => toggleReason(reason)}
             >
-              {selectedReasons.includes(reason) ? (
-                <Icon
-                  name="check-square-o"
-                  size={20}
-                  color={theme.colors.secondary}
-                />
-              ) : (
-                <Icon
-                  name="square-o"
-                  size={20}
-                  color={theme.colors.secondary}
-                />
-              )}
+              <Icon
+                name={selectedReason === reason ? "dot-circle-o" : "circle-o"}
+                size={24}
+                color={theme.colors.secondary}
+              />
               <Text style={styles.reasonOptionText}>{reason}</Text>
             </TouchableOpacity>
           ))}
+          {selectedReason === "Others" && (
+            <TextInput
+              style={styles.otherReasonInput}
+              placeholder="Enter your reason"
+              value={otherReason}
+              onChangeText={setOtherReason}
+            />
+          )}
           <TouchableOpacity
             style={styles.reportButton}
             onPress={handleReportSubmission}
@@ -103,24 +160,12 @@ function OverviewTab({ foodDetails, navigation}) {
       </View>
     </Modal>
   );
-
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity
-        style={styles.addToCollectionButton}
-        onPress={handleAddToCollection}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollViewContainer}
       >
-        <AntIcon
-          name="addfolder"
-          size={20}
-          color={theme.colors.secondary}
-        />
-        <Text style={styles.collectionButtonText}>
-          {collectionButtonText}
-        </Text>
-      </TouchableOpacity> */}
-      {/* <View style={styles.line} /> */}
-      <ScrollView style={{marginTop: 5}}>
         <View style={styles.infoItem}>
           <Icon
             name="star"
@@ -165,24 +210,40 @@ function OverviewTab({ foodDetails, navigation}) {
           <Text style={styles.value}>{foodDetails?.calories}</Text>
         </View>
 
-        <ScrollView
-          style={styles.listItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {relatedLoading ? (
-            <RecommendSmallSkeleton total={5} />
-          ) : (
+        <View>
+          {relatedDishs && relatedDishs.length > 0 && (
             <>
-              {relatedDishs?.map((item) => (
-                <SmallRecommendItem key={item.id} item={item} />
-              ))}
+              <Text style={styles.relatedTxt}>Related dishes</Text>
+              <ScrollView
+                style={styles.listItem}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {relatedLoading || relatedError ? (
+                  <RecommendSmallSkeleton total={5} />
+                ) : (
+                  <>
+                    {relatedDishs.map((item) => (
+                      <SmallRecommendItem key={item.id} item={item} />
+                    ))}
+                  </>
+                )}
+              </ScrollView>
             </>
           )}
-        </ScrollView>
-        <TouchableOpacity onPress={startReporting}>
-          <Text style={styles.reportIssuer}>Report Issuer</Text>
-        </TouchableOpacity>
+        </View>
+
+        <View style={styles.reportButtonContainer}>
+          {existingReport && existingReport.length > 0 ? (
+            <Text style={styles.alreadyReportedText}>
+              * Thank you. You have already reported this dish!
+            </Text>
+          ) : (
+            <TouchableOpacity onPress={startReporting}>
+              <Text style={styles.reportIssuer}>Report Issuer</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
       {renderReportModal()}
     </View>
@@ -193,12 +254,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingHorizontal: 15,
+    flexDirection: "column",
   },
-  addToCollectionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 25,
+  scrollViewContainer: {
+    marginTop: 5,
+    flex: 1,
   },
+  // addToCollectionButton: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   marginVertical: 25,
+  // },
   collectionButtonText: {
     color: theme.colors.secondary,
     fontSize: 16,
@@ -224,11 +290,6 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
   },
-  reportIssuer: {
-    color: theme.colors.secondary,
-    fontSize: 16,
-    marginTop: 20,
-  },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -240,66 +301,84 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   line: {
-      borderBottomWidth: 0.5,
-      borderBottomColor: theme.colors.secondary,
-    },
-    reportIssuer: {
-      color: theme.colors.secondary,
-      fontSize: 16,
-      marginBottom: 90,
-      paddingLeft: 10,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: "flex-end",
-      backgroundColor: "transparent",
-    },
-    overlay: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    innerReportContainer: {
-      backgroundColor: "white",
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      padding: 20,
-      height: 500,
-    },
-    closeIcon: {
-      position: "absolute",
-      top: 15,
-      right: 20,
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 15,
-    },
-    reasonOptionContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 10,
-    },
-    reasonOptionText: {
-      fontSize: 16,
-      marginLeft: 10,
-    },
-    reportButton: {
-      backgroundColor: theme.colors.secondary,
-      padding: 15,
-      width: "40%",
-      borderRadius: 5,
-      alignItems: "center",
-      alignSelf:"center",
-      marginTop: 20,
-    },
-    reportButtonText: {
-      color: "white",
-      fontSize: 16,
-    },
-    listItem: {
-      marginTop: 10,
-      paddingLeft: 5,
-    },
-  });
+    borderBottomWidth: 0.5,
+    borderBottomColor: theme.colors.secondary,
+  },
+  reportIssuer: {
+    color: theme.colors.secondary,
+    fontSize: 16,
+    marginVertical: 20,
+    paddingLeft: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "transparent",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  innerReportContainer: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    height: 500,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 15,
+    right: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  reasonOptionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  reasonOptionText: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  reportButton: {
+    backgroundColor: theme.colors.secondary,
+    padding: 15,
+    width: "40%",
+    borderRadius: 5,
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  reportButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  listItem: {
+    marginTop: 10,
+    paddingLeft: 5,
+  },
+  reportButtonContainer: {
+    justifyContent: "flex-end",
+    marginBottom: 20,
+  },
+
+  alreadyReportedText: {
+    color: "red",
+    fontSize: 15,
+    marginVertical: 20,
+    fontStyle: "italic",
+  },
+  relatedTxt: {
+    fontSize: 22,
+    marginLeft: 5,
+    marginTop: 10,
+    fontWeight: "500",
+    color: theme.colors.secondary,
+  },
+});
 export default OverviewTab;

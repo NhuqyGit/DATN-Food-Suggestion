@@ -10,6 +10,7 @@ import OverviewTab from "../../components/FoodDetails/components/OverviewTab";
 import NoteTab from "../../components/FoodDetails/components/NoteTab";
 import ReviewsTab from "../../components/FoodDetails/components/ReviewsTab";
 import IngredientsTab from "../../components/FoodDetails/components/IngredientsTab";
+import DirectionTab from "./components/DirectionTab";
 import SaveModal from "../SaveModal/SaveModal";
 import {
   useIsDishInCollectionQuery,
@@ -21,6 +22,7 @@ import {
   useDeleteDishFromMealPlanMutation,
   useGetMealplanIdByUserIdQuery,
 } from "../../slices/mealPlanSlice";
+
 import { useFocusEffect } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
@@ -86,7 +88,6 @@ function FoodDetailsScreen({ navigation, route }) {
     setModalVisible(!isModalVisible);
   };
 
-  // console.log(mealID);
   const handleAddToMealPlan = async () => {
     if (!isDishInMealPlan?.isInMealPlan) {
       await addDishToMealPlan({ mealPlanId: mealID, dishId: foodDetails.id });
@@ -120,8 +121,8 @@ function FoodDetailsScreen({ navigation, route }) {
 
       <View style={styles.header}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.title}>{foodDetails.dishName}</Text>
-          <Text style={styles.author}>By {foodDetails.author}</Text>
+          <Text style={styles.title}>{foodDetails?.dishName}</Text>
+          <Text style={styles.author}>By {foodDetails?.author}</Text>
         </View>
 
         {isCollectionLoading ||
@@ -162,12 +163,15 @@ function FoodDetailsScreen({ navigation, route }) {
             tabBarIndicatorStyle: {
               backgroundColor: theme.colors.secondary,
             },
+            //lazy: true,
             tabBarLabelStyle: {
-              fontSize: 16,
+              fontSize: 17,
               fontWeight: "bold",
-              width: 400,
+              //width: 0,
               textTransform: "none",
             },
+            tabBarItemStyle: { width: 115 },
+            tabBarScrollEnabled: true
           }}
         >
           <Tab.Screen name="Overview">
@@ -175,9 +179,25 @@ function FoodDetailsScreen({ navigation, route }) {
               <OverviewTab foodDetails={foodDetails} navigation={navigation} />
             )}
           </Tab.Screen>
-          <Tab.Screen name="Ingredients">
+          <Tab.Screen name="Ingredients"
+            options={{
+              tabBarLabel: ({ focused }) => {
+               return(
+                <View>
+                  <Text style={{color: focused ? "red": "gray"}}>Ingredients</Text>
+                  <Text>2 Items</Text>
+                </View>
+               )  
+              },
+            }}
+          >
             {() => (
-              <IngredientsTab ingredients={foodDetails.dishToIngredients} />
+              <IngredientsTab ingredients={foodDetails?.dishToIngredients} />
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Directions">
+            {() => (
+              <DirectionTab directions={foodDetails?.directions} />
             )}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
@@ -188,7 +208,7 @@ function FoodDetailsScreen({ navigation, route }) {
               <ReviewsTab
                 navigation={navigation}
                 dishId={foodDetails.id}
-                dishInfo={foodDetails.dishName}
+                dishInfo={foodDetails?.dishName}
               />
             )}
           </Tab.Screen>

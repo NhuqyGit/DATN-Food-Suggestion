@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { theme } from "../../theme/index";
@@ -14,6 +16,9 @@ import {
 } from "../../slices/noteSlice";
 
 const AddNoteScreen = ({ navigation, route }) => {
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
   const [createNote, { isLoading: isCreating }] = useCreateNoteMutation();
@@ -36,7 +41,6 @@ const AddNoteScreen = ({ navigation, route }) => {
           noteTitle,
           noteContent,
         }).unwrap();
-        //console.log("Note updated:", noteTitle);
       } else {
         await createNote({
           noteTitle,
@@ -44,7 +48,6 @@ const AddNoteScreen = ({ navigation, route }) => {
           dishId,
           userId,
         }).unwrap();
-        //console.log("Note added:", noteTitle);
       }
       setNoteTitle("");
       setNoteContent("");
@@ -59,37 +62,39 @@ const AddNoteScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleCancel} style={styles.header}>
-        <Ionicons name="close-circle-outline" size={30} color="gray" />
-      </TouchableOpacity>
-      <Text style={styles.title}>{note ? "Edit Note" : "Add a Note"}</Text>
-      <View style={styles.subcontainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Note title"
-          value={noteTitle}
-          onChangeText={setNoteTitle}
-        />
-        <TextInput
-          style={[styles.input, styles.descriptionInput]}
-          placeholder="Write your note (required)"
-          multiline={true}
-          numberOfLines={6}
-          value={noteContent}
-          onChangeText={setNoteContent}
-        />
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={handleOk}
-          disabled={isCreating || isUpdating}
-        >
-          <Text style={styles.buttonText}>
-            {isCreating || isUpdating ? "Saving..." : "Save"}
-          </Text>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleCancel} style={styles.header}>
+          <Ionicons name="close-circle-outline" size={30} color="gray" />
         </TouchableOpacity>
+        <Text style={styles.title}>{note ? "Edit Note" : "Add a Note"}</Text>
+        <View style={styles.subcontainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Note title"
+            value={noteTitle}
+            onChangeText={setNoteTitle}
+          />
+          <TextInput
+            style={[styles.input, styles.descriptionInput]}
+            placeholder="Write your note (required)"
+            multiline={true}
+            numberOfLines={6}
+            value={noteContent}
+            onChangeText={setNoteContent}
+          />
+        </View>
+        <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleOk}
+            disabled={isCreating || isUpdating}
+          >
+            <Text style={styles.buttonText}>
+              {isCreating || isUpdating ? "Saving..." : "Save"}
+            </Text>
+          </TouchableOpacity>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 const styles = StyleSheet.create({
@@ -137,6 +142,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
+    alignSelf: "center",
   },
   cancelButton: {
     backgroundColor: "gray",

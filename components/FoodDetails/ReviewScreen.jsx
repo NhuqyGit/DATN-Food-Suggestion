@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Rating } from "react-native-ratings";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -20,6 +22,9 @@ import { useGetUserByIdQuery } from "../../slices/userInfoSlice";
 
 const ReviewScreen = ({ route }) => {
   const navigation = useNavigation();
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   const { dishId, dishInfo, review } = route.params || {};
   const [userId, setUserId] = useState(null);
   const [createReview, { isLoading: isCreating }] = useCreateReviewMutation();
@@ -88,62 +93,66 @@ const ReviewScreen = ({ route }) => {
   if (userLoading) return <Text>Loading current user</Text>;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.dishInfo}>{dishInfo}</Text>
-          <TouchableOpacity onPress={handleCancel} style={styles.closeButton}>
-            <Ionicons name="close-circle-outline" size={30} color="gray" />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.subtitle}>
-          {review ? "Edit Review" : "Leave a review"}
-        </Text>
-
-        <View style={styles.divider} />
-        <View style={styles.userInfo}>
-          {userInf?.imgUrl ? (
-            <Image source={{ uri: userInf?.imgUrl }} style={styles.userImage} />
-          ) : (
-            <View style={styles.avatarContainer}>
-              <Text style={styles.avatarText}>
-                {userInf?.username?.substring(0, 2)}
-              </Text>
-            </View>
-          )}
-          <View style={styles.userText}>
-            <Text style={styles.userName}>{userInf?.username}</Text>
-            <Text style={styles.posting}>Posting publicly</Text>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.dishInfo}>{dishInfo}</Text>
+            <TouchableOpacity onPress={handleCancel} style={styles.closeButton}>
+              <Ionicons name="close-circle-outline" size={30} color="gray" />
+            </TouchableOpacity>
           </View>
+          <Text style={styles.subtitle}>
+            {review ? "Edit Review" : "Leave a review"}
+          </Text>
+
+          <View style={styles.divider} />
+          <View style={styles.userInfo}>
+            {userInf?.imgUrl ? (
+              <Image
+                source={{ uri: userInf?.imgUrl }}
+                style={styles.userImage}
+              />
+            ) : (
+              <View style={styles.avatarContainer}>
+                <Text style={styles.avatarText}>
+                  {userInf?.username?.substring(0, 2)}
+                </Text>
+              </View>
+            )}
+            <View style={styles.userText}>
+              <Text style={styles.userName}>{userInf?.username}</Text>
+              <Text style={styles.posting}>Posting publicly</Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+          <Rating
+            onFinishRating={setRating}
+            ratingColor={theme.colors.primary}
+            style={styles.rating}
+            startingValue={rating}
+            imageSize={30}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Leave your feedback and share your culinary tips!"
+            multiline
+            numberOfLines={4}
+            onChangeText={setReview}
+            value={reviewContent}
+          />
+          {!!errorRating && <Text style={{ color: "red" }}>{errorRating}</Text>}
         </View>
-        <View style={styles.divider} />
-        <Rating
-          onFinishRating={setRating}
-          ratingColor={theme.colors.primary}
-          style={styles.rating}
-          startingValue={rating}
-          imageSize={30}
-        />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Leave your feedback and share your culinary tips!"
-          multiline
-          numberOfLines={4}
-          onChangeText={setReview}
-          value={reviewContent}
-        />
-        {!!errorRating && <Text style={{ color: "red" }}>{errorRating}</Text>}
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleSubmit}
+          disabled={isCreating || isUpdating}
+        >
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={handleSubmit}
-        disabled={isCreating || isUpdating}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

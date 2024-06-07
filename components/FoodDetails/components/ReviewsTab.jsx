@@ -127,8 +127,7 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
     return users?.find((user) => user.id === userId);
   };
 
-  if (!userID || reviewLoading || userLoading) return <ReviewSkeleton />;
-  if (reviewError || userError) return <Text>Error</Text>;
+  if (!userID || reviewLoading || userLoading || reviewError || userError) return <ReviewSkeleton />;
 
   // Separate the current user's review from the rest
   const userReview = reviews?.find(
@@ -137,7 +136,13 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
   const otherReviews = reviews?.filter(
     (review) => review?.userId?.toString() !== userID?.toString()
   );
-
+  if(!reviews || reviews?.length === 0){
+    return(
+      <View style={styles.noDirectionsContainer}>
+      <Text style={styles.noDirectionsText}>How was it</Text>
+    </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -353,11 +358,23 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   imagePlaceholder: {
-    width: '100%',
+    width: '80%',
     height: 60,
     backgroundColor: "gray",
     borderRadius: 8,
     marginBottom: 16,
+    paddingHorizontal: 16,
+  },
+  noDirectionsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "white",
+    padding: 16,
+  },
+  noDirectionsText: {
+    fontSize: 16,
+    color: 'gray',
   },
 });
 
