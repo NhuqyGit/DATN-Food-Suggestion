@@ -31,7 +31,7 @@ const HomeScreen = () => {
         }}
         scrollEventThrottle={16}
       >
-        <AnimatedHeader style={[{ opacity: headerOpacity }]}></AnimatedHeader>
+        <AnimatedHeader style={{ opacity: headerOpacity }}></AnimatedHeader>
         <CategoryList />
         <RecommendList />
         <MealPlanMadeEasy />

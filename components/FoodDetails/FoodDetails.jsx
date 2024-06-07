@@ -72,7 +72,7 @@ function FoodDetailsScreen({ navigation, route }) {
     refetch: refetchMealPlan,
   } = useIsDishInMealPlanQuery({ mealPlanId: mealID, dishId: foodDetails.id });
 
-  console.log(mealPlanID);
+  //(mealPlanID);
   useFocusEffect(
     useCallback(() => {
       refetchCollection();
@@ -179,7 +179,18 @@ function FoodDetailsScreen({ navigation, route }) {
               <OverviewTab foodDetails={foodDetails} navigation={navigation} />
             )}
           </Tab.Screen>
-          <Tab.Screen name="Ingredients">
+          <Tab.Screen name="Ingredients"
+            options={{
+              tabBarLabel: ({ focused }) => {
+               return(
+                <View>
+                  <Text style={{color: focused ? "red": "gray"}}>Ingredients</Text>
+                  <Text>2 Items</Text>
+                </View>
+               )  
+              },
+            }}
+          >
             {() => (
               <IngredientsTab ingredients={foodDetails?.dishToIngredients} />
             )}

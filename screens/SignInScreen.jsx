@@ -65,6 +65,7 @@ function SignInScreen() {
         await AsyncStorageService.setToken(responseJson?.accessToken)
         await AsyncStorage.setItem('user_id', responseJson?.id.toString())
 
+        // Get user
         const responseGetUserById = await fetch(
           `${HOST}/users/${responseJson.id}`,
           {

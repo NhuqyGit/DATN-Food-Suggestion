@@ -18,6 +18,8 @@ import SplashScreen from './screens/SplashScreen'
 import Search from './screens/Search/Search'
 import { useSelector } from 'react-redux'
 import { selectUserInfo } from './slices/userLoginSlice'
+import PerDone from './screens/PerDone'
+import PerSetup from './screens/PerSetup'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -79,6 +81,8 @@ export default function Navigation() {
           <Stack.Screen name='Personalization'>
             {(props) => <Personalization {...props} />}
           </Stack.Screen>
+          <Stack.Screen name='PersonalizeSetUp' component={PerSetup} />
+          <Stack.Screen name='PersonalizeDone' component={PerDone} />
         </Stack.Navigator>
       ) : (
         <Tab.Navigator

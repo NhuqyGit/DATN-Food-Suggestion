@@ -14,6 +14,7 @@ export default function PlanDate({
   setOffsetWeek,
   hidePop = false,
   offsetWeek,
+  setRandom,
 }) {
   return (
     <View style={styles.container}>
@@ -42,7 +43,7 @@ export default function PlanDate({
       </View>
       {!hidePop && (
         <View className="flex items-center justify-center bg-[#ECE9E9] rounded-full">
-          <PopOver />
+          <PopOver setRandom={setRandom} />
         </View>
       )}
     </View>
