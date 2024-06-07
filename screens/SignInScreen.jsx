@@ -41,8 +41,9 @@ function SignInScreen() {
     try {
       // Update user notificationToken
       const notifiToken = await AsyncStorage.getItem("expoPushToken");
+      const userId = await AsyncStorage.getItem('user_id')
 
-      const response = await fetch(`${HOST}/users/${userInfo?.id}`, {
+      const response = await fetch(`${HOST}/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
