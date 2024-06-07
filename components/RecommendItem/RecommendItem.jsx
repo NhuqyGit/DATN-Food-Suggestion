@@ -12,9 +12,45 @@ import { theme } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from '../../slices/userLoginSlice'
 
 function RecommendItem({ item }) {
   const navigation = useNavigation()
+  const userInfo = useSelector(selectUserInfo)
+
+  const dishId = item?.id
+  const userId = userInfo?.id
+
+  const onAddToCollection = async () => {
+    try {
+      const token = await AsyncStorageService.getAccessToken()
+      const response = await fetch(
+        `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            collectionName: 'All saved dishs',
+          }),
+        }
+      )
+
+      if (response.status === 201) {
+        alert('Add to collection successfully')
+      } else {
+        alert('Add to collection failed')
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
 
   return (
     <TouchableOpacity
@@ -39,10 +75,12 @@ function RecommendItem({ item }) {
         <Text style={styles.title}>{item?.dishName}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
-          <View style={styles.iconContainer}>
-            {/* <Icon style={styles.addIcon} name='plus' /> */}
-            <MaterialIcons name='add' size={22} color='white' />
-          </View>
+          <TouchableOpacity onPress={onAddToCollection}>
+            <View style={styles.iconContainer}>
+              {/* <Icon style={styles.addIcon} name='plus' /> */}
+              <MaterialIcons name='favorite' size={30} color='white' />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -89,7 +127,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   iconContainer: {
-    backgroundColor: theme.colors.secondary,
+    // backgroundColor: theme.colors.secondary,
     borderRadius:
       Math.round(
         Dimensions.get('window').width + Dimensions.get('window').height

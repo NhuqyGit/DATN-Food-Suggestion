@@ -1,5 +1,5 @@
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import FilterItem from './FilterItem'
 import { AntDesign } from '@expo/vector-icons'
 
@@ -7,31 +7,31 @@ const Filter = ({ hasButton = false }) => {
   const mockData = [
     {
       title: 'Chanh',
-      active: true,
+      active: false,
     },
     {
       title: 'Thịt bò',
-      active: true,
+      active: false,
     },
     {
       title: 'Dâu',
-      active: true,
+      active: false,
     },
     {
       title: 'Thịt heo',
-      active: true,
+      active: false,
     },
     {
       title: 'Táo',
-      active: true,
+      active: false,
     },
     {
       title: 'Ớt hiểm',
-      active: true,
+      active: false,
     },
     {
       title: 'Cà chua',
-      active: true,
+      active: false,
     },
     {
       title: 'Bột cà ri',
@@ -43,36 +43,46 @@ const Filter = ({ hasButton = false }) => {
     },
   ]
 
-  const mockData2 = [
+  const cookingTimeOptions = [
     {
       title: '< 5 phút',
-      active: true,
+      active: false,
+      value: 300,
     },
     {
       title: '< 10 phút',
-      active: true,
+      active: false,
+      value: 600,
     },
     {
       title: '< 15 phút',
-      active: true,
+      active: false,
+      value: 900,
     },
     {
       title: '< 30 phút',
-      active: true,
+      active: false,
+      value: 1800,
     },
     {
       title: '< 45 phút',
-      active: true,
+      active: false,
+      value: 2700,
     },
     {
       title: '< 1 giờ',
-      active: true,
+      active: false,
+      value: 3600,
     },
     {
       title: '< 2 giờ',
-      active: true,
+      active: false,
+      value: 7200,
     },
   ]
+
+  const [cookingTimes, setCookingTimes] = useState(cookingTimeOptions)
+
   return (
     <View style={styles.container}>
       <View>
@@ -96,7 +106,7 @@ const Filter = ({ hasButton = false }) => {
         <Text style={styles.title}>Thời gian nấu, ít hơn:</Text>
         <View style={styles.wrapper}>
           <View style={styles.list}>
-            {mockData2.map((item, index) => (
+            {cookingTimes.map((item, index) => (
               <FilterItem key={index} data={item} />
             ))}
           </View>

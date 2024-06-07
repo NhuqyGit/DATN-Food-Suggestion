@@ -16,22 +16,30 @@ import RecommendSmallSkeleton from '../../screens/Search/ViewImageScreen/Recomme
 import { useNavigation } from '@react-navigation/native'
 
 function RecommendList() {
-  const [dish, setDish] = useState(null)
+  const [recommendDishes, setRecommendDishes] = useState(null)
+  const [healthyDishes, setHealthyDishes] = useState(null)
+  const [quicklyDishes, setQuicklyDishes] = useState(null)
+
+  const COUNT_DIET = 2
+  const COUNT_QUICK = 3
   const [loading, setLoading] = useState(true)
+  const [loadingHealthy, setLoadingHealthy] = useState(true)
+  const [loadingQuickly, setLoadingQuickly] = useState(true)
   const navigation = useNavigation()
 
   useEffect(() => {
-    const getAllDish = async () => {
+    const getRecommendDishes = async () => {
+      setLoading(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/dish`, {
+        const response = await fetch(`${HOST}/dish/recommend`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
         const json = await response.json()
-        setDish(json)
+        setRecommendDishes(json)
       } catch (error) {
         console.error(error)
       } finally {
@@ -39,7 +47,53 @@ function RecommendList() {
       }
     }
 
-    getAllDish()
+    const getHealthyDishes = async () => {
+      setLoadingHealthy(true)
+      try {
+        const token = await AsyncStorageService.getAccessToken()
+        const response = await fetch(
+          `${HOST}/dish/healthy?dietCount=${COUNT_DIET}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        const json = await response.json()
+        setHealthyDishes(json)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoadingHealthy(false)
+      }
+    }
+
+    const getQuicklyDishes = async () => {
+      setLoadingQuickly(true)
+      try {
+        const token = await AsyncStorageService.getAccessToken()
+        const response = await fetch(
+          `${HOST}/dish/quickly?ingredientCount=${COUNT_QUICK}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        const json = await response.json()
+        setQuicklyDishes(json)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoadingQuickly(false)
+      }
+    }
+
+    getQuicklyDishes()
+    getHealthyDishes()
+    getRecommendDishes()
   }, [])
 
   const handleClickVieAll = (item) => {
@@ -55,7 +109,7 @@ function RecommendList() {
           onPress={() => {
             handleClickVieAll({
               name: 'Yours recommendations',
-              dishes: dish,
+              dishes: recommendDishes,
             })
           }}
         >
@@ -71,9 +125,11 @@ function RecommendList() {
           <RecommendLargeSkeleton total={5} />
         ) : (
           <>
-            {dish?.map((item) => (
-              <RecommendItem key={item.id} item={item} />
-            ))}
+            {recommendDishes &&
+              recommendDishes.length > 0 &&
+              recommendDishes?.map((item) => (
+                <RecommendItem key={item.id} item={item} />
+              ))}
           </>
         )}
       </ScrollView>
@@ -85,7 +141,7 @@ function RecommendList() {
             onPress={() => {
               handleClickVieAll({
                 name: 'Healthy recipes',
-                dishes: dish,
+                dishes: recommendDishes,
               })
             }}
           >
@@ -97,13 +153,15 @@ function RecommendList() {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          {loading ? (
+          {loadingHealthy ? (
             <RecommendSmallSkeleton total={5} />
           ) : (
             <>
-              {dish?.map((item) => (
-                <SmallRecommendItem key={item.id} item={item} />
-              ))}
+              {healthyDishes &&
+                healthyDishes.length > 0 &&
+                healthyDishes?.map((item) => (
+                  <SmallRecommendItem key={item.id} item={item} />
+                ))}
             </>
           )}
         </ScrollView>
@@ -114,7 +172,7 @@ function RecommendList() {
             onPress={() => {
               handleClickVieAll({
                 name: 'Quick recipes',
-                dishes: dish,
+                dishes: recommendDishes,
               })
             }}
           >
@@ -126,13 +184,15 @@ function RecommendList() {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          {loading ? (
+          {loadingQuickly ? (
             <RecommendSmallSkeleton total={5} />
           ) : (
             <>
-              {dish?.map((item) => (
-                <SmallRecommendItem key={item.id} item={item} />
-              ))}
+              {quicklyDishes &&
+                quicklyDishes.length > 0 &&
+                quicklyDishes?.map((item) => (
+                  <SmallRecommendItem key={item.id} item={item} />
+                ))}
             </>
           )}
         </ScrollView>

@@ -9,8 +9,45 @@ import {
   View,
 } from 'react-native'
 import { theme } from '../../theme'
+import { selectUserInfo } from '../../slices/userLoginSlice'
+import { useSelector } from 'react-redux'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
 
 function SmallRecommendItem({ item }) {
+  const userInfo = useSelector(selectUserInfo)
+
+  const dishId = item?.id
+  const userId = userInfo?.id
+
+  const onAddToCollection = async () => {
+    try {
+      const token = await AsyncStorageService.getAccessToken()
+      const response = await fetch(
+        `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            collectionName: 'All saved dishs',
+          }),
+        }
+      )
+
+      if (response.status === 201) {
+        alert('Add to collection successfully')
+      } else {
+        alert('Add to collection failed')
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
   return (
     <TouchableOpacity activeOpacity={1} style={styles.container}>
       <Image
@@ -34,10 +71,12 @@ function SmallRecommendItem({ item }) {
         </View>
         <View style={styles.authorContainer}>
           <Text style={styles.title}>{item?.dishName}</Text>
-          <View style={styles.iconContainer}>
-            {/* <Icon style={styles.addIcon} name='plus' /> */}
-            <MaterialIcons name='add' size={22} color='white' />
-          </View>
+          <TouchableOpacity onPress={onAddToCollection}>
+            <View style={styles.iconContainer}>
+              {/* <Icon style={styles.addIcon} name='plus' /> */}
+              <MaterialIcons name='favorite' size={16} color='white' />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
