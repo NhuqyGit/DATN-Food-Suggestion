@@ -2,10 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons'
 
-const FilterItem = ({ data }) => {
+const FilterItem = ({ data, onPress }) => {
   const { active, title, hasDelete } = data
   return (
-    <TouchableOpacity style={[styles.container, !active && styles.inactive]}>
+    <TouchableOpacity
+      style={[styles.container, !active && styles.inactive]}
+      onPress={onPress}
+    >
       <Text style={{ color: active ? 'white' : '#4CAF50' }}>{title}</Text>
       {hasDelete && (
         <AntDesign name='close' size={24} color={active ? 'white' : 'black'} />

@@ -14,6 +14,13 @@ import { AsyncStorageService } from '../../../utils/AsynStorage'
 import { HOST } from '../../../config'
 import LatestDishSkeleton from '../ViewImageScreen/LatestDishSkeleton'
 import IngredientSkeleton from '../ViewImageScreen/IngredientSkeleton'
+import {
+  selectCookingTime,
+  selectIngredientIds,
+} from '../../../slices/searchSlice'
+import { useSelector } from 'react-redux'
+import RecommendLargeSkeleton from '../ViewImageScreen/RecommendLargeSkeleton'
+import SearchValueSkeleton from '../ViewImageScreen/SearchValueSkeleton'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
@@ -25,7 +32,11 @@ const SearchScreen = ({ navigation, route }) => {
   const [searchText, setSearchText] = useState('')
   const [loading, setLoading] = useState(true)
   const [loadingDish, setLoadingDish] = useState(true)
+  const [loadingDishBySearchText, setLoadingDishBySearchText] = useState(true)
   const [dishBySearchText, setDishBySearchText] = useState([])
+
+  const ingredientIds = useSelector(selectIngredientIds)
+  const cookingTime = useSelector(selectCookingTime)
 
   useEffect(() => {
     const getIngredients = async () => {
@@ -70,29 +81,41 @@ const SearchScreen = ({ navigation, route }) => {
     getIngredients()
   }, [])
 
-  useEffect(() => {
-    const getDishBySearchText = async () => {
-      try {
-        const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/dish/search?text=${searchText}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+  const getDishBySearchText = async () => {
+    setLoadingDishBySearchText(true)
+    try {
+      const token = await AsyncStorageService.getAccessToken()
 
-        const json = await response.json()
-        setDishBySearchText(json)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
+      let query = '?text=' + searchText
+
+      if (cookingTime) {
+        query += '&cookingTime=' + cookingTime
       }
-    }
 
+      if (ingredientIds && ingredientIds.length > 0) {
+        query += '&ingredientIds=' + ingredientIds
+      }
+
+      const response = await fetch(`${HOST}/dish/search${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const json = await response.json()
+      setDishBySearchText(json)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoadingDishBySearchText(false)
+    }
+  }
+
+  useEffect(() => {
     if (searchText) {
       getDishBySearchText()
     }
-  }, [searchText])
+  }, [searchText, cookingTime, ingredientIds])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -176,11 +199,33 @@ const SearchScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
 
-            {isFilter && <Filter hasButton />}
+            {isFilter && (
+              <Filter
+                hasButton
+                ingredients={ingredients}
+                setIsFilter={setIsFilter}
+              />
+            )}
 
-            {dishBySearchText?.map((item) => (
-              <SearchResultItem key={item.id} item={item} />
-            ))}
+            {loadingDishBySearchText ? (
+              <View
+                style={{
+                  flexDirection: 'column',
+                  flexWrap: 'wrap',
+                  gap: 8,
+                }}
+              >
+                <SearchValueSkeleton total={2} />
+              </View>
+            ) : (
+              <>
+                {dishBySearchText &&
+                  dishBySearchText.length > 0 &&
+                  dishBySearchText?.map((item) => (
+                    <SearchResultItem key={item.id} item={item} />
+                  ))}
+              </>
+            )}
           </View>
         )}
       </ScrollView>
