@@ -22,15 +22,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const CollectionScreen = ({ navigation, route }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [userId, setUserId] = useState(null);
-  const { dishId } = route.params;
-
-  // console.log("DishID", dishId);
+  const {dishId} = route.params;
+  
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const storedUserId = await AsyncStorage.getItem("user_id");
         if (storedUserId) {
-          // console.log("User id: ", storedUserId);
           setUserId(storedUserId);
         }
       } catch (error) {
@@ -131,12 +129,8 @@ const CollectionScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <TouchableOpacity
-        style={styles.doneButton}
-        onPress={handleDone}
-        disabled={isAdding}
-      >
-        <Text style={styles.buttonText}>{isAdding ? "Saving..." : "Done"}</Text>
+      <TouchableOpacity style={styles.doneButton} onPress={handleDone} disabled={isAdding}>
+          <Text style={styles.buttonText}>{isAdding ? 'Saving...' : 'Done'}</Text>
       </TouchableOpacity>
     </View>
   );

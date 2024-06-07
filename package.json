@@ -55,6 +55,7 @@
     "react-native-pager-view": "6.3.0",
     "react-native-popover-view": "^5.1.8",
     "react-native-popup-menu": "^0.16.1",
+    "react-native-radio-buttons-group": "^3.1.0",
     "react-native-ratings": "^8.1.0",
     "react-native-reanimated": "~3.10.1",
     "react-native-reanimated-carousel": "^3.5.1",
