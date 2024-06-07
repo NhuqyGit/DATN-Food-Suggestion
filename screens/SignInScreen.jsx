@@ -36,6 +36,33 @@ function SignInScreen() {
     setPassword(password)
   }
 
+  const sendPushToken = async () => {
+    const token = await AsyncStorageService.getAccessToken();
+    try {
+      // Update user notificationToken
+      const notifiToken = await AsyncStorage.getItem("expoPushToken");
+
+      const response = await fetch(`${HOST}/users/${userInfo?.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          notificationToken: notifiToken,
+        }),
+      });
+
+      const responseJson = await response.json();
+
+      if (responseJson.error) {
+        console.log(responseJson.message);
+      } 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const response = await fetch(
@@ -65,6 +92,7 @@ function SignInScreen() {
         await AsyncStorageService.setToken(responseJson?.accessToken)
         await AsyncStorage.setItem('user_id', responseJson?.id.toString())
 
+        await sendPushToken()
         // Get user
         const responseGetUserById = await fetch(
           `${HOST}/users/${responseJson.id}`,

@@ -23,9 +23,6 @@ function PerDone({ navigation }) {
   const handleLogin = async () => {
     const token = await AsyncStorageService.getAccessToken();
     try {
-      // Update user notificationToken
-      const notifiToken = await AsyncStorage.getItem("expoPushToken");
-
       const response = await fetch(`${HOST}/users/${userInfo?.id}`, {
         method: "PUT",
         headers: {
@@ -34,7 +31,6 @@ function PerDone({ navigation }) {
         },
         body: JSON.stringify({
           isLogin: true,
-          notificationToken: notifiToken,
         }),
       });
 

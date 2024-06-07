@@ -214,7 +214,7 @@ function ReceipeListScreen({ route, navigation }) {
         </View>
 
         <ScrollView>
-          {dishes.map((item, index) => {
+          {dishes?.map((item, index) => {
             return (
               <RecipeListItem
                 item={item}
