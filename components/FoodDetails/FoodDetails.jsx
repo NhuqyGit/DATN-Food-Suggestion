@@ -132,7 +132,7 @@ function FoodDetailsScreen({ navigation, route }) {
         mealLoading ||
         mealError ? (
           <AntIcon
-            name="questioncircle"
+            name="pluscircle"
             size={40}
             color={theme.colors.secondary}
           />

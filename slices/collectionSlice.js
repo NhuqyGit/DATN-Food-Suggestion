@@ -62,6 +62,16 @@ export const collectionApi = createApi({
         body: { collectionIds },
       }),
     }),
+    getCollectionsByDishId: builder.query({
+      query: (dishId) => `collections/dish/${dishId}`,
+    }),
+    updateDishCollections: builder.mutation({
+      query: ({ userId, dishId, collectionIds }) => ({
+        url: `collections/updateDishCollections`,
+        method: 'POST',
+        body: { userId, dishId, collectionIds },
+      }),
+    }),
   }),
 });
 
@@ -75,6 +85,8 @@ export const {
   useIsDishInCollectionQuery,
   useIsCollectionNameExistsQuery,
   useAddDishToCollectionsMutation,
+  useGetCollectionsByDishIdQuery,
+  useUpdateDishCollectionsMutation,
 } = collectionApi;
 
 export default collectionApi;
