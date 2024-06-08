@@ -39,7 +39,7 @@ export default function ListDishItem({
   };
 
   return (
-    <View style={styles.shadowView}>
+    <View style={styles.shadowView} className="mt-2">
       <TouchableOpacity
         onPress={async () => {
           const token = await AsyncStorageService.getAccessToken();
@@ -54,18 +54,20 @@ export default function ListDishItem({
 
           navigation.navigate("FoodDetail", { foodDetails: item });
         }}
-        className="flex flex-row mt-2 h-32 mx-1 bg-slate-50 rounded-md"
+        className="flex flex-row  h-32  bg-slate-50 rounded-md"
       >
         <Image source={imgUri} className="w-32 h-32 rounded-md" />
         <View
-          className={`flex flex-col px-3 justify-between py-3 ${isPlus && "bg-gray-200 rounded-r-lg"}`}
+          className={`flex flex-col rounded-md  px-3 justify-between py-3 ${isPlus && "bg-gray-200 rounded-r-lg"}`}
         >
-          <Text className="text-base font-semibold">{name}</Text>
+          <Text className="text-base font-semibold flex flex-wrap max-w-[200px]">
+            {name}
+          </Text>
           <View className="flex flex-row justify-between items-center w-4/5">
             <View className=" h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
               <Ionicons name="time-outline" size={26} color="white" />
               <Text className="text-white text-base font-medium px-1">
-                {Number(time) / 60} mins
+                {(Number(time) / 60).toFixed(0)} mins
               </Text>
             </View>
             {isAdd ? (
