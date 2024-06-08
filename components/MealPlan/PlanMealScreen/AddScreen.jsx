@@ -40,7 +40,7 @@ function AddScreen() {
         assets: item.dishes.map((dishItem) => ({
           dish_id: dishItem?.id,
           name: dishItem.dishName,
-          time: `${dishItem.cookingTime} mins`,
+          time: `${dishItem.cookingTime}`,
           imgUri: { uri: dishItem.imageUrl },
         })),
       }));

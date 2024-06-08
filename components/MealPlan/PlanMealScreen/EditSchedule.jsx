@@ -140,8 +140,6 @@ const EditSchedule = () => {
 
           const planDates = selectedDays.map((day) => moment.utc(day).format());
 
-          console.log();
-
           const res = await fetch(
             `https://datn-admin-be.onrender.com/mealplan/update-plan-date`,
             {

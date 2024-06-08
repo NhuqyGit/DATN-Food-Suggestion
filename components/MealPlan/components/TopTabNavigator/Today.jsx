@@ -195,6 +195,7 @@ function Today() {
                 time={asset.time}
                 imgUri={asset.imgUri}
                 setRandom={setRandom}
+                formattedPlanDate={formattedStartDateYear}
               />
             ))}
           </Animated.View>

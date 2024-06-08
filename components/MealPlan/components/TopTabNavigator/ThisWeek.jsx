@@ -34,6 +34,9 @@ function ThisWeek() {
   const [modalVisible, setModalVisible] = useState(false);
   const [random, setRandom] = useState(0);
 
+  const planDate = startDate.clone().add(indexDay, "days");
+  const formattedPlanDate = planDate.format("YYYY MMM Do");
+
   const handleCloseModal = () => {
     setModalVisible(false);
   };
@@ -126,6 +129,29 @@ function ThisWeek() {
     }, [offsetWeek, navigation, random])
   );
 
+  const getDayOfWeekIndex = (dayString) => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return daysOfWeek.indexOf(dayString);
+  };
+
+  const calculateNewDate = (startDate, dayOfWeek) => {
+    const start = moment(startDate, "YYYY MMM DD");
+    const targetDayIndex = getDayOfWeekIndex(dayOfWeek);
+    const currentDayIndex = start.day();
+
+    let diff = targetDayIndex - currentDayIndex;
+    if (diff < 0) diff += 7;
+    return start.add(diff, "days").format("YYYY MMM DD");
+  };
+
   return (
     <View className="py-4 h-full bg-white">
       <View className="px-3">
@@ -176,6 +202,10 @@ function ThisWeek() {
                     time={asset.time}
                     imgUri={asset.imgUri}
                     setRandom={setRandom}
+                    formattedPlanDate={calculateNewDate(
+                      formattedPlanDate,
+                      day.title
+                    )}
                   />
                 ))}
               </Animated.View>

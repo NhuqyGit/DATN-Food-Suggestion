@@ -9,6 +9,7 @@ import { theme } from "../../../theme/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
 import { HOST } from "../../../config";
+import moment from "moment";
 
 export default function ListDishItem({
   id,
@@ -20,6 +21,7 @@ export default function ListDishItem({
   imgUri,
   isAdd = false,
   onSelectItem,
+  formattedPlanDate,
 }) {
   const navigation = useNavigation();
   const [isPlus, setisPlus] = useState(isSelected);
@@ -37,6 +39,10 @@ export default function ListDishItem({
     setisPlus(!isPlus);
     onSelectItem(id);
   };
+  const dateFormat =
+    formattedPlanDate !== undefined
+      ? moment.utc(formattedPlanDate, "YYYY MMMM Do").toDate()
+      : undefined;
 
   return (
     <View style={styles.shadowView} className="mt-2">
@@ -54,17 +60,17 @@ export default function ListDishItem({
 
           navigation.navigate("FoodDetail", { foodDetails: item });
         }}
-        className="flex flex-row  h-32  bg-slate-50 rounded-md"
+        className="flex flex-row h-32 bg-slate-50 rounded-md"
       >
         <Image source={imgUri} className="w-32 h-32 rounded-md" />
         <View
-          className={`flex flex-col rounded-md  px-3 justify-between py-3 ${isPlus && "bg-gray-200 rounded-r-lg"}`}
+          className={`flex flex-col rounded-md px-3 justify-between py-3 ${isPlus && "bg-gray-200 rounded-r-lg"}`}
         >
           <Text className="text-base font-semibold flex flex-wrap max-w-[200px]">
             {name}
           </Text>
           <View className="flex flex-row justify-between items-center w-4/5">
-            <View className=" h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
+            <View className="h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
               <Ionicons name="time-outline" size={26} color="white" />
               <Text className="text-white text-base font-medium px-1">
                 {(Number(time) / 60).toFixed(0)} mins
@@ -136,6 +142,7 @@ export default function ListDishItem({
                 const mealplanId = mealplanJson?.mealplanId;
                 const mealPlanIdInt = parseInt(mealplanId, 10);
                 const dishIdInt = parseInt(id, 10);
+
                 const res = await fetch(
                   `https://datn-admin-be.onrender.com/mealplan`,
                   {
@@ -147,6 +154,7 @@ export default function ListDishItem({
                     body: JSON.stringify({
                       mealPlanId: mealPlanIdInt,
                       dishId: dishIdInt,
+                      planDate: dateFormat,
                     }),
                   }
                 );

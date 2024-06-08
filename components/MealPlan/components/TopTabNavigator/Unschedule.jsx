@@ -60,6 +60,7 @@ function Unschedule() {
               time={asset.time}
               imgUri={asset.imgUri}
               setRandom={setRandom}
+              formattedPlanDate={undefined}
             />
           ))}
         </View>
