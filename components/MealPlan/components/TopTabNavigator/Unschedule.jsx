@@ -30,7 +30,7 @@ function Unschedule() {
       ].dishes?.map((dishItem) => ({
         dish_id: dishItem?.dish?.id,
         name: dishItem.dish.dishName,
-        time: `${dishItem.dish.cookingTime} mins`,
+        time: `${dishItem.dish.cookingTime} `,
         imgUri: { uri: dishItem.dish.imageUrl },
       }));
 

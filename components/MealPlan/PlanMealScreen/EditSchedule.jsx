@@ -40,15 +40,19 @@ const EditSchedule = () => {
   const date = `${formattedStartDate.toLocaleString()}  -  ${formattedEndDate.toLocaleString()}`;
   const navigation = useNavigation();
 
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDays, setSelectedDays] = useState([]);
 
   const toggleDay = (day) => {
     const dayIndex = daysOfWeek.indexOf(day);
     const selectedDate = startDate.clone().add(dayIndex, "days");
     const selectedDateString = selectedDate.format("YYYY-MM-DD");
-    setSelectedDay((prev) =>
-      prev === selectedDateString ? null : selectedDateString
-    );
+    setSelectedDays((prev) => {
+      if (prev.includes(selectedDateString)) {
+        return prev.filter((date) => date !== selectedDateString);
+      } else {
+        return [...prev, selectedDateString];
+      }
+    });
   };
 
   return (
@@ -58,7 +62,7 @@ const EditSchedule = () => {
       </View>
       <View>
         <Text className="text-2xl font-semibold">Schedule recipe</Text>
-        <Text className="text-sm text-[#5E5E5E] ">
+        <Text className="text-sm text-[#5E5E5E]">
           Choose which day(s) to schedule this recipe for
         </Text>
       </View>
@@ -90,7 +94,7 @@ const EditSchedule = () => {
                   <Plus
                     isAdd={true}
                     onToggle={() => toggleDay(day)}
-                    isSelected={selectedDay === selectedDateString}
+                    isSelected={selectedDays.includes(selectedDateString)}
                   />
                   <Text className="text-lg pl-6">{day}</Text>
                 </View>
@@ -133,9 +137,10 @@ const EditSchedule = () => {
           const mealplanId = mealplanJson?.mealplanId;
           const mealPlanIdInt = parseInt(mealplanId, 10);
           const dishIdInt = parseInt(id, 10);
-          const selectedDayAsDate = selectedDay
-            ? moment.utc(selectedDay).toDate()
-            : null;
+
+          const planDates = selectedDays.map((day) => moment.utc(day).format());
+
+          console.log();
 
           const res = await fetch(
             `https://datn-admin-be.onrender.com/mealplan/update-plan-date`,
@@ -148,7 +153,7 @@ const EditSchedule = () => {
               body: JSON.stringify({
                 mealPlanId: mealPlanIdInt,
                 dishId: dishIdInt,
-                planDate: selectedDayAsDate,
+                planDate: planDates,
               }),
             }
           );

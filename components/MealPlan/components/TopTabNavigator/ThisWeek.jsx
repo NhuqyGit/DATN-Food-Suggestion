@@ -109,7 +109,7 @@ function ThisWeek() {
         assets: item.dishes.map((dishItem) => ({
           dishId: dishItem.dishId,
           name: dishItem.dish.dishName,
-          time: `${dishItem.dish.cookingTime} mins`,
+          time: `${dishItem.dish.cookingTime} `,
           imgUri: { uri: dishItem.dish.imageUrl },
         })),
       }));
