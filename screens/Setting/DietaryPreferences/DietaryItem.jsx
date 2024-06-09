@@ -4,10 +4,12 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { theme } from '../../../theme'
 import DietaryDetailItem from './DietaryDetailItem'
 
-const DietaryItem = ({ data }) => {
+const DietaryItem = ({ data, handleChangePersonalize}) => {
   const [isActive, setIsActive] = useState(false)
 
   const totalSelected = data?.items.filter((item) => item.selected).length
+  // console.log(data.id, data)
+  // console.log(totalSelected)
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -18,12 +20,12 @@ const DietaryItem = ({ data }) => {
         >
           <Text style={styles.tagTitle}>{totalSelected}</Text>
           {isActive ? (
-            <MaterialIcons name='keyboard-arrow-down' size={22} color='white' />
+            <MaterialIcons name='keyboard-arrow-down' size={22} color={theme.colors.secondary} />
           ) : (
             <MaterialIcons
               name='keyboard-arrow-right'
               size={22}
-              color='white'
+              color={theme.colors.secondary}
             />
           )}
         </TouchableOpacity>
@@ -36,8 +38,10 @@ const DietaryItem = ({ data }) => {
               <DietaryDetailItem
                 key={item.id}
                 data={item}
+                dataId = {data.id}
                 isLastItem={index === data?.items?.length - 1}
                 selected={item?.selected}
+                handleChangePersonalize={handleChangePersonalize}
               />
             )
           })}
@@ -75,11 +79,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.lightGreen,
   },
 
   tagTitle: {
-    color: 'white',
+    fontWeight: 'bold',
+    color: theme.colors.secondary,
   },
 })
 

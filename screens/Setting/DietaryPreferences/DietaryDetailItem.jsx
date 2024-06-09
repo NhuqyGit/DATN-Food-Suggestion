@@ -3,16 +3,18 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { theme } from '../../../theme'
 
-const DietaryDetailItem = ({ data, isLastItem = false, selected = false }) => {
+const DietaryDetailItem = ({ data, dataId, isLastItem = false, selected = false, handleChangePersonalize }) => {
   const [isActive, setIsActive] = useState(selected)
 
+  const handleChange = () => {
+    setIsActive(!isActive)
+    handleChangePersonalize(dataId, data?.id)
+  }
   return (
     <View>
       <TouchableOpacity
-        onPress={() => {
-          setIsActive(!isActive)
-        }}
-        style={[styles.container]}
+        onPress={handleChange}
+        style={[styles.container, {gap: isActive ? 14 : 16}]}
       >
         {isActive ? (
           <MaterialIcons
@@ -23,7 +25,7 @@ const DietaryDetailItem = ({ data, isLastItem = false, selected = false }) => {
         ) : (
           <View style={styles.outter}></View>
         )}
-        <Text>{data?.title}</Text>
+        <Text>{data?.name}</Text>
       </TouchableOpacity>
       <View
         style={{
@@ -42,7 +44,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 16,
     paddingVertical: 10,
     fontSize: 16,
   },
