@@ -38,7 +38,7 @@ const Collection = ({props, navigation, isProtected = false}) => {
                 <View style={[styles.container]}>
                     <View style={styles.infoCollection}>
                         <Text style={styles.title}>{props.collectionName}</Text>
-                        <Text style={styles.des}>{props.id} RECIPES</Text>
+                        <Text style={styles.des}>{props.dishes?.length} RECIPES</Text>
                     </View>
                     <Image style={styles.imageCollection} source={require('../../assets/images/Profile/avatarDefault.png')}/>
                 </View>

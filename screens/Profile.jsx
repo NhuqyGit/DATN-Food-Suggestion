@@ -358,7 +358,7 @@ function Profile({ navigation }) {
             console.log(responseJson.message);
           } else {
            
-            setCollections(responseJson.collections);
+            setCollections(responseJson);
           }
         } catch (error) {
           console.error(error);
@@ -412,7 +412,7 @@ function Profile({ navigation }) {
     }
   };
 
-  const listCollection = collections.map((col, index) => {
+  const listCollection = collections?.map((col, index) => {
     return (
       <Collection props={col} navigation={navigation} key={index.toString()} />
     );
@@ -438,7 +438,7 @@ function Profile({ navigation }) {
 
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Settings");
@@ -455,8 +455,8 @@ function Profile({ navigation }) {
             style={styles.avatarImage}
             source={
               userInfo?.imgUrl
-                ? require("../assets/images/Profile/avatarTest.jpg")
-                : { uri: userInfo.imgUrl }
+                ? { uri: userInfo.imgUrl }
+                : require("../assets/images/Profile/user.png")
             }
           />
         </TouchableOpacity>
@@ -488,14 +488,15 @@ function Profile({ navigation }) {
             />
           </TouchableOpacity>
         </View>
-
-        <View style={styles.listCollection}>
-          {/* <Collection /> */}
-          {listCollection}
-        </View>
-
+            
+        <ScrollView style={{paddingTop: 10}}>
+          <View style={styles.listCollection}>
+            {/* <Collection /> */}
+            {listCollection}
+          </View>
+        </ScrollView>
         <SortPopUp closePopUp={handleCloseModal} modalVisible={modalVisible} />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -523,8 +524,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarImage: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 200,
   },
   userName: {
