@@ -412,7 +412,7 @@ function Profile({ navigation }) {
     }
   };
 
-  const listCollection = collections?.map((col, index) => {
+  const listCollection = collections.map((col, index) => {
     return (
       <Collection props={col} navigation={navigation} key={index.toString()} />
     );
