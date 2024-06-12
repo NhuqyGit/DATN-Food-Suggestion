@@ -73,7 +73,9 @@ export default function ListDishItem({
             <View className="h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
               <Ionicons name="time-outline" size={26} color="white" />
               <Text className="text-white text-base font-medium px-1">
-                {(Number(time) / 60).toFixed(0)} mins
+                {(Number(time) / 60).toFixed(0) < 120
+                  ? `${(Number(time) / 60).toFixed(0)} mins`
+                  : `${(Number(time) / 60 / 60).toFixed(0)} hours ${(Number(time) / 60).toFixed(0) - (Number(time) / 60 / 60).toFixed(0) * 60} mins `}
               </Text>
             </View>
             {isAdd ? (
