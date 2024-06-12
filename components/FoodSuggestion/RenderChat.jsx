@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import DishMessage from './DishMessage'
 import ListDishMessage from './ListDishMessage'
 import * as Animatable from 'react-native-animatable';
+import MealChat from './MealChat/MealChat'
 
 
 const RenderChat = ({props}) => {
@@ -37,32 +38,32 @@ const RenderChat = ({props}) => {
 		}
 	};
 
-	const listDishMessage = props.response && (typeof props.response === 'object' ? 
-		Object.entries(props.response).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
-			<Text style={styles.sectionTitle}>
-				{convertKeyToDisplayName(key)}
-			</Text>
-			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
-					<DishMessage item={item} />
-				</Animatable.View>
-			))}
-		</Animatable.View>
-		)) : 
-		Object.entries(JSON.parse(props.response)).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
-			<Text style={styles.sectionTitle}>
-				{convertKeyToDisplayName(key)}
-			</Text>
-			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
-					<DishMessage item={item} />
-				</Animatable.View>
-			))}
-		</Animatable.View>
-		))
-	);
+	// const listDishMessage = props.response && (typeof props.response === 'object' ? 
+	// 	Object.entries(props.response).flatMap(([key, value]) => (
+	// 	<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
+	// 		<Text style={styles.sectionTitle}>
+	// 			{convertKeyToDisplayName(key)}
+	// 		</Text>
+	// 		{value.map((item, index) => (
+	// 			<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
+	// 				<DishMessage item={item} />
+	// 			</Animatable.View>
+	// 		))}
+	// 	</Animatable.View>
+	// 	)) : 
+	// 	Object.entries(JSON.parse(props.response)).flatMap(([key, value]) => (
+	// 	<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
+	// 		<Text style={styles.sectionTitle}>
+	// 			{convertKeyToDisplayName(key)}
+	// 		</Text>
+	// 		{value.map((item, index) => (
+	// 			<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
+	// 				<DishMessage item={item} />
+	// 			</Animatable.View>
+	// 		))}
+	// 	</Animatable.View>
+	// 	))
+	// );
 
 	// const formatPrice = (price) => {
     //     return new Intl.NumberFormat('vi-VN').format(price);
@@ -123,8 +124,9 @@ const RenderChat = ({props}) => {
 								{/* <GenerateHeaderMessage /> */}
 								<Text>{props.header}</Text>
 								<View style={{backgroundColor: '#232325', paddingVertical: 5, paddingHorizontal: 15, paddingBottom: 10, borderRadius: 8}}>
-									{listDishMessage}
+									{/* {listDishMessage} */}
 									{/* <ListDishMessage response={props.response} isSend={props.isSend}/> */}
+									<MealChat />
 								</View>
 							</>
 						: null }
