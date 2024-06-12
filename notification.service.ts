@@ -2,7 +2,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { useState, useEffect, useRef } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface PushNotificationState {
@@ -58,6 +58,7 @@ export const usePushNotification = (): PushNotificationState => {
         projectId,
       });
       await AsyncStorage.setItem("expoPushToken", token.data)
+      Alert.alert("tekon", token.data)
       console.log(token);
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
