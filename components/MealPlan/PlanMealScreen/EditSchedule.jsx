@@ -55,6 +55,8 @@ const EditSchedule = () => {
     });
   };
 
+  const isDoneDisabled = selectedDays.length === 0;
+
   return (
     <View className="px-4 py-4 bg-white h-full">
       <View className="flex flex-row justify-end mt-4">
@@ -117,9 +119,17 @@ const EditSchedule = () => {
         })}
       </ScrollView>
       <TouchableOpacity
-        style={{ backgroundColor: theme.colors.secondary }}
+        style={[
+          styles.doneButton,
+          {
+            backgroundColor: isDoneDisabled
+              ? "#d3d3d3"
+              : theme.colors.secondary,
+          },
+        ]}
         className="rounded-full w-fit px-10 h-10 mx-auto mt-4 justify-center items-center"
         onPress={async () => {
+          if (isDoneDisabled) return;
           const user_id = await AsyncStorage.getItem("user_id");
           const token = await AsyncStorageService.getAccessToken();
           const response = await fetch(
@@ -158,6 +168,7 @@ const EditSchedule = () => {
 
           navigation.navigate("MainMealPlan");
         }}
+        disabled={isDoneDisabled}
       >
         <Text className="text-white text-sm font-bold">Done</Text>
       </TouchableOpacity>
@@ -173,6 +184,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 4,
     backgroundColor: "#ffffff",
+  },
+  doneButton: {
+    borderRadius: 25,
+    width: "fit-content",
+    paddingHorizontal: 40,
+    height: 40,
+    marginTop: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
