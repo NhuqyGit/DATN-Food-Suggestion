@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { theme } from "../../../theme/index";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 const GiveFeedBack = () => {
   const navigation = useNavigation();
@@ -59,6 +60,13 @@ const GiveFeedBack = () => {
       }
     );
     if (response) {
+      Toast.show({
+        type: "success",
+        text1: "Feedback Submitted",
+        text2: "Thank you for your feedback!",
+        textStyle: { fontSize: 20 },
+      });
+
       navigation.navigate("MainMealPlan");
     }
   };
