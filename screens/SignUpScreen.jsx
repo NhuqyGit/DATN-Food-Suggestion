@@ -4,87 +4,92 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { theme } from '../theme/index'
-import { useNavigation } from '@react-navigation/native'
-import { Ionicons } from '@expo/vector-icons'
-import { COLORS } from '../theme/theme'
-import { HOST } from '../config'
+  KeyboardAvoidingView,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "../theme/index";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../theme/theme";
+import { HOST } from "../config";
 
 function SignUpScreen() {
-  const navigation = useNavigation()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [validLength, setValidLength] = useState(false)
-  const [hasNumber, setHasNumber] = useState(false)
-  const [hasSpecialCharacter, setHasSpecialCharacter] = useState(false)
-  const [error, setError] = useState()
-  const [isHide, setIsHide] = useState(true)
-
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [validLength, setValidLength] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [hasSpecialCharacter, setHasSpecialCharacter] = useState(false);
+  const [error, setError] = useState();
+  const [isHide, setIsHide] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const handleEmailChange = (email) => {
-    setEmail(email)
-  }
+    setEmail(email);
+  };
 
   const handleSignup = async () => {
     try {
-      const response = await fetch(
-        `${HOST}/auth/signup`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: email,
-            password: password,
-          }),
-        }
-      )
+      setIsLoading(true);
+      const response = await fetch(`${HOST}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      });
 
       if (response.ok) {
-        navigation.navigate('SignInScreen')
+        setIsLoading(false);
+        navigation.navigate("SignInScreen");
       } else {
-        const responseBlob = await response.blob()
-        const responseData = await new Response(responseBlob).text()
-        const data = JSON.parse(responseData)
-
+        const responseBlob = await response.blob();
+        const responseData = await new Response(responseBlob).text();
+        const data = JSON.parse(responseData);
+        setIsLoading(false);
         if (Array.isArray(data.message)) {
-          setError(data.message.join('\n'))
+          setError(data.message.join("\n"));
+          setIsLoading(false);
         } else {
-          setError(data.message)
+          setError(data.message);
+          setIsLoading(false);
         }
       }
+      setIsLoading(false);
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      setIsLoading(false);
     }
-  }
+  };
 
   const handlePasswordChange = (password) => {
-    let pattern = /\d+/
-    let patternCharacter = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+    let pattern = /\d+/;
+    let patternCharacter = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-    setPassword(password)
+    setPassword(password);
     if (password.length >= 8) {
-      setValidLength(true)
+      setValidLength(true);
     } else {
-      setValidLength(false)
+      setValidLength(false);
     }
     if (password.match(pattern)) {
-      setHasNumber(true)
+      setHasNumber(true);
     } else {
-      setHasNumber(false)
+      setHasNumber(false);
     }
     if (password.match(patternCharacter)) {
-      setHasSpecialCharacter(true)
+      setHasSpecialCharacter(true);
     } else {
-      setHasSpecialCharacter(false)
+      setHasSpecialCharacter(false);
     }
-  }
+  };
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View style={styles.container}>
         <View>
           <Text style={styles.title}>Let’s get started!</Text>
@@ -94,7 +99,7 @@ function SignUpScreen() {
           <TextInput
             style={styles.input}
             value={email}
-            placeholder='Enter your username'
+            placeholder="Enter your username"
             onChangeText={handleEmailChange}
           />
         </View>
@@ -103,8 +108,8 @@ function SignUpScreen() {
           <View style={styles.passwordInput}>
             <TextInput
               style={[styles.input, styles.passwordInputLayout]}
-              type='password'
-              placeholder='Enter your password'
+              type="password"
+              placeholder="Enter your password"
               secureTextEntry={isHide}
               onChangeText={handlePasswordChange}
               value={password}
@@ -115,7 +120,7 @@ function SignUpScreen() {
               style={styles.iconEye}
             >
               <Ionicons
-                name={isHide ? 'eye-off' : 'eye'}
+                name={isHide ? "eye-off" : "eye"}
                 size={22}
                 color={COLORS.secondary}
               />
@@ -201,27 +206,38 @@ function SignUpScreen() {
         </View>
         {error && (
           <View>
-            <Text className='text-red-500 font-medium text-sm'>{error}</Text>
+            <Text className="text-red-500 font-medium text-sm">{error}</Text>
           </View>
         )}
-        <TouchableOpacity
-          onPress={handleSignup}
-          style={[
-            styles.signUpButtonContainer,
-            {
-              backgroundColor:
-                !password || !email
-                  ? theme?.colors?.grayBackground
-                  : theme.colors.secondary,
-            },
-          ]}
-          disabled={!email || !password}
-        >
-          <Text style={styles.signButton}>Sign Up</Text>
-        </TouchableOpacity>
+        <KeyboardAvoidingView>
+          <TouchableOpacity
+            onPress={handleSignup}
+            style={[
+              styles.signUpButtonContainer,
+              {
+                backgroundColor:
+                  !password || !email
+                    ? theme?.colors?.grayBackground
+                    : theme.colors.secondary,
+              },
+            ]}
+            disabled={!email || !password}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
+              <Text style={styles.signButton}>Sign Up</Text>
+            )}
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.orLogin}>Back</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -229,16 +245,16 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 80,
     gap: 30,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   signUpButtonContainer: {
-    marginTop: 'auto',
+    marginTop: "auto",
     backgroundColor: theme.colors.secondary,
     paddingVertical: 15,
     paddingHorizontal: 40,
@@ -246,19 +262,19 @@ const styles = StyleSheet.create({
   },
 
   signButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
 
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
   },
 
   inputLabel: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 16,
   },
 
@@ -266,7 +282,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     height: 50,
   },
 
@@ -278,12 +294,12 @@ const styles = StyleSheet.create({
   },
 
   iconEye: {
-    height: '100%',
+    height: "100%",
     padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 10,
     borderLeftWidth: 0,
     borderTopLeftRadius: 0,
@@ -291,14 +307,14 @@ const styles = StyleSheet.create({
   },
 
   passwordInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   progressBarContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 6,
   },
 
@@ -310,15 +326,15 @@ const styles = StyleSheet.create({
   },
 
   warningContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
   },
 
   warningItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
 
@@ -327,7 +343,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
-})
+});
 
-export default SignUpScreen
-
+export default SignUpScreen;
