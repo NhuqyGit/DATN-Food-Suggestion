@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
     // borderWidth: 1,
     marginHorizontal: 8,
-    marginVertical: 20,
+    marginVertical: 10,
     backgroundColor: 'white',
   },
   image: {

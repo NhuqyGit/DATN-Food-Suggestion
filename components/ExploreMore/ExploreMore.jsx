@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { HOST } from '../../config'
 import { AsyncStorageService } from '../../utils/AsynStorage'
 import ExploreMoreItem from '../ExploreMoreItem/ExploreMoreItem'
+import Category from '../Category/Category'
 
 function ExploreMore() {
   const [categories, setCategories] = useState(null)
@@ -34,7 +35,7 @@ function ExploreMore() {
     <View style={styles.container}>
       <Text style={styles.title}>Explore More</Text>
       {categories?.map((item) => (
-        <ExploreMoreItem key={item.id} item={item} />
+        <Category key={item.id} item={item} />
       ))}
     </View>
   )
@@ -44,7 +45,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     paddingVertical: 32,
-    gap: 16,
   },
 
   title: {

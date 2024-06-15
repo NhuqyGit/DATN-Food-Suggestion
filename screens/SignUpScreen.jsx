@@ -45,25 +45,23 @@ function SignUpScreen() {
         }),
       })
 
-      if (response.ok) {
-        setIsLoading(false)
-        navigation.navigate('SignInScreen')
-      } else {
-        const responseBlob = await response.blob()
-        const responseData = await new Response(responseBlob).text()
-        const data = JSON.parse(responseData)
-        setIsLoading(false)
-        if (Array.isArray(data.message)) {
-          setError(data.message.join('\n'))
-          setIsLoading(false)
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(responseJson.message)
+        if (Array.isArray(responseJson.message)) {
+          setError(responseJson.message.join('\n'))
         } else {
-          setError(data.message)
-          setIsLoading(false)
+          setError(responseJson.message)
         }
+        setIsLoading(false)
+      } else {
+        navigation.navigate('SignInScreen')
       }
-      setIsLoading(false)
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
+    } finally {
       setIsLoading(false)
     }
   }
@@ -231,7 +229,7 @@ function SignUpScreen() {
                 disabled={!email || !password}
               >
                 {isLoading ? (
-                  <ActivityIndicator size='small' color='#0000ff' />
+                  <ActivityIndicator size='small' color='white' />
                 ) : (
                   <Text style={styles.signButton}>Sign Up</Text>
                 )}

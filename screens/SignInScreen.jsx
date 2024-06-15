@@ -178,7 +178,7 @@ function SignInScreen() {
               >
                 <Text style={styles.signButton}>
                   {isLoading ? (
-                    <ActivityIndicator size='small' color='#0000ff' />
+                    <ActivityIndicator size='small' color='white' />
                   ) : (
                     <Text>Sign In</Text>
                   )}
