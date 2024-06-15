@@ -145,7 +145,7 @@ function SignInScreen() {
             </View>
             {error && password && <Text className='text-red-500'>{error}</Text>}
             <Text style={styles.forgotPassword}>Forgot password?</Text>
-            <View style={styles.thirdPartyContainer}>
+            {/* <View style={styles.thirdPartyContainer}>
               <TouchableOpacity style={styles.thirdPartyButton}>
                 <Icon name='google' size={25} color='#900' />
               </TouchableOpacity>
@@ -160,6 +160,12 @@ function SignInScreen() {
               onPress={() => navigation.navigate('SignUpScreen')}
             >
               <Text style={styles.orLogin}>Or sign up with email</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SignUpScreen')}
+            >
+              <Text style={styles.orLogin}>Register an account now</Text>
             </TouchableOpacity>
 
             <KeyboardAvoidingView>
