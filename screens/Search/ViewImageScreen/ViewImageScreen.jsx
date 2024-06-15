@@ -14,7 +14,8 @@ import IngredientItem from './IngredientItem'
 import { MotiView } from 'moti'
 import { Skeleton } from 'moti/skeleton'
 import IngredientSkeletonItem from './IngredientSkeletonItem'
-import { firebase } from '../../../config'
+import { HOST, firebase } from '../../../config'
+import { AsyncStorageService } from '../../../utils/AsynStorage'
 
 const ViewImageScreen = ({ navigation, route }) => {
   const { image } = route.params
@@ -91,6 +92,40 @@ const ViewImageScreen = ({ navigation, route }) => {
     }
   }
 
+  const fetchIngredientByImage = async (image) => {
+    setLoading(true)
+    try {
+      const token = await AsyncStorageService.getAccessToken()
+
+      const formData = new FormData()
+      formData.append('image', {
+        uri: image,
+        name: 'image.jpg',
+        type: 'image/jpg',
+      })
+
+      const response = await fetch(
+        `${HOST}/google-gemini/generate-recipe-from-image`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        }
+      )
+
+      const json = await response.json()
+
+      console.log('json', json)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const onRemove = (id) => {
     setOptions((prev) => prev.filter((item) => item.id !== id))
   }
@@ -108,7 +143,9 @@ const ViewImageScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (image) {
-      fetchResult(image)
+      // fetchResult(image)
+
+      fetchIngredientByImage(image)
     }
   }, [image])
 
