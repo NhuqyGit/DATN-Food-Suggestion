@@ -21,6 +21,7 @@ import { selectUserInfo } from "./slices/userLoginSlice";
 import PerDone from "./screens/PerDone";
 import PerSetup from "./screens/PerSetup";
 import Toast from "react-native-toast-message";
+import toastConfig from "./utils/toastConfig";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -114,7 +115,7 @@ export default function Navigation() {
           })}
         </Tab.Navigator>
       )}
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
     </NavigationContainer>
   );
 }
