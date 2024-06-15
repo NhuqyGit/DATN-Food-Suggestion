@@ -81,7 +81,7 @@ const SearchScreen = ({ navigation, route }) => {
     getIngredients()
   }, [])
 
-  const getDishBySearchText = async () => {
+  const getDishBySearchText = async (searchText) => {
     setLoadingDishBySearchText(true)
     try {
       const token = await AsyncStorageService.getAccessToken()
@@ -113,7 +113,9 @@ const SearchScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (searchText) {
-      getDishBySearchText()
+      getDishBySearchText(searchText)
+    } else {
+      setDishBySearchText([])
     }
   }, [searchText, cookingTime, ingredientIds])
 
@@ -127,55 +129,9 @@ const SearchScreen = ({ navigation, route }) => {
           setStep={setStep}
           setSearchText={setSearchText}
           searchText={searchText}
+          getDishBySearchText={getDishBySearchText}
+          step={step}
         />
-
-        {step === 1 && (
-          <View>
-            <View style={styles.popularWrapper}>
-              <View style={styles.padding}>
-                <Text style={styles.title}>The most common ingredients</Text>
-                {loading ? (
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      flexWrap: 'wrap',
-                      gap: 8,
-                    }}
-                  >
-                    <IngredientSkeleton total={2} />
-                  </View>
-                ) : (
-                  <View style={styles.popularList}>
-                    {ingredients?.map((item) => (
-                      <PopularItem key={item.id} item={item} />
-                    ))}
-                  </View>
-                )}
-              </View>
-              <View style={styles.popularWrapper}>
-                <View style={styles.padding}>
-                  <Text style={styles.title}>Latest dish</Text>
-                  {loadingDish ? (
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
-                      <LatestDishSkeleton total={5} />
-                    </View>
-                  ) : (
-                    <View style={styles.dishList}>
-                      {dish?.map((item) => (
-                        <DishItem key={item.id} item={item} />
-                      ))}
-                    </View>
-                  )}
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
 
         {step === 2 && (
           <View style={styles.popularWrapper}>
@@ -226,6 +182,54 @@ const SearchScreen = ({ navigation, route }) => {
                   ))}
               </>
             )}
+          </View>
+        )}
+
+        {step === 1 && (
+          <View>
+            <View style={styles.popularWrapper}>
+              <View style={styles.padding}>
+                <Text style={styles.title}>The most common ingredients</Text>
+                {loading ? (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      flexWrap: 'wrap',
+                      gap: 8,
+                    }}
+                  >
+                    <IngredientSkeleton total={2} />
+                  </View>
+                ) : (
+                  <View style={styles.popularList}>
+                    {ingredients?.map((item) => (
+                      <PopularItem key={item.id} item={item} />
+                    ))}
+                  </View>
+                )}
+              </View>
+              <View style={styles.popularWrapper}>
+                <View style={styles.padding}>
+                  <Text style={styles.title}>Latest dish</Text>
+                  {loadingDish ? (
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
+                      <LatestDishSkeleton total={5} />
+                    </View>
+                  ) : (
+                    <View style={styles.dishList}>
+                      {dish?.map((item) => (
+                        <DishItem key={item.id} item={item} />
+                      ))}
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
           </View>
         )}
       </ScrollView>

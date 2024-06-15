@@ -1,24 +1,23 @@
+import { Entypo, Ionicons } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
 import {
-  View,
+  Platform,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Platform,
+  View,
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Ionicons, Entypo } from '@expo/vector-icons'
 import Button from '../../../components/Button/Button'
 
 function SearchHeader({
-  setStep,
-  navigation,
-  route,
   setVisible,
   setSearchText,
-  searchText,
+  getDishBySearchText,
+  setStep,
+  step,
 }) {
   // const [search, setSearch] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
+  const [text, setText] = useState('')
   const generateBoxShadowStyle = (
     xOffset,
     yOffset,
@@ -46,38 +45,52 @@ function SearchHeader({
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
   useEffect(() => {
-    if (searchText.length > 0) {
-      setStep(2)
-    } else if (searchText.length === 0 && !isFocused) {
-      setStep(1)
+    if (!text) {
+      setSearchText('')
     }
-  }, [searchText, isFocused])
+  }, [text])
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[boxShadow, styles.searchContainer]}>
-        {/* <Icon name='search' size={20} style={styles.searchIcon} /> */}
-        <Ionicons
-          style={styles.searchIcon}
-          name='search-outline'
-          size={22}
-          color='#9e9e9e'
-        />
+      <View style={[boxShadow, styles.searchContainer]}>
+        {step === 2 && (
+          <TouchableOpacity
+            onPress={() => {
+              setStep(1)
+              setText('')
+            }}
+          >
+            <Ionicons
+              style={styles.searchIcon}
+              name='arrow-back-outline'
+              size={22}
+              color='#9e9e9e'
+            />
+          </TouchableOpacity>
+        )}
+
         <TextInput
-          value={searchText}
-          onFocus={() => {
-            setIsFocused(true)
-          }}
-          onBlur={() => {
-            setIsFocused(false)
-          }}
+          value={text}
           onChangeText={(text) => {
-            setSearchText(text)
+            setText(text)
           }}
           style={styles.input}
           placeholder='Search'
         />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setStep(2)
+            getDishBySearchText(text)
+          }}
+        >
+          <Ionicons
+            style={styles.searchIcon}
+            name='search-outline'
+            size={22}
+            color='#9e9e9e'
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.avatarContainer}>
         <Button
@@ -127,7 +140,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   searchIcon: {
-    transform: [{ rotateZ: '90deg' }],
     marginRight: 8,
   },
   searchPlaceHolder: {
