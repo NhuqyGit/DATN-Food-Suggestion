@@ -19,7 +19,7 @@ import {
   useUpdateReviewMutation,
 } from "../../slices/reviewSlice";
 import { useGetUserByIdQuery } from "../../slices/userInfoSlice";
-
+import SkeletonFoodDetails from "./components/SkeletonFoodDetails"
 const ReviewScreen = ({ route }) => {
   const navigation = useNavigation();
   const dismissKeyboard = () => {
@@ -89,8 +89,7 @@ const ReviewScreen = ({ route }) => {
     }
   };
 
-  if (userErr) return <Text>Get user err</Text>;
-  if (userLoading) return <Text>Loading current user</Text>;
+  if (userLoading || userErr) return <SkeletonFoodDetails/>;
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>

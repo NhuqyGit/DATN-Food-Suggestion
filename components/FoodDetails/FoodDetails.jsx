@@ -22,6 +22,7 @@ import {
   useDeleteDishFromMealPlanMutation,
   useGetMealplanIdByUserIdQuery,
 } from "../../slices/mealPlanSlice";
+import Toast from "react-native-toast-message";
 
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -89,16 +90,47 @@ function FoodDetailsScreen({ navigation, route }) {
   };
 
   const handleAddToMealPlan = async () => {
-    if (!isDishInMealPlan?.isInMealPlan) {
-      await addDishToMealPlan({ mealPlanId: mealID, dishId: foodDetails.id });
-    } else {
-      await deleteDishFromMealPlan({
-        dishId: foodDetails.id,
-        mealPlanId: mealID,
+    try {
+      let response;
+  
+      if (!isDishInMealPlan?.isInMealPlan) {
+        response = await addDishToMealPlan({
+          mealPlanId: mealID,
+          dishId: foodDetails.id,
+        });
+        if (response) {
+          Toast.show({
+            type: "success",
+            text1: "Mealplan Added",
+            text2: "This tasty meal has been added to your meal plan",
+            textStyle: { fontSize: 20 },
+          });
+        }
+      } else {
+        response = await deleteDishFromMealPlan({
+          dishId: foodDetails.id,
+          mealPlanId: mealID,
+        });
+        if (response) {
+          Toast.show({
+            type: "success",
+            text1: "Mealplan Removed",
+            text2: "This meal has been removed from your meal plan",
+            textStyle: { fontSize: 20 },
+          });
+        }
+      }
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Operation Failed",
+        text2: "An error occurred while updating your meal plan. Please try again.",
+        textStyle: { fontSize: 20 },
       });
+    } finally {
+      refetchMealPlan();
+      setModalVisible(false);
     }
-    refetchMealPlan();
-    setModalVisible(false);
   };
 
   const handleAddToCollection = async () => {
@@ -135,6 +167,7 @@ function FoodDetailsScreen({ navigation, route }) {
             name="pluscircle"
             size={40}
             color={theme.colors.secondary}
+            style={styles.saveIconContainer}
           />
         ) : (
           <TouchableOpacity
@@ -171,7 +204,7 @@ function FoodDetailsScreen({ navigation, route }) {
               textTransform: "none",
             },
             tabBarItemStyle: { width: 115 },
-            tabBarScrollEnabled: true
+            tabBarScrollEnabled: true,
           }}
         >
           <Tab.Screen name="Overview">
@@ -179,15 +212,18 @@ function FoodDetailsScreen({ navigation, route }) {
               <OverviewTab foodDetails={foodDetails} navigation={navigation} />
             )}
           </Tab.Screen>
-          <Tab.Screen name="Ingredients"
+          <Tab.Screen
+            name="Ingredients"
             options={{
               tabBarLabel: ({ focused }) => {
-               return(
-                <View>
-                  <Text style={{color: focused ? "red": "gray"}}>Ingredients</Text>
-                  <Text>2 Items</Text>
-                </View>
-               )  
+                return (
+                  <View>
+                    <Text style={{ color: focused ? "red" : "gray" }}>
+                      Ingredients
+                    </Text>
+                    <Text>2 Items</Text>
+                  </View>
+                );
               },
             }}
           >
@@ -196,9 +232,7 @@ function FoodDetailsScreen({ navigation, route }) {
             )}
           </Tab.Screen>
           <Tab.Screen name="Directions">
-            {() => (
-              <DirectionTab directions={foodDetails?.directions} />
-            )}
+            {() => <DirectionTab directions={foodDetails?.directions} />}
           </Tab.Screen>
           <Tab.Screen name="My Notes">
             {() => <NoteTab navigation={navigation} dishId={foodDetails.id} />}

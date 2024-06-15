@@ -17,7 +17,7 @@ import {
 } from "../../../slices/noteSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import ReviewSkeleton from "./ReviewSkeleton"
 function InitNotTab() {
   return (
     <View style={styles.containerInitNote}>
@@ -129,8 +129,7 @@ function NoteTab({ navigation, dishId }) {
     }
   };
 
-  if (noteLoading) return <Text>Loading</Text>;
-  if (noteError) return <Text>Error</Text>;
+  if (noteLoading || noteError) return <ReviewSkeleton/>;
 
   return (
     <View style={styles.container}>
