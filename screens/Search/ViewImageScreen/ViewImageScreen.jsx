@@ -191,30 +191,32 @@ const ViewImageScreen = ({ navigation, route }) => {
                   />
                 )
               })}
+
+              {options.length > 0 && (
+                <TouchableOpacity
+                  onPress={handlePressSearch}
+                  style={[
+                    styles.signInButtonContainer,
+                    {
+                      backgroundColor:
+                        options.length === 0 || loading
+                          ? theme?.colors?.grayBackground
+                          : theme.colors.secondary,
+                    },
+                  ]}
+                  disabled={options.length === 0 || loading}
+                >
+                  <Text style={styles.signButton}>
+                    {loading ? (
+                      <ActivityIndicator size='small' color='white' />
+                    ) : (
+                      <Text>Search</Text>
+                    )}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </>
           )}
-
-          <TouchableOpacity
-            onPress={handlePressSearch}
-            style={[
-              styles.signInButtonContainer,
-              {
-                backgroundColor:
-                  options.length === 0 || loading
-                    ? theme?.colors?.grayBackground
-                    : theme.colors.secondary,
-              },
-            ]}
-            disabled={options.length === 0 || loading}
-          >
-            <Text style={styles.signButton}>
-              {loading ? (
-                <ActivityIndicator size='small' color='white' />
-              ) : (
-                <Text>Search</Text>
-              )}
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </View>
     </SafeAreaView>
