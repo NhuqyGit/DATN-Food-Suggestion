@@ -20,19 +20,19 @@ export default function Personalization({ setIsDone }) {
   const [ques, setQues] = useState([
     {
       id: 0,
-      question: "What are your favorite cuisines?",
+      question: "Tell us your favourite cuisines",
       listAns: null,
       svg: SvgPer1,
     },
     {
       id: 1,
-      question: "What are your favorite cuisidfasdfnes?",
+      question: "Are you allergic to anything?",
       listAns: null,
       svg: SvgPer2,
     },
     {
       id: 2,
-      question: "What are your favorite cuisidfasdfnes?",
+      question: "Are you following any specific diet?",
       listAns: null,
       svg: SvgPer3,
     },

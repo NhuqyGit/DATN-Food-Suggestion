@@ -23,11 +23,11 @@ function Splash() {
                 <View className="flex flex-row mt-[18px]">
                   <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
                     <Text className="text-[#FF6321] text-[42px] font-bold leading-normal ">
-                      D
+                      I
                     </Text>
                   </View>
                   <Text className="text-[#FFFFFF] font-bold text-[42px] leading-normal ">
-                    ATN
+                    ntelliTaste
                   </Text>
                 </View>
                 <View className=" justify-center items-center mt-3  bg-[#FF6321] ">
@@ -46,11 +46,11 @@ function Splash() {
                 <View className="flex flex-row mt-[18px]">
                   <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
                     <Text className="text-[#FF6321] text-[42px] font-bold leading-normal ">
-                      D
+                      I
                     </Text>
                   </View>
                   <Text className="text-[#FFFFFF] font-bold text-[42px] leading-normal ">
-                    ATN
+                    ntelliTaste
                   </Text>
                 </View>
                 <View className=" justify-center items-center mt-3  bg-[#FF6321] ">
@@ -68,11 +68,11 @@ function Splash() {
                 <View className="flex flex-row mt-[18px]">
                   <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
                     <Text className="text-[#FF6321] text-[42px] font-bold leading-normal ">
-                      D
+                      I
                     </Text>
                   </View>
                   <Text className="text-[#FFFFFF] font-bold text-[42px] leading-normal ">
-                    ATN
+                    ntelliTaste
                   </Text>
                 </View>
                 <View className=" justify-center items-center mt-3  bg-[#FF6321] ">
@@ -90,11 +90,11 @@ function Splash() {
                 <View className="flex flex-row mt-[18px]">
                   <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
                     <Text className="text-[#FF6321] text-[42px] font-bold leading-normal ">
-                      D
+                      I
                     </Text>
                   </View>
                   <Text className="text-[#FFFFFF] font-bold text-[42px] leading-normal ">
-                    ATN
+                    ntelliTaste
                   </Text>
                 </View>
                 <View className=" justify-center items-center mt-3  bg-[#FF6321] ">

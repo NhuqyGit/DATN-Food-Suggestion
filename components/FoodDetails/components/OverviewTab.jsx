@@ -22,6 +22,7 @@ import {
   useGetReportByUserIdAndDishIdQuery,
 } from "../../../slices/reportSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 const reportReasons = [
   "Inappropriate Content",
@@ -88,12 +89,22 @@ function OverviewTab({ foodDetails, navigation }) {
 
   const handleReportSubmission = async () => {
     if (selectedReason?.length === 0) {
-      Alert.alert("Please select at least one reason.");
+      Toast.show({
+        type: "error",
+        text1: "Report Error",
+        text2: "Please select at least one reason.",
+        textStyle: { fontSize: 20 },
+      });
       return;
     }
     refetch();
     if (existingReport && existingReport?.length > 0) {
-      Alert.alert("You have already reported this dish.");
+      Toast.show({
+        type: "error",
+        text1: "Report Error",
+        text2: "You have already reported this dish.",
+        textStyle: { fontSize: 20 },
+      });
       cancelReporting();
       return;
     }
@@ -101,12 +112,20 @@ function OverviewTab({ foodDetails, navigation }) {
       selectedReason === "Others"
         ? `${selectedReason}: ${otherReason}`
         : selectedReason;
-    await createReport({
+    const response = await createReport({
       userId: parseInt(userId),
       dishId: parseInt(foodDetails?.id),
       content,
     });
-    Alert.alert("Report issued successfully.");
+    if (response.status == 201) {
+      Toast.show({
+        type: "success",
+        text1: "Report Submitted",
+        text2: "Report issued successfully.",
+        textStyle: { fontSize: 20 },
+      });
+    }
+
     cancelReporting();
   };
 
@@ -186,10 +205,10 @@ function OverviewTab({ foodDetails, navigation }) {
           />
           <Text style={styles.label}>Total time</Text>
           <Text style={styles.value}>
-                {(Number(foodDetails?.cookingTime) / 60).toFixed(0) < 120
-                  ? `${(Number(foodDetails?.cookingTime) / 60).toFixed(0)}m`
-                  : `${(Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0)}h ${(Number(foodDetails?.cookingTime) / 60).toFixed(0) - (Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0) * 60}m`}
-              </Text>
+            {(Number(foodDetails?.cookingTime) / 60).toFixed(0) < 120
+              ? `${(Number(foodDetails?.cookingTime) / 60).toFixed(0)}m`
+              : `${(Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0)}h ${(Number(foodDetails?.cookingTime) / 60).toFixed(0) - (Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0) * 60}m`}
+          </Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -240,7 +259,7 @@ function OverviewTab({ foodDetails, navigation }) {
         <View style={styles.reportButtonContainer}>
           {existingReport && existingReport.length > 0 ? (
             <Text style={styles.alreadyReportedText}>
-              * Thank you. You have already reported this dish!
+              * Thank you. You have reported this dish!
             </Text>
           ) : (
             <TouchableOpacity onPress={startReporting}>
