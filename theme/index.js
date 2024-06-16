@@ -40,8 +40,9 @@ export const theme = {
     grayBackground: '#E2E2E2',
     secondary: '#3a9693',
     dark: '#373739',
-    lightGray: '#d9d9d9',
+    //lightGray: '#d9d9d9',
     lightGreen: '#c4e0e3',
-    darkGray: '#909295'
+    darkGray: '#909295',
+    lightGray: '#ededed'
   },
 }
