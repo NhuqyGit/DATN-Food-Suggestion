@@ -1,9 +1,7 @@
-// toastConfig.js
 import React from 'react';
 import { BaseToast, ErrorToast } from 'react-native-toast-message';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { theme } from '../theme';
-
 
 const toastConfig = {
   success: (props) => (
@@ -13,6 +11,16 @@ const toastConfig = {
       contentContainerStyle={styles.contentContainer}
       text1Style={styles.text1}
       text2Style={styles.text2}
+      text2NumberOfLines={2} 
+      renderText2={(props) => (
+        <Text
+          numberOfLines={2}
+          ellipsizeMode="tail"
+          style={styles.text2}
+        >
+          {props.text2}
+        </Text>
+      )}
     />
   ),
   error: (props) => (
@@ -22,6 +30,16 @@ const toastConfig = {
       contentContainerStyle={styles.contentContainer}
       text1Style={styles.text1}
       text2Style={styles.text2}
+      text2NumberOfLines={2}
+      renderText2={(props) => (
+        <Text
+          numberOfLines={2}
+          ellipsizeMode="tail"
+          style={styles.text2}
+        >
+          {props.text2}
+        </Text>
+      )}
     />
   ),
 };
@@ -29,12 +47,14 @@ const toastConfig = {
 const styles = StyleSheet.create({
   successToast: {
     borderLeftColor: theme.colors.secondary,
-    height: 80,
+    height: 'auto',
+    minHeight: 80,
     padding: 10,
   },
   errorToast: {
     borderLeftColor: 'red',
-    height: 80,
+    height: 'auto',
+    minHeight: 80,
     padding: 10,
   },
   contentContainer: {

@@ -10,7 +10,7 @@ function MealPlanMadeEasy() {
       <View style={styles.content}>
         <Text style={styles.title}>Meal planning made easy</Text>
         <Text style={styles.description}>
-          Add recipes, instantly create shopping lists, schedule meals, and get
+          Add recipes, instantly schedule meals, and get
           cooking reminders
         </Text>
       </View>
