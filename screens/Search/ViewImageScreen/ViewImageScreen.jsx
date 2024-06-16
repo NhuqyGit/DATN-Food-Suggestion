@@ -137,8 +137,7 @@ const ViewImageScreen = ({ navigation, route }) => {
 
   const handlePressSearch = () => {
     navigation.navigate('SearchScreen')
-    const filterOptions = options?.filter((item) => item.value > 0.1)
-    dispatch(setIngredientNames(filterOptions?.map((item) => item.name)))
+    dispatch(setIngredientNames(options?.map((item) => item.name)))
     dispatch(setSearchStep(2))
   }
 
