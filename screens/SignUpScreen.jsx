@@ -45,6 +45,11 @@ function SignUpScreen() {
         }),
       })
 
+      if (response.status === 201) {
+        navigation.navigate('SignInScreen')
+        return
+      }
+
       const responseJson = await response.json()
 
       if (responseJson.error) {
@@ -55,8 +60,6 @@ function SignUpScreen() {
           setError(responseJson.message)
         }
         setIsLoading(false)
-      } else {
-        navigation.navigate('SignInScreen')
       }
     } catch (error) {
       console.error(error)
