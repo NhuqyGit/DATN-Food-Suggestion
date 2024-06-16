@@ -175,12 +175,12 @@ function SignInScreen() {
                   styles.signInButtonContainer,
                   {
                     backgroundColor:
-                      !password || !email
+                      !password || !email || !isLoading
                         ? theme?.colors?.grayBackground
                         : theme.colors.secondary,
                   },
                 ]}
-                disabled={!email || !password}
+                disabled={!email || !password || !isLoading}
               >
                 <Text style={styles.signButton}>
                   {isLoading ? (
