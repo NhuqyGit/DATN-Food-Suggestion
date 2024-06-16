@@ -56,10 +56,10 @@ function PopOver({ setRandom }) {
               <Feather name="trash-2" size={26} color="red" />
             </TouchableOpacity>
           </View>
-          <View className="flex flex-row justify-between mt-3 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
+          {/* <View className="flex flex-row justify-between mt-3 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
             <Text className="text-lg font-semibold">Sort by cooking time</Text>
             <Material name="sort-clock-descending-outline" size={26} />
-          </View>
+          </View> */}
         </View>
       </BottomSheet>
     </View>

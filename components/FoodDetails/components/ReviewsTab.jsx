@@ -18,34 +18,7 @@ import {
   useDeleteReviewMutation,
 } from "../../../slices/reviewSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import { MotiView } from "moti";
-
-const ReviewSkeleton = () => {
-  return (
-    <View style={{paddingTop: 20}}>
-      <MotiView
-        from={{ opacity: 1 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ loop: true, type: "timing", duration: 1000 }}
-        style={styles.imagePlaceholder}
-      />
-      <View style={styles.textContainer}>
-        <MotiView
-          from={{ opacity: 1 }}
-          animate={{ opacity: 0.3 }}
-          transition={{ loop: true, type: "timing", duration: 1000 }}
-          style={styles.title}
-        />
-        <MotiView
-          from={{ opacity: 1 }}
-          animate={{ opacity: 0.3 }}
-          transition={{ loop: true, type: "timing", duration: 1000 }}
-          style={styles.subtitle}
-        />
-      </View>
-    </View>
-  );
-};
+import ReviewSkeleton from "./ReviewSkeleton"
 function ReviewsTab({ navigation, dishId, dishInfo }) {
   const [userID, setUserID] = useState(null);
 
@@ -127,7 +100,8 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
     return users?.find((user) => user.id === userId);
   };
 
-  if (!userID || reviewLoading || userLoading || reviewError || userError) return <ReviewSkeleton />;
+  if (!userID || reviewLoading || userLoading || reviewError || userError)
+    return <ReviewSkeleton />;
 
   // Separate the current user's review from the rest
   const userReview = reviews?.find(
@@ -136,13 +110,6 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
   const otherReviews = reviews?.filter(
     (review) => review?.userId?.toString() !== userID?.toString()
   );
-  if(!reviews || reviews?.length === 0){
-    return(
-      <View style={styles.noDirectionsContainer}>
-      <Text style={styles.noDirectionsText}>How was it</Text>
-    </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -168,50 +135,57 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
         </View>
       </View>
       <View style={styles.line} />
-      <ScrollView>
-        {[userReview, ...otherReviews]?.map((review) => {
-          if (!review) return null;
-          const user = getUserById(review?.userId);
-          return (
-            <View key={review.id} style={styles.component}>
-              <View style={styles.reviewContainer}>
-                {user?.imgUrl ? (
-                  <Image
-                    source={{ uri: user?.imgUrl }}
-                    style={styles.userImage}
-                  />
-                ) : (
-                  <View style={styles.avatarContainer}>
-                    <Text style={styles.avatarText}>
-                      {user?.username?.substring(0, 2)}
-                    </Text>
+
+      {reviews.length === 0 ? (
+        <View style={styles.noDirectionsContainer}>
+          <Text style={styles.noDirectionsText}>How was it</Text>
+        </View>
+      ) : (
+        <ScrollView>
+          {[userReview, ...otherReviews]?.map((review) => {
+            if (!review) return null;
+            const user = getUserById(review?.userId);
+            return (
+              <View key={review.id} style={styles.component}>
+                <View style={styles.reviewContainer}>
+                  {user?.imgUrl ? (
+                    <Image
+                      source={{ uri: user?.imgUrl }}
+                      style={styles.userImage}
+                    />
+                  ) : (
+                    <View style={styles.avatarContainer}>
+                      <Text style={styles.avatarText}>
+                        {user?.username?.substring(0, 2)}
+                      </Text>
+                    </View>
+                  )}
+                  <View style={styles.reviewDetails}>
+                    <Text style={styles.userName}>{user?.username}</Text>
+                    <View style={styles.ratingContainer}>
+                      {renderStarRating(review?.rating)}
+                      <Text style={styles.ratingText}>{review?.rating}</Text>
+                    </View>
+                    <Text>{review?.content}</Text>
+                  </View>
+                </View>
+                {review?.userId?.toString() === userID.toString() && (
+                  <View style={styles.icons}>
+                    <TouchableOpacity onPress={() => handleEditReview(review)}>
+                      <Icon name="pencil" size={18} color="#000" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => confirmDeleteReview(review.id)}
+                    >
+                      <Icon name="trash" size={18} color="#000" />
+                    </TouchableOpacity>
                   </View>
                 )}
-                <View style={styles.reviewDetails}>
-                  <Text style={styles.userName}>{user?.username}</Text>
-                  <View style={styles.ratingContainer}>
-                    {renderStarRating(review?.rating)}
-                    <Text style={styles.ratingText}>{review?.rating}</Text>
-                  </View>
-                  <Text>{review?.content}</Text>
-                </View>
               </View>
-              {review?.userId?.toString() === userID.toString() && (
-                <View style={styles.icons}>
-                  <TouchableOpacity onPress={() => handleEditReview(review)}>
-                    <Icon name="pencil" size={18} color="#000" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => confirmDeleteReview(review.id)}
-                  >
-                    <Icon name="trash" size={18} color="#000" />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          );
-        })}
-      </ScrollView>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -224,7 +198,7 @@ const styles = StyleSheet.create({
   component: {
     borderRadius: 8,
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 5,
     marginHorizontal: 10,
     backgroundColor: "#F5F5F5",
   },
@@ -259,6 +233,7 @@ const styles = StyleSheet.create({
   line: {
     borderBottomWidth: 0.5,
     borderBottomColor: theme.colors.secondary,
+    marginBottom: 5,
   },
   addButtonText: {
     color: "white",
@@ -340,41 +315,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 25,
   },
-
-  textContainer: {
-    paddingHorizontal: 16,
-  },
-  title: {
-    width: "70%",
-    height: 20,
-    backgroundColor: "gray",
-    borderRadius: 4,
-    marginBottom: 8,
-  },
-  subtitle: {
-    width: "50%",
-    height: 20,
-    backgroundColor: "gray",
-    borderRadius: 4,
-  },
-  imagePlaceholder: {
-    width: '80%',
-    height: 60,
-    backgroundColor: "gray",
-    borderRadius: 8,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-  },
   noDirectionsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "white",
     padding: 16,
   },
   noDirectionsText: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
 });
 

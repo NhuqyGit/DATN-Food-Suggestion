@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
+  ScrollView,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -18,6 +21,7 @@ import { AsyncStorageService } from '../utils/AsynStorage'
 import { useDispatch } from 'react-redux'
 import { setUserInfo } from '../slices/userLoginSlice'
 import { HOST } from '../config'
+import BackButton from '../components/BackButton/BackButton'
 
 function SignInScreen() {
   const navigation = useNavigation()
@@ -26,7 +30,7 @@ function SignInScreen() {
   const [isHide, setIsHide] = useState(true)
   const [error, setError] = useState()
   const dispatch = useDispatch()
-
+  const [isLoading, setIsLoading] = useState(false)
   const handleEmailChange = (email) => {
     setEmail(email)
   }
@@ -38,19 +42,18 @@ function SignInScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(
-        `${HOST}/auth/signin`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: email,
-            password: password,
-          }),
-        }
-      )
+      setIsLoading(true)
+
+      const response = await fetch(`${HOST}/auth/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      })
 
       const responseJson = await response.json()
 
@@ -61,6 +64,7 @@ function SignInScreen() {
         } else {
           setError(responseJson.message)
         }
+        setIsLoading(false)
       } else {
         await AsyncStorageService.setToken(responseJson?.accessToken)
         await AsyncStorage.setItem('user_id', responseJson?.id.toString())
@@ -81,6 +85,7 @@ function SignInScreen() {
 
         if (responseGetUserByIdJson.error) {
           console.error(responseGetUserByIdJson.message)
+          setIsLoading(false)
         } else {
           if (responseGetUserByIdJson?.isLogin === true) {
             navigation.navigate('Home')
@@ -88,82 +93,114 @@ function SignInScreen() {
             navigation.navigate('Personalization')
           }
         }
+        setIsLoading(false)
       }
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
     }
   }
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>Sign In</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.input}
-            placeholder='Enter your username'
-            value={email}
-            onChangeText={handleEmailChange}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordInput}>
-            <TextInput
-              style={[styles.input, styles.passwordInputLayout]}
-              type='password'
-              secureTextEntry={isHide}
-              placeholder='Enter your password'
-              value={password}
-              onChangeText={handlePasswordChange}
-            />
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => setIsHide(!isHide)}
-              style={styles.iconEye}
-            >
-              <Ionicons
-                name={isHide ? 'eye-off' : 'eye'}
-                size={22}
-                color={COLORS.secondary}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <BackButton />
+          <View style={styles.container}>
+            <View>
+              <Text style={styles.title}>Sign In</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Username</Text>
+              <TextInput
+                style={styles.input}
+                placeholder='Enter your username'
+                value={email}
+                onChangeText={handleEmailChange}
               />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <View style={styles.passwordInput}>
+                <TextInput
+                  style={[styles.input, styles.passwordInputLayout]}
+                  type='password'
+                  secureTextEntry={isHide}
+                  placeholder='Enter your password'
+                  value={password}
+                  onChangeText={handlePasswordChange}
+                />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => setIsHide(!isHide)}
+                  style={styles.iconEye}
+                >
+                  <Ionicons
+                    name={isHide ? 'eye-off' : 'eye'}
+                    size={22}
+                    color={COLORS.secondary}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            {error && password && <Text className='text-red-500'>{error}</Text>}
+            <Text style={styles.forgotPassword}>Forgot password?</Text>
+            {/* <View style={styles.thirdPartyContainer}>
+              <TouchableOpacity style={styles.thirdPartyButton}>
+                <Icon name='google' size={25} color='#900' />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.thirdPartyButton}>
+                <Icon name='facebook' size={25} color='#900' />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.thirdPartyButton}>
+                <Icon name='facebook' size={25} color='#900' />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SignUpScreen')}
+            >
+              <Text style={styles.orLogin}>Or sign up with email</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SignUpScreen')}
+            >
+              <Text style={styles.orLogin}>Register an account now</Text>
             </TouchableOpacity>
+
+            <KeyboardAvoidingView>
+              <TouchableOpacity
+                onPress={handleLogin}
+                style={[
+                  styles.signInButtonContainer,
+                  {
+                    backgroundColor:
+                      !password || !email || isLoading
+                        ? theme?.colors?.grayBackground
+                        : theme.colors.secondary,
+                  },
+                ]}
+                disabled={!email || !password || isLoading}
+              >
+                <Text style={styles.signButton}>
+                  {isLoading ? (
+                    <ActivityIndicator size='small' color='white' />
+                  ) : (
+                    <Text>Sign In</Text>
+                  )}
+                </Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
           </View>
         </View>
-        {error && password && <Text className='text-red-500'>{error}</Text>}
-        <Text style={styles.forgotPassword}>Forgot password?</Text>
-        <View style={styles.thirdPartyContainer}>
-          <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name='google' size={25} color='#900' />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name='facebook' size={25} color='#900' />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.thirdPartyButton}>
-            <Icon name='facebook' size={25} color='#900' />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
-          <Text style={styles.orLogin}>Or sign up with email</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={styles.signInButtonContainer}
-        >
-          <Text style={styles.signButton}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 80,
+    paddingVertical: 20,
     gap: 30,
     backgroundColor: 'white',
   },

@@ -1,52 +1,52 @@
-import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
-import { Camera, CameraType } from 'expo-camera/legacy';
-import * as MediaLibrary from 'expo-media-library';
-import { useEffect, useRef, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Button from '../../../components/Button/Button';
+import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons'
+import { Camera, CameraType } from 'expo-camera/legacy'
+import * as MediaLibrary from 'expo-media-library'
+import { useEffect, useRef, useState } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Button from '../../../components/Button/Button'
 
-const CameraScreen = ({ navigation, route, setVisible }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
-  const cameraRef = useRef(null);
+const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
+  const [hasPermission, setHasPermission] = useState(null)
+  const [image, setImage] = useState(null)
+  const [type, setType] = useState(Camera.Constants.Type.back)
+  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
+  const cameraRef = useRef(null)
 
   useEffect(() => {
     const getPermissions = async () => {
-      await MediaLibrary.requestPermissionsAsync();
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(cameraStatus.status === 'granted');
-    };
+      await MediaLibrary.requestPermissionsAsync()
+      const cameraStatus = await Camera.requestCameraPermissionsAsync()
+      setHasPermission(cameraStatus.status === 'granted')
+    }
 
-    getPermissions();
-  }, []);
+    getPermissions()
+  }, [])
 
   const takePicture = async () => {
     if (cameraRef.current) {
       try {
-        const picture = await cameraRef.current.takePictureAsync();
-        setImage(picture.uri);
+        const picture = await cameraRef.current.takePictureAsync()
+        setImage(picture.uri)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
-  };
+  }
 
   const saveImage = async () => {
     if (image) {
       try {
-        await MediaLibrary.createAssetAsync(image);
-        alert('Image saved to library');
-        setImage(null);
+        await MediaLibrary.createAssetAsync(image)
+        alert('Image saved to library')
+        setImage(null)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
-  };
+  }
 
   if (!hasPermission) {
-    return <Text>No access to camera</Text>;
+    return <Text>No access to camera</Text>
   }
 
   return (
@@ -97,7 +97,7 @@ const CameraScreen = ({ navigation, route, setVisible }) => {
                   setType(
                     type === CameraType.back
                       ? CameraType.front
-                      : CameraType.back,
+                      : CameraType.back
                   )
                 }
                 childrenIcon={
@@ -148,8 +148,8 @@ const CameraScreen = ({ navigation, route, setVisible }) => {
           {image && (
             <TouchableOpacity
               onPress={() => {
-                setVisible(false);
-                navigation.navigate('ViewImageScreen', { image });
+                setVisible(false)
+                navigation.navigate('ViewImageScreen', { image })
               }}
             >
               <Image
@@ -205,10 +205,10 @@ const CameraScreen = ({ navigation, route, setVisible }) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default CameraScreen;
+export default CameraScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -221,4 +221,5 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
   },
-});
+})
+

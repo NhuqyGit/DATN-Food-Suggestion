@@ -173,7 +173,7 @@ function OverviewTab({ foodDetails, navigation }) {
             color={theme.colors.primary}
             style={styles.icon}
           />
-          <Text style={styles.label}>Rating:</Text>
+          <Text style={styles.label}>Rating</Text>
           <Text style={styles.value}>{foodDetails?.rating}</Text>
         </View>
         <View style={styles.line} />
@@ -184,8 +184,12 @@ function OverviewTab({ foodDetails, navigation }) {
             color={theme.colors.primary}
             style={styles.icon}
           />
-          <Text style={styles.label}>Total time:</Text>
-          <Text style={styles.value}>{foodDetails?.cookingTime}m</Text>
+          <Text style={styles.label}>Total time</Text>
+          <Text style={styles.value}>
+                {(Number(foodDetails?.cookingTime) / 60).toFixed(0) < 120
+                  ? `${(Number(foodDetails?.cookingTime) / 60).toFixed(0)}m`
+                  : `${(Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0)}h ${(Number(foodDetails?.cookingTime) / 60).toFixed(0) - (Number(foodDetails?.cookingTime) / 60 / 60).toFixed(0) * 60}m`}
+              </Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -195,7 +199,7 @@ function OverviewTab({ foodDetails, navigation }) {
             color={theme.colors.primary}
             style={styles.icon}
           />
-          <Text style={styles.label}>Servings:</Text>
+          <Text style={styles.label}>Servings</Text>
           <Text style={styles.value}>{foodDetails?.servings}</Text>
         </View>
         <View style={styles.line} />
@@ -206,7 +210,7 @@ function OverviewTab({ foodDetails, navigation }) {
             color={theme.colors.primary}
             style={styles.icon}
           />
-          <Text style={styles.label}>Calories per serving:</Text>
+          <Text style={styles.label}>Calories per serving</Text>
           <Text style={styles.value}>{foodDetails?.calories}</Text>
         </View>
 

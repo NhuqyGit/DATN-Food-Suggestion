@@ -14,14 +14,15 @@ const SearchValueSkeleton = ({ total }) => {
             alignItems: 'center',
             width: '100%',
             flex: 1,
-            paddingHorizontal: 8,
+            padding: 4,
+            paddingHorizontal: 16,
             borderColor: '#D4D4D4',
           }}
         >
           <Skeleton
             show
             height={400}
-            width={'98%'}
+            width={'95%'}
             colorMode='light'
             transition={{
               type: 'timing',

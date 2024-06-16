@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -30,11 +30,11 @@ const EditSchedule = () => {
     "Friday",
     "Saturday",
   ];
-
+  const [scheduleDate, setScheduleDate] = useState([]);
   const [offsetWeek, setOffsetWeek] = useState(0);
   const startDate = moment().startOf("week").add(offsetWeek, "weeks");
   const endDate = moment().endOf("week").add(offsetWeek, "weeks");
-  const formattedStartDateYear = startDate.format("YYYY MMM Do");
+
   const formattedStartDate = startDate.format("MMM Do");
   const formattedEndDate = endDate.format("MMM Do");
   const date = `${formattedStartDate.toLocaleString()}  -  ${formattedEndDate.toLocaleString()}`;
@@ -46,14 +46,60 @@ const EditSchedule = () => {
     const dayIndex = daysOfWeek.indexOf(day);
     const selectedDate = startDate.clone().add(dayIndex, "days");
     const selectedDateString = selectedDate.format("YYYY-MM-DD");
+
     setSelectedDays((prev) => {
-      if (prev.includes(selectedDateString)) {
+      if (prev?.length > 0 && prev.includes(selectedDateString)) {
         return prev.filter((date) => date !== selectedDateString);
       } else {
         return [...prev, selectedDateString];
       }
     });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const user_id = await AsyncStorage.getItem("user_id");
+      const token = await AsyncStorageService.getAccessToken();
+      const res = await fetch(
+        `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const mealplanJson = await res.json();
+      const mealplanId = mealplanJson?.mealplanId;
+      const mealPlanIdInt = parseInt(mealplanId, 10);
+      const dishIdInt = parseInt(id, 10);
+
+      const response = await fetch(
+        `https://datn-admin-be.onrender.com/mealplan/dateMealplan/${mealPlanIdInt}/dish/${dishIdInt}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data?.length > 0) {
+        const formattedData = data.map((date) =>
+          moment(date).format("YYYY-MM-DD")
+        );
+
+        setScheduleDate(formattedData);
+
+        setSelectedDays(formattedData);
+      }
+    };
+    fetchData();
+  }, []);
 
   const isDoneDisabled = selectedDays.length === 0;
 
@@ -89,6 +135,10 @@ const EditSchedule = () => {
           const dayIndex = index;
           const selectedDate = startDate.clone().add(dayIndex, "days");
           const selectedDateString = selectedDate.format("YYYY-MM-DD");
+
+          const isScheduled = scheduleDate.includes(selectedDateString);
+          const isSelected = selectedDays.includes(selectedDateString);
+
           return (
             <View key={index}>
               <View className="flex flex-row justify-between py-4">
@@ -96,7 +146,7 @@ const EditSchedule = () => {
                   <Plus
                     isAdd={true}
                     onToggle={() => toggleDay(day)}
-                    isSelected={selectedDays.includes(selectedDateString)}
+                    isSelected={isSelected}
                   />
                   <Text className="text-lg pl-6">{day}</Text>
                 </View>

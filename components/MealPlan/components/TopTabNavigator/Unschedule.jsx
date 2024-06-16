@@ -30,7 +30,7 @@ function Unschedule() {
       ].dishes?.map((dishItem) => ({
         dish_id: dishItem?.dish?.id,
         name: dishItem.dish.dishName,
-        time: `${dishItem.dish.cookingTime} `,
+        time: `${dishItem.dish.cookingTime}`,
         imgUri: { uri: dishItem.dish.imageUrl },
       }));
 
@@ -47,6 +47,8 @@ function Unschedule() {
       fetchData();
     }, [random])
   );
+
+
 
   return (
     <View className="py-4 h-full bg-white">

@@ -4,6 +4,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  ScrollView,
 } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -12,6 +15,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '../theme/theme'
 import { HOST } from '../config'
+import BackButton from '../components/BackButton/BackButton'
 
 function SignUpScreen() {
   const navigation = useNavigation()
@@ -22,42 +26,46 @@ function SignUpScreen() {
   const [hasSpecialCharacter, setHasSpecialCharacter] = useState(false)
   const [error, setError] = useState()
   const [isHide, setIsHide] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(false)
   const handleEmailChange = (email) => {
     setEmail(email)
   }
 
   const handleSignup = async () => {
     try {
-      const response = await fetch(
-        `${HOST}/auth/signup`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: email,
-            password: password,
-          }),
-        }
-      )
+      setIsLoading(true)
+      const response = await fetch(`${HOST}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      })
 
-      if (response.ok) {
+      if (response.status === 201) {
         navigation.navigate('SignInScreen')
-      } else {
-        const responseBlob = await response.blob()
-        const responseData = await new Response(responseBlob).text()
-        const data = JSON.parse(responseData)
+        return
+      }
 
-        if (Array.isArray(data.message)) {
-          setError(data.message.join('\n'))
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(responseJson.message)
+        if (Array.isArray(responseJson.message)) {
+          setError(responseJson.message.join('\n'))
         } else {
-          setError(data.message)
+          setError(responseJson.message)
         }
+        setIsLoading(false)
       }
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -85,149 +93,161 @@ function SignUpScreen() {
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>Let’s get started!</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>What is your username?</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            placeholder='Enter your username'
-            onChangeText={handleEmailChange}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Create a password</Text>
-          <View style={styles.passwordInput}>
-            <TextInput
-              style={[styles.input, styles.passwordInputLayout]}
-              type='password'
-              placeholder='Enter your password'
-              secureTextEntry={isHide}
-              onChangeText={handlePasswordChange}
-              value={password}
-            />
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => setIsHide(!isHide)}
-              style={styles.iconEye}
-            >
-              <Ionicons
-                name={isHide ? 'eye-off' : 'eye'}
-                size={22}
-                color={COLORS.secondary}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <BackButton />
+          <View style={styles.container}>
+            <View>
+              <Text style={styles.title}>Let’s get started!</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>What is your username?</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                placeholder='Enter your username'
+                onChangeText={handleEmailChange}
               />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View
-            style={[
-              styles.progressBar,
-              {
-                backgroundColor: validLength
-                  ? theme?.colors?.secondary
-                  : theme?.colors?.grayBackground,
-              },
-            ]}
-          />
-          <View
-            style={[
-              styles.progressBar,
-              {
-                backgroundColor: hasNumber
-                  ? theme?.colors?.secondary
-                  : theme?.colors?.grayBackground,
-              },
-            ]}
-          />
-          <View
-            style={[
-              styles.progressBar,
-              {
-                backgroundColor: hasSpecialCharacter
-                  ? theme?.colors?.secondary
-                  : theme?.colors?.grayBackground,
-              },
-            ]}
-          />
-        </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Create a password</Text>
+              <View style={styles.passwordInput}>
+                <TextInput
+                  style={[styles.input, styles.passwordInputLayout]}
+                  type='password'
+                  placeholder='Enter your password'
+                  secureTextEntry={isHide}
+                  onChangeText={handlePasswordChange}
+                  value={password}
+                />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => setIsHide(!isHide)}
+                  style={styles.iconEye}
+                >
+                  <Ionicons
+                    name={isHide ? 'eye-off' : 'eye'}
+                    size={22}
+                    color={COLORS.secondary}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.progressBarContainer}>
+              <View
+                style={[
+                  styles.progressBar,
+                  {
+                    backgroundColor: validLength
+                      ? theme?.colors?.secondary
+                      : theme?.colors?.grayBackground,
+                  },
+                ]}
+              />
+              <View
+                style={[
+                  styles.progressBar,
+                  {
+                    backgroundColor: hasNumber
+                      ? theme?.colors?.secondary
+                      : theme?.colors?.grayBackground,
+                  },
+                ]}
+              />
+              <View
+                style={[
+                  styles.progressBar,
+                  {
+                    backgroundColor: hasSpecialCharacter
+                      ? theme?.colors?.secondary
+                      : theme?.colors?.grayBackground,
+                  },
+                ]}
+              />
+            </View>
 
-        <View style={styles.warningContainer}>
-          <View style={styles.warningItem}>
-            <View
-              style={[
-                styles.warningIcon,
-                {
-                  backgroundColor: validLength
-                    ? theme?.colors?.secondary
-                    : theme?.colors?.grayBackground,
-                },
-              ]}
-            />
-            <Text style={styles.warningItem}>
-              Must contain at least 8 characters
-            </Text>
-          </View>
-          <View style={styles.warningItem}>
-            <View
-              style={[
-                styles.warningIcon,
-                {
-                  backgroundColor: hasNumber
-                    ? theme?.colors?.secondary
-                    : theme?.colors?.grayBackground,
-                },
-              ]}
-            />
-            <Text style={styles.warningItem}>One number</Text>
-          </View>
-          <View style={styles.warningItem}>
-            <View
-              style={[
-                styles.warningIcon,
-                {
-                  backgroundColor: hasSpecialCharacter
-                    ? theme?.colors?.secondary
-                    : theme?.colors?.grayBackground,
-                },
-              ]}
-            />
+            <View style={styles.warningContainer}>
+              <View style={styles.warningItem}>
+                <View
+                  style={[
+                    styles.warningIcon,
+                    {
+                      backgroundColor: validLength
+                        ? theme?.colors?.secondary
+                        : theme?.colors?.grayBackground,
+                    },
+                  ]}
+                />
+                <Text style={styles.warningItem}>
+                  Must contain at least 8 characters
+                </Text>
+              </View>
+              <View style={styles.warningItem}>
+                <View
+                  style={[
+                    styles.warningIcon,
+                    {
+                      backgroundColor: hasNumber
+                        ? theme?.colors?.secondary
+                        : theme?.colors?.grayBackground,
+                    },
+                  ]}
+                />
+                <Text style={styles.warningItem}>One number</Text>
+              </View>
+              <View style={styles.warningItem}>
+                <View
+                  style={[
+                    styles.warningIcon,
+                    {
+                      backgroundColor: hasSpecialCharacter
+                        ? theme?.colors?.secondary
+                        : theme?.colors?.grayBackground,
+                    },
+                  ]}
+                />
 
-            <Text style={styles.warningItem}>One special character</Text>
+                <Text style={styles.warningItem}>One special character</Text>
+              </View>
+            </View>
+            {error && (
+              <View>
+                <Text className='text-red-500 font-medium text-sm'>
+                  {error}
+                </Text>
+              </View>
+            )}
+            <KeyboardAvoidingView>
+              <TouchableOpacity
+                onPress={handleSignup}
+                style={[
+                  styles.signUpButtonContainer,
+                  {
+                    backgroundColor:
+                      !password || !email || isLoading
+                        ? theme?.colors?.grayBackground
+                        : theme.colors.secondary,
+                  },
+                ]}
+                disabled={!email || !password || isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size='small' color='white' />
+                ) : (
+                  <Text style={styles.signButton}>Sign Up</Text>
+                )}
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
           </View>
         </View>
-        {error && (
-          <View>
-            <Text className='text-red-500 font-medium text-sm'>{error}</Text>
-          </View>
-        )}
-        <TouchableOpacity
-          onPress={handleSignup}
-          style={[
-            styles.signUpButtonContainer,
-            {
-              backgroundColor:
-                !password || !email
-                  ? theme?.colors?.grayBackground
-                  : theme.colors.secondary,
-            },
-          ]}
-          disabled={!email || !password}
-        >
-          <Text style={styles.signButton}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 80,
+    paddingVertical: 20,
     gap: 30,
     backgroundColor: 'white',
   },

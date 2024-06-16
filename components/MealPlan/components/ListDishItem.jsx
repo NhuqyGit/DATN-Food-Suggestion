@@ -72,9 +72,12 @@ export default function ListDishItem({
           <View className="flex flex-row justify-between items-center w-4/5">
             <View className="h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
               <Ionicons name="time-outline" size={26} color="white" />
-              <Text className="text-white text-base font-medium px-1">
-                {(Number(time) / 60).toFixed(0)} mins
-              </Text>
+<Text className="text-white text-base font-medium px-1">
+  {Number(time) < 3600
+    ? `${Math.floor(Number(time) / 60)} mins`
+    : `${Math.floor(Number(time) / 3600)}h ${Math.floor((Number(time) % 3600) / 60)}m`}
+</Text>
+
             </View>
             {isAdd ? (
               <TouchableOpacity onPress={handlePressPlus}>
