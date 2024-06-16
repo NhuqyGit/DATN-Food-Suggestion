@@ -110,11 +110,11 @@ function SplashScreen() {
             <View className="flex flex-row mt-[10px]">
               <View className="bg-[#FFFFFF] w-[56px] h-[56px] rounded-lg flex justify-center items-center">
                 <Text className="text-[#3a9693] text-[42px] font-bold leading-normal ">
-                  D
+                  I
                 </Text>
               </View>
               <Text className="text-[#FFFFFF] font-bold text-[42px] leading-normal ">
-                ATN
+                ntelliTaste
               </Text>
             </View>
           </View>
