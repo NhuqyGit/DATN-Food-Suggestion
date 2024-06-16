@@ -73,39 +73,39 @@ const FoodSuggestion = () =>{
 	
 	const [focusedItem, setFocusedItem] = useState(null);
 
-	useEffect(() => {
-		const getTopics = async () => {
-		  try {
-			const token = await AsyncStorageService.getAccessToken();
-			const userId = await AsyncStorageService.getUserId();
-			const headers = {
-			  Authorization: `Bearer ${token}`,
-			};
-	
-			const [dateFilterResponse, topicsResponse] = await Promise.all([
-			  fetch(`${HOST}/topics/user/${userId}/date-filter`, { headers }),
-			  fetch(`${HOST}/topics/user/${userId}`, { headers }),
-			]);
-	
-			if (!dateFilterResponse.ok) {
-			  throw new Error('Failed to fetch date filter data');
-			}
-			if (!topicsResponse.ok) {
-			  throw new Error('Failed to fetch topics data');
-			}
-	
-			const dateFilterData = await dateFilterResponse.json();
-			const topicsData = await topicsResponse.json();
-	
-			setTopicFilter(dateFilterData);
-			setListTopic(topicsData);
-			setFocusedItem(topicsData[0].id);
-		} catch (error) {
-			console.error('Error fetching data:', error);
-		} finally {
-			setLoading(false);
-		}
+	const getTopics = async () => {
+	  try {
+		const token = await AsyncStorageService.getAccessToken();
+		const userId = await AsyncStorageService.getUserId();
+		const headers = {
+		  Authorization: `Bearer ${token}`,
 		};
+
+		const [dateFilterResponse, topicsResponse] = await Promise.all([
+		  fetch(`${HOST}/topics/user/${userId}/date-filter`, { headers }),
+		  fetch(`${HOST}/topics/user/${userId}`, { headers }),
+		]);
+
+		if (!dateFilterResponse.ok) {
+		  throw new Error('Failed to fetch date filter data');
+		}
+		if (!topicsResponse.ok) {
+		  throw new Error('Failed to fetch topics data');
+		}
+
+		const dateFilterData = await dateFilterResponse.json();
+		const topicsData = await topicsResponse.json();
+
+		setTopicFilter(dateFilterData);
+		setListTopic(topicsData);
+		setFocusedItem(topicsData[0].id);
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	} finally {
+		setLoading(false);
+	}
+	};
+	useEffect(() => {
 	
 		getTopics();
 	}, []);
@@ -319,17 +319,35 @@ const FoodSuggestion = () =>{
 		}
 	};
 
+	// const handleAddNewMessage = (topicId, newMessage) => {
+	// 	// console.log(topicId)
+	// 	// console.log(newMessage)
+	// 	const topicIndex = listTopic.findIndex(t => t.id === topicId);
+	// 	// console.log("kokoko: ", newMessage)
+	// 	if (topicIndex !== -1) {
+	// 		listTopic[topicIndex] = {
+	// 		  ...listTopic[topicIndex],
+	// 		  messageList: [...listTopic[topicIndex].messageList, newMessage]
+	// 		};
+	// 	}
+	// }
+
 	const handleAddNewMessage = (topicId, newMessage) => {
-		console.log(topicId)
 		const topicIndex = listTopic.findIndex(t => t.id === topicId);
-		console.log("kokoko: ", newMessage)
 		if (topicIndex !== -1) {
-			listTopic[topicIndex] = {
-			  ...listTopic[topicIndex],
-			  messageList: [...listTopic[topicIndex].messageList, newMessage]
-			};
+		  // Tạo một bản sao của danh sách các chủ đề
+		  const updatedListTopic = [...listTopic];
+		  // Tạo một bản sao của chủ đề cần cập nhật
+		  const updatedTopic = {
+			...updatedListTopic[topicIndex],
+			messageList: [...updatedListTopic[topicIndex].messageList, newMessage]
+		  };
+		  // Thay thế chủ đề cũ bằng chủ đề đã cập nhật
+		  updatedListTopic[topicIndex] = updatedTopic;
+		  // Cập nhật trạng thái với danh sách chủ đề đã cập nhật
+		  setListTopic(updatedListTopic);
 		}
-	}
+	};
 
 	const handleChangeRecordActie = (topicId, recordActive) => {
 		const topicIndex = listTopic.findIndex(t => t.id === topicId);
@@ -345,7 +363,7 @@ const FoodSuggestion = () =>{
 				key={index.toString()}
 				name={topic.title + topic.id.toString()}
 			>
-				{(props) => <FoodSuggesionStack {...props} focusedItem={focusedItem} topic={topic} handleDeleteTopic={handleDeleteTopic} handleChangeNameTopic={handleChangeNameTopic} handleAddNewMessage={handleAddNewMessage} handleChangeRecordActie={handleChangeRecordActie}/>}
+				{(props) => <FoodSuggesionStack {...props} focusedItem={focusedItem} topic={topic} handleDeleteTopic={handleDeleteTopic} handleChangeNameTopic={handleChangeNameTopic} handleAddNewMessage={handleAddNewMessage} handleChangeRecordActie={handleChangeRecordActie} getTopics={getTopics}/>}
 			</Drawer.Screen>
 		)
 	}) : null

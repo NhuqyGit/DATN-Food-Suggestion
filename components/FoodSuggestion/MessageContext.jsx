@@ -17,6 +17,7 @@ export const MessageProvider = ({
   children,
   handleAddNewMessage,
   handleChangeRecordActie,
+  getTopics
 }) => {
   const [listMessage, setListMessage] = useState([]);
   const [isFetchDataCompleted, setIsFetchDataCompleted] = useState(true);
@@ -118,8 +119,8 @@ export const MessageProvider = ({
       count += 1;
     }
     if (diets && diets.length > 0) {
-      newMessage += `${count}. Cần ăn kiêng theo: ${diets.map((diet) => diet.dietName).join(", ")}\n `;
-      messageHeader += `- Cần ăn kiêng theo: ${diets.map((diet) => diet.dietName).join(", ")}\n`;
+      newMessage += `${count}. Cần ăn kiêng theo: ${diets.map((diet) => diet.name).join(", ")}\n `;
+      messageHeader += `- Cần ăn kiêng theo: ${diets.map((diet) => diet.name).join(", ")}\n`;
       count += 1;
     }
     if (allergies && allergies.length > 0) {
@@ -135,13 +136,14 @@ export const MessageProvider = ({
 
     return [newMessage, messageHeader];
   };
-
-  useFocusEffect(
-    useCallback(() => {
+  // console.log("TOPIC-MESSAGE: ", topic.messageList)
+  useEffect(()=> {
+    // useCallback(() => {
       // handleFetchMessages()
-      // console.log("sdfdfsdfsdfsdfsdfsdfdsfsdfsdfdfs")
+      console.log("sdfdfsdfsdfsdfsdfsdfdsfsdfsdfdfs", topic.id)
       if (topic.messageList !== undefined) {
         if (topic.messageList.length > 0) {
+          // console.log(topic.messageList)
           const listMessage = topic.messageList.map((m) => {
             return { ...m, isSend: true };
           });
@@ -149,7 +151,7 @@ export const MessageProvider = ({
         }
       }
     }, [])
-  );
+  
   useFocusEffect(
     useCallback(() => {
       if (recordActive) {
@@ -173,6 +175,19 @@ export const MessageProvider = ({
     setIsFetchDataCompleted(false);
   };
 
+  const handleNewRecipe = (nameDish) => {
+    console.log("handleNewRecipe");
+    const newMessageObj = {
+      id: null,
+      content: `Find me the recipe for ${nameDish}`,
+      response: null,
+      isSend: false,
+      isRecipe: true
+    }; // Tạo đối tượng tin nhắn mới
+    setListMessage([...listMessage, newMessageObj]);
+    setIsFetchDataCompleted(false);
+  };
+
   const handleNewResponse = async (newResponse) => {
     try {
       const sendMessageIndex = listMessage.findIndex(
@@ -187,7 +202,7 @@ export const MessageProvider = ({
       const updatedListMessage = [...listMessage];
 
       // Cập nhật tin nhắn phản hồi vào tin nhắn gửi đi
-      updatedListMessage[sendMessageIndex].header = newMessage[1];
+      // updatedListMessage[sendMessageIndex].header = newMessage[1];
       updatedListMessage[sendMessageIndex].response = newResponse;
       updatedListMessage[sendMessageIndex].isSend = true;
 
@@ -196,16 +211,26 @@ export const MessageProvider = ({
         Authorization: `Bearer ${token}`,
       };
       const body = {
-        header: updatedListMessage[sendMessageIndex].header,
+        // header: updatedListMessage[sendMessageIndex].header,
         content: updatedListMessage[sendMessageIndex].content,
         response: updatedListMessage[sendMessageIndex].response,
         topicBelong: topic.id,
       };
+      if(updatedListMessage[sendMessageIndex].isRecipe){
+        updatedListMessage[sendMessageIndex].isRecipe = true;
+        updatedListMessage[sendMessageIndex].header = `Sau đây là các công thức cho món "${updatedListMessage[sendMessageIndex].content}" được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+        body.isRecipe = true;
+        body.header = `Sau đây là các công thức cho món "${updatedListMessage[sendMessageIndex].content}" được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+      }else{
+        updatedListMessage[sendMessageIndex].header = newMessage[1];
+        body.header = newMessage[1]
+      }
       const response = await axios.post(`${HOST}/messages`, body, { headers });
       const data = await response.data;
       updatedListMessage[sendMessageIndex].id = data.id;
       setListMessage(updatedListMessage);
-      handleAddNewMessage(topic.id, updatedListMessage[sendMessageIndex]);
+      // handleAddNewMessage(topic.id, updatedListMessage[sendMessageIndex]);
+      getTopics()
     } catch (error) {
       console.error("Error posting new message:", error);
     }
@@ -233,7 +258,29 @@ export const MessageProvider = ({
     }
   };
 
-  console.log(newMessage);
+  const fetchDataListRecipe = async (callback, nameDish) => {
+    try {
+      const token = await AsyncStorageService.getAccessToken();
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const body = {
+        "name": nameDish,
+      };
+      const response = await axios.post(`${HOST}/google-gemini/find-in-database`, body, {
+        headers,
+      });
+      const data = await response.data;
+      // console.log("RECIPE: ", data)
+      callback(data);
+    } catch (error) {
+      console.error("Error fetching recipe response:", error);
+      setIsError(true);
+    } finally {
+      setIsFetchDataCompleted(true);
+    }
+  };
+
   return (
     <MessageContext.Provider
       value={{
@@ -247,8 +294,10 @@ export const MessageProvider = ({
         newMessage,
         recordActive,
         handleNewMessage,
+        handleNewRecipe,
         handleNewResponse,
         fetchData,
+        fetchDataListRecipe,
         handlePatchRecordSelect,
         setListRecord,
         handleUpdateListRecord,
