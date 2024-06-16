@@ -1,5 +1,5 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons'
-import React from 'react'
+import React,  { useEffect, useState } from 'react'
 import {
   Dimensions,
   Image,
@@ -13,16 +13,50 @@ import { selectUserInfo } from '../../slices/userLoginSlice'
 import { useSelector } from 'react-redux'
 import { AsyncStorageService } from '../../utils/AsynStorage'
 import { HOST } from '../../config'
+import Toast from "react-native-toast-message";
 
 function SmallRecommendItem({ item }) {
   const userInfo = useSelector(selectUserInfo)
 
   const dishId = item?.id
   const userId = userInfo?.id
+  const [isInCollection, setIsInCollection] = useState(false);
+
+  useEffect(() => {
+    const checkIfInCollection = async () => {
+      try {
+        const token = await AsyncStorageService.getAccessToken();
+        const response = await fetch(
+          `${HOST}/collections/check-in-collection`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId,
+              dishId,
+              collectionName: 'All Personal Recipes',
+            }),
+          }
+        );
+
+        if (response.status === 201) {
+          const data = await response.json();
+          setIsInCollection(data.isInCollection);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkIfInCollection();
+  }, [userId, dishId]);
 
   const onAddToCollection = async () => {
     try {
-      const token = await AsyncStorageService.getAccessToken()
+      const token = await AsyncStorageService.getAccessToken();
       const response = await fetch(
         `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
         {
@@ -32,21 +66,69 @@ function SmallRecommendItem({ item }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            collectionName: 'All saved dishs',
+            collectionName: 'All Personal Recipes',
           }),
         }
-      )
+      );
 
       if (response.status === 201) {
-        alert('Add to collection successfully')
+        setIsInCollection(true);
+        Toast.show({
+          type: "success",
+          text1: "Collection Added",
+          text2: "Recipe was added to 'All Personal Recipes'",
+          textStyle: { fontSize: 20 },
+        });
       } else {
-        alert('Add to collection failed')
+        Toast.show({
+          type: "error",
+          text1: "Operation Failed",
+          text2: "An error occurred while updating your collections. Please try again.",
+          textStyle: { fontSize: 20 },
+        });
       }
     } catch (error) {
-      console.error(error)
-    } finally {
+      console.error(error);
     }
-  }
+  };
+
+  const onDeleteFromCollection = async () => {
+    try {
+      const token = await AsyncStorageService.getAccessToken();
+      const response = await fetch(
+        `${HOST}/collections/removeByName/user/${userId}/dish/${dishId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            collectionName: 'All Personal Recipes',
+          }),
+        }
+      );
+
+      if (response.status === 200) {
+        setIsInCollection(false);
+        Toast.show({
+          type: "success",
+          text1: "Collection Updated",
+          text2: "Recipe was removed from 'All Personal Recipes'",
+          textStyle: { fontSize: 20 },
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Operation Failed",
+          text2: "An error occurred while updating your collections. Please try again.",
+          textStyle: { fontSize: 20 },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <TouchableOpacity activeOpacity={1} style={styles.container}>
@@ -73,8 +155,16 @@ function SmallRecommendItem({ item }) {
           <Text style={styles.title}>{item?.dishName}</Text>
           <TouchableOpacity onPress={onAddToCollection}>
             <View style={styles.iconContainer}>
-              {/* <Icon style={styles.addIcon} name='plus' /> */}
-              <MaterialIcons name='favorite' size={16} color='white' />
+              <TouchableOpacity onPress={isInCollection ? onDeleteFromCollection : onAddToCollection}>
+            <View style={styles.iconContainer}>
+              <MaterialIcons
+                name={isInCollection ? 'favorite' : 'favorite-outline'}
+                size={21}
+                color={isInCollection ? theme.colors.primary : theme.colors.secondary}
+                
+              />
+            </View>
+          </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </View>
@@ -114,7 +204,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   iconContainer: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.lightGray,
     borderRadius:
       Math.round(
         Dimensions.get('window').width + Dimensions.get('window').height
@@ -124,6 +214,11 @@ const styles = StyleSheet.create({
     // padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 3 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 3,
+    // elevation: 5,
   },
   addIcon: {
     color: 'white',
