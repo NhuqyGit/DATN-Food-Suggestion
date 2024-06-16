@@ -267,7 +267,7 @@ export const MessageProvider = ({
       const body = {
         "name": nameDish,
       };
-      const response = await axios.post(`${HOST}/google-gemini/find-in-database`, body, {
+      const response = await axios.post(`${HOST}/openai/find-in-database`, body, {
         headers,
       });
       const data = await response.data;
