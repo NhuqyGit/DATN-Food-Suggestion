@@ -114,7 +114,11 @@ const SearchScreen = ({ navigation, route }) => {
 
       if (ingredientNames && ingredientNames.length > 0) {
         ingredientNames.forEach((name) => {
-          query += 'ingredientNames=' + name + '&'
+          if (searchText) {
+            query += '&ingredientNames=' + name
+          } else {
+            query += 'ingredientNames=' + name + '&'
+          }
         })
       }
 
@@ -125,6 +129,7 @@ const SearchScreen = ({ navigation, route }) => {
       })
 
       const json = await response.json()
+
       setDishBySearchText(json)
     } catch (error) {
       console.error(error)
