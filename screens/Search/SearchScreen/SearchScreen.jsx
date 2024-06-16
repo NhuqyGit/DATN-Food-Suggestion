@@ -17,15 +17,24 @@ import IngredientSkeleton from '../ViewImageScreen/IngredientSkeleton'
 import {
   selectCookingTime,
   selectIngredientIds,
+  selectIngredientNames,
+  selectStep,
+  setSearchStep,
 } from '../../../slices/searchSlice'
-import { useSelector } from 'react-redux'
-import RecommendLargeSkeleton from '../ViewImageScreen/RecommendLargeSkeleton'
+import { useSelector, useDispatch } from 'react-redux'
 import SearchValueSkeleton from '../ViewImageScreen/SearchValueSkeleton'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [step, setStep] = useState(1)
+  const dispatch = useDispatch()
+  // const [step, setStep] = useState(1)
+
+  const step = useSelector(selectStep)
+
+  const setStep = (value) => {
+    dispatch(setSearchStep(value))
+  }
 
   const [ingredients, setIngredients] = useState([])
   const [dish, setDish] = useState([])
@@ -37,6 +46,7 @@ const SearchScreen = ({ navigation, route }) => {
 
   const ingredientIds = useSelector(selectIngredientIds)
   const cookingTime = useSelector(selectCookingTime)
+  const ingredientNames = useSelector(selectIngredientNames)
 
   useEffect(() => {
     const getIngredients = async () => {
@@ -81,19 +91,35 @@ const SearchScreen = ({ navigation, route }) => {
     getIngredients()
   }, [])
 
-  const getDishBySearchText = async () => {
+  const getDishBySearchText = async (searchText) => {
     setLoadingDishBySearchText(true)
     try {
       const token = await AsyncStorageService.getAccessToken()
 
-      let query = '?text=' + searchText
+      let query = '?'
+
+      if (searchText) {
+        query += 'text=' + searchText
+      }
 
       if (cookingTime) {
         query += '&cookingTime=' + cookingTime
       }
 
       if (ingredientIds && ingredientIds.length > 0) {
-        query += '&ingredientIds=' + ingredientIds
+        ingredientIds.forEach((id) => {
+          query += '&ingredientIds=' + id
+        })
+      }
+
+      if (ingredientNames && ingredientNames.length > 0) {
+        ingredientNames.forEach((name) => {
+          if (searchText) {
+            query += '&ingredientNames=' + name
+          } else {
+            query += 'ingredientNames=' + name + '&'
+          }
+        })
       }
 
       const response = await fetch(`${HOST}/dish/search${query}`, {
@@ -103,6 +129,7 @@ const SearchScreen = ({ navigation, route }) => {
       })
 
       const json = await response.json()
+
       setDishBySearchText(json)
     } catch (error) {
       console.error(error)
@@ -112,10 +139,12 @@ const SearchScreen = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    if (searchText) {
-      getDishBySearchText()
+    if (searchText || ingredientNames?.length > 0) {
+      getDishBySearchText(searchText)
+    } else {
+      setDishBySearchText([])
     }
-  }, [searchText, cookingTime, ingredientIds])
+  }, [searchText, cookingTime, ingredientIds, ingredientNames])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,55 +156,9 @@ const SearchScreen = ({ navigation, route }) => {
           setStep={setStep}
           setSearchText={setSearchText}
           searchText={searchText}
+          getDishBySearchText={getDishBySearchText}
+          step={step}
         />
-
-        {step === 1 && (
-          <View>
-            <View style={styles.popularWrapper}>
-              <View style={styles.padding}>
-                <Text style={styles.title}>The most common ingredients</Text>
-                {loading ? (
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      flexWrap: 'wrap',
-                      gap: 8,
-                    }}
-                  >
-                    <IngredientSkeleton total={2} />
-                  </View>
-                ) : (
-                  <View style={styles.popularList}>
-                    {ingredients?.map((item) => (
-                      <PopularItem key={item.id} item={item} />
-                    ))}
-                  </View>
-                )}
-              </View>
-              <View style={styles.popularWrapper}>
-                <View style={styles.padding}>
-                  <Text style={styles.title}>Latest dish</Text>
-                  {loadingDish ? (
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
-                      <LatestDishSkeleton total={5} />
-                    </View>
-                  ) : (
-                    <View style={styles.dishList}>
-                      {dish?.map((item) => (
-                        <DishItem key={item.id} item={item} />
-                      ))}
-                    </View>
-                  )}
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
 
         {step === 2 && (
           <View style={styles.popularWrapper}>
@@ -226,6 +209,54 @@ const SearchScreen = ({ navigation, route }) => {
                   ))}
               </>
             )}
+          </View>
+        )}
+
+        {step === 1 && (
+          <View>
+            <View style={styles.popularWrapper}>
+              <View style={styles.padding}>
+                <Text style={styles.title}>The most common ingredients</Text>
+                {loading ? (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      flexWrap: 'wrap',
+                      gap: 8,
+                    }}
+                  >
+                    <IngredientSkeleton total={2} />
+                  </View>
+                ) : (
+                  <View style={styles.popularList}>
+                    {ingredients?.map((item) => (
+                      <PopularItem key={item.id} item={item} />
+                    ))}
+                  </View>
+                )}
+              </View>
+              <View style={styles.popularWrapper}>
+                <View style={styles.padding}>
+                  <Text style={styles.title}>Latest dish</Text>
+                  {loadingDish ? (
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
+                      <LatestDishSkeleton total={5} />
+                    </View>
+                  ) : (
+                    <View style={styles.dishList}>
+                      {dish?.map((item) => (
+                        <DishItem key={item.id} item={item} />
+                      ))}
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
           </View>
         )}
       </ScrollView>
