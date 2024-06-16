@@ -221,12 +221,12 @@ function SignUpScreen() {
                   styles.signUpButtonContainer,
                   {
                     backgroundColor:
-                      !password || !email || !isLoading
+                      !password || !email || isLoading
                         ? theme?.colors?.grayBackground
                         : theme.colors.secondary,
                   },
                 ]}
-                disabled={!email || !password || !isLoading}
+                disabled={!email || !password || isLoading}
               >
                 {isLoading ? (
                   <ActivityIndicator size='small' color='white' />

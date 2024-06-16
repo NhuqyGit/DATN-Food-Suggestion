@@ -17,15 +17,24 @@ import IngredientSkeleton from '../ViewImageScreen/IngredientSkeleton'
 import {
   selectCookingTime,
   selectIngredientIds,
+  selectIngredientNames,
+  selectStep,
+  setSearchStep,
 } from '../../../slices/searchSlice'
-import { useSelector } from 'react-redux'
-import RecommendLargeSkeleton from '../ViewImageScreen/RecommendLargeSkeleton'
+import { useSelector, useDispatch } from 'react-redux'
 import SearchValueSkeleton from '../ViewImageScreen/SearchValueSkeleton'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [step, setStep] = useState(1)
+  const dispatch = useDispatch()
+  // const [step, setStep] = useState(1)
+
+  const step = useSelector(selectStep)
+
+  const setStep = (value) => {
+    dispatch(setSearchStep(value))
+  }
 
   const [ingredients, setIngredients] = useState([])
   const [dish, setDish] = useState([])
@@ -37,6 +46,7 @@ const SearchScreen = ({ navigation, route }) => {
 
   const ingredientIds = useSelector(selectIngredientIds)
   const cookingTime = useSelector(selectCookingTime)
+  const ingredientNames = useSelector(selectIngredientNames)
 
   useEffect(() => {
     const getIngredients = async () => {
@@ -86,14 +96,26 @@ const SearchScreen = ({ navigation, route }) => {
     try {
       const token = await AsyncStorageService.getAccessToken()
 
-      let query = '?text=' + searchText
+      let query = '?'
+
+      if (searchText) {
+        query += 'text=' + searchText
+      }
 
       if (cookingTime) {
         query += '&cookingTime=' + cookingTime
       }
 
       if (ingredientIds && ingredientIds.length > 0) {
-        query += '&ingredientIds=' + ingredientIds
+        ingredientIds.forEach((id) => {
+          query += '&ingredientIds=' + id
+        })
+      }
+
+      if (ingredientNames && ingredientNames.length > 0) {
+        ingredientNames.forEach((name) => {
+          query += 'ingredientNames=' + name + '&'
+        })
       }
 
       const response = await fetch(`${HOST}/dish/search${query}`, {
@@ -112,12 +134,12 @@ const SearchScreen = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    if (searchText) {
+    if (searchText || ingredientNames?.length > 0) {
       getDishBySearchText(searchText)
     } else {
       setDishBySearchText([])
     }
-  }, [searchText, cookingTime, ingredientIds])
+  }, [searchText, cookingTime, ingredientIds, ingredientNames])
 
   return (
     <SafeAreaView style={styles.container}>

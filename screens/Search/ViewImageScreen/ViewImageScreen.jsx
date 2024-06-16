@@ -6,19 +6,24 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Button from '../../../components/Button/Button'
 import { MaterialIcons } from '@expo/vector-icons'
 import IngredientItem from './IngredientItem'
-import { MotiView } from 'moti'
-import { Skeleton } from 'moti/skeleton'
 import IngredientSkeletonItem from './IngredientSkeletonItem'
 import { HOST, firebase } from '../../../config'
 import { AsyncStorageService } from '../../../utils/AsynStorage'
+import { theme } from '../../../theme'
+import { useDispatch } from 'react-redux'
+import { setIngredientNames, setSearchStep } from '../../../slices/searchSlice'
 
 const ViewImageScreen = ({ navigation, route }) => {
   const { image } = route.params
+
+  const dispatch = useDispatch()
 
   const [resultS, setResultS] = useState('')
   const [options, setOptions] = useState(resultS?.concepts ?? [])
@@ -30,18 +35,41 @@ const ViewImageScreen = ({ navigation, route }) => {
   const MODEL_ID = 'food-item-recognition'
   const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'
 
+  const fetchIngredientByImage = async (image) => {
+    setLoading(true)
+    try {
+      const token = await AsyncStorageService.getAccessToken()
+
+      const formData = new FormData()
+      formData.append('image', {
+        uri: image,
+        name: 'image.jpg',
+        type: 'image/jpg',
+      })
+
+      const response = await fetch(`${HOST}/dish/upload-image`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      })
+
+      const json = await response.json()
+
+      return json.imageUrl
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const fetchResult = async (image) => {
     setLoading(true)
 
-    const response = await fetch(image)
-    const blob = await response.blob()
-
-    const ref = firebase
-      .storage()
-      .ref()
-      .child('images/' + new Date().toISOString())
-    const snapshot = await ref.put(blob)
-    const url = await snapshot.ref.getDownloadURL()
+    const url = await fetchIngredientByImage(image)
 
     try {
       const raw = JSON.stringify({
@@ -92,40 +120,6 @@ const ViewImageScreen = ({ navigation, route }) => {
     }
   }
 
-  const fetchIngredientByImage = async (image) => {
-    setLoading(true)
-    try {
-      const token = await AsyncStorageService.getAccessToken()
-
-      const formData = new FormData()
-      formData.append('image', {
-        uri: image,
-        name: 'image.jpg',
-        type: 'image/jpg',
-      })
-
-      const response = await fetch(
-        `${HOST}/google-gemini/generate-recipe-from-image`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-          body: formData,
-        }
-      )
-
-      const json = await response.json()
-
-      console.log('json', json)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const onRemove = (id) => {
     setOptions((prev) => prev.filter((item) => item.id !== id))
   }
@@ -141,11 +135,16 @@ const ViewImageScreen = ({ navigation, route }) => {
     )
   }
 
+  const handlePressSearch = () => {
+    navigation.navigate('SearchScreen')
+    const filterOptions = options?.filter((item) => item.value > 0.1)
+    dispatch(setIngredientNames(filterOptions?.map((item) => item.name)))
+    dispatch(setSearchStep(2))
+  }
+
   useEffect(() => {
     if (image) {
-      // fetchResult(image)
-
-      fetchIngredientByImage(image)
+      fetchResult(image)
     }
   }, [image])
 
@@ -195,6 +194,28 @@ const ViewImageScreen = ({ navigation, route }) => {
               })}
             </>
           )}
+
+          <TouchableOpacity
+            onPress={handlePressSearch}
+            style={[
+              styles.signInButtonContainer,
+              {
+                backgroundColor:
+                  options.length === 0 || loading
+                    ? theme?.colors?.grayBackground
+                    : theme.colors.secondary,
+              },
+            ]}
+            disabled={options.length === 0 || loading}
+          >
+            <Text style={styles.signButton}>
+              {loading ? (
+                <ActivityIndicator size='small' color='white' />
+              ) : (
+                <Text>Search</Text>
+              )}
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -213,9 +234,9 @@ const styles = StyleSheet.create({
 
   image: {
     width: '100%',
-    height: '70%',
+    height: '60%',
     position: 'absolute',
-    minHeight: '70%',
+    minHeight: '60%',
     zIndex: 1,
   },
 
@@ -227,7 +248,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    marginTop: '100%',
+    marginTop: '90%',
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -248,6 +269,24 @@ const styles = StyleSheet.create({
   borderButton: {
     borderBottomWidth: 1,
     borderColor: '#BDBDBD',
+  },
+
+  signInButtonContainer: {
+    marginTop: 20,
+    flex: 1,
+    backgroundColor: theme.colors.secondary,
+    padding: 10,
+    width: '50%',
+    alignSelf: 'center',
+    // paddingHorizontal: 40,
+    // width: '100%',
+    borderRadius: 10,
+  },
+
+  signButton: {
+    alignSelf: 'center',
+    fontSize: 16,
+    color: '#fff',
   },
 })
 
