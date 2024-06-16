@@ -1,5 +1,5 @@
-import { AntDesign, MaterialIcons, Ionicons } from '@expo/vector-icons'
-import React from 'react'
+import { AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
+import React from "react";
 import {
   Dimensions,
   Image,
@@ -7,88 +7,98 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { theme } from '../../theme'
-import { selectUserInfo } from '../../slices/userLoginSlice'
-import { useSelector } from 'react-redux'
-import { AsyncStorageService } from '../../utils/AsynStorage'
-import { HOST } from '../../config'
+} from "react-native";
+import { theme } from "../../theme";
+import { selectUserInfo } from "../../slices/userLoginSlice";
+import { useSelector } from "react-redux";
+import { AsyncStorageService } from "../../utils/AsynStorage";
+import { HOST } from "../../config";
+import { useNavigation } from "@react-navigation/native";
 
 function DishRecipe({ item, handleSetId, id }) {
-  const userInfo = useSelector(selectUserInfo)
+  const navigation = useNavigation()
+  const userInfo = useSelector(selectUserInfo);
 
-  const dishId = item?.id
-  const userId = userInfo?.id
+  const dishId = item?.id;
+  const userId = userInfo?.id;
 
   const onAddToCollection = async () => {
     try {
-      const token = await AsyncStorageService.getAccessToken()
+      const token = await AsyncStorageService.getAccessToken();
       const response = await fetch(
         `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            collectionName: 'All saved dishs',
+            collectionName: "All saved dishs",
           }),
         }
-      )
+      );
 
       if (response.status === 201) {
-        alert('Add to collection successfully')
+        alert("Add to collection successfully");
       } else {
-        alert('Add to collection failed')
+        alert("Add to collection failed");
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     } finally {
     }
-  }
+  };
 
   return (
     <TouchableOpacity
-        onPress={() => handleSetId(item.id)}
-        style={[styles.container, {backgroundColor: id === item.id ? 'red' : '#232325'}]}>
-        <Image
-            style={styles.image}
-            source={{
-                uri: item?.imageUrl,
-            }}
-        />
+      onPress={() => handleSetId(item.id)}
+      style={[
+        styles.container,
+        { backgroundColor: id === item.id ? "#D3D3D3" : "#232325" },
+      ]}
+    >
+      <Image
+        style={styles.image}
+        source={{
+          uri: item?.imageUrl,
+        }}
+      />
 
-        <View>
-            <View
-            style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 5,
-                marginTop: 5,
-            }}
-            >
-            <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
-            {/* <AntDesign name='star' size={20} color='#FF6321' /> */}
-            <Ionicons name="star" size={16} color={theme.colors.primary} />
-            </View>
-            <View style={styles.authorContainer}>
-                <Text style={styles.title}>{item?.dishName}</Text>
-                <TouchableOpacity>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="arrow-forward-outline" size={20} color="white" />
-                    </View>
-                </TouchableOpacity>
-            </View>
+      <View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+            marginTop: 5,
+          }}
+        >
+          <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
+          {/* <AntDesign name='star' size={20} color='#FF6321' /> */}
+          <Ionicons name="star" size={16} color={theme.colors.primary} />
         </View>
+        <View style={styles.authorContainer}>
+          <Text style={styles.title}>{item?.dishName}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push("FoodDetail", { foodDetails: item });
+            }}
+          >
+            <View style={styles.iconContainer}>
+              <Ionicons name="arrow-forward-outline" size={20} color="white" />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </TouchableOpacity>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
+    flexDirection: "column",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
@@ -97,7 +107,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "#232325",
     // alignItems: 'center'
     padding: 10,
-    marginRight: 8
+    marginRight: 8,
   },
   image: {
     width: 140,
@@ -111,21 +121,21 @@ const styles = StyleSheet.create({
     color: theme.colors.lightGray,
     maxWidth: 100,
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   rating: {
     color: theme.colors.primary,
     fontSize: 14,
   },
   authorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     // maxWidth: 110,
     gap: 8,
   },
   author: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
     marginRight: 4,
   },
@@ -136,17 +146,16 @@ const styles = StyleSheet.create({
     //     Dimensions.get('window').width + Dimensions.get('window').height
     //   ) / 2,
     borderRadius: 100,
-    width: Dimensions.get('window').width * 0.065,
-    height: Dimensions.get('window').width * 0.065,
+    width: Dimensions.get("window").width * 0.065,
+    height: Dimensions.get("window").width * 0.065,
     // padding: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   addIcon: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
-})
+});
 
-export default DishRecipe
-
+export default DishRecipe;

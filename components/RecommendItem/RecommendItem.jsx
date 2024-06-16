@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 5 },
     shadowOpacity: 0.3,
-    shadowRadius: 3,
+    shadowRadius: 4,
     elevation: 5,
   },
   addIcon: {

@@ -1,5 +1,5 @@
-import { AntDesign, MaterialIcons } from '@expo/vector-icons'
-import React,  { useEffect, useState } from 'react'
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -7,19 +7,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { theme } from '../../theme'
-import { selectUserInfo } from '../../slices/userLoginSlice'
-import { useSelector } from 'react-redux'
-import { AsyncStorageService } from '../../utils/AsynStorage'
-import { HOST } from '../../config'
+} from "react-native";
+import { theme } from "../../theme";
+import { selectUserInfo } from "../../slices/userLoginSlice";
+import { useSelector } from "react-redux";
+import { AsyncStorageService } from "../../utils/AsynStorage";
+import { HOST } from "../../config";
 import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
 
 function SmallRecommendItem({ item }) {
-  const userInfo = useSelector(selectUserInfo)
-
-  const dishId = item?.id
-  const userId = userInfo?.id
+  const userInfo = useSelector(selectUserInfo);
+  const navigation = useNavigation()
+  const dishId = item?.id;
+  const userId = userInfo?.id;
   const [isInCollection, setIsInCollection] = useState(false);
 
   useEffect(() => {
@@ -29,15 +30,15 @@ function SmallRecommendItem({ item }) {
         const response = await fetch(
           `${HOST}/collections/check-in-collection`,
           {
-            method: 'POST',
+            method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               userId,
               dishId,
-              collectionName: 'All Personal Recipes',
+              collectionName: "All Personal Recipes",
             }),
           }
         );
@@ -60,13 +61,13 @@ function SmallRecommendItem({ item }) {
       const response = await fetch(
         `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            collectionName: 'All Personal Recipes',
+            collectionName: "All Personal Recipes",
           }),
         }
       );
@@ -83,7 +84,8 @@ function SmallRecommendItem({ item }) {
         Toast.show({
           type: "error",
           text1: "Operation Failed",
-          text2: "An error occurred while updating your collections. Please try again.",
+          text2:
+            "An error occurred while updating your collections. Please try again.",
           textStyle: { fontSize: 20 },
         });
       }
@@ -98,13 +100,13 @@ function SmallRecommendItem({ item }) {
       const response = await fetch(
         `${HOST}/collections/removeByName/user/${userId}/dish/${dishId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            collectionName: 'All Personal Recipes',
+            collectionName: "All Personal Recipes",
           }),
         }
       );
@@ -121,7 +123,8 @@ function SmallRecommendItem({ item }) {
         Toast.show({
           type: "error",
           text1: "Operation Failed",
-          text2: "An error occurred while updating your collections. Please try again.",
+          text2:
+            "An error occurred while updating your collections. Please try again.",
           textStyle: { fontSize: 20 },
         });
       }
@@ -131,7 +134,11 @@ function SmallRecommendItem({ item }) {
   };
 
   return (
-    <TouchableOpacity activeOpacity={1} style={styles.container}>
+    <TouchableOpacity 
+    onPress={() => {
+      navigation.push("FoodDetail", { foodDetails: item });
+    }}
+    activeOpacity={1} style={styles.container}>
       <Image
         style={styles.image}
         source={{
@@ -141,36 +148,39 @@ function SmallRecommendItem({ item }) {
       <View>
         <View
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
             gap: 5,
             marginTop: 5,
           }}
         >
           <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
-          <AntDesign name='star' size={20} color='#FF6321' />
+          <AntDesign name="star" size={20} color="#FF6321" />
         </View>
         <View style={styles.authorContainer}>
           <Text style={styles.title}>{item?.dishName}</Text>
-          <TouchableOpacity onPress={onAddToCollection}>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity onPress={isInCollection ? onDeleteFromCollection : onAddToCollection}>
-            <View style={styles.iconContainer}>
-              <MaterialIcons
-                name={isInCollection ? 'favorite' : 'favorite-outline'}
-                size={21}
-                color={isInCollection ? theme.colors.primary : theme.colors.secondary}
-                
-              />
-            </View>
-          </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
+          <TouchableOpacity
+                onPress={
+                  isInCollection ? onDeleteFromCollection : onAddToCollection
+                }
+              >
+                <View style={styles.iconContainer}>
+                  <MaterialIcons
+                    name={isInCollection ? "favorite" : "favorite-outline"}
+                    size={21}
+                    color={
+                      isInCollection
+                        ? theme.colors.primary
+                        : theme.colors.secondary
+                    }
+                  />
+                </View>
+              </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -183,23 +193,23 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: '#000000',
+    color: "#000000",
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   rating: {
-    color: '#FF6321',
+    color: "#FF6321",
     fontSize: 14,
   },
   authorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     maxWidth: 110,
     gap: 8,
   },
   author: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
     marginRight: 4,
   },
@@ -207,24 +217,24 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.lightGray,
     borderRadius:
       Math.round(
-        Dimensions.get('window').width + Dimensions.get('window').height
+        Dimensions.get("window").width + Dimensions.get("window").height
       ) / 2,
-    width: Dimensions.get('window').width * 0.065,
-    height: Dimensions.get('window').width * 0.065,
+    width: Dimensions.get("window").width * 0.065,
+    height: Dimensions.get("window").width * 0.065,
     // padding: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // shadowColor: "#000",
-    // shadowOffset: { width: 0, height: 3 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 3,
-    // elevation: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 1, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 5,
+    marginBottom: 5,
   },
   addIcon: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
-})
+});
 
-export default SmallRecommendItem
-
+export default SmallRecommendItem;
