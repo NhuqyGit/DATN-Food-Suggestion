@@ -1,8 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { theme } from '../../theme/index'
+import { useMessage } from './MessageContext'
 
 const DishMessage = ({item}) => {
+    const { handleNewRecipe } = useMessage();
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN').format(price);
     };
@@ -13,7 +15,9 @@ const DishMessage = ({item}) => {
                 <Text style={[styles.text, styles.textPrice]}>{`(${formatPrice(item.price)} VND)`}</Text>
             </View>
             <View style={{width: "25%"}}>
-                <TouchableOpacity style={styles.btnRequestRecipe}>
+                <TouchableOpacity
+                    onPress={()=>handleNewRecipe("Apple")}
+                    style={styles.btnRequestRecipe}>
                     <Text style={{color: "white"}}>recipe?</Text>
                 </TouchableOpacity>
             </View>

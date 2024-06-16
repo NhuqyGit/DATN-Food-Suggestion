@@ -8,18 +8,26 @@ import { useFocusEffect } from '@react-navigation/native'
 import DishMessage from './DishMessage'
 import ListDishMessage from './ListDishMessage'
 import * as Animatable from 'react-native-animatable';
+import MealChat from './MealChat/MealChat'
+import ListDishRecipe from './ListDishRecipe'
 
 
 const RenderChat = ({props}) => {
-	const { recordActive, isError, handleNewResponse, fetchData} = useMessage();
+	const { recordActive, isError, handleNewResponse, fetchData, fetchDataListRecipe} = useMessage();
 
 	useFocusEffect(
 		useCallback(()=>{
 			if(!props.isSend){
 				if(!isError){
-					fetchData((response) => {
-						handleNewResponse(response);
-					});
+					if(props.isRecipe){
+						fetchDataListRecipe((response) => {
+							handleNewResponse(response);
+						}, props.content)
+					}else{
+						fetchData((response) => {
+							handleNewResponse(response);
+						});
+					}
 				}
 			}
 		}, [])
@@ -37,32 +45,32 @@ const RenderChat = ({props}) => {
 		}
 	};
 
-	const listDishMessage = props.response && (typeof props.response === 'object' ? 
-		Object.entries(props.response).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
-			<Text style={styles.sectionTitle}>
-				{convertKeyToDisplayName(key)}
-			</Text>
-			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
-					<DishMessage item={item} />
-				</Animatable.View>
-			))}
-		</Animatable.View>
-		)) : 
-		Object.entries(JSON.parse(props.response)).flatMap(([key, value]) => (
-		<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
-			<Text style={styles.sectionTitle}>
-				{convertKeyToDisplayName(key)}
-			</Text>
-			{value.map((item, index) => (
-				<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
-					<DishMessage item={item} />
-				</Animatable.View>
-			))}
-		</Animatable.View>
-		))
-	);
+	// const listDishMessage = props.response && (typeof props.response === 'object' ? 
+	// 	Object.entries(props.response).flatMap(([key, value]) => (
+	// 	<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
+	// 		<Text style={styles.sectionTitle}>
+	// 			{convertKeyToDisplayName(key)}
+	// 		</Text>
+	// 		{value.map((item, index) => (
+	// 			<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
+	// 				<DishMessage item={item} />
+	// 			</Animatable.View>
+	// 		))}
+	// 	</Animatable.View>
+	// 	)) : 
+	// 	Object.entries(JSON.parse(props.response)).flatMap(([key, value]) => (
+	// 	<Animatable.View key={key} animation="fadeIn" delay={props.isSend ? 0 : 300}>
+	// 		<Text style={styles.sectionTitle}>
+	// 			{convertKeyToDisplayName(key)}
+	// 		</Text>
+	// 		{value.map((item, index) => (
+	// 			<Animatable.View key={`${key}_${index}`} animation="fadeIn" delay={props.isSend ? 0 : 300 * (index + 1)}>
+	// 				<DishMessage item={item} />
+	// 			</Animatable.View>
+	// 		))}
+	// 	</Animatable.View>
+	// 	))
+	// );
 
 	// const formatPrice = (price) => {
     //     return new Intl.NumberFormat('vi-VN').format(price);
@@ -89,7 +97,6 @@ const RenderChat = ({props}) => {
 	// 	);
 	// };
 
-	console.log(props.id, ": RENDER")
 	return (
 		<View style={styles.container}>
 			<View style={styles.sendContainer}>
@@ -122,9 +129,13 @@ const RenderChat = ({props}) => {
 							<>
 								{/* <GenerateHeaderMessage /> */}
 								<Text>{props.header}</Text>
-								<View style={{backgroundColor: '#232325', paddingVertical: 5, paddingHorizontal: 15, paddingBottom: 10, borderRadius: 8}}>
-									{listDishMessage}
+								<View style={{backgroundColor: props.isRecipe ? 'white' : '#232325', borderRadius: 8, borderColor: theme.colors.lightGray, borderWidth: props.isRecipe ? 0 : 1}}>
+									{/* {listDishMessage} */}
 									{/* <ListDishMessage response={props.response} isSend={props.isSend}/> */}
+									{
+										props.isRecipe ? <ListDishRecipe response={props.response}/> :
+										<MealChat response={props.response}/>
+									}
 								</View>
 							</>
 						: null }
@@ -221,7 +232,7 @@ const styles = StyleSheet.create({
 		marginVertical: 5
 	},
 	responseChat:{
-		width: "83%"
+		width: "85%"
 	},
 	sendResponse:{
 

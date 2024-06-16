@@ -12,9 +12,9 @@ import { MessageProvider } from "../../components/FoodSuggestion/MessageContext"
 
 const Stack = createNativeStackNavigator()
 
-const FoodSuggesionStack = ({focusedItem, topic, handleDeleteTopic, handleChangeNameTopic, handleAddNewMessage, handleChangeRecordActie}) => {
+const FoodSuggesionStack = ({focusedItem, topic, handleDeleteTopic, handleChangeNameTopic, handleAddNewMessage, handleChangeRecordActie, getTopics}) => {
     return (
-        <MessageProvider topic={topic} focusedItem={focusedItem} handleAddNewMessage={handleAddNewMessage} handleChangeRecordActie={handleChangeRecordActie}>
+        <MessageProvider topic={topic} focusedItem={focusedItem} handleAddNewMessage={handleAddNewMessage} handleChangeRecordActie={handleChangeRecordActie} getTopics={getTopics}>
             <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.lightGreen}}>
                 <Stack.Navigator
                     screenOptions={{
