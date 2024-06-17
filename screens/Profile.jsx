@@ -426,8 +426,10 @@ function Profile({ navigation }) {
         aspect: [1, 1],
       });
       if (!res.canceled) {
-        const { fileName, uri } = res.assets[0];
-        const uploadRes = await uploadToFirebase(uri, fileName);
+        const uri = res.assets[0].uri;
+        const filename = uri.substring(uri.lastIndexOf('/')+1)
+        //console.log(uri)
+        const uploadRes = await uploadToFirebase(uri, filename);
         updateProfileImage(uploadRes.downloadURL);
         // replace user state url
       }
