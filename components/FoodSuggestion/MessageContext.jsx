@@ -93,17 +93,26 @@ export const MessageProvider = ({
 
   const handleCreateMessage = () => {
     let count = 1;
-    const { meal, money, numberOfDiners, diets, allergies } = recordActive;
+    const { meal, money, numberOfDiners, diets, allergies, cuisines, typeSuggest } = recordActive;
     let newMessage = "";
-    let messageHeader =
-      "Sau đây là các món ăn dựa trên các tiêu chí của bạn: \n";
+    let messageHeader = (typeSuggest === 0 || typeSuggest === "0") ?
+      "Sau đây là các món ăn dựa trên các tiêu chí của bạn: \n" : "Sau đây là lịch trình cho một tuần dựa trên các tiêu chí của bạn: \n";
     const formatJson =
       '{"khaiVi": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "monChinh": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "trangMieng": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...]\n }\n';
-    if (meal !== undefined && meal !== null) {
-      const listMeal = ["sáng", "trưa", "tối"];
-      newMessage += `Đề xuất cho tôi một bữa ăn ${listMeal[meal]} (khác) với tiêu chí:\n `;
-      messageHeader += `- Bữa ${listMeal[meal]}\n`;
+    const formatJsonWeek =
+      '{"T2": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "T3": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "T4": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "T5": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "T6": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "T7": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...],\n "CN": [{"food": món 1, "price": giá 1}, {"food": món 2, "price": giá 2}, ...]\n }\n';
+    if (typeSuggest === 0 || typeSuggest === "0"){
+      if (meal !== undefined && meal !== null) {
+        const listMeal = ["sáng", "trưa", "tối"];
+        newMessage += `Đề xuất cho tôi một bữa ăn ${listMeal[meal]} (khác) với tiêu chí:\n `;
+        messageHeader += `- Bữa ${listMeal[meal]}\n`;
+      }
+    }else{
+      if (typeSuggest !== undefined && typeSuggest !== null) {
+        newMessage += `Đề xuất cho tôi một bữa ăn cho một tuần (khác) với tiêu chí:\n `;
+      }
     }
+
     if (
       numberOfDiners !== undefined &&
       numberOfDiners !== null &&
@@ -113,9 +122,18 @@ export const MessageProvider = ({
       messageHeader += `- Số lượng người ăn: ${numberOfDiners}\n`;
       count += 1;
     }
-    if (money !== undefined && money !== null) {
-      newMessage += `${count}. Lượng tiền cho bữa ăn: ${money} vnđ\n `;
-      messageHeader += `- Lượng tiền cho bữa ăn: ${formatPrice(money)} vnđ\n`;
+
+    if (typeSuggest === 0 || typeSuggest === "0"){
+      if (money !== undefined && money !== null) {
+        newMessage += `${count}. Lượng tiền cho bữa ăn: ${money} vnđ\n `;
+        messageHeader += `- Lượng tiền cho bữa ăn: ${formatPrice(money)} vnđ\n`;
+        count += 1;
+      }
+    }
+    
+    if (cuisines && cuisines.length > 0) {
+      newMessage += `${count}. Ẩm thực: ${cuisines.map((cuisine) => cuisine.name).join(", ")}\n `;
+      messageHeader += `- Ẩm thực: ${cuisines.map((cuisine) => cuisine.name).join(", ")}\n`;
       count += 1;
     }
     if (diets && diets.length > 0) {
@@ -130,9 +148,13 @@ export const MessageProvider = ({
     }
     newMessage += `${count}. Hiển thị số tiền tương đương với từng món\n `;
     count += 1;
-    newMessage += `${count}. Có đầy đủ khai vị, món chính và món tráng miệng\n `;
+    newMessage += `${count}. Có đầy đủ khai vị, món chính và món tráng miệng và mỗi cái phải có ít nhất 2 món trở lên.\n `;
     count += 1;
-    newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJson} và chỉ cần nội dụng json, không cần nội dung khác."`;
+    if (typeSuggest === 0 || typeSuggest === "0"){
+      newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJson} và chỉ cần nội dụng json, không cần nội dung khác."`;
+    }else{
+      newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJsonWeek} và chỉ cần nội dụng json, không cần nội dung khác."`;
+    }
 
     return [newMessage, messageHeader];
   };
@@ -220,7 +242,7 @@ export const MessageProvider = ({
         updatedListMessage[sendMessageIndex].isRecipe = true;
         updatedListMessage[sendMessageIndex].header = `Sau đây là các công thức cho món "${updatedListMessage[sendMessageIndex].content}" được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
         body.isRecipe = true;
-        body.header = `Sau đây là các công thức cho món "${updatedListMessage[sendMessageIndex].content}" được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+        body.header = `Sau đây là các công thức được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
       }else{
         updatedListMessage[sendMessageIndex].header = newMessage[1];
         body.header = newMessage[1]
@@ -235,7 +257,7 @@ export const MessageProvider = ({
       console.error("Error posting new message:", error);
     }
   };
-
+  console.log(newMessage !== null ? newMessage[0] : null)
   const fetchData = async (callback) => {
     try {
       const token = await AsyncStorageService.getAccessToken();

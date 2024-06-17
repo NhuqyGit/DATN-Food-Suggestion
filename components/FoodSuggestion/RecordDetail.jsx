@@ -10,6 +10,7 @@ import { AsyncStorageService } from '../../utils/AsynStorage'
 import TagForMeal from './TagForMeal'
 import { useMessage } from './MessageContext';
 import axios from 'axios'
+import TagForType from './TagForType'
 
 const RecordDetail = () => {
     const navigation = useNavigation()
@@ -23,6 +24,8 @@ const RecordDetail = () => {
     const [diner, setDiner] = useState(type === "PATCH" ? recordSelect.numberOfDiners.toString() : "1")
     const [diets, setDiets] = useState(null)
     const [allergies, setAllergies] = useState(null)
+    const [cuisines, setCuisines] = useState(null)
+    const [typeSuggest, setTypeSuggest] = useState(type === "PATCH" ? recordSelect.typeSuggest.toString() : "0")
     
     const [isLoading, setLoading] = useState(false)
 
@@ -41,6 +44,39 @@ const RecordDetail = () => {
         }
     ]
 
+    const typeSuggestData = [
+        {
+            name: "For a day",
+            value: "0",
+        },
+        {
+            name: "For a week",
+            value: "1",
+        }
+    ]
+
+    const handleFetchCuisines = async () => {
+        const token = await AsyncStorageService.getAccessToken();
+        // const userId = await AsyncStorageService.getUserId();
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        try{
+            const response = await fetch(`${HOST}/cuisines`, {headers})
+            const data = await response.json();
+            if (data.length > 0){
+                const refactorData = data.map((m) => {
+                    const { id, name } = m;
+                    const isExist = type === "PATCH" && recordSelect?.cuisines?.some(item => item.id === id) ? true : false;
+                    return {id, name: name, isSelect: isExist}
+                })
+                // console.log("TEST: ", refactorData)
+                setCuisines(refactorData)
+            }
+        }catch (error) {
+            console.error('Error fetching data record diet:', error);
+        }
+    }
 
     const handleFetchDiets = async () => {
         const token = await AsyncStorageService.getAccessToken();
@@ -91,10 +127,11 @@ const RecordDetail = () => {
     useEffect(()=>{
         handleFetchDiets()
         handleFetchAllergies()
+        handleFetchCuisines()
     }, [])
 
     const handleIsChange = () => {
-        if (!diets || !allergies) {
+        if (!diets || !allergies || !cuisines) {
             return false;
         }
         if (type === "PATCH"){
@@ -102,43 +139,58 @@ const RecordDetail = () => {
             
             const isMoneyChange = recordSelect.money !== null ? (recordSelect.money.toString() === price) : ("" === price)
             const isMealChange = recordSelect.meal.toString() === meal
+            const isTypeSuggestChange = recordSelect.typeSuggest.toString() === typeSuggest
             const isDinerChange = recordSelect.numberOfDiners.toString() === diner
     
+            //cuisinses
+            const cuisinesIds = cuisines.filter(cuisine => cuisine.isSelect).map(cuisine => cuisine.id);
+            const recordCuisinesIds = recordSelect.cuisines.map(cuisine => cuisine.id);
+            
             //diets
             const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
             const recordDietsIds = recordSelect.diets.map(diet => diet.id);
-    
+            
             //allergies
             const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
             const recordAllergiesIds = recordSelect.allergies.map(allergy => allergy.id);
         
+            // Compare 2 array cuisines id
+            const areCuisinesSame = cuisinesIds.length === recordCuisinesIds.length && cuisinesIds.every(id => recordCuisinesIds.includes(id));
+            
             // Compare 2 array diets id
             const areDietsSame = dietsIds.length === recordDietsIds.length && dietsIds.every(id => recordDietsIds.includes(id));
             
             // Compare 2 array allergies id
             const areAllergiesSame = allergiesIds.length === recordAllergiesIds.length && allergiesIds.every(id => recordAllergiesIds.includes(id));
     
-            return isNameRecordChange && isMoneyChange && isMealChange && isDinerChange && areDietsSame && areAllergiesSame
+            return isNameRecordChange && isMoneyChange && isTypeSuggestChange && isMealChange && isDinerChange && areDietsSame && areAllergiesSame && areCuisinesSame
         }
 
         else if (type === "POST"){
             const isNameRecordChange = nameRecord === ""
             const isMoneyChange = price === ""
             const isMealChange = meal === "0"
+            const isTypeSuggestChange = typeSuggest === "0"
             const isDinerChange = diner === "1"
     
+            //diets
+            const cuisinesIds = cuisines.filter(cuisine => cuisine.isSelect).map(cuisine => cuisine.id);
+            
             //diets
             const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
     
             //allergies
             const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
-        
+            
+            // Compare 2 array cuisines id
+            const isHasCuisine = cuisinesIds.length === 0
+
             // Compare 2 array diets id
             const isHasDiet = dietsIds.length === 0
             
             // Compare 2 array allergies id
             const isHasAllergy = allergiesIds.length === 0
-            return isNameRecordChange && isMoneyChange && isMealChange && isDinerChange && isHasDiet && isHasAllergy
+            return isNameRecordChange && isMoneyChange && isTypeSuggestChange && isMealChange && isDinerChange && isHasDiet && isHasAllergy && isHasCuisine
         }
     }
 
@@ -152,6 +204,10 @@ const RecordDetail = () => {
 
     const handleChangeMeal = (value) => {
         setMeal(value)
+    }
+
+    const handleChangeTypeSuggest = (value) => {
+        setTypeSuggest(value)
     }
 
     const handleChangeDiner = (diner) => {
@@ -171,12 +227,12 @@ const RecordDetail = () => {
             );
             setAllergies(updatedAllergies);
         }
-        // else if (personalize === "cuisine"){
-        //     const updatedCuisines = cuisin.map(diet =>
-        //       diet.id === id ? { ...diet, isSelect: !diet.isSelect } : diet
-        //     );
-        //     setDiets(updatedDiets);
-        // }
+        else if (personalize === "cuisines"){
+            const updatedCuisines = cuisines.map(cuisine =>
+              cuisine.id === id ? { ...cuisine, isSelect: !cuisine.isSelect } : cuisine
+            );
+            setCuisines(updatedCuisines);
+        }
     };
 
     const handlePress = async () =>{
@@ -192,7 +248,7 @@ const RecordDetail = () => {
                 setLoading(false);
                 return
             }
-            if (price !== "" && parseInt(price) < 10000){
+            if (typeSuggest === "0" && price !== "" && parseInt(price) < 10000){
                 alert("Money have to larger than 10000 or null")
                 setLoading(false);
                 return
@@ -203,6 +259,7 @@ const RecordDetail = () => {
                 const headers = {
                   Authorization: `Bearer ${token}`,
                 };
+                const cuisinesIds = cuisines.filter(cuisine => cuisine.isSelect).map(cuisine => cuisine.id);
                 const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
                 const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
                 const bodyData = {
@@ -210,8 +267,10 @@ const RecordDetail = () => {
                     "meal": parseInt(meal, 10),
                     "money": price !== "" ? parseInt(price, 10) : null,
                     "numberOfDiners": parseInt(diner, 10),
+                    "cuisines": cuisinesIds,
                     "diets": dietsIds,
-                    "allergies": allergiesIds
+                    "allergies": allergiesIds,
+                    "typeSuggest": parseInt(typeSuggest, 10)
                 }
                 const response = await axios.patch(
                     `${HOST}/record/${recordSelect.id}`,
@@ -237,7 +296,7 @@ const RecordDetail = () => {
                 setLoading(false);
                 return
             }
-            if (price !== "" && parseInt(price) < 10000){
+            if (typeSuggest === "0" && price !== "" && parseInt(price) < 10000){
                 alert("Money have to larger than 10000 or null")
                 setLoading(false);
                 return
@@ -249,6 +308,7 @@ const RecordDetail = () => {
                 const headers = {
                   Authorization: `Bearer ${token}`,
                 };
+                const cuisinesIds = cuisines.filter(cuisine => cuisine.isSelect).map(cuisine => cuisine.id);
                 const dietsIds = diets.filter(diet => diet.isSelect).map(diet => diet.id);
                 const allergiesIds = allergies.filter(allergy => allergy.isSelect).map(allergy => allergy.id);
                 const bodyData = {
@@ -257,9 +317,10 @@ const RecordDetail = () => {
                     "meal": parseInt(meal, 10),
                     "money": price !== "" ? parseInt(price, 10) : null,
                     "numberOfDiners": parseInt(diner, 10),
-                    "cuisines": [],
+                    "cuisines": cuisinesIds,
                     "diets": dietsIds,
-                    "allergies": allergiesIds
+                    "allergies": allergiesIds,
+                    "typeSuggest": parseInt(typeSuggest, 10)
                 }
                 const response = await axios.post(
                     `${HOST}/record`,
@@ -275,12 +336,26 @@ const RecordDetail = () => {
         }
     }
 
+    const listTypeSuggest = typeSuggestData.map((m) => {
+        return (
+            <TagForType key={m.value} props={m} typeSuggest={typeSuggest} handleChangeTypeSuggest={handleChangeTypeSuggest}/>
+            // <TagForMeal key={m.value} props={m} meal={meal} handleChangeMeal={handleChangeMeal}/>
+        )
+    })
     const listMeal = mealData.map((m) => {
         return (
             <TagForMeal key={m.value} props={m} meal={meal} handleChangeMeal={handleChangeMeal}/>
         )
     })
 
+    const listCuisines = cuisines?.map((c) => {
+        return (
+            <Tag key={c.id.toString()}
+            props={c}
+            handleToggleSelect={() => handleToggleSelect("cuisines", c.id)}/>
+        )
+    })
+    
     const listDiets = diets?.map((d) => {
         return (
             <Tag key={d.id.toString()}
@@ -330,25 +405,36 @@ const RecordDetail = () => {
                 </View>
 
                 <View style={styles.inputForm}>
-                    <Text style={styles.title}>Price Range</Text>
-                    <TextInput
-                        style={styles.inputName} 
-                        value={price}
-                        keyboardType='numeric'
-                        onChangeText={handleChangePrice}
-                        placeholder='Enter your price' />
-                </View>
-                
-                <View style={styles.inputForm}>
-                    <Text style={styles.title}>Meal</Text>
+                    <Text style={styles.title}>Type suggestion</Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
-                        {listMeal}
+                        {listTypeSuggest}
                     </View>
-                    {/* <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3}}>
-                        <Feather name='plus' size={18} color={theme.colors.secondary} />
-                        <Text style={{fontSize: 13, fontWeight: '500', color: theme.colors.dark}}>Add ingredients</Text>
-                    </TouchableOpacity> */}
                 </View>
+
+                { typeSuggest === "0" ? 
+                    <View style={styles.inputForm}>
+                        <Text style={styles.title}>Price Range</Text>
+                        <TextInput
+                            style={styles.inputName} 
+                            value={price}
+                            keyboardType='numeric'
+                            onChangeText={handleChangePrice}
+                            placeholder='Enter your price' />
+                    </View>
+                    :
+                    null
+                }
+                
+                { typeSuggest === "0" ? 
+                    <View style={styles.inputForm}>
+                        <Text style={styles.title}>Meal</Text>
+                        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
+                            {listMeal}
+                        </View>
+                    </View>
+                    :
+                    null
+                }
                 
                 <View style={styles.inputForm}>
                     <Text style={styles.title}>Numbers of diners</Text>
@@ -360,14 +446,17 @@ const RecordDetail = () => {
                 </View>
 
                 <View style={styles.inputForm}>
+                    <Text style={styles.title}>Cuisines</Text>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
+                        {listCuisines}
+                    </View>
+                </View>
+
+                <View style={styles.inputForm}>
                     <Text style={styles.title}>Allergies</Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
                         {listAllergies}
                     </View>
-                    {/* <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3}}>
-                        <Feather name='plus' size={18} color={theme.colors.secondary} />
-                        <Text style={{fontSize: 13, fontWeight: '500', color: theme.colors.dark}}>Add ingredients</Text>
-                    </TouchableOpacity> */}
                 </View>
 
                 <View style={styles.inputForm}>
