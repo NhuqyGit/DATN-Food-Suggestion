@@ -27,11 +27,14 @@ const Collection = ({props, navigation, isProtected = false}) => {
     }
     
     const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 5, 5, 'black')
-
+    const protectedName = ["All Personal Recipes","Breakfasts","Dinners","Desserts"]
+    if (protectedName.includes(props.collectionName)){
+        isProtected = true
+    }
     return (
         <TouchableOpacity
             onPress={() => {
-                navigation.navigate(isProtected?'PersonalList':'List', { id: props.id, name: props.collectionName })
+                navigation.navigate('List', { id: props.id, name: props.collectionName, isProtected: isProtected })
             }}
             style={[boxShadow, {backgroundColor: 'white', borderRadius: 10, marginBottom: 15}]}>
             <View style={{paddingHorizontal: 20, paddingVertical: 8}}>
