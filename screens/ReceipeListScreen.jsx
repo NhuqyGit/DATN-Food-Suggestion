@@ -18,13 +18,22 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS } from "../theme/theme";
 import { theme } from "../theme/index";
+import { AsyncStorageService } from "../utils/AsynStorage";
+import { HOST } from "../config";
+import { useNavigation } from "@react-navigation/native";
 
 const img = require("../constants/knife-fork.jpg");
 
 function RecipeListItem({ item, removeDish }) {
+  const navigation = useNavigation();
+
   return (
     <View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push("FoodDetail_prof", { foodDetails: item });
+        }}
+      >
         <View
           style={{
             flex: 1,
@@ -42,16 +51,20 @@ function RecipeListItem({ item, removeDish }) {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image source={img} style={{ width: 100, height: 80 }} />
+            <Image
+              source={{ uri: item.imageUrl }}
+              style={{ width: 100, height: 80, borderRadius: 10 }}
+            />
 
             <Text
               style={{
                 ...FONTS.h2,
                 color: COLORS.primary,
                 alignItems: "center",
+                paddingLeft: 5,
               }}
             >
-              {item.name}
+              {item.dishName}
             </Text>
           </View>
           <Menu>
@@ -64,7 +77,12 @@ function RecipeListItem({ item, removeDish }) {
                 <MaterialIcons name="more-vert" size={24} color="gray" />
               </View>
             </MenuTrigger>
-            <MenuOptions>
+            <MenuOptions
+              customStyles={{
+                optionWrapper: { paddingVertical: 10 },
+                optionsContainer: { marginTop: 30 },
+              }}
+            >
               <MenuOption
                 onSelect={() => {
                   removeDish(item.id);
@@ -83,6 +101,7 @@ function RecipeListItem({ item, removeDish }) {
 function ReceipeListScreen({ route, navigation }) {
   const collectionId = route.params.id;
   const collectionName = route.params.name;
+  const isProtected = route.params.isProtected;
   const [isClicked, setIsClicked] = useState(false);
   const [dishes, setDishes] = useState([]);
 
@@ -90,13 +109,16 @@ function ReceipeListScreen({ route, navigation }) {
     const fetchDishes = async () => {
       const token = await AsyncStorageService.getAccessToken();
       try {
-        const response = await fetch(`${HOST}/collections/${collectionId}/dishes`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${HOST}/collections/${collectionId}/dishes`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const responseJson = await response.json();
 
@@ -109,7 +131,7 @@ function ReceipeListScreen({ route, navigation }) {
         console.error(error);
       }
     };
-    fetchDishes()
+    fetchDishes();
   }, []);
 
   const removeDishFromCollection = async (dishId) => {
@@ -174,46 +196,53 @@ function ReceipeListScreen({ route, navigation }) {
             style={{
               position: "absolute",
               left: 10,
-              top: 15,
+              top: 10,
             }}
           >
             <MaterialIcons name="keyboard-arrow-left" size={40} color="white" />
           </TouchableOpacity>
 
-          <Text style={{ ...FONTS.h1, paddingVertical: 20, color: "white" }}>
+          <Text style={{ ...FONTS.h1, paddingVertical: 15, color: "white" }}>
             {collectionName}
           </Text>
-          <Menu
-            style={{
-              position: "absolute",
-              right: 20,
-              top: 20,
-            }}
-          >
-            <MenuTrigger>
-              <View
-                style={{
-                  padding: 5,
+          {!isProtected && (
+            <Menu
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 15,
+              }}
+            >
+              <MenuTrigger>
+                <View
+                  style={{
+                    padding: 5,
+                  }}
+                >
+                  <MaterialIcons name="more-vert" size={24} color="white" />
+                </View>
+              </MenuTrigger>
+              <MenuOptions
+                customStyles={{
+                  optionWrapper: { paddingVertical: 10 },
+                  optionsContainer: { marginTop: 30 },
                 }}
               >
-                <MaterialIcons name="more-vert" size={24} color="gray" />
-              </View>
-            </MenuTrigger>
-            <MenuOptions>
-              <MenuOption
-                onSelect={() => {
-                  setIsClicked(true);
-                  removeCollection(collectionId);
-                }}
-                disabled={isClicked}
-              >
-                <Text style={{ color: "red" }}>Delete</Text>
-              </MenuOption>
-            </MenuOptions>
-          </Menu>
+                <MenuOption
+                  onSelect={() => {
+                    setIsClicked(true);
+                    removeCollection(collectionId);
+                  }}
+                  disabled={isClicked}
+                >
+                  <Text style={{ color: "red" }}>Delete</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+          )}
         </View>
 
-        <ScrollView>
+        <ScrollView style={{ paddingTop: 5 }}>
           {dishes.map((item, index) => {
             return (
               <RecipeListItem
