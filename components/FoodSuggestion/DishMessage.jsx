@@ -6,8 +6,19 @@ import { useMessage } from './MessageContext'
 const DishMessage = ({item}) => {
     const { handleNewRecipe } = useMessage();
     const formatPrice = (price) => {
-        return new Intl.NumberFormat('vi-VN').format(price);
+        // Convert price to string if it's not already
+        const priceStr = price.toString();
+    
+        // Remove non-numeric characters, except the decimal point
+        const cleanPrice = priceStr.replace(/[^0-9.]/g, '');
+    
+        // Convert to number
+        const numericPrice = parseFloat(cleanPrice);
+    
+        // Format the price using the Vietnamese locale
+        return new Intl.NumberFormat('vi-VN').format(numericPrice);
     };
+    console.log(item.price)
     return (
         <View style={styles.container}>
             <View style={{width: "75%"}}>
