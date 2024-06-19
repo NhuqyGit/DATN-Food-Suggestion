@@ -1,14 +1,11 @@
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import FilterItem from './FilterItem'
-import { AntDesign } from '@expo/vector-icons'
-import { useDispatch, useSelector } from 'react-redux'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useDispatch } from 'react-redux'
 import {
-  selectCookingTime,
-  selectIngredientIds,
   setCookingTime,
   setIngredientIds,
 } from '../../../../slices/searchSlice'
+import FilterItem from './FilterItem'
 
 const Filter = ({ hasButton = false, ingredients, setIsFilter }) => {
   const dispatch = useDispatch()
@@ -16,43 +13,43 @@ const Filter = ({ hasButton = false, ingredients, setIsFilter }) => {
   const cookingTimeOptions = [
     {
       id: 1,
-      title: '< 5 phút',
+      title: '< 5 minutes',
       active: false,
       value: 300,
     },
     {
       id: 2,
-      title: '< 10 phút',
+      title: '< 10 minutes',
       active: false,
       value: 600,
     },
     {
       id: 3,
-      title: '< 15 phút',
+      title: '< 15 minutes',
       active: false,
       value: 900,
     },
     {
       id: 4,
-      title: '< 30 phút',
+      title: '< 30 minutes',
       active: false,
       value: 1800,
     },
     {
       id: 5,
-      title: '< 45 phút',
+      title: '< 45 minutes',
       active: false,
       value: 2700,
     },
     {
       id: 6,
-      title: '< 1 giờ',
+      title: '< 1 hour',
       active: false,
       value: 3600,
     },
     {
       id: 7,
-      title: '< 2 giờ',
+      title: '< 2 hours',
       active: false,
       value: 7200,
     },

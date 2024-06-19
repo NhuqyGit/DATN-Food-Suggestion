@@ -6,9 +6,11 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native'
-import React, {forwardRef} from 'react'
+import React, { forwardRef } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { selectUserInfo } from '../../slices/userLoginSlice'
+import { useSelector } from 'react-redux'
 
 function Header(props, ref) {
   const navigation = useNavigation()
@@ -38,6 +40,7 @@ function Header(props, ref) {
   }
 
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
+  const userInfo = useSelector(selectUserInfo)
 
   return (
     <View ref={ref} style={[styles.container, props.style]}>
@@ -65,7 +68,12 @@ function Header(props, ref) {
       >
         <Image
           style={styles.avatarImage}
-          source={require('../../assets/images/Profile/avatarTest.jpg')}
+          source={
+            userInfo?.imgUrl
+              ? { uri: userInfo.imgUrl }
+              : require('../../assets/images/Profile/user.png')
+          }
+          // source={require('../../assets/images/Profile/avatarTest.jpg')}
         />
       </TouchableOpacity>
     </View>

@@ -1,17 +1,30 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setIngredientIds, setSearchStep } from '../../slices/searchSlice'
 
 const PopularItem = ({ item }) => {
+  const dispatch = useDispatch()
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: item.imageUrl,
-        }}
-      />
-      <Text>{item.ingredientName}</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => {
+        dispatch(setIngredientIds([item?.id]))
+        dispatch(setSearchStep(2))
+      }}
+      style={{
+        width: '48.5%',
+      }}
+    >
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={{
+            uri: item?.imageUrl,
+          }}
+        />
+        <Text>{item?.ingredientName}</Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -32,11 +45,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
-    width: '48.5%',
+    width: '100%',
   },
   image: {
     width: 30,
     height: 30,
+    borderRadius: 15,
     objectFit: 'cover',
   },
 })

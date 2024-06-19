@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -6,30 +6,30 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { theme } from '../../theme';
-import { useNavigation } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { AsyncStorageService } from '../../utils/AsynStorage';
-import { HOST } from '../../config';
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../slices/userLoginSlice';
-import Toast from "react-native-toast-message";
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { theme } from '../../theme'
+import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from '../../slices/userLoginSlice'
+import Toast from 'react-native-toast-message'
 
 function RecommendItem({ item }) {
-  const navigation = useNavigation();
-  const userInfo = useSelector(selectUserInfo);
-  const dishId = item?.id;
-  const userId = userInfo?.id;
+  const navigation = useNavigation()
+  const userInfo = useSelector(selectUserInfo)
+  const dishId = item?.id
+  const userId = userInfo?.id
 
-  const [isInCollection, setIsInCollection] = useState(false);
+  const [isInCollection, setIsInCollection] = useState(false)
 
   useEffect(() => {
     const checkIfInCollection = async () => {
       try {
-        const token = await AsyncStorageService.getAccessToken();
+        const token = await AsyncStorageService.getAccessToken()
         const response = await fetch(
           `${HOST}/collections/check-in-collection`,
           {
@@ -44,23 +44,23 @@ function RecommendItem({ item }) {
               collectionName: 'All Personal Recipes',
             }),
           }
-        );
+        )
 
         if (response.status === 201) {
-          const data = await response.json();
-          setIsInCollection(data.isInCollection);
+          const data = await response.json()
+          setIsInCollection(data.isInCollection)
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    };
+    }
 
-    checkIfInCollection();
-  }, [userId, dishId]);
+    checkIfInCollection()
+  }, [userId, dishId])
 
   const onAddToCollection = async () => {
     try {
-      const token = await AsyncStorageService.getAccessToken();
+      const token = await AsyncStorageService.getAccessToken()
       const response = await fetch(
         `${HOST}/collections/addByName/user/${userId}/dish/${dishId}`,
         {
@@ -73,32 +73,33 @@ function RecommendItem({ item }) {
             collectionName: 'All Personal Recipes',
           }),
         }
-      );
+      )
 
       if (response.status === 201) {
-        setIsInCollection(true);
+        setIsInCollection(true)
         Toast.show({
-          type: "success",
-          text1: "Collection Added",
+          type: 'success',
+          text1: 'Collection Added',
           text2: "Recipe was added to 'All Personal Recipes'",
           textStyle: { fontSize: 20 },
-        });
+        })
       } else {
         Toast.show({
-          type: "error",
-          text1: "Operation Failed",
-          text2: "An error occurred while updating your collections. Please try again.",
+          type: 'error',
+          text1: 'Operation Failed',
+          text2:
+            'An error occurred while updating your collections. Please try again.',
           textStyle: { fontSize: 20 },
-        });
+        })
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const onDeleteFromCollection = async () => {
     try {
-      const token = await AsyncStorageService.getAccessToken();
+      const token = await AsyncStorageService.getAccessToken()
       const response = await fetch(
         `${HOST}/collections/removeByName/user/${userId}/dish/${dishId}`,
         {
@@ -111,33 +112,34 @@ function RecommendItem({ item }) {
             collectionName: 'All Personal Recipes',
           }),
         }
-      );
+      )
 
       if (response.status === 200) {
-        setIsInCollection(false);
+        setIsInCollection(false)
         Toast.show({
-          type: "success",
-          text1: "Collection Updated",
+          type: 'success',
+          text1: 'Collection Updated',
           text2: "Recipe was removed from 'All Personal Recipes'",
           textStyle: { fontSize: 20 },
-        });
+        })
       } else {
         Toast.show({
-          type: "error",
-          text1: "Operation Failed",
-          text2: "An error occurred while updating your collections. Please try again.",
+          type: 'error',
+          text1: 'Operation Failed',
+          text2:
+            'An error occurred while updating your collections. Please try again.',
           textStyle: { fontSize: 20 },
-        });
+        })
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('FoodDetail', { foodDetails: item });
+        navigation.push('FoodDetail', { foodDetails: item })
       }}
       activeOpacity={1}
       style={styles.container}
@@ -157,19 +159,23 @@ function RecommendItem({ item }) {
         <Text style={styles.title}>{item?.dishName}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.author}>{item.author}</Text>
-          <TouchableOpacity onPress={isInCollection ? onDeleteFromCollection : onAddToCollection}>
+          <TouchableOpacity
+            onPress={
+              isInCollection ? onDeleteFromCollection : onAddToCollection
+            }
+          >
             <View style={styles.iconContainer}>
               <MaterialIcons
                 name={isInCollection ? 'favorite' : 'favorite-outline'}
                 size={27}
-                color={isInCollection ? theme.colors.primary : theme.colors.secondary}
+                color={isInCollection ? theme.colors.primary : 'white'}
               />
             </View>
           </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -212,13 +218,16 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   iconContainer: {
-    borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+    borderRadius:
+      Math.round(
+        Dimensions.get('window').width + Dimensions.get('window').height
+      ) / 2,
     width: Dimensions.get('window').width * 0.085,
     height: Dimensions.get('window').width * 0.085,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
-    shadowColor: "#000",
+    // backgroundColor: '#fff',
+    shadowColor: '#000',
     shadowOffset: { width: 1, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -228,6 +237,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-});
+})
 
-export default RecommendItem;
+export default RecommendItem
+

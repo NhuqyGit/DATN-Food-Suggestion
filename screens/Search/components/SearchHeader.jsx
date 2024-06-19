@@ -8,6 +8,12 @@ import {
   View,
 } from 'react-native'
 import Button from '../../../components/Button/Button'
+import {
+  setCookingTime,
+  setIngredientIds,
+  setIngredientNames,
+} from '../../../slices/searchSlice'
+import { useDispatch } from 'react-redux'
 
 function SearchHeader({
   setVisible,
@@ -43,6 +49,7 @@ function SearchHeader({
   }
 
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!text) {
@@ -58,6 +65,9 @@ function SearchHeader({
             onPress={() => {
               setStep(1)
               setText('')
+              dispatch(setIngredientIds([]))
+              dispatch(setIngredientNames([]))
+              dispatch(setCookingTime(null))
             }}
           >
             <Ionicons
@@ -80,6 +90,7 @@ function SearchHeader({
         <TouchableOpacity
           onPress={() => {
             setStep(2)
+            setSearchText(text)
             getDishBySearchText(text)
           }}
         >
