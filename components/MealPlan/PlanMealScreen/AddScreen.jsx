@@ -17,6 +17,40 @@ function AddScreen() {
   const handleFetchListCollection = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
+    const date = await AsyncStorage.getItem("planDate");
+
+    const dateFormat = moment.utc(date, "YYYY-MMMM Do");
+
+    const momentObject = moment(dateFormat);
+
+    const formattedDate = momentObject.format("YYYY-MM-DD");
+
+    const response2 = await fetch(
+      `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const mealplanJson = await response2.json();
+
+    const mealplanId = mealplanJson?.mealplanId;
+
+    const dishRes = await fetch(
+      `https://datn-admin-be.onrender.com/mealplan/dishes/date?planDate=${formattedDate}&mealPlanId=${mealplanId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const dishIdDish = await dishRes.json();
 
     const response = await fetch(
       `https://datn-admin-be.onrender.com/collections/user/${user_id}`,
@@ -30,20 +64,27 @@ function AddScreen() {
 
     if (response) {
       const responseJson = await response.json();
-      const data = responseJson?.map((item) => ({
-        title: item?.collectionName,
-        recipes: item?.dishes?.length || 0,
-        img:
-          item.dishes.length > 0
-            ? item.dishes[0].imageUrl
-            : "https://img.freepik.com/free-vector/food-dishes-collection_52683-2957.jpg",
-        assets: item.dishes.map((dishItem) => ({
-          dish_id: dishItem?.id,
-          name: dishItem.dishName,
-          time: `${dishItem.cookingTime}`,
-          imgUri: { uri: dishItem.imageUrl },
-        })),
-      }));
+
+      const data = responseJson?.map((item) => {
+        const filteredAssets = item.dishes.filter(
+          (dishItem) => !dishIdDish.includes(dishItem.id)
+        );
+
+        return {
+          title: item?.collectionName,
+          recipes: item?.dishes?.length || 0,
+          img:
+            item.dishes.length > 0
+              ? item.dishes[0].imageUrl
+              : "https://img.freepik.com/free-vector/food-dishes-collection_52683-2957.jpg",
+          assets: filteredAssets.map((dishItem) => ({
+            dish_id: dishItem?.id,
+            name: dishItem.dishName,
+            time: `${dishItem.cookingTime}`,
+            imgUri: { uri: dishItem.imageUrl },
+          })),
+        };
+      });
       setDataCollection(data);
     }
   };
@@ -71,10 +112,14 @@ function AddScreen() {
       </Text>
 
       <ScrollView>
-        {dataCollection?.map((day, index) => (
+        {dataCollection?.map((collection, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => navigation.navigate("RecipeDetails", { item: day })}
+            onPress={() =>
+              navigation.navigate("RecipeDetails", {
+                item: collection,
+              })
+            }
             style={{ marginBottom: 16 }}
           >
             <View
@@ -92,14 +137,14 @@ function AddScreen() {
                 <Text
                   style={{ fontSize: 16, fontWeight: "500", color: "black" }}
                 >
-                  {day.title}
+                  {collection.title}
                 </Text>
                 <Text style={{ fontSize: 13, color: "#999999" }}>
-                  {day.recipes} RECIPES
+                  {collection?.assets?.length} RECIPES
                 </Text>
               </View>
               <Image
-                source={day.img}
+                source={collection.img}
                 style={{ width: 64, height: 64, borderRadius: 32 }}
               />
             </View>
@@ -183,26 +228,41 @@ function RecipeDetailsScreen({ route }) {
         {item.title}
       </Text>
       <ScrollView>
-        {item.assets.map((asset, assetIndex) => (
-          <ListDishItem
-            key={assetIndex}
-            id={asset.dish_id}
-            name={asset.name}
-            time={asset.time}
-            imgUri={asset.imgUri}
-            isAdd={true}
-            isSelected={selectedDishes.includes(asset.dish_id)}
-            onSelectItem={handleSelectDish}
-          />
-        ))}
+        <View className="flex items-center justify-center">
+          {item?.assets.length === 0 && (
+            <Text className="text-base italic">No recipe found</Text>
+          )}
+        </View>
+        {item?.assets?.length > 0 &&
+          item.assets?.map((asset, assetIndex) => (
+            <ListDishItem
+              key={assetIndex}
+              id={asset.dish_id}
+              name={asset.name}
+              time={asset.time}
+              imgUri={asset.imgUri}
+              isAdd={true}
+              isSelected={selectedDishes.includes(asset.dish_id)}
+              onSelectItem={handleSelectDish}
+            />
+          ))}
       </ScrollView>
-      <TouchableOpacity
-        style={{ backgroundColor: theme.colors.secondary }}
-        className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
-        onPress={handleAddDishes}
-      >
-        <Text className="text-white text-xl font-bold">Add to your plan</Text>
-      </TouchableOpacity>
+
+      {item?.assets?.length > 0 && (
+        <TouchableOpacity
+          style={{
+            backgroundColor:
+              selectedDishes.length === 0
+                ? theme.colors.secondary + "88"
+                : theme.colors.secondary,
+          }}
+          className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
+          onPress={handleAddDishes}
+          disabled={selectedDishes.length === 0}
+        >
+          <Text className="text-white text-xl font-bold">Add to your plan</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

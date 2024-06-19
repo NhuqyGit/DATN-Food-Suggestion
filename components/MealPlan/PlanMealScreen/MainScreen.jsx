@@ -93,7 +93,7 @@ function MainScreen() {
               <View className="flex flex-row items-center">
                 <FontAweSomeIcon
                   name="question-circle-o"
-                  size={24}
+                  size={20}
                   color={theme.colors.secondary}
                 />
                 <Text className="ml-4 text-base font-semibold">
