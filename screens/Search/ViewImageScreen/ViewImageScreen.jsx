@@ -128,7 +128,7 @@ const ViewImageScreen = ({ navigation, route }) => {
     setOptions((prev) =>
       prev.map((item) => {
         if (item.id === id) {
-          return { ...item, title: title }
+          return { ...item, name: title }
         }
         return item
       })
@@ -162,7 +162,7 @@ const ViewImageScreen = ({ navigation, route }) => {
       />
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.content}>
-        <Text style={styles.title}>XÁC NHẬN NGUYÊN LIỆU CỦA BẠN</Text>
+        <Text style={styles.title}>Confirm your ingredients</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           {loading ? (
             <IngredientSkeletonItem total={5} />

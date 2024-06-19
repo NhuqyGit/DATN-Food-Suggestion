@@ -104,11 +104,11 @@ function RecommendList() {
     <View style={styles.container}>
       {/* <View style={styles.horizontalPadding}> */}
       <View style={styles.header}>
-        <Text style={styles.title}>Yours recommendations</Text>
+        <Text style={styles.title}>Your recommendations</Text>
         <TouchableOpacity
           onPress={() => {
             handleClickVieAll({
-              name: 'Yours recommendations',
+              name: 'Your recommendations',
               dishes: recommendDishes,
             })
           }}

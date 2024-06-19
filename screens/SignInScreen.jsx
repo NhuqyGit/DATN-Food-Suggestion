@@ -144,7 +144,6 @@ function SignInScreen() {
               </View>
             </View>
             {error && password && <Text className='text-red-500'>{error}</Text>}
-            <Text style={styles.forgotPassword}>Forgot password?</Text>
             {/* <View style={styles.thirdPartyContainer}>
               <TouchableOpacity style={styles.thirdPartyButton}>
                 <Icon name='google' size={25} color='#900' />

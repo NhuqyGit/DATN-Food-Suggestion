@@ -108,7 +108,11 @@ const SearchScreen = ({ navigation, route }) => {
 
       if (ingredientIds && ingredientIds.length > 0) {
         ingredientIds.forEach((id) => {
-          query += '&ingredientIds=' + id
+          if (searchText) {
+            query += '&ingredientIds=' + id
+          } else {
+            query += 'ingredientIds=' + id + '&'
+          }
         })
       }
 
@@ -139,7 +143,11 @@ const SearchScreen = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    if (searchText || ingredientNames?.length > 0) {
+    if (
+      searchText ||
+      ingredientNames?.length > 0 ||
+      ingredientIds?.length > 0
+    ) {
       getDishBySearchText(searchText)
     } else {
       setDishBySearchText([])
@@ -166,23 +174,25 @@ const SearchScreen = ({ navigation, route }) => {
               <Text
                 style={styles.titleResult}
               >{`${dishBySearchText?.length} RESULT`}</Text>
-              <TouchableOpacity
-                style={styles.filterContainer}
-                onPress={() => {
-                  setIsFilter(!isFilter)
-                }}
-              >
-                <Text style={styles.filter}>{'Filter'}</Text>
-                <AntDesign
-                  style={styles.searchIcon}
-                  name={isFilter ? 'up' : 'down'}
-                  size={22}
-                  color={'#BDBDBD'}
-                />
-              </TouchableOpacity>
+              {searchText && (
+                <TouchableOpacity
+                  style={styles.filterContainer}
+                  onPress={() => {
+                    setIsFilter(!isFilter)
+                  }}
+                >
+                  <Text style={styles.filter}>{'Filter'}</Text>
+                  <AntDesign
+                    style={styles.searchIcon}
+                    name={isFilter ? 'up' : 'down'}
+                    size={22}
+                    color={'#BDBDBD'}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
 
-            {isFilter && (
+            {isFilter && searchText && (
               <Filter
                 hasButton
                 ingredients={ingredients}

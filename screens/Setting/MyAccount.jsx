@@ -52,12 +52,12 @@ const MyAccount = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <MyAccountSetting name='Receive Nhuqy notifications' />
+        {/* <MyAccountSetting name='Receive Nhuqy notifications' />
         <MyAccountSetting name='Measurement System' />
 
         <View style={styles.accountSettingContainer}>
           <Text style={styles.nameSetting}>Email Preferences</Text>
-        </View>
+        </View> */}
 
         {/* <Text style={styles.notice}>
             Deleting your account may make your saved recipes, collections, and personalization preferences
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   deleteAccount: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
   },
