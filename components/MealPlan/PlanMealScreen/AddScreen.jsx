@@ -123,6 +123,7 @@ function AddScreen() {
             style={{ marginBottom: 16 }}
           >
             <View
+              className="flex flex-row items-center justify-between px-4 py-3 bg-[#F3F4F6] rounded-lg "
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
@@ -141,11 +142,13 @@ function AddScreen() {
                 </Text>
                 <Text style={{ fontSize: 13, color: "#999999" }}>
                   {collection?.assets?.length} RECIPES
+                  {/* {collection.img} */}
                 </Text>
               </View>
+
               <Image
-                source={collection.img}
-                style={{ width: 64, height: 64, borderRadius: 32 }}
+                source={{ uri: collection.img }}
+                style={{ width: 64, height: 64, borderRadius: 99 }}
               />
             </View>
           </TouchableOpacity>
