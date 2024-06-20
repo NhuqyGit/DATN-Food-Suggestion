@@ -26,6 +26,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 import Collection from '../components/Profile/Collection'
 import SortPopUp from '../components/Profile/SortPopUp'
+import { selectSearchCollectionIndex } from '../slices/searchSlice'
 
 function Profile({ navigation }) {
   const userInfo = useSelector(selectUserInfo)
@@ -34,58 +35,54 @@ function Profile({ navigation }) {
   const isFocused = useIsFocused()
   const [collections, setCollections] = useState([])
 
+  const searchCollectionIndex = useSelector(selectSearchCollectionIndex)
+
   const handleCloseModal = () => {
     setModalVisible(false)
   }
 
-  useEffect(() => {
-    if (isFocused) {
-      const fetchCollections = async () => {
-        const token = await AsyncStorageService.getAccessToken()
-        try {
-          const response = await fetch(
-            `${HOST}/collections/user/${userInfo?.id}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-
-          const responseJson = await response.json()
-
-          if (responseJson.error) {
-            console.log(responseJson.message)
-          } else {
-            setCollections(responseJson)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      fetchCollections()
+  const getQueryByIndex = (index) => {
+    switch (index) {
+      case 0:
+        return 'sortField=updatedAt'
+      case 1:
+        return 'sortField=collectionName'
+      case 2:
+        return ''
+      default:
+        return ''
     }
-  }, [isFocused])
+  }
 
-  const data = [
-    {
-      nameCollection: 'All Personal Recipes',
-      num: 5,
-      imgCol: require('../assets/images/Profile/avatarDefault.png'),
-    },
-    {
-      nameCollection: 'Breakfasts',
-      num: 2,
-      imgCol: require('../assets/images/Profile/avatarDefault.png'),
-    },
-    {
-      nameCollection: 'Desserts',
-      num: 3,
-      imgCol: require('../assets/images/Profile/avatarDefault.png'),
-    },
-  ]
+  useEffect(() => {
+    const fetchCollections = async () => {
+      const token = await AsyncStorageService.getAccessToken()
+      const query = getQueryByIndex(searchCollectionIndex)
+      try {
+        const response = await fetch(
+          `${HOST}/collections/user/${userInfo?.id}?${query}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        const responseJson = await response.json()
+
+        if (responseJson.error) {
+          console.log(responseJson.message)
+        } else {
+          setCollections(responseJson)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchCollections()
+  }, [searchCollectionIndex, isFocused])
 
   const updateProfileImage = async (newImgUrl) => {
     const token = await AsyncStorageService.getAccessToken()

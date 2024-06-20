@@ -26,7 +26,10 @@ const ExploreCuisine = ({ route }) => {
         <Text style={styles.cateTitle}>{cuisine?.name}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContainer}
+      >
         <View style={styles.section}>
           {cuisine?.dishes?.map((item) => (
             <RecipeCard key={item.id} item={item} />

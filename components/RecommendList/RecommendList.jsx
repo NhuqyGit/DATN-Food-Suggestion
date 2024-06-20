@@ -141,7 +141,7 @@ function RecommendList() {
             onPress={() => {
               handleClickVieAll({
                 name: 'Healthy recipes',
-                dishes: recommendDishes,
+                dishes: healthyDishes,
               })
             }}
           >
@@ -172,7 +172,7 @@ function RecommendList() {
             onPress={() => {
               handleClickVieAll({
                 name: 'Quick recipes',
-                dishes: recommendDishes,
+                dishes: quicklyDishes,
               })
             }}
           >

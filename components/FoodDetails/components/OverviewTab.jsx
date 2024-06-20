@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import {
   Text,
   View,
@@ -9,133 +9,134 @@ import {
   Modal,
   TextInput,
   Alert,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { theme } from "../../../theme/index";
-import { setCollectionButtonText } from "../../../slices/modalSlice";
-import { useGetRelatedDishQuery } from "../../../slices/foodDetailsSlice";
-import SmallRecommendItem from "../../RecommendItem/SmallRecommendItem";
-import RecommendSmallSkeleton from "../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton";
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { theme } from '../../../theme/index'
+import { setCollectionButtonText } from '../../../slices/modalSlice'
+import { useGetRelatedDishQuery } from '../../../slices/foodDetailsSlice'
+import SmallRecommendItem from '../../RecommendItem/SmallRecommendItem'
+import RecommendSmallSkeleton from '../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton'
 import {
   useCreateReportMutation,
   useGetReportByUserIdAndDishIdQuery,
-} from "../../../slices/reportSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
+} from '../../../slices/reportSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Toast from 'react-native-toast-message'
 
 const reportReasons = [
-  "Inappropriate Content",
-  "Spam",
-  "Harassment",
-  "False Information",
-  "Bad Content",
-  "Wordy",
-  "False Image",
+  'Inappropriate Content',
+  'Spam',
+  'Harassment',
+  'False Information',
+  'Bad Content',
+  'Wordy',
+  'False Image',
   "I don't like it",
-  "Others",
-];
+  'Others',
+]
 
 function OverviewTab({ foodDetails, navigation }) {
   const collectionButtonText = useSelector(
     (state) => state.modal.collectionButtonText
-  );
-  const [isReporting, setReporting] = useState(false);
-  const [selectedReason, setSelectedReason] = useState(null);
-  const [otherReason, setOtherReason] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [createReport] = useCreateReportMutation();
+  )
+  const [isReporting, setReporting] = useState(false)
+  const [selectedReason, setSelectedReason] = useState(null)
+  const [otherReason, setOtherReason] = useState('')
+  const [userId, setUserId] = useState(null)
+  const [createReport] = useCreateReportMutation()
   const { data: existingReport, refetch } = useGetReportByUserIdAndDishIdQuery(
     { userId: parseInt(userId), dishId: foodDetails?.id },
     { skip: !userId }
-  );
+  )
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem("user_id");
+        const storedUserId = await AsyncStorage.getItem('user_id')
         if (storedUserId) {
-          setUserId(storedUserId);
+          setUserId(storedUserId)
         }
       } catch (error) {
-        console.error("Failed to fetch userId from AsyncStorage:", error);
+        console.error('Failed to fetch userId from AsyncStorage:', error)
       }
-    };
+    }
 
-    fetchUserId();
-  }, []);
+    fetchUserId()
+  }, [])
 
   useEffect(() => {
     if (userId) {
-      refetch();
+      refetch()
     }
-  }, [userId, refetch]);
+  }, [userId, refetch])
 
   const {
     data: relatedDishs,
     isLoading: relatedLoading,
     isError: relatedError,
-  } = useGetRelatedDishQuery(foodDetails?.id);
+  } = useGetRelatedDishQuery(foodDetails?.id)
 
   const cancelReporting = () => {
-    setReporting(false);
-    setSelectedReason([]);
-    setOtherReason("");
-    refetch();
-  };
+    setReporting(false)
+    setSelectedReason([])
+    setOtherReason('')
+    refetch()
+  }
 
   const toggleReason = (reason) => {
-    setSelectedReason(reason === selectedReason ? null : reason);
-  };
+    setSelectedReason(reason === selectedReason ? null : reason)
+  }
 
   const handleReportSubmission = async () => {
     if (selectedReason?.length === 0) {
       Toast.show({
-        type: "error",
-        text1: "Report Error",
-        text2: "Please select at least one reason.",
+        type: 'error',
+        text1: 'Report Error',
+        text2: 'Please select at least one reason.',
         textStyle: { fontSize: 20 },
-      });
-      return;
+      })
+      return
     }
-    refetch();
+    refetch()
     if (existingReport && existingReport?.length > 0) {
       Toast.show({
-        type: "error",
-        text1: "Report Error",
-        text2: "You have already reported this dish.",
+        type: 'error',
+        text1: 'Report Error',
+        text2: 'You have already reported this dish.',
         textStyle: { fontSize: 20 },
-      });
-      cancelReporting();
-      return;
+      })
+      cancelReporting()
+      return
     }
     const content =
-      selectedReason === "Others"
+      selectedReason === 'Others'
         ? `${selectedReason}: ${otherReason}`
-        : selectedReason;
+        : selectedReason
     const response = await createReport({
       userId: parseInt(userId),
       dishId: parseInt(foodDetails?.id),
       content,
-    });
-    if (response.status == 201) {
+    })
+
+    if (response.data?.userId) {
       Toast.show({
-        type: "success",
-        text1: "Report Submitted",
-        text2: "Report issued successfully.",
+        type: 'success',
+        text1: 'Report Submitted',
+        text2: 'Report issued successfully.',
         textStyle: { fontSize: 20 },
-      });
+      })
     }
 
-    cancelReporting();
-  };
+    cancelReporting()
+  }
 
   const startReporting = () => {
-    setReporting(true);
-  };
+    setReporting(true)
+  }
 
   const renderReportModal = () => (
     <Modal
-      animationType="slide"
+      animationType='slide'
       transparent
       visible={isReporting}
       onRequestClose={cancelReporting}
@@ -145,7 +146,7 @@ function OverviewTab({ foodDetails, navigation }) {
         <View style={styles.innerReportContainer}>
           <Text style={styles.modalTitle}>Select Reasons for Report</Text>
           <TouchableOpacity style={styles.closeIcon} onPress={cancelReporting}>
-            <Icon name="close" size={22} color="black" />
+            <Icon name='close' size={22} color='black' />
           </TouchableOpacity>
           {reportReasons.map((reason, index) => (
             <TouchableOpacity
@@ -154,17 +155,17 @@ function OverviewTab({ foodDetails, navigation }) {
               onPress={() => toggleReason(reason)}
             >
               <Icon
-                name={selectedReason === reason ? "dot-circle-o" : "circle-o"}
+                name={selectedReason === reason ? 'dot-circle-o' : 'circle-o'}
                 size={24}
                 color={theme.colors.secondary}
               />
               <Text style={styles.reasonOptionText}>{reason}</Text>
             </TouchableOpacity>
           ))}
-          {selectedReason === "Others" && (
+          {selectedReason === 'Others' && (
             <TextInput
               style={styles.otherReasonInput}
-              placeholder="Enter your reason"
+              placeholder='Enter your reason'
               value={otherReason}
               onChangeText={setOtherReason}
             />
@@ -178,7 +179,7 @@ function OverviewTab({ foodDetails, navigation }) {
         </View>
       </View>
     </Modal>
-  );
+  )
   return (
     <View style={styles.container}>
       <ScrollView
@@ -187,7 +188,7 @@ function OverviewTab({ foodDetails, navigation }) {
       >
         <View style={styles.infoItem}>
           <Icon
-            name="star"
+            name='star'
             size={20}
             color={theme.colors.primary}
             style={styles.icon}
@@ -198,7 +199,7 @@ function OverviewTab({ foodDetails, navigation }) {
         <View style={styles.line} />
         <View style={styles.infoItem}>
           <Ionicons
-            name="timer"
+            name='timer'
             size={20}
             color={theme.colors.primary}
             style={styles.icon}
@@ -213,7 +214,7 @@ function OverviewTab({ foodDetails, navigation }) {
         <View style={styles.line} />
         <View style={styles.infoItem}>
           <Ionicons
-            name="server"
+            name='server'
             size={20}
             color={theme.colors.primary}
             style={styles.icon}
@@ -224,7 +225,7 @@ function OverviewTab({ foodDetails, navigation }) {
         <View style={styles.line} />
         <View style={styles.infoItem}>
           <Ionicons
-            name="flame"
+            name='flame'
             size={20}
             color={theme.colors.primary}
             style={styles.icon}
@@ -270,14 +271,14 @@ function OverviewTab({ foodDetails, navigation }) {
       </ScrollView>
       {renderReportModal()}
     </View>
-  );
+  )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingHorizontal: 15,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   scrollViewContainer: {
     marginTop: 5,
@@ -294,9 +295,9 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   infoItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginVertical: 10,
   },
   label: {
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
   value: {
     marginLeft: 5,
     fontSize: 16,
-    textAlign: "right",
+    textAlign: 'right',
     flex: 3,
     paddingRight: 15,
   },
@@ -314,13 +315,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 14,
   },
   line: {
@@ -335,33 +336,33 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   innerReportContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     height: 500,
   },
   closeIcon: {
-    position: "absolute",
+    position: 'absolute',
     top: 15,
     right: 20,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 15,
   },
   reasonOptionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
   reasonOptionText: {
@@ -371,14 +372,14 @@ const styles = StyleSheet.create({
   reportButton: {
     backgroundColor: theme.colors.secondary,
     padding: 15,
-    width: "40%",
+    width: '40%',
     borderRadius: 5,
-    alignItems: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    alignSelf: 'center',
     marginTop: 20,
   },
   reportButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
   },
   listItem: {
@@ -386,22 +387,23 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   reportButtonContainer: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     marginBottom: 20,
   },
 
   alreadyReportedText: {
-    color: "red",
+    color: 'red',
     fontSize: 15,
     marginVertical: 20,
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   relatedTxt: {
     fontSize: 22,
     marginLeft: 5,
     marginTop: 10,
-    fontWeight: "500",
+    fontWeight: '500',
     color: theme.colors.secondary,
   },
-});
-export default OverviewTab;
+})
+export default OverviewTab
+
