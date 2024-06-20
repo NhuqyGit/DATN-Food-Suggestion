@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
 import { HOST } from "../../../config";
 import moment from "moment";
+import Toast from "react-native-toast-message";
 
 export default function ListDishItem({
   id,
@@ -44,11 +45,40 @@ export default function ListDishItem({
       ? moment.utc(formattedPlanDate, "YYYY MMMM Do").toDate()
       : undefined;
 
+  const [mealPlanIdInt, setMealPlanIdInt] = useState();
+
+  const [user_id, setUserId] = useState();
+  const [token, setToken] = useState();
+  const dishIdInt = parseInt(id, 10);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const user_id = await AsyncStorage.getItem("user_id");
+      setUserId(user_id);
+      const token = await AsyncStorageService.getAccessToken();
+      setToken(token);
+      const response = await fetch(
+        `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const mealplanJson = await response.json();
+      const mealplanId = mealplanJson?.mealplanId;
+      const mealPlanIdInt = parseInt(mealplanId, 10);
+      setMealPlanIdInt(mealPlanIdInt);
+    };
+    fetchData();
+  }, []);
   return (
     <View style={styles.shadowView} className="mt-2">
       <TouchableOpacity
         onPress={async () => {
-          const token = await AsyncStorageService.getAccessToken();
           const response = await fetch(`${HOST}/dish/${id}`, {
             method: "GET",
             headers: {
@@ -72,12 +102,11 @@ export default function ListDishItem({
           <View className="flex flex-row justify-between items-center w-4/5">
             <View className="h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
               <Ionicons name="time-outline" size={26} color="white" />
-<Text className="text-white text-base font-medium px-1">
-  {Number(time) < 3600
-    ? `${Math.floor(Number(time) / 60)} mins`
-    : `${Math.floor(Number(time) / 3600)}h ${Math.floor((Number(time) % 3600) / 60)}m`}
-</Text>
-
+              <Text className="text-white text-base font-medium px-1">
+                {Number(time) < 3600
+                  ? `${Math.floor(Number(time) / 60)} mins`
+                  : `${Math.floor(Number(time) / 3600)}h ${Math.floor((Number(time) % 3600) / 60)}m`}
+              </Text>
             </View>
             {isAdd ? (
               <TouchableOpacity onPress={handlePressPlus}>
@@ -128,24 +157,6 @@ export default function ListDishItem({
             <TouchableOpacity
               className="flex flex-row items-center mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid"
               onPress={async () => {
-                const user_id = await AsyncStorage.getItem("user_id");
-                const token = await AsyncStorageService.getAccessToken();
-                const response = await fetch(
-                  `https://datn-admin-be.onrender.com/mealplan/user/${user_id}`,
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
-
-                const mealplanJson = await response.json();
-                const mealplanId = mealplanJson?.mealplanId;
-                const mealPlanIdInt = parseInt(mealplanId, 10);
-                const dishIdInt = parseInt(id, 10);
-
                 const res = await fetch(
                   `https://datn-admin-be.onrender.com/mealplan`,
                   {
@@ -170,6 +181,76 @@ export default function ListDishItem({
               <Text className="ml-4 text-base font-semibold">
                 Remove from Meal Plan
               </Text>
+            </TouchableOpacity>
+          </View>
+          <View className="flex flex-row items-center mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
+            <TouchableOpacity
+              onPress={async () => {
+                const momentObject = moment(dateFormat);
+                const newDate = momentObject.add(7, "days").toDate();
+
+                const formattedDate = momentObject.format("YYYY-MM-DD");
+
+                const dishRes = await fetch(
+                  `https://datn-admin-be.onrender.com/mealplan/dishes/date?planDate=${formattedDate}&mealPlanId=${mealPlanIdInt}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                const dishIdDish = await dishRes.json();
+
+                const dishIdInt = parseInt(id, 10);
+
+                if (!dishIdDish.includes(dishIdInt)) {
+                  console.log(">>>", "<<<");
+                  const response = await fetch(
+                    `https://datn-admin-be.onrender.com/mealplan`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({
+                        mealPlanId: mealPlanIdInt,
+                        dishId: dishIdInt,
+                        planDate: newDate,
+                      }),
+                    }
+                  );
+
+                  Toast.show({
+                    type: "success",
+                    text1: "Recipe Added",
+                    text2: "Recipe was added to next week",
+                    textStyle: { fontSize: 20 },
+                  });
+                } else {
+                  Toast.show({
+                    type: "error",
+                    text1: "Exist Recipe",
+                    text2: "Recipe was existed next week",
+                    textStyle: { fontSize: 20 },
+                  });
+                }
+
+                setModalVisible(false);
+              }}
+            >
+              <View className="flex flex-row items-center">
+                <Feather
+                  name="repeat"
+                  size={24}
+                  color={theme.colors.secondary}
+                />
+                <Text className="ml-4 text-base font-semibold">
+                  Repeat next week
+                </Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
