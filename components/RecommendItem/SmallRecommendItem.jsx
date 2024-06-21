@@ -170,7 +170,7 @@ function SmallRecommendItem({ item }) {
             <View style={styles.iconContainer}>
               <MaterialIcons
                 name={isInCollection ? 'favorite' : 'favorite-outline'}
-                size={21}
+                size={22}
                 color={
                   isInCollection ? theme.colors.primary : theme.colors.secondary
                 }
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     // shadowOffset: { width: 1, height: 3 },
     // shadowOpacity: 0.3,
     // shadowRadius: 1,
-    elevation: 5,
+    //elevation: 5,
     marginBottom: 5,
   },
   addIcon: {

@@ -148,7 +148,7 @@ function FoodDetailsScreen({ navigation, route }) {
           onPress={handleNavigateBack}
           style={styles.backButtonContainer}
         >
-          <Ionicons name='chevron-back-circle' size={30} color='white' />
+          <Ionicons name='chevron-back-circle' size={32} color={theme.colors.grayBackground} />
         </TouchableOpacity>
       </View>
 
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   backButtonContainer: {
     position: 'absolute',
     top: 40,
-    left: 20,
+    left: 10,
     zIndex: 10,
   },
   image: {

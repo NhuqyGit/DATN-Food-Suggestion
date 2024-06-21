@@ -164,8 +164,7 @@ const RecipeCard = ({ item, callBack }) => {
           <Text style={styles.title}>{item?.dishName}</Text>
           <View style={styles.authorContainer}>
             <Text style={styles.author}>{item.author}</Text>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity
+            <TouchableOpacity
                 onPress={
                   isInCollection ? onDeleteFromCollection : onAddToCollection
                 }
@@ -182,7 +181,6 @@ const RecipeCard = ({ item, callBack }) => {
                   />
                 </View>
               </TouchableOpacity>
-            </View>
           </View>
         </View>
       </ImageBackground>

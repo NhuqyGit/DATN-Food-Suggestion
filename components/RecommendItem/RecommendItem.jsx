@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ImageBackground
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { theme } from '../../theme'
@@ -167,7 +168,7 @@ function RecommendItem({ item }) {
             <View style={styles.iconContainer}>
               <MaterialIcons
                 name={isInCollection ? 'favorite' : 'favorite-outline'}
-                size={27}
+                size={29}
                 color={isInCollection ? theme.colors.primary : 'white'}
               />
             </View>
@@ -192,10 +193,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 20,
+    right: 16,
     bottom: 0,
     justifyContent: 'flex-end',
     padding: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.15)'
   },
   title: {
     color: 'white',
@@ -227,11 +230,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 1, height: 5 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 4,
+    // elevation: 5,
   },
   addIcon: {
     color: 'white',
