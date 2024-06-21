@@ -138,7 +138,7 @@ const RecipeCard = ({ item, callBack }) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        navigation.push('FoodDetail', { foodDetails: item })
+        navigation.push('FoodDetail_prof', { foodDetails: item })
       }}
     >
       <ImageBackground
