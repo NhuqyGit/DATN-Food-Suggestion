@@ -9,6 +9,7 @@ import React, {
 import { AsyncStorageService } from "../../utils/AsynStorage";
 import { HOST } from "../../config";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 const MessageContext = createContext();
 
@@ -192,6 +193,8 @@ export const MessageProvider = ({
       content: nameRecord,
       response: null,
       isSend: false,
+      isRecipe: false,
+      isRecipeImage: false
     }; // Tạo đối tượng tin nhắn mới
     setListMessage([...listMessage, newMessageObj]);
     setIsFetchDataCompleted(false);
@@ -204,11 +207,25 @@ export const MessageProvider = ({
       content: `Find me the recipe for ${nameDish}`,
       response: null,
       isSend: false,
-      isRecipe: true
+      isRecipe: true,
+      isRecipeImage: true,
     }; // Tạo đối tượng tin nhắn mới
     setListMessage([...listMessage, newMessageObj]);
     setIsFetchDataCompleted(false);
   };
+
+  function extractQuery(inputString) {
+    const keyword = 'for';
+    const keywordIndex = inputString.indexOf(keyword);
+
+    if (keywordIndex !== -1) {
+        // Extract the part of the string after "for"
+        const query = inputString.substring(keywordIndex + keyword.length).trim();
+        return query;
+    } else {
+        throw new Error('Keyword "for" not found in the input string');
+    }
+  }
 
   const handleNewResponse = async (newResponse) => {
     try {
@@ -239,10 +256,13 @@ export const MessageProvider = ({
         topicBelong: topic.id,
       };
       if(updatedListMessage[sendMessageIndex].isRecipe){
+        const nameDish = extractQuery(updatedListMessage[sendMessageIndex].content)
+        console.log("aaaa: ", nameDish)
         updatedListMessage[sendMessageIndex].isRecipe = true;
-        updatedListMessage[sendMessageIndex].header = `Sau đây là các công thức cho món "${updatedListMessage[sendMessageIndex].content}" được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+        updatedListMessage[sendMessageIndex].header = `Sau đây là các công thức của món ${nameDish} được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
         body.isRecipe = true;
-        body.header = `Sau đây là các công thức được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+        body.isRecipeImage = false;
+        body.header = `Sau đây là các công thức của món ${nameDish} được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
       }else{
         updatedListMessage[sendMessageIndex].header = newMessage[1];
         body.header = newMessage[1]
@@ -257,7 +277,56 @@ export const MessageProvider = ({
       console.error("Error posting new message:", error);
     }
   };
-  console.log(newMessage !== null ? newMessage[0] : null)
+
+  const handleResponseRecipe = async (newResponse) => {
+    try {
+      console.log("res: ",newResponse)
+      const sendMessageIndex = listMessage.findIndex(
+        (message) => message.isSend === false
+      );
+      if (sendMessageIndex === -1) {
+        console.error("Tin nhắn không tồn tại");
+        return;
+      }
+
+      // Sao chép danh sách tin nhắn hiện có
+      const updatedListMessage = [...listMessage];
+
+      // Cập nhật tin nhắn phản hồi vào tin nhắn gửi đi
+      updatedListMessage[sendMessageIndex].response = newResponse;
+      updatedListMessage[sendMessageIndex].isSend = true;
+      updatedListMessage[sendMessageIndex].isRecipe = false;
+
+      const token = await AsyncStorageService.getAccessToken();
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const body = {
+        header: `Đây là công thức của món ${nameDish} chúng tôi tìm thấy được ở ngoài hệ thống, bên dưới là hình ảnh, công thức và link youtube hướng dẫn.`,
+        content: updatedListMessage[sendMessageIndex].content,
+        response: updatedListMessage[sendMessageIndex].response,
+        isRecipe: false,
+        isRecipeImage: true,
+        topicBelong: topic.id,
+      };
+      // if(updatedListMessage[sendMessageIndex].isRecipeImage){
+        const nameDish = extractQuery(updatedListMessage[sendMessageIndex].content)
+        // updatedListMessage[sendMessageIndex].isRecipe = true;
+        updatedListMessage[sendMessageIndex].header = `Đây là công thức của món ${nameDish} chúng tôi tìm thấy được ở ngoài hệ thống, bên dưới là hình ảnh, công thức và link youtube hướng dẫn.`
+        // body.isRecipe = true;
+        // body.header = `Sau đây là các công thức của món ${nameDish} được tìm thấy trong hệ thống:\n- Để xem công thức bạn hãy nhấn vào món ăn.\n- Để chuyển đến mô tả món ăn cụ thể bạn hãy nhấn vào nút mũi tên.`
+      // }else{
+      const response = await axios.post(`${HOST}/messages`, body, { headers });
+      const data = await response.data;
+      updatedListMessage[sendMessageIndex].id = data.id;
+      setListMessage(updatedListMessage);
+      // handleAddNewMessage(topic.id, updatedListMessage[sendMessageIndex]);
+      getTopics()
+    } catch (error) {
+      console.error("Error posting new message:", error);
+    }
+  };
+
   const fetchData = async (callback) => {
     try {
       const token = await AsyncStorageService.getAccessToken();
@@ -281,6 +350,8 @@ export const MessageProvider = ({
   };
 
   const fetchDataListRecipe = async (callback, nameDish) => {
+    let data; // Declare `data` at the function level
+    console.log("AABBB: ", data, nameDish)
     try {
       const token = await AsyncStorageService.getAccessToken();
       const headers = {
@@ -292,8 +363,44 @@ export const MessageProvider = ({
       const response = await axios.post(`${HOST}/openai/find-in-database`, body, {
         headers,
       });
+      console.log(body)
+      data = response.data; // Assign response data to `data`
+      console.log("RECIPE: ", data)
+      callback(data);
+    } catch (error) {
+      console.error("Error fetching recipe response:", error);
+      setIsError(true); // Ensure `setIsError` is accessible
+    } finally {
+      console.log("aaaBJBJBLL: ", data ? data.existedInDatabase : null);
+      if (data && data.existedInDatabase) {
+        setIsFetchDataCompleted(true); // Ensure `setIsFetchDataCompleted` is accessible
+      }
+      else{
+        Toast.show({
+          type: "info",
+          text1: "Searching for recipe...",
+          text2: "No recipe found in the system, please wait while we search external sources for you.",
+          textStyle: { fontSize: 28 },
+        });        
+      }
+    }
+  };
+  
+
+  const fetchRecipeImage = async (callback, nameDish) => {
+    console.log("CCCCCC: ", nameDish)
+    try {
+      const token = await AsyncStorageService.getAccessToken();
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      
+      const response = await axios.get(`${HOST}/openai/recipe-image`, {
+        headers,
+        params: { query: nameDish },
+      });
       const data = await response.data;
-      // console.log("RECIPE: ", data)
+      console.log(data)
       callback(data);
     } catch (error) {
       console.error("Error fetching recipe response:", error);
@@ -324,6 +431,9 @@ export const MessageProvider = ({
         setListRecord,
         handleUpdateListRecord,
         handleSetListRecord,
+        handleResponseRecipe,
+        extractQuery,
+        fetchRecipeImage
       }}
     >
       {children}

@@ -27,7 +27,7 @@ const DishMessage = ({item}) => {
             </View>
             <View style={{width: "25%"}}>
                 <TouchableOpacity
-                    onPress={()=>handleNewRecipe("bún bò")}
+                    onPress={()=>handleNewRecipe(item.food)}
                     style={styles.btnRequestRecipe}>
                     <Text style={{color: "white"}}>recipe?</Text>
                 </TouchableOpacity>
