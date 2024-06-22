@@ -10,19 +10,30 @@ import ListDishMessage from './ListDishMessage'
 import * as Animatable from 'react-native-animatable';
 import MealChat from './MealChat/MealChat'
 import ListDishRecipe from './ListDishRecipe'
+import RecipeWithImage from './RecipeWithImage'
 
 
 const RenderChat = ({props}) => {
-	const { recordActive, isError, handleNewResponse, fetchData, fetchDataListRecipe} = useMessage();
+	const { recordActive, isError, handleNewResponse, fetchData, fetchDataListRecipe, extractQuery, fetchRecipeImage, handleResponseRecipe} = useMessage();
 
 	useFocusEffect(
 		useCallback(()=>{
 			if(!props.isSend){
 				if(!isError){
 					if(props.isRecipe){
+						const nameDish = extractQuery(props.content)
 						fetchDataListRecipe((response) => {
-							handleNewResponse(response);
-						}, props.content)
+							console.log(response.existedInDatabase, nameDish, "AAAAAAA")
+							if (response.existedInDatabase){
+								handleNewResponse(response);
+							}
+							else{
+								console.log("RE_IMAGE: ", nameDish)
+								fetchRecipeImage((res) => {
+									handleResponseRecipe(res);
+								}, nameDish)
+							}
+						}, nameDish)
 					}else{
 						fetchData((response) => {
 							handleNewResponse(response);
@@ -127,15 +138,15 @@ const RenderChat = ({props}) => {
 					>
 						{props.isSend ? 
 							<>
-								{/* <GenerateHeaderMessage /> */}
 								<Text>{props.header}</Text>
 								<View style={{backgroundColor: props.isRecipe ? 'white' : '#232325', borderRadius: 8, borderColor: theme.colors.lightGray, borderWidth: props.isRecipe ? 0 : 1}}>
-									{/* {listDishMessage} */}
-									{/* <ListDishMessage response={props.response} isSend={props.isSend}/> */}
-									{
-										props.isRecipe ? <ListDishRecipe response={props.response}/> :
-										<MealChat response={props.response}/>
-									}
+									{props.isRecipe ? (
+										<ListDishRecipe response={props.response} />
+									) : props.isRecipeImage ? (
+										<RecipeWithImage response={props.response} />
+									) : (
+										<MealChat response={props.response} />
+									)}
 								</View>
 							</>
 						: null }
