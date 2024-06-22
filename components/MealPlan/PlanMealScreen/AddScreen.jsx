@@ -9,12 +9,17 @@ import { theme } from "../../../theme/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
 import moment from "moment";
+import SearchValueSkeleton from "../../../screens/Search/ViewImageScreen/SearchValueSkeleton";
+import IngredientSkeleton from "../../../screens/Search/ViewImageScreen/IngredientSkeleton";
+import CuisineSkeleton from "../../../screens/Search/ViewImageScreen/CuisineSkeleton";
 
 function AddScreen() {
   const navigation = useNavigation();
   const [dataCollection, setDataCollection] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFetchListCollection = async () => {
+    setIsLoading(true);
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
     const date = await AsyncStorage.getItem("planDate");
@@ -86,6 +91,7 @@ function AddScreen() {
         };
       });
       setDataCollection(data);
+      setIsLoading(false);
     }
   };
 
@@ -111,49 +117,55 @@ function AddScreen() {
         Browse your collections
       </Text>
 
-      <ScrollView>
-        {dataCollection?.map((collection, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() =>
-              navigation.navigate("RecipeDetails", {
-                item: collection,
-              })
-            }
-            style={{ marginBottom: 16 }}
-          >
-            <View
-              className="flex flex-row items-center justify-between px-4 py-3 bg-[#F3F4F6] rounded-lg "
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingVertical: 12,
-                paddingHorizontal: 16,
-                backgroundColor: "#F3F4F6",
-                borderRadius: 8,
-                alignItems: "center",
-              }}
+      {isLoading ? (
+        <View className="flex flex-wrap gap-2 mt-4">
+          <CuisineSkeleton total={4} />
+        </View>
+      ) : (
+        <ScrollView>
+          {dataCollection?.map((collection, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() =>
+                navigation.navigate("RecipeDetails", {
+                  item: collection,
+                })
+              }
+              style={{ marginBottom: 16 }}
             >
-              <View className="flex flex-col gap-2">
-                <Text
-                  style={{ fontSize: 16, fontWeight: "500", color: "black" }}
-                >
-                  {collection.title}
-                </Text>
-                <Text style={{ fontSize: 13, color: "#999999" }}>
-                  {collection?.assets?.length} RECIPES
-                  {/* {collection.img} */}
-                </Text>
-              </View>
+              <View
+                className="flex flex-row items-center justify-between px-4 py-3 bg-[#F3F4F6] rounded-lg "
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingVertical: 12,
+                  paddingHorizontal: 16,
+                  backgroundColor: "#F3F4F6",
+                  borderRadius: 8,
+                  alignItems: "center",
+                }}
+              >
+                <View className="flex flex-col gap-2">
+                  <Text
+                    style={{ fontSize: 16, fontWeight: "500", color: "black" }}
+                  >
+                    {collection.title}
+                  </Text>
+                  <Text style={{ fontSize: 13, color: "#999999" }}>
+                    {collection?.assets?.length} RECIPES
+                    {/* {collection.img} */}
+                  </Text>
+                </View>
 
-              <Image
-                source={{ uri: collection.img }}
-                style={{ width: 64, height: 64, borderRadius: 99 }}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+                <Image
+                  source={{ uri: collection.img }}
+                  style={{ width: 64, height: 64, borderRadius: 99 }}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
