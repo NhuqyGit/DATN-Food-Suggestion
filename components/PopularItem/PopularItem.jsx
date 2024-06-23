@@ -22,7 +22,9 @@ const PopularItem = ({ item }) => {
             uri: item?.imageUrl,
           }}
         />
-        <Text>{item?.ingredientName}</Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode='tail'>
+          {item?.ingredientName}
+        </Text>
       </View>
     </TouchableOpacity>
   )
@@ -52,6 +54,9 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     objectFit: 'cover',
+  },
+  text: {
+    flexShrink: 1,
   },
 })
 

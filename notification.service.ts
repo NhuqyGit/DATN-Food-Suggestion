@@ -56,8 +56,6 @@ export const usePushNotification = (): PushNotificationState => {
         projectId,
       })
       await AsyncStorage.setItem('expoPushToken', token.data)
-      // Alert.alert("tekon", token.data)
-      // console.log(token);
       if (Platform.OS === 'android') {
         Notifications.setNotificationChannelAsync('default', {
           name: 'default',
@@ -68,7 +66,6 @@ export const usePushNotification = (): PushNotificationState => {
       }
       return token
     } else {
-      console.log('Must use physical device for push notifications')
     }
   }
 
@@ -81,9 +78,7 @@ export const usePushNotification = (): PushNotificationState => {
         setNotication(notification)
       })
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response)
-      })
+      Notifications.addNotificationResponseReceivedListener((response) => {})
     return () => {
       Notifications.removeNotificationSubscription(
         notificationListener.current!

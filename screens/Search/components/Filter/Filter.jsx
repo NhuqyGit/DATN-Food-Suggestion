@@ -1,5 +1,13 @@
+import { AntDesign } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 import {
   setCookingTime,
@@ -7,7 +15,7 @@ import {
 } from '../../../../slices/searchSlice'
 import FilterItem from './FilterItem'
 
-const Filter = ({ hasButton = false, ingredients, setIsFilter }) => {
+const Filter = ({ hasButton = false, ingredients, setIsFilter, isFilter }) => {
   const dispatch = useDispatch()
 
   const cookingTimeOptions = [
@@ -61,6 +69,7 @@ const Filter = ({ hasButton = false, ingredients, setIsFilter }) => {
   const [ingredientsMapping, setIngredientsMapping] = useState([])
   const [cookingTimeMapping, setCookingTimeMapping] =
     useState(cookingTimeOptions)
+  const [showAllPopular, setShowAllPopular] = useState(false)
 
   useEffect(() => {
     setIngredientsMapping(
@@ -114,55 +123,104 @@ const Filter = ({ hasButton = false, ingredients, setIsFilter }) => {
     }
   }
 
+  const handleSeeIngredients = () => {
+    setShowAllPopular(!showAllPopular)
+  }
+
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.title}>Nguyên liệu bạn có</Text>
-        <View style={styles.wrapper}>
-          <View style={styles.list}>
-            {ingredientsMapping.map((item, index) => (
-              <FilterItem
-                key={index}
-                data={item}
-                onPress={() => {
-                  handleClickIngredient(item.id)
-                }}
-              />
-            ))}
+    <Modal
+      animationType='slide'
+      transparent
+      visible={isFilter}
+      onRequestClose={() => {
+        setIsFilter(false)
+      }}
+    >
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 8,
+            }}
+          >
+            <Text style={styles.title}>Ingredients you have</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setIsFilter(false)
+              }}
+            >
+              <AntDesign name='close' size={24} color='white' />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.wrapper}>
+            {ingredients?.length > 10 && (
+              <TouchableOpacity
+                onPress={handleSeeIngredients}
+                style={styles.seeMoreButton}
+              >
+                <Text style={styles.seeMoreText}>
+                  {showAllPopular ? 'See Less' : 'See More'}
+                </Text>
+              </TouchableOpacity>
+            )}
+            <View style={styles.list}>
+              {ingredientsMapping
+                ?.slice(0, showAllPopular ? ingredients.length : 10)
+                .map((item, index) => (
+                  <FilterItem
+                    key={index}
+                    data={item}
+                    onPress={() => {
+                      handleClickIngredient(item.id)
+                    }}
+                  />
+                ))}
+            </View>
           </View>
         </View>
-      </View>
 
-      <View>
-        <Text style={styles.title}>Thời gian nấu, ít hơn:</Text>
-        <View style={styles.wrapper}>
-          <View style={styles.list}>
-            {cookingTimeMapping.map((item, index) => (
-              <FilterItem
-                key={index}
-                data={item}
-                onPress={() => {
-                  handleClickCookingTime(item.value)
-                }}
-              />
-            ))}
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 8,
+            }}
+          >
+            <Text style={styles.title}>Less cooking time:</Text>
+          </View>
+          <View style={styles.wrapper}>
+            <View style={styles.list}>
+              {cookingTimeMapping.map((item, index) => (
+                <FilterItem
+                  key={index}
+                  data={item}
+                  onPress={() => {
+                    handleClickCookingTime(item.value)
+                  }}
+                />
+              ))}
+            </View>
           </View>
         </View>
-      </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          setIsFilter(false)
-          dispatch(setIngredientIds(ingredientState))
-          dispatch(setCookingTime(cookingTimeState))
-        }}
-        style={styles.filterButton}
-      >
-        <View style={styles.filterWrapper}>
-          <Text style={styles.filterTitle}>Filter</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          onPress={() => {
+            setIsFilter(false)
+            dispatch(setIngredientIds(ingredientState))
+            dispatch(setCookingTime(cookingTimeState))
+          }}
+          style={styles.filterButton}
+        >
+          <View style={styles.filterWrapper}>
+            <Text style={styles.filterTitle}>Filter</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+    </Modal>
   )
 }
 
@@ -171,18 +229,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#373739',
     paddingVertical: 32,
     gap: 16,
-    position: 'absolute',
-    zIndex: 100,
-    top: 48,
-    minHeight: 500,
   },
 
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    paddingVertical: 8,
     color: '#fff',
-    marginLeft: 16,
   },
 
   wrapper: {
@@ -209,8 +262,10 @@ const styles = StyleSheet.create({
   },
 
   filterButton: {
+    marginTop: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 64,
   },
 
   filterWrapper: {
@@ -226,6 +281,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+  },
+
+  seeMoreButton: {
+    paddingTop: 16,
+    paddingHorizontal: 8,
+    alignSelf: 'flex-end',
+  },
+
+  seeMoreText: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: `white`,
   },
 })
 

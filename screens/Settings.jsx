@@ -1,6 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
-import { ScrollView, Text, TouchableOpacity, StyleSheet,View } from 'react-native'
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS, FONTS } from '../theme/theme'
 import SettingItem from '../components/Profile/SettingItem'
@@ -37,49 +43,27 @@ function Settings({ navigation }) {
     navigation.navigate('EditProfile')
   }
 
-  const navigateToSecurity = () => {
-    console.log('Security function')
-  }
+  const navigateToSecurity = () => {}
 
-  const navigateToNotifications = () => {
-    console.log('Notifications function')
-  }
+  const navigateToNotifications = () => {}
 
-  const navigateToPrivacy = () => {
-    console.log('Privacy function')
-  }
+  const navigateToPrivacy = () => {}
 
-  const navigateToSubscription = () => {
-    console.log('Subscription function')
-  }
+  const navigateToSubscription = () => {}
 
-  const navigateToSupport = () => {
-    console.log('Support function')
-  }
+  const navigateToSupport = () => {}
 
-  const navigateToTermsAndPolicies = () => {
-    console.log('Terms and Policies function')
-  }
+  const navigateToTermsAndPolicies = () => {}
 
-  const navigateToFreeSpace = () => {
-    console.log('Free Space function')
-  }
+  const navigateToFreeSpace = () => {}
 
-  const navigateToDateSaver = () => {
-    console.log('Date saver')
-  }
+  const navigateToDateSaver = () => {}
 
-  const navigateToReportProblem = () => {
-    console.log('Report a problem')
-  }
+  const navigateToReportProblem = () => {}
 
-  const addAccount = () => {
-    console.log('Aadd account ')
-  }
+  const addAccount = () => {}
 
-  const logout = () => {
-    console.log('Logout')
-  }
+  const logout = () => {}
 
   const accountItems = [
     {
@@ -142,36 +126,33 @@ function Settings({ navigation }) {
 
   const listSettingItem = [
     {
-      name: "My Account",
-      action: "my-account",
+      name: 'My Account',
+      action: 'my-account',
     },
     {
-      name: "Dietary Preferences",
-      action: "dietary preferences",
+      name: 'Dietary Preferences',
+      action: 'dietary preferences',
     },
     {
-      name: "Terms And Policies",
-      action: "term-and-policies",
+      name: 'Terms And Policies',
+      action: 'term-and-policies',
     },
     {
-      name: "Help & Support",
-      action: "help-support",
+      name: 'Help & Support',
+      action: 'help-support',
     },
     {
-      name: "Report Problems",
-      action: "report-problems",
+      name: 'Report Problems',
+      action: 'report-problems',
     },
     {
-      name: "About Nhuqy",
-      action: "About",
+      name: 'About Nhuqy',
+      action: 'About',
     },
-
   ]
 
-  const listComponentSettingItem = listSettingItem.map((item, index)=>{
-    return (
-      <SettingItem props={item} key={index.toString()}/>
-    )
+  const listComponentSettingItem = listSettingItem.map((item, index) => {
+    return <SettingItem props={item} key={index.toString()} />
   })
 
   return (
@@ -258,9 +239,7 @@ function Settings({ navigation }) {
     //   </ScrollView>
     // </SafeAreaView>
 
-    
-
-    <SafeAreaView style={{backgroundColor: 'white'}}>
+    <SafeAreaView style={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.btnBack}
@@ -270,20 +249,19 @@ function Settings({ navigation }) {
         </TouchableOpacity>
 
         <Text style={styles.head}>Settings</Text>
-        
+
         {listComponentSettingItem}
       </View>
     </SafeAreaView>
-
   )
 }
 const styles = StyleSheet.create({
-  container:{
+  container: {
     width: '100%',
     height: '100%',
     backgroundColor: 'white',
-    paddingHorizontal: 20
-  },  
+    paddingHorizontal: 20,
+  },
   btnBack: {
     width: 35,
     height: 35,
@@ -293,16 +271,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    backgroundColor: '#F3F3F3'
+    backgroundColor: '#F3F3F3',
   },
-  head:{
+  head: {
     textAlign: 'left',
     fontSize: 24,
     marginVertical: 10,
     fontWeight: '700',
-    color: '#231F20'
-  }
+    color: '#231F20',
+  },
 })
 
-
 export default Settings
+

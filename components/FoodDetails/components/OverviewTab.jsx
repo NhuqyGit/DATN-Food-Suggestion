@@ -9,6 +9,8 @@ import {
   Modal,
   TextInput,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -143,45 +145,54 @@ function OverviewTab({ foodDetails, navigation }) {
     >
       <View style={styles.modalContainer}>
         <TouchableOpacity style={styles.overlay} onPress={cancelReporting} />
-        <View style={styles.innerReportContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.innerReportContainer}
+        >
           <Text style={styles.modalTitle}>Select Reasons for Report</Text>
           <TouchableOpacity style={styles.closeIcon} onPress={cancelReporting}>
             <Icon name='close' size={22} color='black' />
           </TouchableOpacity>
-          {reportReasons.map((reason, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.reasonOptionContainer}
-              onPress={() => toggleReason(reason)}
-            >
-              <Icon
-                name={selectedReason === reason ? 'dot-circle-o' : 'circle-o'}
-                size={24}
-                color={theme.colors.secondary}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {reportReasons.map((reason, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.reasonOptionContainer}
+                onPress={() => toggleReason(reason)}
+              >
+                <Icon
+                  name={selectedReason === reason ? 'dot-circle-o' : 'circle-o'}
+                  size={24}
+                  color={theme.colors.secondary}
+                />
+                <Text style={styles.reasonOptionText}>{reason}</Text>
+              </TouchableOpacity>
+            ))}
+            {selectedReason === 'Others' && (
+              <TextInput
+                style={styles.otherReasonInput}
+                placeholder='Enter your reason'
+                value={otherReason}
+                onChangeText={setOtherReason}
               />
-              <Text style={styles.reasonOptionText}>{reason}</Text>
-            </TouchableOpacity>
-          ))}
-          {selectedReason === 'Others' && (
-            <TextInput
-              style={styles.otherReasonInput}
-              placeholder='Enter your reason'
-              value={otherReason}
-              onChangeText={setOtherReason}
-            />
-          )}
+            )}
+          </ScrollView>
+
           <TouchableOpacity
             style={styles.reportButton}
             onPress={handleReportSubmission}
           >
             <Text style={styles.reportButtonText}>Report</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   )
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollViewContainer}
@@ -270,7 +281,7 @@ function OverviewTab({ foodDetails, navigation }) {
         </View>
       </ScrollView>
       {renderReportModal()}
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 const styles = StyleSheet.create({
@@ -376,7 +387,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 30,
   },
   reportButtonText: {
     color: 'white',
@@ -403,6 +414,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: '500',
     color: theme.colors.secondary,
+  },
+
+  otherReasonInput: {
+    borderWidth: 1,
+    borderColor: theme.colors.secondary,
+    borderRadius: 5,
+    padding: 10,
   },
 })
 export default OverviewTab

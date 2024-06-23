@@ -19,14 +19,17 @@ function ProfileStack() {
       <Stack.Screen name='List' component={ReceipeListScreen} />
       <Stack.Screen name='PersonalList' component={PersonalReceipeList} />
       <Stack.Screen name='Settings' component={Setting} />
-      <Stack.Screen name='FoodDetail_prof' component={FoodDetailsScreen} />
+      <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
       <Stack.Screen
         options={{
           animation: 'slide_from_bottom',
         }}
-        name='NewCollection' component={NewCollection} />
+        name='NewCollection'
+        component={NewCollection}
+      />
     </Stack.Navigator>
   )
 }
 
 export default ProfileStack
+

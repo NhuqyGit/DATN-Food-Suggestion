@@ -6,7 +6,6 @@ const SettingItem = ({ props, navigation }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(props.action)
         navigation.push(props.action)
       }}
       style={styles.container}

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState } from 'react'
 import {
   Text,
   View,
@@ -7,36 +7,36 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-} from "react-native";
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import { theme } from "../../../theme/index";
-import Icon from "react-native-vector-icons/FontAwesome";
+} from 'react-native'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import { theme } from '../../../theme/index'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import {
   useGetNoteByUserIdAndDishIdQuery,
   useDeleteNoteMutation,
-} from "../../../slices/noteSlice";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ReviewSkeleton from "./ReviewSkeleton"
+} from '../../../slices/noteSlice'
+import { useFocusEffect } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import ReviewSkeleton from './ReviewSkeleton'
 function InitNotTab() {
   return (
     <View style={styles.containerInitNote}>
       <Image
-        source={require("../../../assets/images/FoodDetails/notesInit.png")}
+        source={require('../../../assets/images/FoodDetails/notesInit.png')}
         style={styles.imageNote}
       />
-      <Text style={{ textAlign: "center", fontWeight: "bold", marginTop: 5 }}>
+      <Text style={{ textAlign: 'center', fontWeight: 'bold', marginTop: 5 }}>
         Jot it down
       </Text>
-      <Text style={{ textAlign: "center", color: "gray", marginTop: 10 }}>
+      <Text style={{ textAlign: 'center', color: 'gray', marginTop: 10 }}>
         Got an idea, reminder, or some inspiration?
       </Text>
-      <Text style={{ textAlign: "center", color: "gray" }}>
-        {" "}
+      <Text style={{ textAlign: 'center', color: 'gray' }}>
+        {' '}
         Save a private note here for next time.
       </Text>
     </View>
-  );
+  )
 }
 
 function NoteList({ notes, onDeleteNote, onEditNote }) {
@@ -48,88 +48,87 @@ function NoteList({ notes, onDeleteNote, onEditNote }) {
           <Text style={styles.subText}>{note?.noteContent}</Text>
           <View style={styles.icons}>
             <TouchableOpacity onPress={() => onEditNote(note)}>
-              <Icon name="pencil" size={18} color="#000" />
+              <Icon name='pencil' size={18} color='#000' />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onDeleteNote(note.id)}>
-              <Icon name="trash" size={18} color="#000" />
+              <Icon name='trash' size={18} color='#000' />
             </TouchableOpacity>
           </View>
         </View>
       ))}
     </ScrollView>
-  );
+  )
 }
 
 function NoteTab({ navigation, dishId }) {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(null)
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem("user_id");
+        const storedUserId = await AsyncStorage.getItem('user_id')
         if (storedUserId) {
-          //console.log("User id: ", storedUserId);
-          setUserId(storedUserId);
+          setUserId(storedUserId)
         }
       } catch (error) {
-        console.error("Failed to fetch userId from AsyncStorage:", error);
+        console.error('Failed to fetch userId from AsyncStorage:', error)
       }
-    };
+    }
 
-    fetchUserId();
-  }, []);
+    fetchUserId()
+  }, [])
 
   const {
     data: notes,
     error: noteError,
     isLoading: noteLoading,
     refetch,
-  } = useGetNoteByUserIdAndDishIdQuery({ userId, dishId });
+  } = useGetNoteByUserIdAndDishIdQuery({ userId, dishId })
 
-  const [deleteNote] = useDeleteNoteMutation();
+  const [deleteNote] = useDeleteNoteMutation()
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
+      refetch()
     }, [refetch])
-  );
+  )
 
   const handleAddNote = () => {
-    navigation.navigate("AddNewNote", { dishId, userId });
-  };
+    navigation.navigate('AddNewNote', { dishId, userId })
+  }
 
   const handleEditNote = (note) => {
-    navigation.navigate("AddNewNote", { note });
-  };
+    navigation.navigate('AddNewNote', { note })
+  }
 
   const confirmDeleteNote = (id) => {
     Alert.alert(
-      "Delete Note",
-      "Are you sure you want to delete this note?",
+      'Delete Note',
+      'Are you sure you want to delete this note?',
       [
         {
-          text: "Cancel",
-          style: "cancel",
+          text: 'Cancel',
+          style: 'cancel',
         },
         {
-          text: "Delete",
-          style: "destructive",
+          text: 'Delete',
+          style: 'destructive',
           onPress: () => handleDeleteNote(id),
         },
       ],
       { cancelable: true }
-    );
-  };
+    )
+  }
 
   const handleDeleteNote = async (id) => {
     try {
-      await deleteNote(id).unwrap();
-      refetch();
+      await deleteNote(id).unwrap()
+      refetch()
     } catch (error) {
-      console.error("Failed to delete note:", error);
+      console.error('Failed to delete note:', error)
     }
-  };
+  }
 
-  if (noteLoading || noteError) return <ReviewSkeleton/>;
+  if (noteLoading || noteError) return <ReviewSkeleton />
 
   return (
     <View style={styles.container}>
@@ -137,7 +136,7 @@ function NoteTab({ navigation, dishId }) {
         <View style={styles.rowItem}>
           <TouchableOpacity style={styles.addNoteBtn} onPress={handleAddNote}>
             <SimpleLineIcons
-              name="note"
+              name='note'
               size={20}
               color={theme.colors.secondary}
               style={styles.iconAdd}
@@ -157,32 +156,32 @@ function NoteTab({ navigation, dishId }) {
         <InitNotTab />
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     flex: 1,
   },
   containerInitNote: {
     marginTop: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 14,
   },
   addNoteBtn: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
   },
   iconAdd: {
@@ -194,12 +193,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginLeft: 10,
-    color: "white",
+    color: 'white',
     fontSize: 17,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   text: {
-    color: "black",
+    color: 'black',
     paddingLeft: 10,
   },
   imageNote: {
@@ -217,23 +216,24 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: '#F5F5F5',
   },
   mainText: {
     fontSize: 16,
-    color: "black",
+    color: 'black',
     marginBottom: 5,
   },
   subText: {
     fontSize: 14,
-    color: "gray",
+    color: 'gray',
     marginBottom: 15,
   },
   icons: {
     paddingRight: 10,
-    flexDirection: "row",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     gap: 25,
   },
-});
-export default NoteTab;
+})
+export default NoteTab
+

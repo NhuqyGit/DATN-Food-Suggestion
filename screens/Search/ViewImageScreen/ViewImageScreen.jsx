@@ -111,10 +111,8 @@ const ViewImageScreen = ({ navigation, route }) => {
         // Accessing data from the first output, modify this based on your actual data structure
         setResultS(result.outputs[0].data)
       } else {
-        console.log('No data found in the response')
       }
     } catch (error) {
-      console.log('error', error)
     } finally {
       setLoading(false)
     }

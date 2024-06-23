@@ -47,7 +47,6 @@ const NewCollection = () => {
       const responseJson = await response.json()
 
       if (responseJson.error) {
-        console.log(responseJson.message)
       } else {
         navigation.goBack()
       }

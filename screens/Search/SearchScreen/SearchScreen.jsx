@@ -23,6 +23,7 @@ import {
 } from '../../../slices/searchSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import SearchValueSkeleton from '../ViewImageScreen/SearchValueSkeleton'
+import { theme } from '../../../theme'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
@@ -43,6 +44,7 @@ const SearchScreen = ({ navigation, route }) => {
   const [loadingDish, setLoadingDish] = useState(true)
   const [loadingDishBySearchText, setLoadingDishBySearchText] = useState(true)
   const [dishBySearchText, setDishBySearchText] = useState([])
+  const [showAllPopular, setShowAllPopular] = useState(false)
 
   const ingredientIds = useSelector(selectIngredientIds)
   const cookingTime = useSelector(selectCookingTime)
@@ -72,7 +74,7 @@ const SearchScreen = ({ navigation, route }) => {
       setLoadingDish(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/dish/latest?sort=desc&limit=5`, {
+        const response = await fetch(`${HOST}/dish/latest?sort=desc&limit=20`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -154,6 +156,10 @@ const SearchScreen = ({ navigation, route }) => {
     }
   }, [searchText, cookingTime, ingredientIds, ingredientNames])
 
+  const handleSeeIngredients = () => {
+    setShowAllPopular(!showAllPopular)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.wrapper} scrollEnabled vertical>
@@ -197,6 +203,7 @@ const SearchScreen = ({ navigation, route }) => {
                 hasButton
                 ingredients={ingredients}
                 setIsFilter={setIsFilter}
+                isFilter={isFilter}
               />
             )}
 
@@ -238,10 +245,25 @@ const SearchScreen = ({ navigation, route }) => {
                     <IngredientSkeleton total={2} />
                   </View>
                 ) : (
-                  <View style={styles.popularList}>
-                    {ingredients?.map((item) => (
-                      <PopularItem key={item.id} item={item} />
-                    ))}
+                  <View>
+                    <View style={styles.popularList}>
+                      {ingredients
+                        ?.slice(0, showAllPopular ? ingredients.length : 4)
+                        .map((item) => (
+                          <PopularItem key={item.id} item={item} />
+                        ))}
+                    </View>
+
+                    {ingredients?.length > 4 && (
+                      <TouchableOpacity
+                        onPress={handleSeeIngredients}
+                        style={styles.seeMoreButton}
+                      >
+                        <Text style={styles.seeMoreText}>
+                          {showAllPopular ? 'See Less' : 'See More'}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 )}
               </View>
@@ -359,6 +381,17 @@ const styles = StyleSheet.create({
 
   padding: {
     padding: 16,
+  },
+
+  seeMoreButton: {
+    padding: 8,
+    alignSelf: 'flex-end',
+  },
+
+  seeMoreText: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: `${theme.colors.secondary}`,
   },
 })
 

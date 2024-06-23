@@ -14,21 +14,20 @@ import Ans from '../components/Ans'
 const deviceHeight = Dimensions.get('window').height
 const deviceWidth = Dimensions.get('window').width
 
-function PerScreen({ navigation, listQues, ques, quesLen, handleAnswerChange }) {
-  // const [answers, setAnswers] = useState(ques.listAns)
-
-  // console.log(answers)
-  // useEffect(() => {
-  //   setAnswers(ques.listAns)
-  // }, [ques.listAns])
-
+function PerScreen({
+  navigation,
+  listQues,
+  ques,
+  quesLen,
+  handleAnswerChange,
+}) {
   const checkNextStatus = () => {
     return ques.listAns?.every((c) => c.isSelect === false)
   }
 
   const handleOnNext = () => {
     if (ques.id === quesLen - 1) {
-      const newQues = listQues.map(({ svg, ...rest }) => ({ ...rest }));
+      const newQues = listQues.map(({ svg, ...rest }) => ({ ...rest }))
       navigation.navigate('PersonalizeSetUp', { newQues })
     } else {
       navigation.navigate(`Personalize${(ques.id + 1).toString()}`)
@@ -51,7 +50,7 @@ function PerScreen({ navigation, listQues, ques, quesLen, handleAnswerChange }) 
       ques.listAns?.map((c) => (
         <Ans props={c} onChange={handleAnswerChange} ques={ques} key={c.id} />
       )),
-    [ques.listAns],
+    [ques.listAns]
   )
 
   // const handleAnswerChange = useCallback((updatedAnswer) => {
@@ -213,3 +212,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#bdbdbd',
   },
 })
+

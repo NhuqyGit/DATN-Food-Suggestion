@@ -73,7 +73,6 @@ function Profile({ navigation }) {
         const responseJson = await response.json()
 
         if (responseJson.error) {
-          console.log(responseJson.message)
         } else {
           setCollections(responseJson)
         }
@@ -101,7 +100,6 @@ function Profile({ navigation }) {
       const responseJson = await response.json()
 
       if (responseJson.error) {
-        console.log(responseJson.message)
       } else {
         dispatch(setUserInfo({ ...userInfo, imgUrl: newImgUrl }))
       }
@@ -126,7 +124,6 @@ function Profile({ navigation }) {
       if (!res.canceled) {
         const uri = res.assets[0].uri
         const filename = uri.substring(uri.lastIndexOf('/') + 1)
-        //console.log(uri)
         const uploadRes = await uploadToFirebase(uri, filename)
         updateProfileImage(uploadRes.downloadURL)
         // replace user state url

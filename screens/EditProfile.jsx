@@ -28,7 +28,7 @@ function EditProfile({ navigation }) {
   const today = new Date()
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
-    'YYYY/MM/DD',
+    'YYYY/MM/DD'
   )
   const [selectedStartDate, setSelectedStartDate] = useState('01/01/1990')
   const [startedDate, setStartedDate] = useState('12/12/2023')
@@ -48,8 +48,6 @@ function EditProfile({ navigation }) {
       aspect: [4, 4],
       quality: 1,
     })
-
-    console.log(result)
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri)
@@ -340,3 +338,4 @@ function EditProfile({ navigation }) {
 }
 
 export default EditProfile
+

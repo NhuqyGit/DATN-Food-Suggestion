@@ -33,7 +33,7 @@ function RecipeListItem({ item, removeDish }) {
     <View>
       <TouchableOpacity
         onPress={() => {
-          navigation.push('FoodDetail_prof', { foodDetails: item })
+          navigation.push('FoodDetail', { foodDetails: item })
         }}
       >
         <View
@@ -125,7 +125,6 @@ function ReceipeListScreen({ route, navigation }) {
         const responseJson = await response.json()
 
         if (responseJson.error) {
-          console.log(responseJson.message)
         } else {
           setDishes(responseJson)
         }

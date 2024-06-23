@@ -161,7 +161,9 @@ function SmallRecommendItem({ item }) {
           <AntDesign name='star' size={20} color='#FF6321' />
         </View>
         <View style={styles.authorContainer}>
-          <Text style={styles.title}>{item?.dishName}</Text>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>
+            {item?.dishName}
+          </Text>
           <TouchableOpacity
             onPress={
               isInCollection ? onDeleteFromCollection : onAddToCollection
@@ -196,6 +198,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 13,
     fontWeight: 'bold',
+    flexShrink: 1,
   },
   rating: {
     color: '#FF6321',

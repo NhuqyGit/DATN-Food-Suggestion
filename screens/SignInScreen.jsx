@@ -163,6 +163,7 @@ function SignInScreen() {
 
             <TouchableOpacity
               onPress={() => navigation.navigate('SignUpScreen')}
+              disabled={!email || !password || isLoading}
             >
               <Text style={styles.orLogin}>Register an account now</Text>
             </TouchableOpacity>

@@ -4,12 +4,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { theme } from '../../../theme'
 import DietaryDetailItem from './DietaryDetailItem'
 
-const DietaryItem = ({ data, handleChangePersonalize}) => {
+const DietaryItem = ({ data, handleChangePersonalize }) => {
   const [isActive, setIsActive] = useState(false)
 
   const totalSelected = data?.items.filter((item) => item.selected).length
-  // console.log(data.id, data)
-  // console.log(totalSelected)
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -20,7 +19,11 @@ const DietaryItem = ({ data, handleChangePersonalize}) => {
         >
           <Text style={styles.tagTitle}>{totalSelected}</Text>
           {isActive ? (
-            <MaterialIcons name='keyboard-arrow-down' size={22} color={theme.colors.secondary} />
+            <MaterialIcons
+              name='keyboard-arrow-down'
+              size={22}
+              color={theme.colors.secondary}
+            />
           ) : (
             <MaterialIcons
               name='keyboard-arrow-right'
@@ -38,7 +41,7 @@ const DietaryItem = ({ data, handleChangePersonalize}) => {
               <DietaryDetailItem
                 key={item.id}
                 data={item}
-                dataId = {data.id}
+                dataId={data.id}
                 isLastItem={index === data?.items?.length - 1}
                 selected={item?.selected}
                 handleChangePersonalize={handleChangePersonalize}

@@ -161,26 +161,28 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
             <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
             <AntDesign name='star' size={20} color='#FF6321' />
           </View>
-          <Text style={styles.title}>{item?.dishName}</Text>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>
+            {item?.dishName}
+          </Text>
           <View style={styles.authorContainer}>
             <Text style={styles.author}>{item.author}</Text>
             <TouchableOpacity
-                onPress={
-                  isInCollection ? onDeleteFromCollection : onAddToCollection
-                }
-              >
-                <View style={styles.iconContainer}>
-                  <MaterialIcons
-                    name={isInCollection ? 'favorite' : 'favorite-outline'}
-                    size={24}
-                    color={
-                      isInCollection
-                        ? theme.colors.primary
-                        : theme.colors.secondary
-                    }
-                  />
-                </View>
-              </TouchableOpacity>
+              onPress={
+                isInCollection ? onDeleteFromCollection : onAddToCollection
+              }
+            >
+              <View style={styles.iconContainer}>
+                <MaterialIcons
+                  name={isInCollection ? 'favorite' : 'favorite-outline'}
+                  size={24}
+                  color={
+                    isInCollection
+                      ? theme.colors.primary
+                      : theme.colors.secondary
+                  }
+                />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
@@ -213,6 +215,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: '700',
+    flexShrink: 1,
   },
   rating: {
     color: 'white',

@@ -27,9 +27,7 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
       try {
         const picture = await cameraRef.current.takePictureAsync()
         setImage(picture.uri)
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     }
   }
 
@@ -39,9 +37,7 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
         await MediaLibrary.createAssetAsync(image)
         alert('Image saved to library')
         setImage(null)
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     }
   }
 

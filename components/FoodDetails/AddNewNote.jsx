@@ -61,8 +61,6 @@ const AddNoteScreen = ({ navigation, route }) => {
     navigation.goBack()
   }
 
-  console.log('note', noteContent, noteTitle)
-
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>

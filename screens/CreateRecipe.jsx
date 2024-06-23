@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Ionicons,
   AntDesign,
   Entypo,
   MaterialCommunityIcons,
-} from "@expo/vector-icons";
+} from '@expo/vector-icons'
 import {
   StyleSheet,
   Text,
@@ -17,14 +17,14 @@ import {
   Modal,
   Pressable,
   KeyboardAvoidingView,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import { theme } from "../theme/index";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { FlatList } from "react-native-gesture-handler";
-import * as ImagePicker from "expo-image-picker";
-import { Platform } from "react-native";
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useNavigation } from '@react-navigation/native'
+import { theme } from '../theme/index'
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
+import { FlatList } from 'react-native-gesture-handler'
+import * as ImagePicker from 'expo-image-picker'
+import { Platform } from 'react-native'
 
 const IngredientsTab = ({
   ingredientList,
@@ -32,26 +32,26 @@ const IngredientsTab = ({
   deleteIngredient,
   updateIngredient,
 }) => {
-  const [modalVisible, setModalVisible] = useState("false");
-  const [modalType, setModalType] = useState("");
-  const [ingredientInput, setIngredientInput] = useState("");
-  const [ingredientID, setIngredientID] = useState(0);
+  const [modalVisible, setModalVisible] = useState('false')
+  const [modalType, setModalType] = useState('')
+  const [ingredientInput, setIngredientInput] = useState('')
+  const [ingredientID, setIngredientID] = useState(0)
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
+    <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center' }}>
       <View
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           bottom: 0,
           left: 0,
           right: 0,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <MaterialCommunityIcons
-          name="food-variant"
+          name='food-variant'
           size={100}
           color={theme.colors.backgroundColor}
         />
@@ -59,19 +59,19 @@ const IngredientsTab = ({
           Create your ingredient list
         </Text>
       </View>
-      <View style={{ width: "90%", flex: 1, marginBottom: 75 }}>
+      <View style={{ width: '90%', flex: 1, marginBottom: 75 }}>
         <View>
           <TouchableOpacity
             style={{ paddingVertical: 10 }}
             onPress={() => {
-              setIngredientInput("");
-              setModalType("create");
-              setModalVisible(true);
+              setIngredientInput('')
+              setModalType('create')
+              setModalVisible(true)
             }}
           >
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: 'row' }}>
               <Ionicons
-                name="add-circle-outline"
+                name='add-circle-outline'
                 size={24}
                 color={theme.colors.secondary}
               />
@@ -85,7 +85,7 @@ const IngredientsTab = ({
           />
         </View>
         {ingredientList.length > 0 && (
-          <View style={{ flex: 1, backgroundColor: "white" }}>
+          <View style={{ flex: 1, backgroundColor: 'white' }}>
             <FlatList
               data={ingredientList}
               renderItem={({ item, index }) => {
@@ -94,16 +94,16 @@ const IngredientsTab = ({
                     style={{ paddingTop: 10 }}
                     key={index}
                     onPress={() => {
-                      setIngredientID(item.id);
-                      setIngredientInput(item.name);
-                      setModalType("update");
-                      setModalVisible(true);
+                      setIngredientID(item.id)
+                      setIngredientInput(item.name)
+                      setModalType('update')
+                      setModalVisible(true)
                     }}
                   >
                     <View
                       style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                         paddingVertical: 15,
                         paddingHorizontal: 25,
                         borderColor: theme.colors.secondary,
@@ -114,29 +114,29 @@ const IngredientsTab = ({
                       <Text style={{ fontSize: 16 }}>{item.name}</Text>
                       <TouchableOpacity
                         onPress={() => {
-                          deleteIngredient(item.id);
+                          deleteIngredient(item.id)
                         }}
                       >
                         <AntDesign
-                          name="delete"
+                          name='delete'
                           size={24}
                           color={theme.colors.primary}
                         />
                       </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
-                );
+                )
               }}
             />
           </View>
         )}
         <Modal
-          animationType="fade"
+          animationType='fade'
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
+            Alert.alert('Modal has been closed.')
+            setModalVisible(!modalVisible)
           }}
         >
           <View style={[styles.centeredView]}>
@@ -146,14 +146,14 @@ const IngredientsTab = ({
                   marginTop: -20,
                   paddingBottom: 20,
                   color: theme.colors.secondary,
-                  fontWeight: "bold",
+                  fontWeight: 'bold',
                 }}
               >
-                {modalType == "create"
-                  ? "New ingredient"
-                  : modalType == "update"
-                    ? "Update ingredient"
-                    : "Undefined Type"}
+                {modalType == 'create'
+                  ? 'New ingredient'
+                  : modalType == 'update'
+                    ? 'Update ingredient'
+                    : 'Undefined Type'}
               </Text>
               <TextInput
                 style={{
@@ -162,32 +162,32 @@ const IngredientsTab = ({
                   borderRadius: 10,
                   borderColor: theme.colors.secondary,
                   borderWidth: 1,
-                  width: "120%",
+                  width: '120%',
                 }}
                 value={ingredientInput}
                 onChangeText={setIngredientInput}
               />
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   marginTop: 20,
                   marginBottom: -10,
                   gap: 20,
                 }}
               >
                 <Pressable
-                  style={[styles.button, { backgroundColor: "white" }]}
+                  style={[styles.button, { backgroundColor: 'white' }]}
                   onPress={() => {
-                    setModalVisible(!modalVisible);
+                    setModalVisible(!modalVisible)
                   }}
                 >
                   <Text
                     style={{
                       color: theme.colors.secondary,
-                      fontWeight: "bold",
-                      textAlign: "center",
+                      fontWeight: 'bold',
+                      textAlign: 'center',
                     }}
                   >
                     Cancel
@@ -199,20 +199,20 @@ const IngredientsTab = ({
                     { backgroundColor: theme.colors.secondary },
                   ]}
                   onPress={() => {
-                    if (modalType == "create") {
-                      createIngredient(ingredientInput);
-                    } else if (modalType == "update") {
-                      updateIngredient(ingredientID, ingredientInput);
+                    if (modalType == 'create') {
+                      createIngredient(ingredientInput)
+                    } else if (modalType == 'update') {
+                      updateIngredient(ingredientID, ingredientInput)
                     }
-                    setModalVisible(!modalVisible);
+                    setModalVisible(!modalVisible)
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "bold" }}>
-                    {modalType == "create"
-                      ? "Create"
-                      : modalType == "update"
-                        ? "Update"
-                        : "Undefined"}
+                  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                    {modalType == 'create'
+                      ? 'Create'
+                      : modalType == 'update'
+                        ? 'Update'
+                        : 'Undefined'}
                   </Text>
                 </Pressable>
               </View>
@@ -221,8 +221,8 @@ const IngredientsTab = ({
         </Modal>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const OverviewTab = ({
   overviewImage,
@@ -237,13 +237,12 @@ const OverviewTab = ({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-    });
+    })
     if (!res.canceled) {
-      const imguri = res.assets[0].uri;
-      console.log(imguri);
-      updateOverviewImage(imguri);
+      const imguri = res.assets[0].uri
+      updateOverviewImage(imguri)
     }
-  };
+  }
 
   function displayImage() {
     if (overviewImage) {
@@ -251,27 +250,27 @@ const OverviewTab = ({
         <ImageBackground
           source={{ uri: overviewImage }}
           style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
           }}
           imageStyle={{ borderRadius: 25 }}
-          resizeMode="cover"
+          resizeMode='cover'
         >
           <Ionicons
-            name="images-outline"
+            name='images-outline'
             size={24}
             color={theme.colors.secondary}
           />
         </ImageBackground>
-      );
+      )
     } else {
-      <Ionicons
-        name="images-outline"
+      ;<Ionicons
+        name='images-outline'
         size={24}
         color={theme.colors.secondary}
-      />;
+      />
     }
   }
 
@@ -279,18 +278,18 @@ const OverviewTab = ({
     <View
       style={{
         flex: 1,
-        backgroundColor: "white",
-        alignItems: "center",
+        backgroundColor: 'white',
+        alignItems: 'center',
       }}
     >
-      <View style={{ width: "90%" }}>
-        <View style={{ paddingTop: 20, flexDirection: "row" }}>
-          <Ionicons name="text" size={24} color={theme.colors.secondary} />
+      <View style={{ width: '90%' }}>
+        <View style={{ paddingTop: 20, flexDirection: 'row' }}>
+          <Ionicons name='text' size={24} color={theme.colors.secondary} />
           <Text
             style={{
               color: theme.colors.secondary,
               fontSize: 16,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             Title
@@ -306,16 +305,16 @@ const OverviewTab = ({
           }}
           value={overviewTitle}
           onChangeText={(val) => {
-            updateOverviewTitle(val);
+            updateOverviewTitle(val)
           }}
         />
-        <View style={{ paddingTop: 20, flexDirection: "row" }}>
-          <Entypo name="link" size={24} color={theme.colors.secondary} />
+        <View style={{ paddingTop: 20, flexDirection: 'row' }}>
+          <Entypo name='link' size={24} color={theme.colors.secondary} />
           <Text
             style={{
               color: theme.colors.secondary,
               fontSize: 16,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             URL
@@ -331,19 +330,19 @@ const OverviewTab = ({
           }}
           value={overviewURL}
           onChangeText={(val) => {
-            updateOverviewURL(val);
+            updateOverviewURL(val)
           }}
         />
         <TouchableOpacity onPress={importImage} style={{ paddingTop: 20 }}>
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
               borderRadius: 25,
               borderWidth: 3,
-              borderStyle: "dashed",
+              borderStyle: 'dashed',
               borderColor: theme.colors.secondary,
-              height: Dimensions.get("window").width * 0.9,
+              height: Dimensions.get('window').width * 0.9,
             }}
           >
             {displayImage()}
@@ -351,8 +350,8 @@ const OverviewTab = ({
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const DirectionsTab = ({
   directionsDesc,
@@ -360,12 +359,12 @@ const DirectionsTab = ({
   totalTime,
   updateTotalTime,
 }) => (
-  <View style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
-    <View style={{ width: "90%" }}>
+  <View style={{ flex: 1, backgroundColor: 'white', alignItems: 'center' }}>
+    <View style={{ width: '90%' }}>
       <Text
         style={{
           fontSize: 16,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           color: theme.colors.secondary,
           paddingTop: 20,
         }}
@@ -384,16 +383,16 @@ const DirectionsTab = ({
           borderWidth: 0.5,
           borderColor: theme.colors.secondary,
           height: 190,
-          verticalAlign: "top",
+          verticalAlign: 'top',
         }}
         onChangeText={updateDirectionsDesc}
       />
-      <View style={{ paddingTop: 20, flexDirection: "row" }}>
-        <AntDesign name="hourglass" size={24} color={theme.colors.secondary} />
+      <View style={{ paddingTop: 20, flexDirection: 'row' }}>
+        <AntDesign name='hourglass' size={24} color={theme.colors.secondary} />
         <Text
           style={{
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.secondary,
           }}
         >
@@ -413,32 +412,32 @@ const DirectionsTab = ({
       />
     </View>
   </View>
-);
+)
 
 function CreateRecipe() {
-  const navigation = useNavigation();
-  const WIDTH = Dimensions.get("window").width;
-  const [index, setIndex] = useState(0);
+  const navigation = useNavigation()
+  const WIDTH = Dimensions.get('window').width
+  const [index, setIndex] = useState(0)
   const [routes] = useState([
-    { key: "Overview", title: "Overview" },
-    { key: "Ingredients", title: "Ingredients" },
-    { key: "Directions", title: "Directions" },
-  ]);
-  const [ingredientList, setIngredientList] = useState([]);
-  const [overviewImageUri, setOverviewImageUri] = useState("");
-  const [overviewTitle, setOverviewTitle] = useState("");
-  const [overviewURL, setOverviewURL] = useState("");
-  const [directionsDesc, setDirectionsDesc] = useState("");
-  const [totalTime, setTotalTime] = useState("");
+    { key: 'Overview', title: 'Overview' },
+    { key: 'Ingredients', title: 'Ingredients' },
+    { key: 'Directions', title: 'Directions' },
+  ])
+  const [ingredientList, setIngredientList] = useState([])
+  const [overviewImageUri, setOverviewImageUri] = useState('')
+  const [overviewTitle, setOverviewTitle] = useState('')
+  const [overviewURL, setOverviewURL] = useState('')
+  const [directionsDesc, setDirectionsDesc] = useState('')
+  const [totalTime, setTotalTime] = useState('')
 
   function deleteIngredient(id) {
-    setIngredientList(ingredientList.filter((e) => e.id != id));
+    setIngredientList(ingredientList.filter((e) => e.id != id))
   }
   function createIngredient(ingredientName) {
-    let index = 0;
+    let index = 0
 
     if (ingredientList.length > 0) {
-      index = ingredientList[ingredientList.length - 1].id + 1;
+      index = ingredientList[ingredientList.length - 1].id + 1
     }
     setIngredientList([
       ...ingredientList,
@@ -446,22 +445,22 @@ function CreateRecipe() {
         id: index,
         name: ingredientName,
       },
-    ]);
+    ])
   }
   function updateIngredient(id, ingredientName) {
     setIngredientList(
       ingredientList.map((ingredient) => {
         if (ingredient.id == id) {
-          ingredient.name = ingredientName;
+          ingredient.name = ingredientName
         }
-        return ingredient;
+        return ingredient
       })
-    );
+    )
   }
 
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
-      case "Overview":
+      case 'Overview':
         return (
           <OverviewTab
             jumpTo={jumpTo}
@@ -472,8 +471,8 @@ function CreateRecipe() {
             overviewURL={overviewURL}
             updateOverviewURL={setOverviewURL}
           />
-        );
-      case "Ingredients":
+        )
+      case 'Ingredients':
         return (
           <IngredientsTab
             jumpTo={jumpTo}
@@ -482,8 +481,8 @@ function CreateRecipe() {
             createIngredient={createIngredient}
             updateIngredient={updateIngredient}
           />
-        );
-      case "Directions":
+        )
+      case 'Directions':
         return (
           <DirectionsTab
             jumpTo={jumpTo}
@@ -492,9 +491,9 @@ function CreateRecipe() {
             totalTime={totalTime}
             updateTotalTime={setTotalTime}
           />
-        );
+        )
     }
-  };
+  }
 
   const renderTabBar = (props) => (
     <TabBar
@@ -502,42 +501,42 @@ function CreateRecipe() {
       renderLabel={({ route, focused, color }) => (
         <Text
           style={{
-            color: focused ? theme.colors.secondary : "black",
+            color: focused ? theme.colors.secondary : 'black',
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: 'bold',
           }}
         >
           {route.title}
         </Text>
       )}
       indicatorStyle={{ backgroundColor: theme.colors.secondary }}
-      style={{ backgroundColor: "white" }}
+      style={{ backgroundColor: 'white' }}
     />
-  );
+  )
 
   return (
     <SafeAreaView style={{ backgroundColor: theme.colors.secondary, flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         keyboardVerticalOffset={-100}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View
           style={{
             padding: 20,
-            justifyContent: "space-between",
-            alignItems: "center",
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+          <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
             Create personal recipe
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.goBack();
+              navigation.goBack()
             }}
           >
-            <AntDesign name="close" size={24} color="white" />
+            <AntDesign name='close' size={24} color='white' />
           </TouchableOpacity>
         </View>
         <TabView
@@ -549,12 +548,12 @@ function CreateRecipe() {
         />
         <View
           style={{
-            position: "absolute",
+            position: 'absolute',
             bottom: 20,
             left: 0,
             right: 0,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <TouchableOpacity
@@ -565,66 +564,58 @@ function CreateRecipe() {
               borderRadius: 45,
             }}
             onPress={() => {
-              console.log({
-                title: overviewTitle,
-                url: overviewURL,
-                image: overviewImageUri,
-                ingredients: ingredientList,
-                directions: directionsDesc,
-                totalTime: totalTime,
-              });
               navigation.goBack()
             }}
           >
-            <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
               Save recipe
             </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
+    flexDirection: 'column',
     flex: 1,
   },
   tabBtn: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingVertical: 15,
     flex: 1,
   },
   tabText: {
-    alignSelf: "center",
+    alignSelf: 'center',
     fontSize: 16,
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
   },
 
   topContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     backgroundColor: theme.colors.secondary,
   },
   bottomContainer: {
     flex: 4,
-    alignItems: "center",
-    backgroundColor: "white",
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   input: { height: 40, margin: 12, borderWidth: 1, padding: 10 },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 22,
   },
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -632,7 +623,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: "70%",
+    width: '70%',
   },
   button: {
     borderRadius: 20,
@@ -640,6 +631,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     elevation: 2,
   },
-});
+})
 
-export default CreateRecipe;
+export default CreateRecipe
+
