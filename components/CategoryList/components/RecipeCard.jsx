@@ -16,7 +16,7 @@ import { AsyncStorageService } from '../../../utils/AsynStorage'
 import { HOST } from '../../../config'
 import Toast from 'react-native-toast-message'
 
-const RecipeCard = ({ item, callBack }) => {
+const RecipeCard = ({ item, callBack, navigateLocation }) => {
   const navigation = useNavigation()
   const userInfo = useSelector(selectUserInfo)
   const dishId = item?.id
@@ -138,7 +138,7 @@ const RecipeCard = ({ item, callBack }) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        navigation.push('FoodDetail_prof', { foodDetails: item })
+        navigation.push(navigateLocation, { foodDetails: item })
       }}
     >
       <ImageBackground

@@ -32,7 +32,7 @@ const ExploreCuisine = ({ route }) => {
       >
         <View style={styles.section}>
           {cuisine?.dishes?.map((item) => (
-            <RecipeCard key={item.id} item={item} />
+            <RecipeCard key={item.id} item={item} navigateLocation="FoodDetail"/>
           ))}
         </View>
       </ScrollView>
