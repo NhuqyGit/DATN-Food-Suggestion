@@ -27,7 +27,7 @@ function SettingsItem({ item }) {
         style={{
           marginLeft: 36,
           ...FONTS.semiBold,
-          fontWeight: 600,
+          fontWeight: "600",
           fontSize: 16,
           color: item.color,
         }}
