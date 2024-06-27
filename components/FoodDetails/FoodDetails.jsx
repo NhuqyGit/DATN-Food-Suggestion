@@ -21,6 +21,7 @@ import {
   useAddDishToMealPlanMutation,
   useDeleteDishFromMealPlanMutation,
   useGetMealplanIdByUserIdQuery,
+  useDeleteAllDishFromMealPlanMutation,
 } from "../../slices/mealPlanSlice";
 import Toast from "react-native-toast-message";
 
@@ -35,6 +36,7 @@ function FoodDetailsScreen({ navigation, route }) {
   //const [isModalVisible, setModalVisible] = useState(false)
   const [addDishToMealPlan] = useAddDishToMealPlanMutation();
   const [deleteDishFromMealPlan] = useDeleteDishFromMealPlanMutation();
+  const [deleteAllDishFromMealPlan] = useDeleteAllDishFromMealPlanMutation();
   const [addDishToCollections] = useAddDishToCollectionsMutation();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -109,10 +111,11 @@ function FoodDetailsScreen({ navigation, route }) {
           });
         }
       } else {
-        response = await deleteDishFromMealPlan({
+        response = await deleteAllDishFromMealPlan({
           dishId: foodDetails.id,
           mealPlanId: mealID,
         });
+
         if (response) {
           Toast.show({
             type: "success",
