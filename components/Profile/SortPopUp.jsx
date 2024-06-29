@@ -31,6 +31,7 @@ const SortPopUp = ({ closePopUp, modalVisible }) => {
         index={index}
         checkBoxIndex={checkBoxIndex}
         setCheckBoxIndex={setCheckBoxIndex}
+        closePopUp={closePopUp}
       />
     )
   })

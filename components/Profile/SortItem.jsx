@@ -3,7 +3,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setSearchCollectionIndex } from '../../slices/searchSlice'
 
-const SortItem = ({ props, index, checkBoxIndex, setCheckBoxIndex }) => {
+const SortItem = ({
+  props,
+  index,
+  checkBoxIndex,
+  setCheckBoxIndex,
+  closePopUp,
+}) => {
   const dispatch = useDispatch()
   return (
     <View style={styles.container}>
@@ -11,6 +17,7 @@ const SortItem = ({ props, index, checkBoxIndex, setCheckBoxIndex }) => {
         onPress={() => {
           setCheckBoxIndex(index)
           dispatch(setSearchCollectionIndex(index))
+          closePopUp()
         }}
         style={[
           styles.checkBox,

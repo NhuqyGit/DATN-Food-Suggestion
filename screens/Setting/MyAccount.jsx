@@ -53,11 +53,21 @@ const MyAccount = ({ navigation }) => {
         </View>
 
         {/* <MyAccountSetting name='Receive Nhuqy notifications' />
-        <MyAccountSetting name='Measurement System' />
+        <MyAccountSetting name='Measurement System' /> */}
 
-        <View style={styles.accountSettingContainer}>
-          <Text style={styles.nameSetting}>Email Preferences</Text>
-        </View> */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ChangeInformation')}
+        >
+          <View style={styles.accountSettingContainer}>
+            <Text style={styles.nameSetting}>Change Information</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
+          <View style={styles.accountSettingContainer}>
+            <Text style={styles.nameSetting}>Change Password</Text>
+          </View>
+        </TouchableOpacity>
 
         {/* <Text style={styles.notice}>
             Deleting your account may make your saved recipes, collections, and personalization preferences
