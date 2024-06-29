@@ -24,7 +24,7 @@ export const MessageProvider = ({
   const [isFetchDataCompleted, setIsFetchDataCompleted] = useState(true)
   const [nameRecord, setNameRecord] = useState(null)
   const [recordId, setRecordId] = useState(null)
-  const [recordActive, setRecordActive] = useState(topic.record)
+  const [recordActive, setRecordActive] = useState(null)
   const [listRecord, setListRecord] = useState([])
   const [newMessage, setNewMessage] = useState(null)
   const [isError, setIsError] = useState(false)
@@ -170,8 +170,6 @@ export const MessageProvider = ({
     return [newMessage, messageHeader]
   }
   useEffect(() => {
-    // useCallback(() => {
-    // handleFetchMessages()
     if (topic.messageList !== undefined) {
       if (topic.messageList.length > 0) {
         const listMessage = topic.messageList.map((m) => {
@@ -180,18 +178,33 @@ export const MessageProvider = ({
         setListMessage(listMessage)
       }
     }
+    if (topic.record !== undefined){
+      setRecordActive(topic.record)
+    }
   }, [])
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(()=>{
       if (recordActive) {
         setNameRecord(recordActive.nameRecord)
         setRecordId(recordActive.id)
         const newMessage = handleCreateMessage()
         setNewMessage(newMessage)
       }
+      else{
+        setNameRecord(null)
+        setRecordId(null)
+        setNewMessage(null)
+      }
     }, [recordActive])
-  )
+
+  useEffect(()=>{
+    if(topic.record){
+      setRecordActive(topic.record)
+    }
+    else{
+      setRecordActive(null)
+    }
+  }, [topic.record])
 
   const handleNewMessage = () => {
     const newMessageObj = {
@@ -440,6 +453,7 @@ export const MessageProvider = ({
         handleResponseRecipe,
         extractQuery,
         fetchRecipeImage,
+        getTopics,
       }}
     >
       {children}

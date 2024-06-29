@@ -16,6 +16,8 @@ import * as Animatable from 'react-native-animatable'
 import MealChat from './MealChat/MealChat'
 import ListDishRecipe from './ListDishRecipe'
 import RecipeWithImage from './RecipeWithImage'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from '../../slices/userLoginSlice'
 
 const RenderChat = ({ props }) => {
   const {
@@ -28,6 +30,7 @@ const RenderChat = ({ props }) => {
     fetchRecipeImage,
     handleResponseRecipe,
   } = useMessage()
+  const userInfo = useSelector(selectUserInfo)
 
   useFocusEffect(
     useCallback(() => {
@@ -122,21 +125,29 @@ const RenderChat = ({ props }) => {
     <View style={styles.container}>
       <View style={styles.sendContainer}>
         <View style={styles.avatarUser}>
-          <Image
+          {/* <Image
             style={styles.imageUser}
             source={require('../../assets/images/Profile/avatarTest.jpg')}
+            /> */}
+          <Image
+            style={styles.imageUser}
+            source={
+              userInfo?.imgUrl
+                ? { uri: userInfo.imgUrl }
+                : require('../../assets/images/Profile/user.png')
+            }
           />
         </View>
         <View style={styles.sendChat}>
-          <Text style={styles.nameText}>Mr. Bean</Text>
+          <Text style={styles.nameText}>{userInfo?.username}</Text>
           <Text style={styles.sendText}>{props.content}</Text>
         </View>
       </View>
 
       <View style={styles.responseContainer}>
         <View style={styles.avatarGPT}>
-          {/* <Image style={styles.imageUser} source={require("../../assets/favicon.png")} /> */}
-          <Feather name='slack' size={20} color={theme.colors.dark} />
+          <Image style={styles.imageAI} source={require("../../assets/images/suggestion/AI.png")} />
+          {/* <Feather name='slack' size={20} color={theme.colors.dark} /> */}
         </View>
         <View style={styles.responseChat}>
           <Text style={styles.nameText}>Nhuqy</Text>
@@ -238,6 +249,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: theme.colors.lightGray,
+    backgroundColor: "#e6ecff",
+    borderColor: '#5360ac',
   },
   imageUser: {
     width: 30,
@@ -245,6 +258,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#5360ac',
+  },
+  imageAI: {
+    width: 25,
+    height: 25,
+    borderRadius: 100,
+    // borderWidth: 1,
+    // borderColor: '#5360ac',
   },
   sendContainer: {
     display: 'flex',

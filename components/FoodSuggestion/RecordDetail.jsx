@@ -553,6 +553,7 @@ const RecordDetail = () => {
           <TextInput
             style={styles.inputName}
             value={diner}
+            keyboardType='numeric'
             onChangeText={handleChangeDiner}
             placeholder='Enter your name record'
           />
@@ -581,14 +582,6 @@ const RecordDetail = () => {
                         <Feather name='plus' size={18} color={theme.colors.secondary} />
                         <Text style={{fontSize: 13, fontWeight: '500', color: theme.colors.dark}}>Add ingredients</Text>
                     </TouchableOpacity> */}
-        </View>
-
-        <View style={styles.inputForm}>
-          <Text style={styles.title}>Personal Taste Preferences</Text>
-          <TextInput
-            style={styles.inputName}
-            placeholder='Enter your name record'
-          ></TextInput>
         </View>
       </ScrollView>
 
