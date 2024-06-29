@@ -26,13 +26,13 @@ export default function Personalization({ setIsDone }) {
     },
     {
       id: 1,
-      question: 'Are you allergic to anything?',
+      question: 'Are you following any specific diet?',
       listAns: null,
       svg: SvgPer2,
     },
     {
       id: 2,
-      question: 'Are you following any specific diet?',
+      question: 'Are you allergic to anything?',
       listAns: null,
       svg: SvgPer3,
     },

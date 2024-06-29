@@ -7,7 +7,7 @@ import { SIZES } from '../../theme/theme';
 import { useMessage } from './MessageContext';
 const Footer = () => {
     const navigation = useNavigation();
-    const { listMessage, isFetchDataCompleted, nameRecord, handleNewMessage, handleNewResponse} = useMessage();
+    const { listMessage, isFetchDataCompleted, nameRecord, handleNewMessage, handleNewResponse, newMessage} = useMessage();
     const [isClick, setIsClick] = useState(false);
     const [isFolderOpen, setIsFolderOpen] = useState(false);
     const folderTranslateY = useRef(new Animated.Value(0)).current;
@@ -55,8 +55,8 @@ const Footer = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handleNewMessage}
-                        style={[styles.btnSend, {backgroundColor: !isFetchDataCompleted ? "#5e5e5e" : theme.colors.secondary}]}
-                        disabled={!isFetchDataCompleted}
+                        style={[styles.btnSend, {backgroundColor: !isFetchDataCompleted || newMessage === null ? "#5e5e5e" : theme.colors.secondary}]}
+                        disabled={!isFetchDataCompleted || newMessage === null}
                     >
                         {!isFetchDataCompleted ? 
                             <ActivityIndicator color={theme.colors.lightGray}/> 

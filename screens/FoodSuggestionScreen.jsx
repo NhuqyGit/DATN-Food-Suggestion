@@ -14,7 +14,7 @@ import {
 } from '@react-navigation/drawer'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
-import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons'
+import { MaterialCommunityIcons, Ionicons, Entypo, Feather } from '@expo/vector-icons'
 import FoodSuggesionStack from './FoodSuggestion/FoodSuggesionStack'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { theme } from '../theme/index'
@@ -241,7 +241,7 @@ const FoodSuggestion = () => {
         })
         return updatedFilter
       })
-      return
+      return true
     }
     try {
       const token = await AsyncStorageService.getAccessToken()
@@ -276,8 +276,10 @@ const FoodSuggestion = () => {
         })
         return updatedFilter
       })
+      return true
     } catch (error) {
       console.error('Error delete topics:', error)
+      return false
     }
   }
 
@@ -319,8 +321,10 @@ const FoodSuggestion = () => {
 
       // setFocusedItem(data.id);
       // navigation.navigate(data.title + data.id.toString())
+      return true
     } catch (error) {
       console.error('Error patching topics:', error)
+      return false
     }
   }
 
@@ -439,11 +443,14 @@ const FoodSuggestion = () => {
                 }}
                 onPress={handleNewSuggestion}
               >
-                <Image
-                  source={require('../assets/favicon.png')}
-                  style={{ width: 35, height: 35, marginRight: 10 }}
-                />
-                <Text style={{ fontWeight: 'bold' }}>New suggestion</Text>
+                <View style={styles.avatarGPT}>
+                  <Image style={styles.imageAI} source={require("../assets/images/suggestion/AI.png")} />
+                  {/* <Feather name='slack' size={20} color={theme.colors.dark} /> */}
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1}}>
+                  <Text style={{ fontWeight: 'bold' }}>New suggestion</Text>
+                  <Ionicons name='create-outline' size={22} color={"black"} />
+                </View>
               </TouchableOpacity>
             </View>
 
@@ -515,6 +522,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
+  },
+  avatarGPT: {
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 15,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: theme.colors.lightGray,
+    backgroundColor: "#e6ecff",
+  },
+  imageAI: {
+    width: 32,
+    height: 32,
+    borderRadius: 100,
   },
 })
 

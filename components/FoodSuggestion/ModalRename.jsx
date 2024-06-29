@@ -12,12 +12,18 @@ const ModalRename = ({menuItem, modalVisible, handleCloseModal, handleChangeName
     const handleRename = async () => {
         setIsLoading(true)
         const temp = await handleChangeNameTopic(topic.id, newTitle)
+        if (temp){
+            handleCloseModal()
+        }
         setIsLoading(false)
     }
-
+    
     const handleDelete = async () => {
         setIsLoading(true)
         const temp = await handleDeleteTopic(topic.id)
+        if (temp){
+            handleCloseModal()
+        }
         setIsLoading(false)
     }
 

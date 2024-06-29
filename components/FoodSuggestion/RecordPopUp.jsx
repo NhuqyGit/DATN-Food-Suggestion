@@ -3,13 +3,37 @@ import { MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
 import { theme } from '../../theme/index'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
 
-const RecordPopUp = ({recordSelect, closePopUp, modalVisible}) => {
+const RecordPopUp = ({recordSelect, closePopUp, modalVisible, handleFetchListRecord, getTopics, isSelect, setIsSelect, recordId}) => {
     const navigation = useNavigation()
 
     const handleEdit = () => {
         closePopUp()
         navigation.push("RecordDetail", {recordSelect, type: "PATCH"})
+    }
+
+    const handleDelete = async () => {
+        try {
+            const token = await AsyncStorageService.getAccessToken()
+            const headers = {
+              Authorization: `Bearer ${token}`,
+            }
+      
+            const response = await axios.delete(`${HOST}/record/${recordSelect?.id}`, {
+              headers,
+            })
+            const data = await response.data
+            console.log(data)
+            handleFetchListRecord()
+            getTopics()
+            setIsSelect(recordId)
+        } catch (error) {
+            console.error('Error delete topics:', error)
+        }
+        closePopUp()
     }
 
     return (
@@ -33,7 +57,9 @@ const RecordPopUp = ({recordSelect, closePopUp, modalVisible}) => {
                         <MaterialIcons name='edit' size={20} color='#231F20' />
                         <Text style={styles.modalItemText}>Edit</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalItem}>
+                    <TouchableOpacity
+                        onPress={handleDelete}
+                        style={styles.modalItem}>
                         <MaterialIcons name="delete-forever" size={20} color='red' />
                         <Text style={styles.modalItemText}>Delete</Text>
                     </TouchableOpacity>
