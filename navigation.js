@@ -22,6 +22,7 @@ import PerSetup from "./screens/PerSetup";
 import Toast from "react-native-toast-message";
 import toastConfig from "./utils/toastConfig";
 import { theme } from "./theme/index";
+import TermScreen from "./screens/TermScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -79,6 +80,7 @@ const Navigation = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="SignInScreen" component={SignInScreen} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+          <Stack.Screen name="TermScreen" component={TermScreen} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Personalization">
             {(props) => <Personalization {...props} />}
