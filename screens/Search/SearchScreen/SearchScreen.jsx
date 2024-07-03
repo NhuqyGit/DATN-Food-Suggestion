@@ -258,6 +258,7 @@ const SearchScreen = ({ navigation, route }) => {
                       <TouchableOpacity
                         onPress={handleSeeIngredients}
                         style={styles.seeMoreButton}
+                        disabled={loading}
                       >
                         <Text style={styles.seeMoreText}>
                           {showAllPopular ? 'See Less' : 'See More'}
@@ -303,10 +304,12 @@ const SearchScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white"
   },
 
   wrapper: {
     flex: 1,
+    paddingTop: 20,
   },
 
   popularWrapper: {

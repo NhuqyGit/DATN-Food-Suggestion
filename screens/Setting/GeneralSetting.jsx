@@ -21,10 +21,6 @@ function GeneralSetting({ navigation }) {
       action: 'DietaryPreferences',
     },
     {
-      name: 'Terms And Policies',
-      action: 'TermsAndPolicies',
-    },
-    {
       name: 'Feedback & Support',
       action: 'FeedbackStack',
     },
@@ -33,7 +29,7 @@ function GeneralSetting({ navigation }) {
       action: 'ReportProblems',
     },
     {
-      name: 'About Suggestion Food',
+      name: 'About IntelliTaste',
       action: 'About',
     },
   ]

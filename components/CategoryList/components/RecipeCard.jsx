@@ -19,12 +19,17 @@ import Toast from 'react-native-toast-message'
 const RecipeCard = ({ item, callBack, navigateLocation }) => {
   const navigation = useNavigation()
   const userInfo = useSelector(selectUserInfo)
+  const [loading, setLoading] = useState(false)
+  const [loadingCollec, setLoadingCollec] = useState(false)
   const dishId = item?.id
   const userId = userInfo?.id
 
   const [isInCollection, setIsInCollection] = useState(false)
+  const [checkCollecLoading, setCheckCollecLoading] = useState(false)
+
   useEffect(() => {
     const checkIfInCollection = async () => {
+      setCheckCollecLoading(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
         const response = await fetch(
@@ -49,6 +54,8 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        setCheckCollecLoading(false)
       }
     }
 
@@ -56,6 +63,7 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
   }, [userId, dishId])
 
   const onAddToCollection = async () => {
+    setLoading(true)
     try {
       const token = await AsyncStorageService.getAccessToken()
       const response = await fetch(
@@ -91,10 +99,13 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
   const onDeleteFromCollection = async () => {
+    setLoadingCollec(true)
     try {
       const token = await AsyncStorageService.getAccessToken()
       const response = await fetch(
@@ -132,8 +143,11 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoadingCollec(false)
     }
   }
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -170,6 +184,7 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
               onPress={
                 isInCollection ? onDeleteFromCollection : onAddToCollection
               }
+              disabled={loadingCollec || loading || checkCollecLoading}
             >
               <View style={styles.iconContainer}>
                 <MaterialIcons

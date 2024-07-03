@@ -17,16 +17,6 @@ const FeedbackAndSupport = ({ navigation }) => {
       route: 'Feedback',
     },
     {
-      id: 2,
-      title: 'Rate Our App',
-      route: 'RateOurApp',
-    },
-    {
-      id: 3,
-      title: 'Love Suggestion Food?',
-      route: 'LoveSuggestionFood',
-    },
-    {
       id: 4,
       title: 'FAQ',
       route: 'FAQStack',

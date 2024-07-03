@@ -21,7 +21,6 @@ function IngredientsTab({ ingredients }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         {ingredients?.map((ingredientType) => (
           <View key={ingredientType.id}>
-            <TouchableOpacity>
               <View style={styles.row}>
                 <View key={ingredientType?.id} style={styles.rowItem}>
                   <Icon
@@ -36,8 +35,6 @@ function IngredientsTab({ ingredients }) {
                   </Text>
                 </View>
               </View>
-            </TouchableOpacity>
-
             <View style={styles.line} />
           </View>
         ))}

@@ -124,6 +124,7 @@ const CollectionScreen = ({ navigation, route }) => {
             key={option.id}
             style={styles.checkboxContainer}
             onPress={() => handleCheckboxChange(option?.id)}
+            disabled={optionsCollectionLoading || optionsCollectionError}
           >
             <View
               style={[
