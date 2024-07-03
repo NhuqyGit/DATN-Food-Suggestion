@@ -21,7 +21,7 @@ const About = ({ navigation }) => {
       title: 'Terms of Use',
       content: `
             <h2>1. Introduction</h2>
-            <p>This Terms of Use Agreement ("Agreement") constitutes a legal agreement between [App Name] ("we," "us," or "our") and you ("you" or "your") regarding your access to and use of the [App Name] mobile application (the "App").</p>
+            <p>This Terms of Use Agreement ("Agreement") constitutes a legal agreement between IntelliTaste ("we," "us," or "our") and you ("you" or "your") regarding your access to and use of the IntelliTaste mobile application (the "App").</p>
             <h2>2. Acceptance of Terms</h2>
             <p>By downloading, installing, or using the App, you agree to be bound by the terms and conditions of this Agreement. If you disagree with any part of the Agreement, then you may not access or use the App.</p>
             <h2>3. User Accounts</h2>
@@ -47,11 +47,11 @@ const About = ({ navigation }) => {
             <h2>9. Changes to the Agreement</h2>
             <p>We may revise this Agreement at any time by posting the revised terms on the App. You are expected to check this page periodically so you are aware of any changes, as they are binding on you.</p>
             <h2>10. Governing Law</h2>
-            <p>This Agreement shall be governed by and construed in accordance with the laws of [State], without regard to its conflict of law provisions.</p>
+            <p>This Agreement shall be governed by and construed in accordance with the laws of Vietnam, without regard to its conflict of law provisions.</p>
             <h2>11. Entire Agreement</h2>
             <p>This Agreement constitutes the entire agreement between you and us regarding your use of the App.</p>
             <h2>12. Contact Us</h2>
-            <p>If you have any questions about this Agreement, please contact us at [email protected]</p>
+            <p>If you have any questions about this Agreement, please contact us at phanthihuunien@gmail.com</p>
       `,
     },
     {
@@ -59,7 +59,7 @@ const About = ({ navigation }) => {
       title: 'Privacy Notice',
       content: `
         <h2>Privacy Notice</h2>
-        <p>This Privacy Notice ("Notice") describes how [App Name] ("we," "us," or "our") collects, uses, and discloses your personal information when you use our mobile application, [App Name] ("App").</p>
+        <p>This Privacy Notice ("Notice") describes how IntelliTaste ("we," "us," or "our") collects, uses, and discloses your personal information when you use our mobile application, IntelliTaste ("App").</p>
         <h3>1. Information We Collect</h3>
         <p>We collect several types of information from and about users of our App:</p>
         <ul>
@@ -92,13 +92,13 @@ const About = ({ navigation }) => {
         <h3>6. Data Retention</h3>
         <p>We will retain your information for as long as it is necessary to fulfill the purposes described in this Notice, unless a longer retention period is required or permitted by law.</p>
         <h3>7. Children's Privacy</h3>
-        <p>Our App is not intended for children under the age of [age]. We do not knowingly collect personal information from children under [age]. If you are a parent or guardian and you believe your child has provided us with personal information, please contact us.</p>
+        <p>Our App is not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and you believe your child has provided us with personal information, please contact us.</p>
         <h3>8. Security</h3>
         <p>We take reasonable steps to protect your information from unauthorized access, disclosure, alteration, or destruction. However, no internet transmission or electronic storage is 100% secure.</p>
         <h3>9. Changes to this Notice</h3>
         <p>We may update this Notice from time to time. We will notify you of any changes by posting the new Notice on the App.</p>
         <h3>10. Contact Us</h3>
-        <p>If you have any questions about this Notice, please contact us at [email protected]</p>
+        <p>If you have any questions about this Notice, please contact us at phanthihuunien@gmail.com</p>
       `,
     },    
     {
@@ -106,13 +106,13 @@ const About = ({ navigation }) => {
       title: 'Copyright Policy',
       content: `
         <h2>Copyright Policy</h2>
-        <p>This Copyright Policy ("Policy") outlines the terms and conditions regarding the use of copyrighted material within the [App Name] mobile application ("App").</p>
+        <p>This Copyright Policy ("Policy") outlines the terms and conditions regarding the use of copyrighted material within the IntelliTaste mobile application ("App").</p>
         <h3>1. Ownership of Content</h3>
-        <p>All content available in the App, including but not limited to text, images, graphics, logos, and audiovisual materials, is the property of [App Name] or its licensors and is protected by copyright laws.</p>
+        <p>All content available in the App, including but not limited to text, images, graphics, logos, and audiovisual materials, is the property of IntelliTaste or its licensors and is protected by copyright laws.</p>
         <h3>2. Permitted Use</h3>
         <p>Users of the App are granted a limited, non-exclusive, non-transferable license to access and use the content for personal and non-commercial purposes only. Any unauthorized use, reproduction, or distribution of the content is strictly prohibited.</p>
         <h3>3. Reporting Copyright Infringement</h3>
-        <p>If you believe that any content in the App infringes upon your copyright, please contact us at [email protected] with the following information:</p>
+        <p>If you believe that any content in the App infringes upon your copyright, please contact us at phanthihuunien@gmail.com with the following information:</p>
         <ul>
           <li>Description of the copyrighted work</li>
           <li>Identification of the infringing material</li>
@@ -123,7 +123,7 @@ const About = ({ navigation }) => {
         <h3>4. Removal of Infringing Content</h3>
         <p>Upon receipt of a valid copyright infringement notice, we will promptly remove or disable access to the infringing material.</p>
         <h3>5. Contact Us</h3>
-        <p>If you have any questions about this Copyright Policy, please contact us at [email protected]</p>
+        <p>If you have any questions about this Copyright Policy, please contact us at phanthihuunien@gmail.com</p>
       `,
     },    
     {
@@ -139,7 +139,7 @@ const About = ({ navigation }) => {
         <h3>3. No Discrimination</h3>
         <p>We will not discriminate against you for exercising your rights under the CCPA, including the right to opt-out of the sale of your personal information.</p>
         <h3>4. Contact Us</h3>
-        <p>If you have any questions about opting out of the sale of your personal information, please contact us at [email protected]</p>
+        <p>If you have any questions about opting out of the sale of your personal information, please contact us at phanthihuunien@gmail.com</p>
       `,
     },    
   ];
@@ -162,7 +162,7 @@ const About = ({ navigation }) => {
           <Text style={styles.head}>About IntelliTaste</Text>
 
           <Text style={styles.content}>
-            IntelliTaste was launched in 2024 by students of HCMUS on a mission to invent the ultimate kitchen tool. Whether it's finding a recipe or going to the store, Suggestion Food wants to make it easier for foodies to do what they love - cook, eat, and share!. Suggestion Food's mission is to be the world's largest, most powerful and most helpful food site in the world.
+            IntelliTaste was launched in 2024 by students of HCMUS on a mission to invent the ultimate kitchen tool. Whether it's finding a recipe or going to the store, IntelliTaste wants to make it easier for foodies to do what they love - cook, eat, and share!. IntelliTaste's mission is to be the world's largest, most powerful and most helpful food site in the world.
           </Text>
 
           {topics.map((topic) => (
