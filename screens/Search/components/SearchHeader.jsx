@@ -93,7 +93,7 @@ function SearchHeader({
             setSearchText(text)
             getDishBySearchText(text)
           }}
-          disable={!text}
+          disabled={!text}
         >
           <Ionicons
             style={styles.searchIcon}
