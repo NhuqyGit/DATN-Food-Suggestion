@@ -93,6 +93,7 @@ function SearchHeader({
             setSearchText(text)
             getDishBySearchText(text)
           }}
+          disabled={!text}
         >
           <Ionicons
             style={styles.searchIcon}
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 25,
     // borderColor: 'red',
     // borderWidth: 1,
     flex: 1,

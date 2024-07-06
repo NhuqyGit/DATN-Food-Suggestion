@@ -188,6 +188,7 @@ function OverviewTab({ foodDetails, navigation }) {
       </View>
     </Modal>
   )
+  const roundedRating = Math.round(foodDetails?.rating * 10) / 10;
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -205,7 +206,7 @@ function OverviewTab({ foodDetails, navigation }) {
             style={styles.icon}
           />
           <Text style={styles.label}>Rating</Text>
-          <Text style={styles.value}>{foodDetails?.rating}</Text>
+          <Text style={styles.value}>{roundedRating}</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>

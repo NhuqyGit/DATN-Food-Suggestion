@@ -24,6 +24,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import SearchValueSkeleton from '../ViewImageScreen/SearchValueSkeleton'
 import { theme } from '../../../theme'
+import RecipeCard from '../../../components/CategoryList/components/RecipeCard'
 
 const SearchScreen = ({ navigation, route }) => {
   const [isFilter, setIsFilter] = useState(false)
@@ -258,6 +259,7 @@ const SearchScreen = ({ navigation, route }) => {
                       <TouchableOpacity
                         onPress={handleSeeIngredients}
                         style={styles.seeMoreButton}
+                        disabled={loading}
                       >
                         <Text style={styles.seeMoreText}>
                           {showAllPopular ? 'See Less' : 'See More'}
@@ -268,7 +270,7 @@ const SearchScreen = ({ navigation, route }) => {
                 )}
               </View>
               <View style={styles.popularWrapper}>
-                <View style={styles.padding}>
+                <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
                   <Text style={styles.title}>Latest dish</Text>
                   {loadingDish ? (
                     <View
@@ -303,10 +305,12 @@ const SearchScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white"
   },
 
   wrapper: {
     flex: 1,
+    paddingTop: 20,
   },
 
   popularWrapper: {
@@ -337,10 +341,13 @@ const styles = StyleSheet.create({
   },
 
   dishList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 8,
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // justifyContent: 'space-between',
+    // gap: 8,
+    display: 'flex',
+    gap: 20,
+   // width: '90%',
   },
 
   titleContainer: {
@@ -380,7 +387,7 @@ const styles = StyleSheet.create({
   },
 
   padding: {
-    padding: 16,
+    padding: 16
   },
 
   seeMoreButton: {

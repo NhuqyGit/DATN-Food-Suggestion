@@ -34,7 +34,7 @@ function Profile({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false)
   const isFocused = useIsFocused()
   const [collections, setCollections] = useState([])
-
+  const [fetchCollection, setFetchCollection] = useState(false)
   const searchCollectionIndex = useSelector(selectSearchCollectionIndex)
 
   const handleCloseModal = () => {
@@ -56,6 +56,7 @@ function Profile({ navigation }) {
 
   useEffect(() => {
     const fetchCollections = async () => {
+      setFetchCollection(true)
       const token = await AsyncStorageService.getAccessToken()
       const query = getQueryByIndex(searchCollectionIndex)
       try {
@@ -78,6 +79,9 @@ function Profile({ navigation }) {
         }
       } catch (error) {
         console.error(error)
+      }
+      finally{
+        setFetchCollection(false)
       }
     }
     fetchCollections()
@@ -107,12 +111,15 @@ function Profile({ navigation }) {
       console.error(error)
     }
   }
-
-  const listCollection = collections?.map((col, index) => {
-    return (
-      <Collection props={col} navigation={navigation} key={index.toString()} />
-    )
-  })
+  let listCollection
+  if(!fetchCollection)
+  {
+    listCollection = collections?.map((col, index) => {
+      return (
+        <Collection props={col} navigation={navigation} key={index.toString()} />
+      )
+    })
+  }
 
   const importImage = async () => {
     try {

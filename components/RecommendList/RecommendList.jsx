@@ -229,6 +229,7 @@ const styles = StyleSheet.create({
 
   listItem: {
     paddingLeft: 20,
+    paddingRight: 10,
   },
 
   healthyList: {

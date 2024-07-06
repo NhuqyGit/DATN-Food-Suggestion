@@ -308,22 +308,6 @@ function FoodDetailsScreen({ navigation, route }) {
         </View>
       </BottomSheet>
 
-      {/* <SaveModal
-        isVisible={isModalVisible}
-        onClose={handleToggleModal}
-        addMealPlanBtnText={
-          isDishInMealPlan?.isInMealPlan
-            ? "Remove from Meal Plan"
-            : "Add to Meal Plan"
-        }
-        collectionButtonText={
-          isDishInCollection?.isInCollection
-            ? "Update Collections"
-            : "Add to Collections"
-        }
-        onAddToMealPlan={handleAddToMealPlan}
-        onAddToCollection={handleAddToCollection}
-      /> */}
     </View>
   );
 }

@@ -49,7 +49,7 @@ function DishRecipe({ item, handleSetId, id }) {
     } finally {
     }
   };
-
+  const roundedRating = Math.round(item?.rating * 10) / 10;
   return (
     <TouchableOpacity
       onPress={() => handleSetId(item.id)}
@@ -75,7 +75,7 @@ function DishRecipe({ item, handleSetId, id }) {
             marginTop: 5,
           }}
         >
-          <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
+          <Text style={styles.rating}>{`Rating: ${roundedRating}`}</Text>
           {/* <AntDesign name='star' size={20} color='#FF6321' /> */}
           <Ionicons name="star" size={16} color={theme.colors.primary} />
         </View>
