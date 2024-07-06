@@ -133,6 +133,7 @@ function RecommendItem({ item }) {
       console.error(error)
     }
   }
+  const roundedRating = Math.round(item?.rating * 10) / 10;
   return (
     <TouchableOpacity
       onPress={() => {
@@ -155,7 +156,7 @@ function RecommendItem({ item }) {
             gap: 3,
           }}
         >
-          <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
+          <Text style={styles.rating}>{`Rating: ${roundedRating}`}</Text>
           <AntDesign name='star' size={20} color='#FF6321' />
         </View>
         <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>
@@ -234,11 +235,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 1, height: 5 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 4,
+    // elevation: 5,
   },
 
   addIcon: {

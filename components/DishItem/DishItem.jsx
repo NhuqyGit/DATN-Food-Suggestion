@@ -1,52 +1,90 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-
+import { AntDesign, MaterialIcons } from '@expo/vector-icons'
 const DishItem = ({ item }) => {
   const navigation = useNavigation()
+  const roundedRating = Math.round(item?.rating * 10) / 10;
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('FoodDetail', { foodDetails: item })
         }}
-        style={styles.container}
       >
-        <Image
-          style={styles.image}
-          source={{
-            uri: item.imageUrl,
-          }}
-        />
-        <Text style={styles.title}>{item.dishName}</Text>
+     <ImageBackground
+        source={{
+          uri: item?.imageUrl,
+        }}
+        style={styles.image}
+        imageStyle={{ borderRadius: 10 }}
+      >
+        <View style={styles.overlay}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 5,
+              marginTop: 5,
+            }}
+          >
+            <Text style={styles.rating}>{`Rating: ${roundedRating}`}</Text>
+            <AntDesign name='star' size={20} color='#FF6321' />
+          </View>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>
+            {item?.dishName}
+          </Text>
+          <View style={styles.authorContainer}>
+            <Text style={styles.author}>{item.author}</Text>
+          </View>
+        </View>
+      </ImageBackground>
       </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    justifyContent: 'flex-end',
+    height: 200,
     width: '100%',
+    padding: 8,
+  },
+  title: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: '700',
+    flexShrink: 1,
+  },
+  rating: {
+    color: 'white',
+    fontSize: 14,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  author: {
+    color: 'white',
+    fontWeight: '500',
+    marginRight: 4,
+    textTransform: 'uppercase',
+  },
+  container: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: 200,
-    borderRadius: 20,
     resizeMode: 'cover',
-  },
-  title: {
-    position: 'absolute',
-    bottom: 10,
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingVertical: 5,
+    justifyContent: 'flex-end',
   },
 })
 

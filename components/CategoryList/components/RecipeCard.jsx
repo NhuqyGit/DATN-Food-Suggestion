@@ -147,7 +147,7 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
       setLoadingCollec(false)
     }
   }
-
+  const roundedRating = Math.round(item?.rating * 10) / 10;
   return (
     <TouchableOpacity
       style={styles.container}
@@ -172,7 +172,7 @@ const RecipeCard = ({ item, callBack, navigateLocation }) => {
               marginTop: 5,
             }}
           >
-            <Text style={styles.rating}>{`Rating: ${item?.rating}`}</Text>
+            <Text style={styles.rating}>{`Rating: ${roundedRating}`}</Text>
             <AntDesign name='star' size={20} color='#FF6321' />
           </View>
           <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>
@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     position: 'relative',
-    paddingVertical: 7,
   },
   image: {
     width: '100%',
@@ -220,7 +219,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: 'absolute',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     justifyContent: 'flex-end',
     height: 200,
     width: '100%',

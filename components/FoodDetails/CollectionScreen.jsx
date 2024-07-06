@@ -146,7 +146,7 @@ const CollectionScreen = ({ navigation, route }) => {
         disabled={isUpdating}
       >
         <Text style={styles.buttonText}>
-          {isUpdating ? "Saving..." : "Done"}
+          {isUpdating ? "Saving" : "Done"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -202,13 +202,23 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   doneButton: {
+    // backgroundColor: theme.colors.secondary,
+    // borderRadius: 10,
+    // alignItems: "center",
+    // padding: 12,
+    // marginVertical: 20,
+    // width: 150,
+    // alignSelf: "center",
+
     backgroundColor: theme.colors.secondary,
-    borderRadius: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    display: "flex",
     alignItems: "center",
-    padding: 12,
-    marginVertical: 20,
-    width: 150,
     alignSelf: "center",
+    borderRadius: 25,
+    width: "30%",
+    marginVertical: 20,
   },
   checkboxContainer: {
     flexDirection: "row",
