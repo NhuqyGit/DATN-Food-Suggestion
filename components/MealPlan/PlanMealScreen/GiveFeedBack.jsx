@@ -91,14 +91,14 @@ const GiveFeedBack = () => {
         <ScrollView className="flex gap-y-3 px-5">
           <View>
             <Text className="font-semibold text-[24px] text-[#3a9693]">
-              DATN Meal Planner Customer Satisfaction Survey
+              IntelliTaste Meal Planner Customer Satisfaction Survey
             </Text>
           </View>
           <View className="flex gap-y-4">
             <View>
               <Text className="text-base font-normal text-[#232222b3]">
-                * 1. How likely is it that you would recommended the DATN Meal
-                Planner to a friend or colleague?
+                * 1. How likely is it that you would recommended the
+                IntelliTaste Meal Planner to a friend or colleague?
               </Text>
               <View className="flex flex-row justify-between w-full pt-3">
                 <Text className="text-base font-normal text-[#232222b3]">

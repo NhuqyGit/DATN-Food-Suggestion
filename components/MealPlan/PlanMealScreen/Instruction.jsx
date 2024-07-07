@@ -70,15 +70,20 @@ function Instruction() {
           </View>
           <View>
             <Text className="text-base font-normal text-[#232222b3] ">
-              Get organized with the DATN Meal Planner - available in the app
-              with a paid subscription to DATN - and say goodbye to mid-week
-              dinner dilemmas, last minute trips to the store, and wasted food.
+              Get organized with the IntelliTatse Meal Planner - available in
+              the app with a paid subscription to IntelliTatse - and say goodbye
+              to mid-week dinner dilemmas, last minute trips to the store, and
+              wasted food.
             </Text>
           </View>
         </View>
         <View className="flex gap-3">
           <View>
-            <MaterialIcons name="restaurant-menu" size={44} color={theme.colors.secondary} />
+            <MaterialIcons
+              name="restaurant-menu"
+              size={44}
+              color={theme.colors.secondary}
+            />
           </View>
           <Text className="text-[22px] font-semibold leading-normal text-[#000000]">
             Create Your Menu
@@ -93,7 +98,11 @@ function Instruction() {
         </View>
         <View className="flex gap-3">
           <View>
-            <FontAweSomeIcon name="bowl-food" size={40} color={theme.colors.secondary} />
+            <FontAweSomeIcon
+              name="bowl-food"
+              size={40}
+              color={theme.colors.secondary}
+            />
           </View>
           <Text className="text-[22px] font-semibold leading-normal text-[#000000]">
             Cook, Review, Recipes!
@@ -121,9 +130,17 @@ function Instruction() {
                     <View className="flex flex-row items-center gap-2 py-5">
                       <View className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F3F3F3]">
                         {openAccordionIndex === index + 1 ? (
-                          <AntDesign name="minus" size={20} color={theme.colors.secondary} />
+                          <AntDesign
+                            name="minus"
+                            size={20}
+                            color={theme.colors.secondary}
+                          />
                         ) : (
-                          <AntDesign name="plus" size={20} color={theme.colors.secondary} />
+                          <AntDesign
+                            name="plus"
+                            size={20}
+                            color={theme.colors.secondary}
+                          />
                         )}
                       </View>
                       <View>

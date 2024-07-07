@@ -48,8 +48,6 @@ function Unschedule() {
     }, [random])
   );
 
-
-
   return (
     <View className="py-4 h-full bg-white">
       <ScrollView>
@@ -63,6 +61,7 @@ function Unschedule() {
               imgUri={asset.imgUri}
               setRandom={setRandom}
               formattedPlanDate={undefined}
+              hasRepeat={false}
             />
           ))}
         </View>
