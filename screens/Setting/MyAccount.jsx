@@ -42,30 +42,29 @@ const MyAccount = ({ navigation }) => {
             </View>
 
             <View style={styles.info}>
-              <Text style={styles.name}>{userInfo?.username}</Text>
+              <Text style={styles.name}>{`@${userInfo?.username}`}</Text>
               <Text style={styles.email}>{userInfo?.email}</Text>
             </View>
           </View>
-
-          <TouchableOpacity style={styles.sectionProfileRight}>
-            <MaterialIcons name='edit' size={16} color='#231F20' />
-          </TouchableOpacity>
         </View>
 
         {/* <MyAccountSetting name='Receive Nhuqy notifications' />
         <MyAccountSetting name='Measurement System' /> */}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate('ChangeInformation')}
         >
           <View style={styles.accountSettingContainer}>
             <Text style={styles.nameSetting}>Change Information</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
           <View style={styles.accountSettingContainer}>
             <Text style={styles.nameSetting}>Change Password</Text>
+            <TouchableOpacity style={styles.sectionProfileRight}>
+              <MaterialIcons name='edit' size={16} color='#231F20' />
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
 
@@ -144,13 +143,22 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   accountSettingContainer: {
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F3F3',
+    borderColor: '#F3F3F3',
     paddingVertical: 12,
   },
+
+  nameSetting: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#231F20',
+  },
+
   info: {
     marginLeft: 15,
   },
