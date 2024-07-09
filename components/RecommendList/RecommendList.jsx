@@ -32,7 +32,7 @@ function RecommendList() {
       setLoading(true)
       try {
         const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/dish/recommend`, {
+        const response = await fetch(`${HOST}/dish/recommend2?page=1&limit=8`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -96,7 +96,11 @@ function RecommendList() {
     getRecommendDishes()
   }, [])
 
-  const handleClickVieAll = (item) => {
+  const handleClickViewAll = (item) => {
+    navigation.navigate('ViewAllRecommend', { cuisine: item })
+  }
+
+  const handleClickViewAll2 = (item) => {
     navigation.navigate('ExploreCuisine', { cuisine: item })
   }
 
@@ -107,7 +111,7 @@ function RecommendList() {
         <Text style={styles.title}>Your recommendations</Text>
         <TouchableOpacity
           onPress={() => {
-            handleClickVieAll({
+            handleClickViewAll({
               name: 'Your recommendations',
               dishes: recommendDishes,
             })
@@ -139,7 +143,7 @@ function RecommendList() {
           <Text style={styles.title}>Healthy recipes</Text>
           <TouchableOpacity
             onPress={() => {
-              handleClickVieAll({
+              handleClickViewAll2({
                 name: 'Healthy recipes',
                 dishes: healthyDishes,
               })
@@ -170,7 +174,7 @@ function RecommendList() {
           <Text style={styles.title}>Quick recipes</Text>
           <TouchableOpacity
             onPress={() => {
-              handleClickVieAll({
+              handleClickViewAll2({
                 name: 'Quick recipes',
                 dishes: quicklyDishes,
               })
@@ -240,4 +244,5 @@ const styles = StyleSheet.create({
 })
 
 export default RecommendList
+
 

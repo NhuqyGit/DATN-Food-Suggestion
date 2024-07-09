@@ -138,7 +138,6 @@ function OverviewTab({ foodDetails, navigation }) {
 
   const renderReportModal = () => (
     <Modal
-      animationType='slide'
       transparent
       visible={isReporting}
       onRequestClose={cancelReporting}
@@ -160,8 +159,8 @@ function OverviewTab({ foodDetails, navigation }) {
                 style={styles.reasonOptionContainer}
                 onPress={() => toggleReason(reason)}
               >
-                <Icon
-                  name={selectedReason === reason ? 'dot-circle-o' : 'circle-o'}
+                <Ionicons
+                  name={selectedReason === reason ? 'radio-button-on-outline' : 'radio-button-off-outline'}
                   size={24}
                   color={theme.colors.secondary}
                 />
@@ -174,16 +173,18 @@ function OverviewTab({ foodDetails, navigation }) {
                 placeholder='Enter your reason'
                 value={otherReason}
                 onChangeText={setOtherReason}
+                numberOfLines={3}
               />
             )}
           </ScrollView>
-
+          <View style={styles.btnSaveContainer}>
           <TouchableOpacity
             style={styles.reportButton}
             onPress={handleReportSubmission}
           >
             <Text style={styles.reportButtonText}>Report</Text>
           </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
       </View>
     </Modal>
@@ -360,7 +361,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    height: 500,
+    height: 550,
   },
   closeIcon: {
     position: 'absolute',
@@ -381,14 +382,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
   },
+  btnSaveContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   reportButton: {
     backgroundColor: theme.colors.secondary,
-    padding: 15,
-    width: '40%',
-    borderRadius: 5,
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginTop: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 25,
+    width: "30%",
   },
   reportButtonText: {
     color: 'white',
