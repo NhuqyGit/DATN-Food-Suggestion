@@ -23,8 +23,8 @@ function Home() {
       <Stack.Screen name='ViewAllRecommend' component={ViewAllRecommend} />
       <Stack.Screen name='ExploreCuisine' component={ExploreCuisine} />
       <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
-      <Stack.Screen name="AddNewNote" component={AddNewNote} />
       <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+      <Stack.Screen name="AddNewNote" component={AddNewNote} />
       <Stack.Screen name="CollectionScreen" component={CollectionScreen} />
       <Stack.Screen name="AddNewCollection" component={AddNewCollection} />
       <Stack.Screen name='MealPlan' component={MealPlan} />
