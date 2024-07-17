@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -9,65 +9,65 @@ import {
   View,
   ActivityIndicator,
   ScrollView,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Icon from 'react-native-vector-icons/FontAwesome'
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/FontAwesome";
 // import { theme } from '../theme'
-import { useNavigation } from '@react-navigation/native'
-import { theme } from '../theme/index'
-import { COLORS } from '../theme/theme'
-import { Ionicons } from '@expo/vector-icons'
-import { AsyncStorageService } from '../utils/AsynStorage'
-import { useDispatch } from 'react-redux'
-import { setUserInfo } from '../slices/userLoginSlice'
-import { HOST } from '../config'
-import BackButton from '../components/BackButton/BackButton'
+import { useNavigation } from "@react-navigation/native";
+import { theme } from "../theme/index";
+import { COLORS } from "../theme/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { AsyncStorageService } from "../utils/AsynStorage";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../slices/userLoginSlice";
+import { HOST } from "../config";
+import BackButton from "../components/BackButton/BackButton";
 
 function SignInScreen() {
-  const navigation = useNavigation()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isHide, setIsHide] = useState(true)
-  const [error, setError] = useState()
-  const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isHide, setIsHide] = useState(true);
+  const [error, setError] = useState();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const handleEmailChange = (email) => {
-    setEmail(email)
-  }
+    setEmail(email);
+  };
 
   const handlePasswordChange = (password) => {
-    setError('')
-    setPassword(password)
-  }
+    setError("");
+    setPassword(password);
+  };
 
   const handleLogin = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
       const response = await fetch(`${HOST}/auth/signin`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: email,
           password: password,
         }),
-      })
+      });
 
-      const responseJson = await response.json()
+      const responseJson = await response.json();
 
       if (responseJson.error) {
-        setError(responseJson.message)
+        setError(responseJson.message);
         if (Array.isArray(responseJson.message)) {
-          setError(responseJson.message.join('\n'))
+          setError(responseJson.message.join("\n"));
         } else {
-          setError(responseJson.message)
+          setError(responseJson.message);
         }
-        setIsLoading(false)
+        setIsLoading(false);
       } else {
-        await AsyncStorageService.setToken(responseJson?.accessToken)
-        await AsyncStorage.setItem('user_id', responseJson?.id.toString())
+        await AsyncStorageService.setToken(responseJson?.accessToken);
+        await AsyncStorage.setItem("user_id", responseJson?.id.toString());
 
         // Get user
         const responseGetUserById = await fetch(
@@ -77,32 +77,32 @@ function SignInScreen() {
               Authorization: `Bearer ${responseJson.accessToken}`,
             },
           }
-        )
+        );
 
-        const responseGetUserByIdJson = await responseGetUserById.json()
+        const responseGetUserByIdJson = await responseGetUserById.json();
 
-        dispatch(setUserInfo(responseGetUserByIdJson))
+        dispatch(setUserInfo(responseGetUserByIdJson));
 
         if (responseGetUserByIdJson.error) {
-          console.error(responseGetUserByIdJson.message)
-          setIsLoading(false)
+          console.error(responseGetUserByIdJson.message);
+          setIsLoading(false);
         } else {
           if (responseGetUserByIdJson?.isLogin === true) {
-            navigation.navigate('Home')
+            navigation.navigate("Home");
           } else {
-            navigation.navigate('Personalization')
+            navigation.navigate("TermScreen");
           }
         }
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } catch (error) {
-      console.error(error)
-      setIsLoading(false)
+      console.error(error);
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: 20 }}>
           <BackButton />
@@ -114,7 +114,7 @@ function SignInScreen() {
               <Text style={styles.label}>Username</Text>
               <TextInput
                 style={styles.input}
-                placeholder='Enter your username'
+                placeholder="Enter your username"
                 value={email}
                 onChangeText={handleEmailChange}
               />
@@ -124,9 +124,9 @@ function SignInScreen() {
               <View style={styles.passwordInput}>
                 <TextInput
                   style={[styles.input, styles.passwordInputLayout]}
-                  type='password'
+                  type="password"
                   secureTextEntry={isHide}
-                  placeholder='Enter your password'
+                  placeholder="Enter your password"
                   value={password}
                   onChangeText={handlePasswordChange}
                 />
@@ -136,14 +136,14 @@ function SignInScreen() {
                   style={styles.iconEye}
                 >
                   <Ionicons
-                    name={isHide ? 'eye-off' : 'eye'}
+                    name={isHide ? "eye-off" : "eye"}
                     size={22}
                     color={COLORS.secondary}
                   />
                 </TouchableOpacity>
               </View>
             </View>
-            {error && password && <Text className='text-red-500'>{error}</Text>}
+            {error && password && <Text className="text-red-500">{error}</Text>}
             {/* <View style={styles.thirdPartyContainer}>
               <TouchableOpacity style={styles.thirdPartyButton}>
                 <Icon name='google' size={25} color='#900' />
@@ -162,7 +162,7 @@ function SignInScreen() {
             </TouchableOpacity> */}
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('SignUpScreen')}
+              onPress={() => navigation.navigate("SignUpScreen")}
               disabled={!email || !password || isLoading}
             >
               <Text style={styles.orLogin}>Register an account now</Text>
@@ -184,7 +184,7 @@ function SignInScreen() {
               >
                 <Text style={styles.signButton}>
                   {isLoading ? (
-                    <ActivityIndicator size='small' color='white' />
+                    <ActivityIndicator size="small" color="white" />
                   ) : (
                     <Text>Sign In</Text>
                   )}
@@ -195,19 +195,19 @@ function SignInScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 20,
     gap: 30,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   signInButtonContainer: {
@@ -219,31 +219,31 @@ const styles = StyleSheet.create({
   },
 
   signButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
 
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
   },
 
   passwordInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   label: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
 
   input: {
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     height: 50,
   },
 
@@ -255,12 +255,12 @@ const styles = StyleSheet.create({
   },
 
   iconEye: {
-    height: '100%',
+    height: "100%",
     padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 10,
     borderLeftWidth: 0,
     borderTopLeftRadius: 0,
@@ -268,9 +268,9 @@ const styles = StyleSheet.create({
   },
 
   thirdPartyContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 40,
     gap: 10,
   },
@@ -279,9 +279,9 @@ const styles = StyleSheet.create({
     padding: 15,
     minWidth: 60,
     borderRadius: 6,
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
 
   forgotPassword: {
@@ -289,9 +289,8 @@ const styles = StyleSheet.create({
   },
 
   orLogin: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
-})
+});
 
-export default SignInScreen
-
+export default SignInScreen;

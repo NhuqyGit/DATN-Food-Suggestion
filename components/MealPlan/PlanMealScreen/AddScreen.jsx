@@ -236,7 +236,7 @@ function RecipeDetailsScreen({ route }) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, padding: 16 }} className="bg-white">
       <View className="flex flex-row justify-end mt-4">
         <CloseButton />
       </View>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react'
 import {
+  ActivityIndicator,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -8,15 +9,63 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
-import { theme } from '../../theme';
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { MaterialIcons } from '@expo/vector-icons'
+import { theme } from '../../theme'
+import { AsyncStorageService } from '../../utils/AsynStorage'
+import { HOST } from '../../config'
+import Toast from 'react-native-toast-message'
 
 const ReportProblems = ({ navigation }) => {
   const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
+    Keyboard.dismiss()
+  }
+
+  const [report, setReport] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleReport = async () => {
+    try {
+      setIsLoading(true)
+
+      const token = await AsyncStorageService.getAccessToken()
+
+      const response = await fetch(`${HOST}/feedback-apps`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: report,
+          type: 'report',
+        }),
+      })
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(
+          Array.isArray(responseJson.message)
+            ? responseJson.message.join('\n')
+            : responseJson.message
+        )
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Report Successfully',
+          text2: 'We will check and fix it soon',
+          textStyle: { fontSize: 20 },
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   return (
     <SafeAreaView
       style={{
@@ -44,19 +93,43 @@ const ReportProblems = ({ navigation }) => {
               placeholder={`Let us know the issue you're encountering.`}
               multiline
               style={styles.input}
+              textAlignVertical='top'
+              onChangeText={(text) => setReport(text)}
             />
+
+            {error ? (
+              <Text style={{ color: 'red', marginVertical: 10 }}>{error}</Text>
+            ) : null}
           </View>
 
-          <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Submit</Text>
+          <TouchableOpacity
+            onPress={handleReport}
+            style={[
+              styles.submitButton,
+              {
+                backgroundColor:
+                  !report || isLoading
+                    ? theme?.colors?.grayBackground
+                    : theme.colors.secondary,
+              },
+            ]}
+            disabled={isLoading || !report}
+          >
+            <Text style={styles.submitButtonText}>
+              {isLoading ? (
+                <ActivityIndicator size='small' color='white' />
+              ) : (
+                <Text>Submit</Text>
+              )}
+            </Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default ReportProblems;
+export default ReportProblems
 
 const styles = StyleSheet.create({
   container: {
@@ -108,4 +181,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-});
+})
+

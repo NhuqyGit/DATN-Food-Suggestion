@@ -44,10 +44,8 @@ const CollectionScreen = ({ navigation, route }) => {
     refetch: refetchUserCollections,
   } = useGetCollectionsByUserIdQuery(userId);
 
-  const {
-    data: collectionsWithDish,
-    refetch: refetchCollectionsWithDish,
-  } = useGetCollectionsByDishIdQuery(dishId);
+  const { data: collectionsWithDish, refetch: refetchCollectionsWithDish } =
+    useGetCollectionsByDishIdQuery(dishId);
 
   const [updateDishCollections, { isLoading: isUpdating }] =
     useUpdateDishCollectionsMutation();
@@ -145,9 +143,7 @@ const CollectionScreen = ({ navigation, route }) => {
         onPress={handleDone}
         disabled={isUpdating}
       >
-        <Text style={styles.buttonText}>
-          {isUpdating ? "Saving" : "Done"}
-        </Text>
+        <Text style={styles.buttonText}>{isUpdating ? "Saving" : "Done"}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -202,14 +198,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   doneButton: {
-    // backgroundColor: theme.colors.secondary,
-    // borderRadius: 10,
-    // alignItems: "center",
-    // padding: 12,
-    // marginVertical: 20,
-    // width: 150,
-    // alignSelf: "center",
-
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: 30,
     paddingVertical: 15,

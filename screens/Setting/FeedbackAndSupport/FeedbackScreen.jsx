@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -8,15 +8,64 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
-import { theme } from '../../../theme';
+  ActivityIndicator,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { MaterialIcons } from '@expo/vector-icons'
+import { theme } from '../../../theme'
+import { AsyncStorageService } from '../../../utils/AsynStorage'
+import { HOST } from '../../../config'
+import Toast from 'react-native-toast-message'
 
 const FeedbackScreen = ({ navigation }) => {
   const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
+    Keyboard.dismiss()
+  }
+  const [feedback, setFeedback] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleFeedback = async () => {
+    try {
+      setIsLoading(true)
+
+      const token = await AsyncStorageService.getAccessToken()
+
+      const response = await fetch(`${HOST}/feedback-apps`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: feedback,
+          type: 'feedback',
+        }),
+      })
+
+      const responseJson = await response.json()
+
+      if (responseJson.error) {
+        setError(
+          Array.isArray(responseJson.message)
+            ? responseJson.message.join('\n')
+            : responseJson.message
+        )
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Feedback Successfully',
+          text2: 'Thank you for your feedback',
+          textStyle: { fontSize: 20 },
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -44,19 +93,43 @@ const FeedbackScreen = ({ navigation }) => {
               placeholder={`Tell us what's on your mind?`}
               multiline
               style={styles.input}
+              textAlignVertical='top'
+              onChangeText={(text) => setFeedback(text)}
             />
+
+            {error ? (
+              <Text style={{ color: 'red', marginVertical: 10 }}>{error}</Text>
+            ) : null}
           </View>
 
-          <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Submit</Text>
+          <TouchableOpacity
+            onPress={handleFeedback}
+            style={[
+              styles.submitButton,
+              {
+                backgroundColor:
+                  !feedback || isLoading
+                    ? theme?.colors?.grayBackground
+                    : theme.colors.secondary,
+              },
+            ]}
+            disabled={isLoading || !feedback}
+          >
+            <Text style={styles.submitButtonText}>
+              {isLoading ? (
+                <ActivityIndicator size='small' color='white' />
+              ) : (
+                <Text>Submit</Text>
+              )}
+            </Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default FeedbackScreen;
+export default FeedbackScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -107,4 +180,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-});
+})
+

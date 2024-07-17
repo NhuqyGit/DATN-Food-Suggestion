@@ -8,6 +8,7 @@ import MyAccount from './MyAccount'
 import GeneralSetting from './GeneralSetting'
 import DietaryPreferences from './DietaryPreferences/DietaryPreferences'
 import FeedbackStack from './FeedbackAndSupport/FeedbackStack'
+import ChangePassword from './ChangePassword'
 
 const Stack = createNativeStackNavigator()
 
@@ -20,6 +21,7 @@ const Setting = () => {
     >
       <Stack.Screen name='GeneralSetting' component={GeneralSetting} />
       <Stack.Screen name='MyAccount' component={MyAccount} />
+      <Stack.Screen name='ChangePassword' component={ChangePassword} />
       <Stack.Screen name='DietaryPreferences' component={DietaryPreferences} />
       <Stack.Screen name='TermsAndPolicies' component={TermsAndPolicies} />
       <Stack.Screen name='FeedbackStack' component={FeedbackStack} />

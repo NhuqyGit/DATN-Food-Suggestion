@@ -1,56 +1,56 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { HOST } from '../../config'
-import { theme } from '../../theme'
-import { AsyncStorageService } from '../../utils/AsynStorage'
-import RecommendItem from '../RecommendItem/RecommendItem'
-import SmallRecommendItem from '../RecommendItem/SmallRecommendItem'
-import RecommendLargeSkeleton from '../../screens/Search/ViewImageScreen/RecommendLargeSkeleton'
-import RecommendSmallSkeleton from '../../screens/Search/ViewImageScreen/RecommendSmallSkeleton'
-import { useNavigation } from '@react-navigation/native'
+} from "react-native";
+import { HOST } from "../../config";
+import { theme } from "../../theme";
+import { AsyncStorageService } from "../../utils/AsynStorage";
+import RecommendItem from "../RecommendItem/RecommendItem";
+import SmallRecommendItem from "../RecommendItem/SmallRecommendItem";
+import RecommendLargeSkeleton from "../../screens/Search/ViewImageScreen/RecommendLargeSkeleton";
+import RecommendSmallSkeleton from "../../screens/Search/ViewImageScreen/RecommendSmallSkeleton";
+import { useNavigation } from "@react-navigation/native";
 
 function RecommendList() {
-  const [recommendDishes, setRecommendDishes] = useState(null)
-  const [healthyDishes, setHealthyDishes] = useState(null)
-  const [quicklyDishes, setQuicklyDishes] = useState(null)
+  const [recommendDishes, setRecommendDishes] = useState(null);
+  const [healthyDishes, setHealthyDishes] = useState(null);
+  const [quicklyDishes, setQuicklyDishes] = useState(null);
 
-  const COUNT_DIET = 2
-  const COUNT_QUICK = 3
-  const [loading, setLoading] = useState(true)
-  const [loadingHealthy, setLoadingHealthy] = useState(true)
-  const [loadingQuickly, setLoadingQuickly] = useState(true)
-  const navigation = useNavigation()
+  const COUNT_DIET = 2;
+  const COUNT_QUICK = 3;
+  const [loading, setLoading] = useState(true);
+  const [loadingHealthy, setLoadingHealthy] = useState(true);
+  const [loadingQuickly, setLoadingQuickly] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getRecommendDishes = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const token = await AsyncStorageService.getAccessToken()
         const response = await fetch(`${HOST}/dish/recommend2?page=1&limit=8`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        });
 
-        const json = await response.json()
-        setRecommendDishes(json)
+        const json = await response.json();
+        setRecommendDishes(json);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     const getHealthyDishes = async () => {
-      setLoadingHealthy(true)
+      setLoadingHealthy(true);
       try {
-        const token = await AsyncStorageService.getAccessToken()
+        const token = await AsyncStorageService.getAccessToken();
         const response = await fetch(
           `${HOST}/dish/healthy?dietCount=${COUNT_DIET}`,
           {
@@ -58,21 +58,21 @@ function RecommendList() {
               Authorization: `Bearer ${token}`,
             },
           }
-        )
+        );
 
-        const json = await response.json()
-        setHealthyDishes(json)
+        const json = await response.json();
+        setHealthyDishes(json);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       } finally {
-        setLoadingHealthy(false)
+        setLoadingHealthy(false);
       }
-    }
+    };
 
     const getQuicklyDishes = async () => {
-      setLoadingQuickly(true)
+      setLoadingQuickly(true);
       try {
-        const token = await AsyncStorageService.getAccessToken()
+        const token = await AsyncStorageService.getAccessToken();
         const response = await fetch(
           `${HOST}/dish/quickly?ingredientCount=${COUNT_QUICK}`,
           {
@@ -80,21 +80,21 @@ function RecommendList() {
               Authorization: `Bearer ${token}`,
             },
           }
-        )
+        );
 
-        const json = await response.json()
-        setQuicklyDishes(json)
+        const json = await response.json();
+        setQuicklyDishes(json);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       } finally {
-        setLoadingQuickly(false)
+        setLoadingQuickly(false);
       }
-    }
+    };
 
-    getQuicklyDishes()
-    getHealthyDishes()
-    getRecommendDishes()
-  }, [])
+    getQuicklyDishes();
+    getHealthyDishes();
+    getRecommendDishes();
+  }, []);
 
   const handleClickViewAll = (item) => {
     navigation.navigate('ViewAllRecommend', { cuisine: item })
@@ -114,7 +114,7 @@ function RecommendList() {
             handleClickViewAll({
               name: 'Your recommendations',
               dishes: recommendDishes,
-            })
+            });
           }}
         >
           <Text style={styles.viewAll}>View All</Text>
@@ -146,7 +146,7 @@ function RecommendList() {
               handleClickViewAll2({
                 name: 'Healthy recipes',
                 dishes: healthyDishes,
-              })
+              });
             }}
           >
             <Text style={styles.viewAll}>View All</Text>
@@ -177,10 +177,10 @@ function RecommendList() {
               handleClickViewAll2({
                 name: 'Quick recipes',
                 dishes: quicklyDishes,
-              })
+              });
             }}
           >
-            <Text style={styles.viewAll}>View all</Text>
+            <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
         </View>
         <ScrollView
@@ -202,33 +202,33 @@ function RecommendList() {
         </ScrollView>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     // marginTop: 16,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
 
   header: {
     marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
     paddingHorizontal: 20,
   },
 
   title: {
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 
   viewAll: {
     fontSize: 16,
     color: theme.colors.secondary,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 
   listItem: {
@@ -237,12 +237,9 @@ const styles = StyleSheet.create({
   },
 
   healthyList: {
-    backgroundColor: '#FEFFD3',
+    backgroundColor: "#FEFFD3",
     paddingBottom: 32,
     marginTop: 30,
   },
-})
-
-export default RecommendList
-
-
+});
+export default RecommendList;

@@ -19,13 +19,13 @@ import { useMessage } from './MessageContext'
 import RecordPopUp from './RecordPopUp'
 
 const ListRecordScreen = () => {
-  const { recordId, handlePatchRecordSelect, listRecord, setListRecord } =
+  const { recordId, handlePatchRecordSelect, listRecord, setListRecord, getTopics } =
     useMessage()
   const [recordSelect, setRecordSelect] = useState(null)
   const [isSelect, setIsSelect] = useState(recordId)
   // const [listRecord, setListRecord] = useState([])
   const [modalVisible, setModalVisible] = useState(false)
-
+  console.log(recordId, isSelect, "listRecord")
   const navigation = useNavigation()
 
   const recordData = [
@@ -211,6 +211,11 @@ const ListRecordScreen = () => {
         recordSelect={recordSelect}
         closePopUp={handleCloseModal}
         modalVisible={modalVisible}
+        handleFetchListRecord={handleFetchListRecord}
+        getTopics={getTopics}
+        setIsSelect={setIsSelect}
+        isSelect={isSelect}
+        recordId={recordId}
       />
     </View>
     // </SafeAreaView>
