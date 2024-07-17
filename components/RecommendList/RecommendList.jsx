@@ -31,8 +31,8 @@ function RecommendList() {
     const getRecommendDishes = async () => {
       setLoading(true);
       try {
-        const token = await AsyncStorageService.getAccessToken();
-        const response = await fetch(`${HOST}/dish/recommend`, {
+        const token = await AsyncStorageService.getAccessToken()
+        const response = await fetch(`${HOST}/dish/recommend2?page=1&limit=8`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -96,9 +96,13 @@ function RecommendList() {
     getRecommendDishes();
   }, []);
 
-  const handleClickVieAll = (item) => {
-    navigation.navigate("ExploreCuisine", { cuisine: item });
-  };
+  const handleClickViewAll = (item) => {
+    navigation.navigate('ViewAllRecommend', { cuisine: item })
+  }
+
+  const handleClickViewAll2 = (item) => {
+    navigation.navigate('ExploreCuisine', { cuisine: item })
+  }
 
   return (
     <View style={styles.container}>
@@ -107,8 +111,8 @@ function RecommendList() {
         <Text style={styles.title}>Your recommendations</Text>
         <TouchableOpacity
           onPress={() => {
-            handleClickVieAll({
-              name: "Your recommendations",
+            handleClickViewAll({
+              name: 'Your recommendations',
               dishes: recommendDishes,
             });
           }}
@@ -139,8 +143,8 @@ function RecommendList() {
           <Text style={styles.title}>Healthy recipes</Text>
           <TouchableOpacity
             onPress={() => {
-              handleClickVieAll({
-                name: "Healthy recipes",
+              handleClickViewAll2({
+                name: 'Healthy recipes',
                 dishes: healthyDishes,
               });
             }}
@@ -170,8 +174,8 @@ function RecommendList() {
           <Text style={styles.title}>Quick recipes</Text>
           <TouchableOpacity
             onPress={() => {
-              handleClickVieAll({
-                name: "Quick recipes",
+              handleClickViewAll2({
+                name: 'Quick recipes',
                 dishes: quicklyDishes,
               });
             }}
@@ -238,5 +242,4 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 });
-
 export default RecommendList;

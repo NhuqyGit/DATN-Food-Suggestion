@@ -174,7 +174,7 @@ function RecipeDetailsScreen({ route }) {
   const navigation = useNavigation();
   const { item } = route.params;
   const [selectedDishes, setSelectedDishes] = useState([]);
-
+  const [isAdding, setIsAdding] = useState(false);
   const handleSelectDish = (dishId) => {
     setSelectedDishes((prevSelected) => {
       if (prevSelected.includes(dishId)) {
@@ -186,6 +186,7 @@ function RecipeDetailsScreen({ route }) {
   };
 
   const handleAddDishes = async () => {
+    setIsAdding(true);
     const user_id = await AsyncStorage.getItem("user_id");
     const token = await AsyncStorageService.getAccessToken();
     const date = await AsyncStorage.getItem("planDate");
@@ -230,7 +231,7 @@ function RecipeDetailsScreen({ route }) {
         console.error("Error:", errorResponse);
       }
     }
-
+    setIsAdding(false);
     navigation.navigate("MainMealPlan", { addedDishes: true });
   };
 
@@ -273,7 +274,7 @@ function RecipeDetailsScreen({ route }) {
           }}
           className=" rounded-full w-2/3 h-12 mx-auto mt-4 justify-center items-center "
           onPress={handleAddDishes}
-          disabled={selectedDishes.length === 0}
+          disabled={selectedDishes.length === 0 || isAdding}
         >
           <Text className="text-white text-xl font-bold">Add to your plan</Text>
         </TouchableOpacity>

@@ -142,7 +142,7 @@ const ReviewScreen = ({ route }) => {
           />
           {!!errorRating && <Text style={{ color: "red" }}>{errorRating}</Text>}
         </View>
-
+        <View style={styles.btnSaveContainer}>
         <TouchableOpacity
           style={styles.submitButton}
           onPress={handleSubmit}
@@ -150,6 +150,7 @@ const ReviewScreen = ({ route }) => {
         >
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   rating: {
-    marginVertical: 16,
+    marginVertical: 10,
     alignItems: "flex-start",
   },
   input: {
@@ -218,13 +219,30 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   submitButton: {
+    // backgroundColor: theme.colors.secondary,
+    // padding: 12,
+    // borderRadius: 10,
+    // width: "40%",
+    // alignItems: "center",
+    // alignSelf: "center",
+    // marginBottom: 20,
     backgroundColor: theme.colors.secondary,
-    padding: 12,
-    borderRadius: 10,
-    width: "40%",
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    display: "flex",
     alignItems: "center",
-    alignSelf: "center",
-    marginBottom: 20,
+    justifyContent: "center",
+    borderRadius: 25,
+    width: "30%",
+  },
+  btnSaveContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   submitButtonText: {
     color: "#fff",
