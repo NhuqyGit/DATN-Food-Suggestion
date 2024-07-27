@@ -201,7 +201,12 @@ function ReceipeListScreen({ route, navigation }) {
         >
           <View style={styles.section}>
             {dishes?.map((item) => (
-              <RecipeCard key={item.id} item={item} callBack={onBack} navigateLocation="FoodDetail_prof"/>
+              <RecipeCard
+                key={item.id}
+                item={item}
+                callBack={onBack}
+                navigateLocation='FoodDetail'
+              />
             ))}
           </View>
         </ScrollView>

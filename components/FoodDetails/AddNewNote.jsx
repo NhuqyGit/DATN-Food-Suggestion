@@ -84,6 +84,7 @@ const AddNoteScreen = ({ navigation, route }) => {
             onChangeText={setNoteContent}
           />
         </View>
+        <View style={styles.btnSaveContainer}>
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -98,9 +99,10 @@ const AddNoteScreen = ({ navigation, route }) => {
           disabled={isCreating || isUpdating || !noteTitle || !noteContent}
         >
           <Text style={styles.buttonText}>
-            {isCreating || isUpdating ? 'Saving...' : 'Save'}
+            {isCreating || isUpdating ? 'Saving' : 'Save'}
           </Text>
         </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -136,6 +138,15 @@ const styles = StyleSheet.create({
   descriptionInput: {
     height: 150,
   },
+  btnSaveContainer: {
+    position: 'absolute',
+    bottom: 25,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   buttonText: {
     color: 'white',
     fontSize: 16,
@@ -143,14 +154,13 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: theme.colors.secondary,
-    borderRadius: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    width: '40%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    alignSelf: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 25,
+    width: "30%",
   },
   cancelButton: {
     backgroundColor: 'gray',

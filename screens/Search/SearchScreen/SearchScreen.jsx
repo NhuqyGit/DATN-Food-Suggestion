@@ -315,8 +315,8 @@ const styles = StyleSheet.create({
 
   popularWrapper: {
     // padding: 16,
-    gap: 16,
-    paddingBottom: 16,
+    gap: 5,
+   // paddingBottom: 10,
   },
 
   historyList: {
