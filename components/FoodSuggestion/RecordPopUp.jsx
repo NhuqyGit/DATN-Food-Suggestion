@@ -7,7 +7,7 @@ import axios from 'axios'
 import { AsyncStorageService } from '../../utils/AsynStorage'
 import { HOST } from '../../config'
 
-const RecordPopUp = ({recordSelect, closePopUp, modalVisible, handleFetchListRecord, getTopics, isSelect, setIsSelect, recordId}) => {
+const RecordPopUp = ({recordSelect, closePopUp, modalVisible, handleFetchListRecord, getTopics, isSelect, setIsSelect, recordId, setRecordId}) => {
     const navigation = useNavigation()
 
     const handleEdit = () => {
@@ -26,10 +26,11 @@ const RecordPopUp = ({recordSelect, closePopUp, modalVisible, handleFetchListRec
               headers,
             })
             const data = await response.data
-            console.log(data)
             handleFetchListRecord()
             getTopics()
-            setIsSelect(recordId)
+            if (recordId === recordSelect?.id)
+                setIsSelect(null)
+
         } catch (error) {
             console.error('Error delete topics:', error)
         }

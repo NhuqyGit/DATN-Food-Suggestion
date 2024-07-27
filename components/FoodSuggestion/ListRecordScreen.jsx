@@ -25,7 +25,6 @@ const ListRecordScreen = () => {
   const [isSelect, setIsSelect] = useState(recordId)
   // const [listRecord, setListRecord] = useState([])
   const [modalVisible, setModalVisible] = useState(false)
-  console.log(recordId, isSelect, "listRecord")
   const navigation = useNavigation()
 
   const recordData = [
@@ -111,9 +110,9 @@ const ListRecordScreen = () => {
         headers,
       })
       const data = await response.json()
-      if (data.length > 0) {
-        setListRecord(data)
-      }
+      // if (data.length > 0) {
+      setListRecord(data)
+      // }
     } catch (error) {
       console.error('Error fetching data record:', error)
     }

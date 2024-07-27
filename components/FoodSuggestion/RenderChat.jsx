@@ -150,7 +150,7 @@ const RenderChat = ({ props }) => {
           {/* <Feather name='slack' size={20} color={theme.colors.dark} /> */}
         </View>
         <View style={styles.responseChat}>
-          <Text style={styles.nameText}>Nhuqy</Text>
+          <Text style={styles.nameText}>IntelliTaste</Text>
           {isError ? (
             <Text>Error</Text>
           ) : (
@@ -263,8 +263,6 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 100,
-    // borderWidth: 1,
-    // borderColor: '#5360ac',
   },
   sendContainer: {
     display: 'flex',
