@@ -454,6 +454,7 @@ export const MessageProvider = ({
         extractQuery,
         fetchRecipeImage,
         getTopics,
+        setRecordId
       }}
     >
       {children}
