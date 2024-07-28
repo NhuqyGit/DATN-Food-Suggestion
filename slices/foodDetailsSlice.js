@@ -23,10 +23,16 @@ export const foodDetailsSlice = createApi({
     }),
     getRelatedDish: builder.query({
       query: (dishId) => `/dish/related/${dishId}`
-    })
+    }),
+    getRecommendedDish: builder.query({
+      query: ({ page = 1, limit = 10 }) => ({
+        url: '/dish/recommend2',
+        params: { page, limit },
+      }),
+    }),
   }),
 });
 
-export const { useGetAllFoodDetailsQuery, useGetRelatedDishQuery } = foodDetailsSlice;
+export const { useGetAllFoodDetailsQuery, useGetRelatedDishQuery, useGetRecommendedDishQuery } = foodDetailsSlice;
 
 export default foodDetailsSlice;
