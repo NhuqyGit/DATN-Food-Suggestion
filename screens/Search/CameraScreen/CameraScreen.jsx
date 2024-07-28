@@ -29,7 +29,9 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
       try {
         const picture = await cameraRef.current.takePictureAsync()
         setImage(picture.uri)
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
@@ -39,11 +41,17 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
         await MediaLibrary.createAssetAsync(image)
         alert('Image saved to library')
         setImage(null)
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
-  if (!hasPermission) {
+  if (hasPermission === null) {
+    return <Text>Requesting camera permission...</Text>
+  }
+
+  if (hasPermission === false) {
     return <Text>No access to camera</Text>
   }
 
@@ -229,4 +237,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 })
-
