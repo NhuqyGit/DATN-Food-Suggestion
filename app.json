@@ -27,7 +27,7 @@
       ],
       "package": "com.anonymous.client",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/favicon.png"
