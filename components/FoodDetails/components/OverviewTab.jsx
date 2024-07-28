@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { theme } from '../../../theme/index'
 import { setCollectionButtonText } from '../../../slices/modalSlice'
-import { useGetRelatedDishQuery } from '../../../slices/foodDetailsSlice'
+import { useGetRelatedDishQuery, useGetRecommendedDishQuery } from '../../../slices/foodDetailsSlice'
 import SmallRecommendItem from '../../RecommendItem/SmallRecommendItem'
 import RecommendSmallSkeleton from '../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton'
 import {
@@ -76,7 +76,13 @@ function OverviewTab({ foodDetails, navigation }) {
     data: relatedDishs,
     isLoading: relatedLoading,
     isError: relatedError,
-  } = useGetRelatedDishQuery(foodDetails?.id)
+  } = useGetRelatedDishQuery(foodDetails?.id) 
+  
+  const {
+    data: recommendDishs,
+    isLoading: recommendLoading,
+    isError: recommendError,
+  } = useGetRecommendedDishQuery({ page: 1, limit: 10 });
 
   const cancelReporting = () => {
     setReporting(false)
@@ -261,6 +267,26 @@ function OverviewTab({ foodDetails, navigation }) {
                 ) : (
                   <>
                     {relatedDishs.map((item) => (
+                      <SmallRecommendItem key={item.id} item={item} />
+                    ))}
+                  </>
+                )}
+              </ScrollView>
+            </>
+          )}
+          {recommendDishs && recommendDishs.length > 0 && (
+            <>
+              <Text style={styles.relatedTxt}>Your recommendations</Text>
+              <ScrollView
+                style={styles.listItem}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {recommendLoading || recommendError ? (
+                  <RecommendSmallSkeleton total={5} />
+                ) : (
+                  <>
+                    {recommendDishs.map((item) => (
                       <SmallRecommendItem key={item.id} item={item} />
                     ))}
                   </>
