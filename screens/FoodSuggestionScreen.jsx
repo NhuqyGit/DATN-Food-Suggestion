@@ -14,7 +14,12 @@ import {
 } from '@react-navigation/drawer'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
-import { MaterialCommunityIcons, Ionicons, Entypo, Feather } from '@expo/vector-icons'
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  Entypo,
+  Feather,
+} from '@expo/vector-icons'
 import FoodSuggesionStack from './FoodSuggestion/FoodSuggesionStack'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { theme } from '../theme/index'
@@ -424,7 +429,10 @@ const FoodSuggestion = () => {
     <Drawer.Navigator
       drawerContent={(props) => {
         return (
-          <SafeAreaView style={{ flex: 1, position: 'relative' }}>
+          <SafeAreaView
+            style={{ flex: 1, position: 'relative' }}
+            edges={['right', 'left', 'top']}
+          >
             <View
               style={{
                 justifyContent: 'center',
@@ -444,12 +452,22 @@ const FoodSuggestion = () => {
                 onPress={handleNewSuggestion}
               >
                 <View style={styles.avatarGPT}>
-                  <Image style={styles.imageAI} source={require("../assets/images/suggestion/AI.png")} />
+                  <Image
+                    style={styles.imageAI}
+                    source={require('../assets/images/suggestion/AI.png')}
+                  />
                   {/* <Feather name='slack' size={20} color={theme.colors.dark} /> */}
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}
+                >
                   <Text style={{ fontWeight: 'bold' }}>New suggestion</Text>
-                  <Ionicons name='create-outline' size={22} color={"black"} />
+                  <Ionicons name='create-outline' size={22} color={'black'} />
                 </View>
               </TouchableOpacity>
             </View>
@@ -533,7 +551,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: theme.colors.lightGray,
-    backgroundColor: "#e6ecff",
+    backgroundColor: '#e6ecff',
   },
   imageAI: {
     width: 32,

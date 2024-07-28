@@ -146,11 +146,14 @@ const ViewImageScreen = ({ navigation, route }) => {
   }, [image])
 
   useEffect(() => {
-    setOptions(resultS?.concepts ?? [])
+    if (resultS?.concepts && resultS?.concepts?.length > 0) {
+      const options = resultS?.concepts?.filter((item) => item?.value > 0.01)
+      setOptions(options ?? [])
+    }
   }, [resultS])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['right', 'left', 'top']}>
       <Button
         style={styles.button}
         onPress={() => navigation.goBack()}

@@ -515,7 +515,10 @@ function CreateRecipe() {
   )
 
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.secondary, flex: 1 }}>
+    <SafeAreaView
+      style={{ backgroundColor: theme.colors.secondary, flex: 1 }}
+      edges={['right', 'left', 'top']}
+    >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         keyboardVerticalOffset={-100}

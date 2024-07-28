@@ -45,7 +45,10 @@ function GeneralSetting({ navigation }) {
   })
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white' }}
+      edges={['right', 'left', 'top']}
+    >
       <View style={styles.container}>
         <View>
           <TouchableOpacity

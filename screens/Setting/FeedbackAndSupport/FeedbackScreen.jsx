@@ -72,6 +72,7 @@ const FeedbackScreen = ({ navigation }) => {
         backgroundColor: 'white',
         flex: 1,
       }}
+      edges={['right', 'left', 'top']}
     >
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>

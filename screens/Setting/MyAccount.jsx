@@ -17,7 +17,10 @@ const MyAccount = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white' }}
+      edges={['right', 'left', 'top']}
+    >
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.btnBack}

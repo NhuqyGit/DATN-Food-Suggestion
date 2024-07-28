@@ -16,6 +16,7 @@ const FAQTopic = ({ navigation, title }) => {
         backgroundColor: 'white',
         flex: 1,
       }}
+      edges={['right', 'left', 'top']}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>

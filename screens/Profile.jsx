@@ -79,8 +79,7 @@ function Profile({ navigation }) {
         }
       } catch (error) {
         console.error(error)
-      }
-      finally{
+      } finally {
         setFetchCollection(false)
       }
     }
@@ -112,11 +111,14 @@ function Profile({ navigation }) {
     }
   }
   let listCollection
-  if(!fetchCollection)
-  {
+  if (!fetchCollection) {
     listCollection = collections?.map((col, index) => {
       return (
-        <Collection props={col} navigation={navigation} key={index.toString()} />
+        <Collection
+          props={col}
+          navigation={navigation}
+          key={index.toString()}
+        />
       )
     })
   }
@@ -141,7 +143,10 @@ function Profile({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white' }}
+      edges={['right', 'left', 'top']}
+    >
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {

@@ -116,6 +116,7 @@ function EditProfile({ navigation }) {
         backgroundColor: COLORS.white,
         paddingHorizontal: 22,
       }}
+      edges={['right', 'left', 'top']}
     >
       <View
         style={{

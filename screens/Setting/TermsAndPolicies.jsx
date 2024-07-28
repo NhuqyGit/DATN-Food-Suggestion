@@ -16,6 +16,7 @@ const TermsAndPolicies = ({ navigation }) => {
         backgroundColor: 'white',
         flex: 1,
       }}
+      edges={['right', 'left', 'top']}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>

@@ -92,7 +92,10 @@ function SignUpScreen() {
   }
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white', flex: 1 }}
+      edges={['right', 'left', 'top']}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: 20 }}>
           <BackButton />

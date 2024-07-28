@@ -162,7 +162,7 @@ const SearchScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['right', 'left', 'top']}>
       <ScrollView style={styles.wrapper} scrollEnabled vertical>
         <SearchHeader
           navigation={navigation}
@@ -270,7 +270,7 @@ const SearchScreen = ({ navigation, route }) => {
                 )}
               </View>
               <View style={styles.popularWrapper}>
-                <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
+                <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
                   <Text style={styles.title}>Latest dish</Text>
                   {loadingDish ? (
                     <View
@@ -305,7 +305,7 @@ const SearchScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
 
   wrapper: {
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   popularWrapper: {
     // padding: 16,
     gap: 5,
-   // paddingBottom: 10,
+    // paddingBottom: 10,
   },
 
   historyList: {
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     // gap: 8,
     display: 'flex',
     gap: 20,
-   // width: '90%',
+    // width: '90%',
   },
 
   titleContainer: {
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   },
 
   padding: {
-    padding: 16
+    padding: 16,
   },
 
   seeMoreButton: {
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
 
   seeMoreText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
     color: `${theme.colors.secondary}`,
   },
 })

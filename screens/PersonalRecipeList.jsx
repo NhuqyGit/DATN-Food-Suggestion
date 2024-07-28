@@ -78,12 +78,10 @@ function PersonalReceipeList({ route, navigation }) {
   const collectionID = route.params.id
   const collectionName = route.params.name
 
-  useEffect(()=>{
-    const fetch = async()=>{
-
-    }
+  useEffect(() => {
+    const fetch = async () => {}
     fetch()
-  },[])
+  }, [])
   // get data
   data = [
     { id: 0, name: 'a', date: '12/54/8' },
@@ -108,7 +106,10 @@ function PersonalReceipeList({ route, navigation }) {
 
   return (
     <MenuProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: 'white' }}
+        edges={['right', 'left', 'top']}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -154,3 +155,4 @@ function PersonalReceipeList({ route, navigation }) {
 }
 
 export default PersonalReceipeList
+

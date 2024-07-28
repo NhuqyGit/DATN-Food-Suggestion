@@ -27,7 +27,7 @@ function SettingsItem({ item }) {
         style={{
           marginLeft: 36,
           ...FONTS.semiBold,
-          fontWeight: "600",
+          fontWeight: '600',
           fontSize: 16,
           color: item.color,
         }}
@@ -239,7 +239,10 @@ function Settings({ navigation }) {
     //   </ScrollView>
     // </SafeAreaView>
 
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white' }}
+      edges={['right', 'left', 'top']}
+    >
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.btnBack}

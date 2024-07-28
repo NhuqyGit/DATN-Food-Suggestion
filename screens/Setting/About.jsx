@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
-import RenderHtml from 'react-native-render-html';
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { MaterialIcons } from '@expo/vector-icons'
+import RenderHtml from 'react-native-render-html'
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width
 
 const About = ({ navigation }) => {
-  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState(null)
   const topics = [
     {
       id: 1,
@@ -100,7 +100,7 @@ const About = ({ navigation }) => {
         <h3>10. Contact Us</h3>
         <p>If you have any questions about this Notice, please contact us at phanthihuunien@gmail.com</p>
       `,
-    },    
+    },
     {
       id: 3,
       title: 'Copyright Policy',
@@ -125,7 +125,7 @@ const About = ({ navigation }) => {
         <h3>5. Contact Us</h3>
         <p>If you have any questions about this Copyright Policy, please contact us at phanthihuunien@gmail.com</p>
       `,
-    },    
+    },
     {
       id: 4,
       title: 'Do Not Sell My Personal Information',
@@ -141,15 +141,18 @@ const About = ({ navigation }) => {
         <h3>4. Contact Us</h3>
         <p>If you have any questions about opting out of the sale of your personal information, please contact us at phanthihuunien@gmail.com</p>
       `,
-    },    
-  ];
+    },
+  ]
 
   const handleTopicPress = (id) => {
-    setSelectedTopic(selectedTopic === id ? null : id);
-  };
+    setSelectedTopic(selectedTopic === id ? null : id)
+  }
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white', flex: 1 }}
+      edges={['right', 'left', 'top']}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <TouchableOpacity
@@ -162,7 +165,12 @@ const About = ({ navigation }) => {
           <Text style={styles.head}>About IntelliTaste</Text>
 
           <Text style={styles.content}>
-            IntelliTaste was launched in 2024 by students of HCMUS on a mission to invent the ultimate kitchen tool. Whether it's finding a recipe or going to the store, IntelliTaste wants to make it easier for foodies to do what they love - cook, eat, and share!. IntelliTaste's mission is to be the world's largest, most powerful and most helpful food site in the world.
+            IntelliTaste was launched in 2024 by students of HCMUS on a mission
+            to invent the ultimate kitchen tool. Whether it's finding a recipe
+            or going to the store, IntelliTaste wants to make it easier for
+            foodies to do what they love - cook, eat, and share!. IntelliTaste's
+            mission is to be the world's largest, most powerful and most helpful
+            food site in the world.
           </Text>
 
           {topics.map((topic) => (
@@ -192,10 +200,10 @@ const About = ({ navigation }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default About;
+export default About
 
 const styles = StyleSheet.create({
   container: {
@@ -239,4 +247,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingLeft: 10,
   },
-});
+})
+

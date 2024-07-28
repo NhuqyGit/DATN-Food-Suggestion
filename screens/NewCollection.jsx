@@ -61,7 +61,10 @@ const NewCollection = () => {
     Keyboard.dismiss()
   }
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView
+      style={{ backgroundColor: 'white' }}
+      edges={['right', 'left', 'top']}
+    >
       <StatusBar backgroundColor='black' barStyle='dark-content' />
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>

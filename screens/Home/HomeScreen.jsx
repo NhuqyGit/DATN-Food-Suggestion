@@ -19,7 +19,10 @@ const HomeScreen = () => {
   })
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#c4e0e3' }}>
+    <SafeAreaView
+      style={{ backgroundColor: '#c4e0e3' }}
+      edges={['right', 'left', 'top']}
+    >
       <ScrollView
         style={styles.container}
         showsVerticalScrollIndicator={false}

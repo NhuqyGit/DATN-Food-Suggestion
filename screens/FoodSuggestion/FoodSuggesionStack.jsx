@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ListRecordScreen from "../../components/FoodSuggestion/ListRecordScreen";
-import FoodSuggestionScreen from "./FoodSuggestionScreen";
-import RecordDetail from "../../components/FoodSuggestion/RecordDetail";
-import { useIsFocused } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "../../theme/index";
-import { MessageProvider } from "../../components/FoodSuggestion/MessageContext";
-import FoodDetailsScreen from "../../components/FoodDetails/FoodDetails";
+import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import ListRecordScreen from '../../components/FoodSuggestion/ListRecordScreen'
+import FoodSuggestionScreen from './FoodSuggestionScreen'
+import RecordDetail from '../../components/FoodSuggestion/RecordDetail'
+import { useIsFocused } from '@react-navigation/native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { theme } from '../../theme/index'
+import { MessageProvider } from '../../components/FoodSuggestion/MessageContext'
+import FoodDetailsScreen from '../../components/FoodDetails/FoodDetails'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const FoodSuggesionStack = ({
   focusedItem,
@@ -31,13 +31,14 @@ const FoodSuggesionStack = ({
     >
       <SafeAreaView
         style={{ flex: 1, backgroundColor: theme.colors.lightGreen }}
+        edges={['right', 'left', 'top']}
       >
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
           }}
         >
-          <Stack.Screen name="FoodSuggestionMain">
+          <Stack.Screen name='FoodSuggestionMain'>
             {(props) => (
               <FoodSuggestionScreen
                 {...props}
@@ -50,30 +51,31 @@ const FoodSuggesionStack = ({
 
           <Stack.Screen
             options={{
-              animation: "slide_from_bottom",
+              animation: 'slide_from_bottom',
             }}
-            name="ListRecords"
+            name='ListRecords'
             component={ListRecordScreen}
           />
           <Stack.Screen
             options={{
-              animation: "slide_from_right",
+              animation: 'slide_from_right',
             }}
             // listeners={{
             //     beforeRemove: () => {
             //         setAllowDrawer(true);
             //     }
             // }}
-            name="RecordDetail"
+            name='RecordDetail'
             component={RecordDetail}
           />
-           <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
+          <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
         </Stack.Navigator>
       </SafeAreaView>
     </MessageProvider>
-  );
-};
+  )
+}
 
-export default FoodSuggesionStack;
+export default FoodSuggesionStack
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})
+

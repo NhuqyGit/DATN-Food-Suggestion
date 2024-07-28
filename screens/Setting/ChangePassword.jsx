@@ -100,7 +100,7 @@ function ChangePassword() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={['right', 'left', 'top']}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
         <View style={styles.container}>
           <BackButton />

@@ -4,6 +4,7 @@ import * as MediaLibrary from 'expo-media-library'
 import { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Button from '../../../components/Button/Button'
+import { useIsFocused } from '@react-navigation/native'
 
 const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
   const [hasPermission, setHasPermission] = useState(null)
@@ -11,6 +12,7 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
   const [type, setType] = useState(Camera.Constants.Type.back)
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
   const cameraRef = useRef(null)
+  const isFocused = useIsFocused()
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -47,81 +49,90 @@ const CameraScreen = ({ navigation, route, setVisible, setStep }) => {
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={styles.camera}
-        type={type}
-        flashMode={flash}
-        ref={cameraRef}
-      >
-        <View
-          style={{
-            backgroundColor: '#000',
-          }}
+      {isFocused && (
+        <Camera
+          style={styles.camera}
+          type={type}
+          flashMode={flash}
+          autoFocus
+          ref={cameraRef}
         >
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 12,
-              marginTop: 10,
+              backgroundColor: '#000',
             }}
           >
-            {!image && (
-              <Button
-                onPress={() => setVisible(false)}
-                childrenIcon={
-                  <MaterialIcons
-                    name='keyboard-arrow-left'
-                    size={32}
-                    color='white'
-                  />
-                }
-              />
-            )}
-            {image && (
-              <Button icon={'close'} size={26} onPress={() => setImage(null)} />
-            )}
-
             <View
               style={{
                 flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: 12,
+                marginTop: 10,
               }}
             >
-              <Button
-                onPress={() =>
-                  setType(
-                    type === CameraType.back
-                      ? CameraType.front
-                      : CameraType.back
-                  )
-                }
-                childrenIcon={
-                  <MaterialIcons
-                    name='flip-camera-ios'
-                    size={24}
-                    color='#fff'
-                  />
-                }
-              />
-              {flash === Camera.Constants.FlashMode.off ? (
+              {!image && (
                 <Button
-                  color={'#f1f1f1'}
+                  onPress={() => setVisible(false)}
                   childrenIcon={
-                    <Ionicons name='flash-off' size={20} color='#fff' />
+                    <MaterialIcons
+                      name='keyboard-arrow-left'
+                      size={32}
+                      color='white'
+                    />
                   }
-                  onPress={() => setFlash(Camera.Constants.FlashMode.on)}
-                />
-              ) : (
-                <Button
-                  childrenIcon={<Entypo name='flash' size={20} color='#fff' />}
-                  onPress={() => setFlash(Camera.Constants.FlashMode.off)}
                 />
               )}
+              {image && (
+                <Button
+                  icon={'close'}
+                  size={26}
+                  onPress={() => setImage(null)}
+                />
+              )}
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}
+              >
+                <Button
+                  onPress={() =>
+                    setType(
+                      type === CameraType.back
+                        ? CameraType.front
+                        : CameraType.back
+                    )
+                  }
+                  childrenIcon={
+                    <MaterialIcons
+                      name='flip-camera-ios'
+                      size={24}
+                      color='#fff'
+                    />
+                  }
+                />
+                {flash === Camera.Constants.FlashMode.off ? (
+                  <Button
+                    color={'#f1f1f1'}
+                    childrenIcon={
+                      <Ionicons name='flash-off' size={20} color='#fff' />
+                    }
+                    onPress={() => setFlash(Camera.Constants.FlashMode.on)}
+                  />
+                ) : (
+                  <Button
+                    childrenIcon={
+                      <Entypo name='flash' size={20} color='#fff' />
+                    }
+                    onPress={() => setFlash(Camera.Constants.FlashMode.off)}
+                  />
+                )}
+              </View>
             </View>
           </View>
-        </View>
-      </Camera>
+        </Camera>
+      )}
 
       <View
         style={{
