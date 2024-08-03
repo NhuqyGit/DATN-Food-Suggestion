@@ -51,6 +51,8 @@ const SearchScreen = ({ navigation, route }) => {
   const cookingTime = useSelector(selectCookingTime)
   const ingredientNames = useSelector(selectIngredientNames)
 
+  const LIMIT = 5
+
   useEffect(() => {
     const getIngredients = async () => {
       setLoading(true)
@@ -122,9 +124,9 @@ const SearchScreen = ({ navigation, route }) => {
       if (ingredientNames && ingredientNames.length > 0) {
         ingredientNames.forEach((name) => {
           if (searchText) {
-            query += '&ingredientNames=' + name
+            query += `&limit=${LIMIT}&ingredientNames=` + name
           } else {
-            query += 'ingredientNames=' + name + '&'
+            query += `limit=${LIMIT}&ingredientNames=` + name + '&'
           }
         })
       }
