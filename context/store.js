@@ -11,6 +11,7 @@ import UserLoginReducer from '../slices/userLoginSlice'
 import mealPlanSlice from '../slices/mealPlanSlice'
 import reportApi from '../slices/reportSlice'
 import searchSlice from '../slices/searchSlice'
+import reportReviewApi from '../slices/reportReviewSlice'
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export const store = configureStore({
     [reviewApi.reducerPath]: reviewApi.reducer,
     [mealPlanSlice.reducerPath]: mealPlanSlice.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
+    [reportReviewApi.reducerPath]: reportReviewApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -34,7 +36,8 @@ export const store = configureStore({
       noteApi.middleware,
       reviewApi.middleware,
       mealPlanSlice.middleware,
-      reportApi.middleware
+      reportApi.middleware,
+      reportReviewApi.middleware
     ),
 })
 

@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { theme } from '../../../theme/index'
 import Toast from 'react-native-toast-message'
+import { useCreateReportMutation } from '../../../slices/reportSlice'
+import { useCreateReportReviewMutation } from '../../../slices/reportReviewSlice'
 
 const reportReasons = [
   'Inappropriate Content',
@@ -30,6 +32,7 @@ const reportReasons = [
 const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
   const [selectedReason, setSelectedReason] = useState(null)
   const [otherReason, setOtherReason] = useState('')
+  const [createReportReview] = useCreateReportReviewMutation()
 
   const toggleReason = (reason) => {
     setSelectedReason(reason === selectedReason ? null : reason)
@@ -45,36 +48,26 @@ const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
       })
       return
     }
-    // if (existingReport && existingReport?.length > 0) {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Report Error',
-    //     text2: 'You have already reported this dish.',
-    //     textStyle: { fontSize: 20 },
-    //   })
-    //   cancelReporting()
-    //   return
-    // }
-    // const content =
-    //   selectedReason === 'Others'
-    //     ? `${selectedReason}: ${otherReason}`
-    //     : selectedReason
-    // const response = await createReport({
-    //   userId: parseInt(userId),
-    //   dishId: parseInt(foodDetails?.id),
-    //   content,
-    // })
 
-    // if (response.data?.userId) {
-    //   Toast.show({
-    //     type: 'success',
-    //     text1: 'Report Submitted',
-    //     text2: 'Report issued successfully.',
-    //     textStyle: { fontSize: 20 },
-    //   })
-    // }
+    const reason =
+      selectedReason === 'Others'
+        ? `${selectedReason}: ${otherReason}`
+        : selectedReason
+    const response = await createReportReview({
+      reviewId: parseInt(reviewId),
+      reason,
+    })
 
-    // cancelReporting()
+    if (response.data?.id) {
+      Toast.show({
+        type: 'success',
+        text1: 'Report Submitted',
+        text2: 'Report issued successfully.',
+        textStyle: { fontSize: 20 },
+      })
+    }
+
+    cancelReporting()
   }
 
   return (
