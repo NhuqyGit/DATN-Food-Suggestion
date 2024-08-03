@@ -40,8 +40,6 @@ function FoodDetailsScreen({ navigation, route }) {
   const [addDishToCollections] = useAddDishToCollectionsMutation()
   const [modalVisible, setModalVisible] = useState(false)
 
-  console.log('foodDetails', foodDetails)
-
   useEffect(() => {
     const fetchUserId = async () => {
       try {

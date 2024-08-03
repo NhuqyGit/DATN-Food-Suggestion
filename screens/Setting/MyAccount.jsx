@@ -39,7 +39,7 @@ const MyAccount = ({ navigation }) => {
                 source={
                   userInfo?.imgUrl
                     ? { uri: userInfo.imgUrl }
-                    : require('../../assets/images/Profile/avatarTest.jpg')
+                    : require('../../assets/images/Profile/user.png')
                 }
               />
             </View>

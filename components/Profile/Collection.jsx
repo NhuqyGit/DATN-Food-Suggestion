@@ -46,7 +46,6 @@ const Collection = ({ props, navigation, isProtected = false }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log('hihi')
         navigation.navigate('List', {
           id: props.id,
           name: props.collectionName,
@@ -99,3 +98,4 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 })
+
