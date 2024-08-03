@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -8,62 +8,62 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-} from "react-native";
-import { Rating } from "react-native-ratings";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { theme } from "../../theme";
+} from 'react-native'
+import { Rating } from 'react-native-ratings'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { theme } from '../../theme'
 import {
   useCreateReviewMutation,
   useUpdateReviewMutation,
-} from "../../slices/reviewSlice";
-import { useGetUserByIdQuery } from "../../slices/userInfoSlice";
-import SkeletonFoodDetails from "./components/SkeletonFoodDetails"
+} from '../../slices/reviewSlice'
+import { useGetUserByIdQuery } from '../../slices/userInfoSlice'
+import SkeletonFoodDetails from './components/SkeletonFoodDetails'
 const ReviewScreen = ({ route }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
-  const { dishId, dishInfo, review } = route.params || {};
-  const [userId, setUserId] = useState(null);
-  const [createReview, { isLoading: isCreating }] = useCreateReviewMutation();
-  const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
-  const [rating, setRating] = useState(review ? review.rating : 1);
-  const [reviewContent, setReview] = useState(review ? review.content : "");
-  const [errorRating, setErrorRating] = useState("");
+    Keyboard.dismiss()
+  }
+  const { dishId, dishInfo, review } = route.params || {}
+  const [userId, setUserId] = useState(null)
+  const [createReview, { isLoading: isCreating }] = useCreateReviewMutation()
+  const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation()
+  const [rating, setRating] = useState(review ? review.rating : 5)
+  const [reviewContent, setReview] = useState(review ? review.content : '')
+  const [errorRating, setErrorRating] = useState('')
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem("user_id");
+        const storedUserId = await AsyncStorage.getItem('user_id')
         if (storedUserId) {
-          setUserId(storedUserId);
+          setUserId(storedUserId)
         }
       } catch (error) {
-        console.error("Failed to fetch userId from AsyncStorage:", error);
+        console.error('Failed to fetch userId from AsyncStorage:', error)
       }
-    };
+    }
 
-    fetchUserId();
-  }, []);
+    fetchUserId()
+  }, [])
 
   const {
     data: userInf,
     error: userErr,
     isLoading: userLoading,
-  } = useGetUserByIdQuery(userId);
+  } = useGetUserByIdQuery(userId)
 
   const handleCancel = () => {
-    navigation.goBack();
-  };
+    navigation.goBack()
+  }
 
   const handleSubmit = async () => {
     try {
-      if (reviewContent === "") {
-        setErrorRating("* Review required");
+      if (reviewContent === '') {
+        setErrorRating('* Review required')
       } else {
-        setErrorRating("");
+        setErrorRating('')
         if (review) {
           await updateReview({
             id: review.id,
@@ -71,25 +71,25 @@ const ReviewScreen = ({ route }) => {
             userId: parseInt(userId),
             content: reviewContent,
             rating: parseInt(rating),
-          }).unwrap();
+          }).unwrap()
         } else {
           await createReview({
             dishId: parseInt(dishId),
             userId: parseInt(userId),
             content: reviewContent,
             rating: parseInt(rating),
-          }).unwrap();
+          }).unwrap()
         }
-        setRating(1);
-        setReview("");
-        navigation.goBack();
+        setRating(1)
+        setReview('')
+        navigation.goBack()
       }
     } catch (error) {
-      console.error("Failed to submit review:", error);
+      console.error('Failed to submit review:', error)
     }
-  };
+  }
 
-  if (userLoading || userErr) return <SkeletonFoodDetails/>;
+  if (userLoading || userErr) return <SkeletonFoodDetails />
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -98,11 +98,11 @@ const ReviewScreen = ({ route }) => {
           <View style={styles.header}>
             <Text style={styles.dishInfo}>{dishInfo}</Text>
             <TouchableOpacity onPress={handleCancel} style={styles.closeButton}>
-              <Ionicons name="close-circle-outline" size={30} color="gray" />
+              <Ionicons name='close-circle-outline' size={30} color='gray' />
             </TouchableOpacity>
           </View>
           <Text style={styles.subtitle}>
-            {review ? "Edit Review" : "Leave a review"}
+            {review ? 'Edit Review' : 'Leave a review'}
           </Text>
 
           <View style={styles.divider} />
@@ -134,56 +134,56 @@ const ReviewScreen = ({ route }) => {
           />
           <TextInput
             style={styles.input}
-            placeholder="Leave your feedback and share your culinary tips!"
+            placeholder='Leave your feedback and share your culinary tips!'
             multiline
             numberOfLines={4}
             onChangeText={setReview}
             value={reviewContent}
           />
-          {!!errorRating && <Text style={{ color: "red" }}>{errorRating}</Text>}
+          {!!errorRating && <Text style={{ color: 'red' }}>{errorRating}</Text>}
         </View>
         <View style={styles.btnSaveContainer}>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isCreating || isUpdating}
-        >
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isCreating || isUpdating}
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     paddingTop: 50,
-    backgroundColor: "#fff",
-    justifyContent: "space-between",
+    backgroundColor: '#fff',
+    justifyContent: 'space-between',
   },
   content: {
     flex: 1,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 16,
   },
   dishInfo: {
     fontSize: 18,
-    fontWeight: "semibold",
+    fontWeight: 'semibold',
     flex: 1,
   },
   closeButton: {
     marginLeft: 8,
   },
   userInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   avatar: {
     width: 40,
@@ -195,28 +195,28 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   posting: {
     fontSize: 14,
-    color: "grey",
+    color: 'grey',
   },
   subtitle: {
     fontSize: 22,
     marginBottom: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   rating: {
     marginVertical: 10,
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderRadius: 8,
     padding: 8,
     marginBottom: 16,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
   },
   submitButton: {
     // backgroundColor: theme.colors.secondary,
@@ -229,11 +229,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: 30,
     paddingVertical: 15,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 25,
-    width: "30%",
+    width: '30%',
   },
   btnSaveContainer: {
     position: 'absolute',
@@ -245,21 +245,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
   divider: {
-    borderBottomColor: "#ddd",
+    borderBottomColor: '#ddd',
     borderBottomWidth: 1,
     marginVertical: 16,
   },
   avatarContainer: {
-    backgroundColor: "lightgray",
+    backgroundColor: 'lightgray',
     width: 40,
     height: 40,
     borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   userImage: {
@@ -271,6 +271,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 16,
   },
-});
+})
 
-export default ReviewScreen;
+export default ReviewScreen
+
