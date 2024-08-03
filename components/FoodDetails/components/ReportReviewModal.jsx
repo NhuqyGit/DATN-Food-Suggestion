@@ -58,6 +58,15 @@ const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
       reason,
     })
 
+    if (response.error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Report Error',
+        text2: 'You have already reported this review.',
+        textStyle: { fontSize: 20 },
+      })
+      return
+    }
     if (response.data?.id) {
       Toast.show({
         type: 'success',
@@ -68,6 +77,8 @@ const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
     }
 
     cancelReporting()
+    setOtherReason('')
+    setSelectedReason(undefined)
   }
 
   return (
