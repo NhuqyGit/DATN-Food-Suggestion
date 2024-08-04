@@ -229,9 +229,8 @@ const EditSchedule = () => {
           navigation.navigate("MainMealPlan");
           const mpRes = await res.json();
 
-          if(!mpRes.result) return
           //result: { deletedMealplanDishes, newMealplanDishes },
-
+          console.log(mpRes.result)
           const deletedMealplanDishes = mpRes.result.deletedMealplanDishes;
           // type [id1, id2,...]
 
@@ -249,7 +248,7 @@ const EditSchedule = () => {
               id: String(mpDish.id),
               title: "Mealplan reminder",
               body: "Don't forget your " + name,
-              date: mpDish.planDate,
+              date: new Date(mpDish.planDate),
             });
           }
 
