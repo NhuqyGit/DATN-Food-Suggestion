@@ -27,6 +27,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "antd": "^5.12.2",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.12",
     "deprecated-react-native-prop-types": "^5.0.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.29.1",

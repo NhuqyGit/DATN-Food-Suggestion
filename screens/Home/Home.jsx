@@ -10,6 +10,7 @@ import ReviewScreen from '../../components/FoodDetails/ReviewScreen'
 import MealPlan from '../MealPlan'
 import ExploreCuisine from '../../components/CategoryList/ExploreCuisine'
 import ViewAllRecommend from '../../components/CategoryList/ViewAllRecommend'
+import ViewAllEvent from '../../components/CategoryList/ViewAllEvent'
 const Stack = createNativeStackNavigator()
 function Home() {
   return (
@@ -21,12 +22,13 @@ function Home() {
       <Stack.Screen name='HomeScreen' component={HomeScreen} />
       <Stack.Screen name='ExploreCategories' component={ExploreCategories} />
       <Stack.Screen name='ViewAllRecommend' component={ViewAllRecommend} />
+      <Stack.Screen name='ViewAllEvent' component={ViewAllEvent} />
       <Stack.Screen name='ExploreCuisine' component={ExploreCuisine} />
       <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
-      <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
-      <Stack.Screen name="AddNewNote" component={AddNewNote} />
-      <Stack.Screen name="CollectionScreen" component={CollectionScreen} />
-      <Stack.Screen name="AddNewCollection" component={AddNewCollection} />
+      <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
+      <Stack.Screen name='AddNewNote' component={AddNewNote} />
+      <Stack.Screen name='CollectionScreen' component={CollectionScreen} />
+      <Stack.Screen name='AddNewCollection' component={AddNewCollection} />
       <Stack.Screen name='MealPlan' component={MealPlan} />
     </Stack.Navigator>
   )
