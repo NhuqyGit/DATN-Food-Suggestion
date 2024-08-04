@@ -11,6 +11,8 @@ import { AsyncStorageService } from "../../../utils/AsynStorage";
 import { HOST } from "../../../config";
 import moment from "moment";
 import Toast from "react-native-toast-message";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import SchedulerService from "../../../local-pushNotification.service";
 
 export default function ListDishItem({
   id,
@@ -24,10 +26,18 @@ export default function ListDishItem({
   onSelectItem,
   formattedPlanDate,
   hasRepeat = true,
+  mealplanDishId,
+  planDate = null,
 }) {
   const navigation = useNavigation();
   const [isPlus, setisPlus] = useState(isSelected);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [scheduleTime, setScheduleTime] = useState(
+    planDate ? new Date(planDate) : new Date()
+  );
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [activateEffect, setActivateEffect] = useState(false);
 
   useEffect(() => {
     setisPlus(isSelected);
@@ -37,9 +47,35 @@ export default function ListDishItem({
     setModalVisible(false);
   };
 
+  const showTimePicker = () => {
+    if (isPlus) {
+      setScheduleTime(new Date());
+      setActivateEffect(true);
+      return;
+    }
+    // open timepicker
+    setPickerVisible(true);
+  };
+
+  const handleTimePicker = ({ type }, selectedDate) => {
+    setPickerVisible(false);
+
+    if (type == "set") {
+      setScheduleTime(selectedDate);
+      setActivateEffect(true);
+    }
+    console.log(type + " - " + selectedDate);
+  };
+
+  useEffect(() => {
+    if (!isAdd || !scheduleTime || !activateEffect) return;
+    setActivateEffect(false);
+    handlePressPlus();
+  }, [activateEffect]);
+
   const handlePressPlus = () => {
     setisPlus(!isPlus);
-    onSelectItem(id);
+    onSelectItem({ dishId: id, name, time: scheduleTime });
   };
   const dateFormat =
     formattedPlanDate !== undefined
@@ -80,6 +116,7 @@ export default function ListDishItem({
     <View style={styles.shadowView} className="mt-2">
       <TouchableOpacity
         onPress={async () => {
+          
           const response = await fetch(`${HOST}/dish/${id}`, {
             method: "GET",
             headers: {
@@ -96,35 +133,57 @@ export default function ListDishItem({
         <Image source={imgUri} className="w-32 h-32 rounded-md" />
         <View
           className={`flex flex-col rounded-md px-3 justify-between py-3 ${isPlus && "bg-gray-200 rounded-r-lg"}`}
+          style={{width:'80%'}}
         >
           <Text className="text-base font-semibold flex flex-wrap max-w-[200px]">
             {name}
           </Text>
-          <View className="flex flex-row justify-between items-center w-4/5">
-            <View className="h-9 rounded-full flex flex-row bg-[#454242] px-2 py-1">
+          <View style={{width: '45%'}}>
+            <View
+              className="rounded-full flex-row bg-[#454242] px-2 py-1"
+            >
               <Ionicons name="time-outline" size={26} color="white" />
-              <Text className="text-white text-base font-medium px-1">
+              <Text
+                className="text-white text-base px-1"
+                style={{ fontSize: 16 }}
+              >
                 {Number(time) < 3600
                   ? `${Math.floor(Number(time) / 60)} mins`
                   : `${Math.floor(Number(time) / 3600)}h ${Math.floor((Number(time) % 3600) / 60)}m`}
               </Text>
             </View>
-            {isAdd ? (
-              <TouchableOpacity onPress={handlePressPlus}>
-                <AntIcon
-                  name={isPlus ? "minuscircle" : "pluscircle"}
-                  size={30}
-                  color={!isPlus ? theme.colors.secondary : "gray"}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <View className="p-[6px] flex items-center justify-center bg-[#ECE9E9] rounded-full">
-                  <Feather name="more-horizontal" size={18} />
-                </View>
-              </TouchableOpacity>
-            )}
+            
           </View>
+          <View style={{flexDirection: 'row', alignContent:'space-between',justifyContent:"space-between", width: '80%'}}>
+              {(!isAdd || isPlus) && scheduleTime && (
+                <View
+                  className="h-9 rounded-full flex flex-row px-2 py-1"
+                  style={{ backgroundColor: theme.colors.secondary }}
+                >
+                  <Ionicons name="time-outline" size={26} color="white" />
+                  <Text className="text-white text-base font-medium px-1">
+                    {String(scheduleTime.getHours()).padStart(2, "0")}:
+                    {String(scheduleTime.getMinutes()).padStart(2, "0")}
+                  </Text>
+                </View>
+              )}
+              <View></View>
+              {isAdd ? (
+                <TouchableOpacity onPress={showTimePicker}>
+                  <AntIcon
+                    name={isPlus ? "minuscircle" : "pluscircle"}
+                    size={30}
+                    color={!isPlus ? theme.colors.secondary : "gray"}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <View className="p-[6px] flex items-center justify-center bg-[#ECE9E9] rounded-full">
+                    <Feather name="more-horizontal" size={18} />
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
         </View>
       </TouchableOpacity>
 
@@ -139,6 +198,7 @@ export default function ListDishItem({
                   imgUri,
                   name: name,
                   day,
+                  planDate,
                 });
               }}
             >
@@ -169,11 +229,21 @@ export default function ListDishItem({
                     body: JSON.stringify({
                       mealPlanId: mealPlanIdInt,
                       dishId: dishIdInt,
-                      planDate: dateFormat,
+                      planDate: planDate,
                     }),
                   }
                 );
                 setRandom(Math.random(0, 10) + 1);
+                console.log({
+                  id: mealplanDishId,
+                      mealPlanId: mealPlanIdInt,
+                      dishId: dishIdInt,
+                      planDate: planDate,
+                    })
+                if (mealplanDishId) {
+                  //cancel schedule: id=mealplanDishId
+                  SchedulerService.cancel(String(mealplanDishId));
+                }
 
                 handleCloseModal();
               }}
@@ -188,8 +258,11 @@ export default function ListDishItem({
             <View className="flex flex-row items-center mt-2 mb-2 pb-3 border-b border-b-[#F3F3F3] border-solid">
               <TouchableOpacity
                 onPress={async () => {
-                  const momentObject = moment(dateFormat);
-                  const newDate = momentObject.add(7, "days").toDate();
+                  const momentObject = moment(dateFormat).add(7,'days');
+                  const date = new Date(planDate)
+                  const newPlanDate = new Date(dateFormat.setHours(date.getHours(), date.getMinutes(),0));
+                  newPlanDate.setDate(newPlanDate.getDate() + 7);
+                  console.log(newPlanDate + " - " + dateFormat)
 
                   const formattedDate = momentObject.format("YYYY-MM-DD");
 
@@ -206,7 +279,7 @@ export default function ListDishItem({
                   const dishIdDish = await dishRes.json();
 
                   const dishIdInt = parseInt(id, 10);
-
+                  console.log(newPlanDate)
                   if (!dishIdDish.includes(dishIdInt)) {
                     const response = await fetch(
                       `https://datn-admin-be.onrender.com/mealplan`,
@@ -219,10 +292,20 @@ export default function ListDishItem({
                         body: JSON.stringify({
                           mealPlanId: mealPlanIdInt,
                           dishId: dishIdInt,
-                          planDate: newDate,
+                          //planDate: newDate,
+                          planDate: newPlanDate,
                         }),
                       }
                     );
+
+                    const mpdishId = (await response.json()).id;
+                    //add schedule: name = name, date = newPlanDate
+                    SchedulerService.schedule({
+                      id: String(mpdishId),
+                      title: "Mealplan reminder",
+                      body: "Don't forget your " + name,
+                      date: newPlanDate,
+                    });
 
                     Toast.show({
                       type: "success",
@@ -257,6 +340,13 @@ export default function ListDishItem({
           )}
         </View>
       </BottomSheet>
+      {pickerVisible && (
+        <DateTimePicker
+          mode="time"
+          value={scheduleTime}
+          onChange={handleTimePicker}
+        />
+      )}
     </View>
   );
 }

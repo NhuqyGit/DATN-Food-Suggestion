@@ -16,10 +16,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../../../theme/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageService } from "../../../utils/AsynStorage";
+import SchedulerService from "../../../local-pushNotification.service";
 
 const EditSchedule = () => {
   const route = useRoute();
-  const { id, imgUri, name, day } = route.params;
+  const { id, imgUri, name, day, planDate } = route.params;
 
   const daysOfWeek = [
     "Sunday",
@@ -197,8 +198,18 @@ const EditSchedule = () => {
           const mealplanId = mealplanJson?.mealplanId;
           const mealPlanIdInt = parseInt(mealplanId, 10);
           const dishIdInt = parseInt(id, 10);
+          const date = new Date(planDate);
 
-          const planDates = selectedDays.map((day) => moment.utc(day).format());
+          const planDates = selectedDays.map(
+            (day) =>
+              new Date(
+                moment
+                  .utc(day)
+                  .toDate()
+                  .setHours(date.getHours(), date.getMinutes(), 0)
+              )
+          );
+          console.log(planDates);
 
           const res = await fetch(
             `https://datn-admin-be.onrender.com/mealplan/update-plan-date`,
@@ -215,8 +226,33 @@ const EditSchedule = () => {
               }),
             }
           );
-
           navigation.navigate("MainMealPlan");
+          const mpRes = await res.json();
+
+          if(!mpRes.result) return
+          //result: { deletedMealplanDishes, newMealplanDishes },
+
+          const deletedMealplanDishes = mpRes.result.deletedMealplanDishes;
+          // type [id1, id2,...]
+
+          const newMealplanDishes = mpRes.result.newMealplanDishes;
+          // type [{id, planDate}, {}, ...]
+
+          // cancel deleted schedule: id = id
+          for (let mpDishId of deletedMealplanDishes) {
+            SchedulerService.cancel(String(mpDishId));
+          }
+
+          // add new schedule: id = id, name = name, date = planDate
+          for (let mpDish of newMealplanDishes) {
+            SchedulerService.schedule({
+              id: String(mpDish.id),
+              title: "Mealplan reminder",
+              body: "Don't forget your " + name,
+              date: mpDish.planDate,
+            });
+          }
+
         }}
         disabled={isDoneDisabled}
       >

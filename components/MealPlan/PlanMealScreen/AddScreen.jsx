@@ -12,6 +12,7 @@ import moment from "moment";
 import SearchValueSkeleton from "../../../screens/Search/ViewImageScreen/SearchValueSkeleton";
 import IngredientSkeleton from "../../../screens/Search/ViewImageScreen/IngredientSkeleton";
 import CuisineSkeleton from "../../../screens/Search/ViewImageScreen/CuisineSkeleton";
+import SchedulerService from "../../../local-pushNotification.service";
 
 function AddScreen() {
   const navigation = useNavigation();
@@ -175,12 +176,22 @@ function RecipeDetailsScreen({ route }) {
   const { item } = route.params;
   const [selectedDishes, setSelectedDishes] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
-  const handleSelectDish = (dishId) => {
+
+  const isSelected = (dishId) => {
+    for (let dish of selectedDishes) {
+      if (dish.dishId == dishId) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const handleSelectDish = ({ dishId, name, time }) => {
     setSelectedDishes((prevSelected) => {
-      if (prevSelected.includes(dishId)) {
-        return prevSelected.filter((id) => id !== dishId);
+      if (isSelected(dishId)) {
+        return prevSelected.filter((dish) => dish.dishId !== dishId);
       } else {
-        return [...prevSelected, dishId];
+        return [...prevSelected, { dishId, name, time }];
       }
     });
   };
@@ -208,8 +219,17 @@ function RecipeDetailsScreen({ route }) {
 
     for (const dish of selectedDishes) {
       const mealPlanIdInt = parseInt(mealplanId, 10);
-      const dishIdInt = parseInt(dish, 10);
+      const dishIdInt = parseInt(dish.dishId, 10);
 
+      const planDate = new Date(
+        dateFormat.setHours(dish.time.getHours(), dish.time.getMinutes(), 0)
+      );
+      console.log({
+        mealPlanId: mealPlanIdInt,
+        dishId: dishIdInt,
+        planDate,
+        dateFormat: dateFormat,
+      });
       const response = await fetch(
         `https://datn-admin-be.onrender.com/mealplan`,
         {
@@ -221,7 +241,7 @@ function RecipeDetailsScreen({ route }) {
           body: JSON.stringify({
             mealPlanId: mealPlanIdInt,
             dishId: dishIdInt,
-            planDate: dateFormat,
+            planDate,
           }),
         }
       );
@@ -229,6 +249,17 @@ function RecipeDetailsScreen({ route }) {
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Error:", errorResponse);
+      } else {
+        const res = await response.json();
+        const mpDishId = res.id;
+        // schedule notification
+        // id = mpDishId, title = "Mealplan reminder", name = dish.name, date = dateFormat
+        SchedulerService.schedule({
+          id: String(mpDishId),
+          title: "Mealplan reminder",
+          body: "Don't forget your " + dish.name,
+          date: planDate,
+        });
       }
     }
     setIsAdding(false);
@@ -258,7 +289,7 @@ function RecipeDetailsScreen({ route }) {
               time={asset.time}
               imgUri={asset.imgUri}
               isAdd={true}
-              isSelected={selectedDishes.includes(asset.dish_id)}
+              isSelected={isSelected(asset.dish_id)}
               onSelectItem={handleSelectDish}
             />
           ))}
