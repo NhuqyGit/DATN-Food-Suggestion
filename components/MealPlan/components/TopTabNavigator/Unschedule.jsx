@@ -32,6 +32,8 @@ function Unschedule() {
         name: dishItem.dish.dishName,
         time: `${dishItem.dish.cookingTime}`,
         imgUri: { uri: dishItem.dish.imageUrl },
+        mealplanDishId: dishItem.id,
+        planDate: dishItem.planDate     
       }));
 
       setDataDish(unscheduledDishes || []);
@@ -62,6 +64,8 @@ function Unschedule() {
               setRandom={setRandom}
               formattedPlanDate={undefined}
               hasRepeat={false}
+              mealplanDishId={asset.mealplanDishId}
+              planDate={asset.planDate}
             />
           ))}
         </View>

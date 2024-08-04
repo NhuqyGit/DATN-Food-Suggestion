@@ -128,6 +128,8 @@ function Today() {
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} `,
           imgUri: { uri: dishItem.dish.imageUrl },
+          mealplanDishId: dishItem.id,
+          planDate: dishItem.planDate
         })),
       };
 
@@ -196,6 +198,8 @@ function Today() {
                 imgUri={asset.imgUri}
                 setRandom={setRandom}
                 formattedPlanDate={formattedStartDateYear}
+                mealplanDishId={asset.mealplanDishId}
+                planDate={asset.planDate}
               />
             ))}
           </Animated.View>

@@ -114,6 +114,8 @@ function ThisWeek() {
           name: dishItem.dish.dishName,
           time: `${dishItem.dish.cookingTime} `,
           imgUri: { uri: dishItem.dish.imageUrl },
+          mealplanDishId: dishItem.id,
+          planDate: dishItem.planDate
         })),
       }));
       setDataDish(data);
@@ -206,6 +208,8 @@ function ThisWeek() {
                       formattedPlanDate,
                       day.title
                     )}
+                    mealplanDishId={asset.mealplanDishId}
+                    planDate={asset.planDate}
                   />
                 ))}
               </Animated.View>
