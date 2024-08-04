@@ -43,6 +43,7 @@ const Collection = ({ props, navigation, isProtected = false }) => {
   if (protectedName.includes(props.collectionName)) {
     isProtected = true
   }
+
   return (
     <TouchableOpacity
       onPress={() => {

@@ -21,7 +21,15 @@ import {
 import { useFocusEffect } from '@react-navigation/native'
 import ReviewSkeleton from './ReviewSkeleton'
 import ReportReviewModal from './ReportReviewModal'
-function ReviewsTab({ navigation, dishId, dishInfo }) {
+function ReviewsTab({
+  navigation,
+  dishId,
+  dishInfo,
+  reviews,
+  reviewError,
+  reviewLoading,
+  refetch,
+}) {
   const [userID, setUserID] = useState(null)
   const [isReporting, setIsReporting] = useState(false)
   const [reviewId, setReviewId] = useState()
@@ -48,13 +56,6 @@ function ReviewsTab({ navigation, dishId, dishInfo }) {
 
     fetchUserID()
   }, [])
-
-  const {
-    data: reviews,
-    error: reviewError,
-    isLoading: reviewLoading,
-    refetch,
-  } = useGetReviewsByDishIdQuery(dishId)
 
   useFocusEffect(
     useCallback(() => {

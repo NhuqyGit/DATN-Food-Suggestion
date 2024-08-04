@@ -1,82 +1,82 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from 'react'
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { theme } from "../../theme/index";
-import Ionicons from "react-native-vector-icons/Ionicons";
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { theme } from '../../theme/index'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import {
   useGetCollectionsByUserIdQuery,
   useGetCollectionsByDishIdQuery,
   useUpdateDishCollectionsMutation,
-} from "../../slices/collectionSlice";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from '../../slices/collectionSlice'
+import { useFocusEffect } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const CollectionScreen = ({ navigation, route }) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const { dishId } = route.params;
+  const [selectedOptions, setSelectedOptions] = useState([])
+  const [userId, setUserId] = useState(null)
+  const { dishId } = route.params
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const storedUserId = await AsyncStorage.getItem("user_id");
+        const storedUserId = await AsyncStorage.getItem('user_id')
         if (storedUserId) {
-          setUserId(storedUserId);
+          setUserId(storedUserId)
         }
       } catch (error) {
-        console.error("Failed to fetch userId from AsyncStorage:", error);
+        console.error('Failed to fetch userId from AsyncStorage:', error)
       }
-    };
+    }
 
-    fetchUserId();
-  }, []);
+    fetchUserId()
+  }, [])
 
   const {
     data: optionsCollection,
     error: optionsCollectionError,
     isLoading: optionsCollectionLoading,
     refetch: refetchUserCollections,
-  } = useGetCollectionsByUserIdQuery(userId);
+  } = useGetCollectionsByUserIdQuery(userId)
 
   const { data: collectionsWithDish, refetch: refetchCollectionsWithDish } =
-    useGetCollectionsByDishIdQuery(dishId);
+    useGetCollectionsByDishIdQuery(dishId)
 
   const [updateDishCollections, { isLoading: isUpdating }] =
-    useUpdateDishCollectionsMutation();
+    useUpdateDishCollectionsMutation()
 
   useFocusEffect(
     useCallback(() => {
-      refetchUserCollections();
-      refetchCollectionsWithDish();
+      refetchUserCollections()
+      refetchCollectionsWithDish()
     }, [refetchUserCollections, refetchCollectionsWithDish])
-  );
+  )
 
   useEffect(() => {
     if (collectionsWithDish) {
       const initialSelectedOptions = collectionsWithDish?.map(
         (collection) => collection.id
-      );
-      setSelectedOptions(initialSelectedOptions);
+      )
+      setSelectedOptions(initialSelectedOptions)
     }
-  }, [collectionsWithDish]);
+  }, [collectionsWithDish])
 
   const handleAddNewCollection = () => {
-    navigation.navigate("AddNewCollection");
-  };
+    navigation.navigate('AddNewCollection')
+  }
 
   const handleCheckboxChange = (collectionId) => {
     setSelectedOptions((prevSelectedOptions) =>
       prevSelectedOptions?.includes(collectionId)
         ? prevSelectedOptions?.filter((id) => id !== collectionId)
         : [...prevSelectedOptions, collectionId]
-    );
-  };
+    )
+  }
 
   const handleDone = async () => {
     try {
@@ -84,12 +84,12 @@ const CollectionScreen = ({ navigation, route }) => {
         userId,
         dishId,
         collectionIds: selectedOptions,
-      }).unwrap();
-      navigation.goBack();
+      }).unwrap()
+      navigation.goBack()
     } catch (error) {
-      console.error("Failed to update dish collections:", error);
+      console.error('Failed to update dish collections:', error)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -97,7 +97,7 @@ const CollectionScreen = ({ navigation, route }) => {
         onPress={() => navigation.goBack()}
         style={styles.closeBtn}
       >
-        <Ionicons name="close-circle-outline" size={30} color="gray" />
+        <Ionicons name='close-circle-outline' size={30} color='gray' />
       </TouchableOpacity>
       <Text style={styles.title}>Collections</Text>
       <View style={styles.line} />
@@ -107,7 +107,7 @@ const CollectionScreen = ({ navigation, route }) => {
             style={styles.addButton}
             onPress={handleAddNewCollection}
           >
-            <Icon name="plus-circle" size={27} color={theme.colors.secondary} />
+            <Icon name='plus-circle' size={27} color={theme.colors.secondary} />
             <Text style={[styles.buttonText, styles.text]}>
               Add New Collection
             </Text>
@@ -131,7 +131,7 @@ const CollectionScreen = ({ navigation, route }) => {
               ]}
             >
               {selectedOptions?.includes(option?.id) && (
-                <Icon name="check" size={15} color="white" />
+                <Icon name='check' size={15} color='white' />
               )}
             </View>
             <Text style={styles.checkboxLabel}>{option?.collectionName}</Text>
@@ -143,53 +143,53 @@ const CollectionScreen = ({ navigation, route }) => {
         onPress={handleDone}
         disabled={isUpdating}
       >
-        <Text style={styles.buttonText}>{isUpdating ? "Saving" : "Done"}</Text>
+        <Text style={styles.buttonText}>{isUpdating ? 'Saving' : 'Done'}</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   addButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: 20,
     paddingRight: 10,
   },
   closeBtn: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     paddingTop: 50,
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     padding: 20,
     paddingTop: 30,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 18,
-    fontWeight: "semibold",
+    fontWeight: 'semibold',
   },
   text: {
-    color: "black",
+    color: 'black',
     paddingLeft: 7,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   line: {
     borderBottomWidth: 0.5,
@@ -201,16 +201,16 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: 30,
     paddingVertical: 15,
-    display: "flex",
-    alignItems: "center",
-    alignSelf: "center",
+    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'center',
     borderRadius: 25,
-    width: "30%",
+    width: 200,
     marginVertical: 20,
   },
   checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 5,
     paddingLeft: 20,
   },
@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: theme.colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 10,
   },
   checkedCheckbox: {
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     fontSize: 16,
   },
-});
+})
 
-export default CollectionScreen;
+export default CollectionScreen
+

@@ -6,6 +6,7 @@ import ExploreMore from '../../components/ExploreMore/ExploreMore'
 import Header from '../../components/Header/Header'
 import MealPlanMadeEasy from '../../components/Introduction/MealPlanMadeEasy'
 import RecommendList from '../../components/RecommendList/RecommendList'
+import EventList from '../../components/EventList/EventList'
 
 const AnimatedHeader = Animated.createAnimatedComponent(Header)
 
@@ -36,6 +37,7 @@ const HomeScreen = () => {
       >
         <AnimatedHeader style={{ opacity: headerOpacity }}></AnimatedHeader>
         <CategoryList />
+        <EventList />
         <RecommendList />
         <MealPlanMadeEasy />
         <ExploreMore />

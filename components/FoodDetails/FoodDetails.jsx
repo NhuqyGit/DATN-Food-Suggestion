@@ -27,6 +27,7 @@ import Toast from 'react-native-toast-message'
 
 import { useFocusEffect } from '@react-navigation/native'
 import BottomSheet from '../BottomSheet/BottomSheet'
+import { useGetReviewsByDishIdQuery } from '../../slices/reviewSlice'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -171,6 +172,13 @@ function FoodDetailsScreen({ navigation, route }) {
     },
   ]
 
+  const {
+    data: reviews,
+    error: reviewError,
+    isLoading: reviewLoading,
+    refetch,
+  } = useGetReviewsByDishIdQuery(foodDetails.id)
+
   return (
     <View style={styles.foodDetailsScreen}>
       <View>
@@ -245,7 +253,11 @@ function FoodDetailsScreen({ navigation, route }) {
         >
           <Tab.Screen name='Overview'>
             {() => (
-              <OverviewTab foodDetails={foodDetails} navigation={navigation} />
+              <OverviewTab
+                reviews={reviewLoading ? [] : reviews}
+                foodDetails={foodDetails}
+                navigation={navigation}
+              />
             )}
           </Tab.Screen>
           <Tab.Screen
@@ -284,6 +296,10 @@ function FoodDetailsScreen({ navigation, route }) {
                 navigation={navigation}
                 dishId={foodDetails.id}
                 dishInfo={foodDetails?.dishName}
+                reviews={reviews}
+                reviewError={reviewError}
+                reviewLoading={reviewLoading}
+                refetch={refetch}
               />
             )}
           </Tab.Screen>

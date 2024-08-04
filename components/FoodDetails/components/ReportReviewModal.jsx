@@ -17,16 +17,17 @@ import Toast from 'react-native-toast-message'
 import { useCreateReportMutation } from '../../../slices/reportSlice'
 import { useCreateReportReviewMutation } from '../../../slices/reportReviewSlice'
 
-const reportReasons = [
-  'Inappropriate Content',
+const reviewReportReasons = [
+  'Inaccurate Information',
+  'Offensive Language',
   'Spam',
-  'Harassment',
-  'False Information',
-  'Bad Content',
-  'Wordy',
-  'False Image',
-  "I don't like it",
-  'Others',
+  'Duplicate Content',
+  'Conflicts of Interest',
+  'Off-topic',
+  'Fake Review',
+  'Violation of Guidelines',
+  'Bias',
+  'Misleading',
 ]
 
 const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
@@ -94,7 +95,7 @@ const ReportReviewModal = ({ reviewId, isReporting, cancelReporting }) => {
             <Icon name='close' size={22} color='black' />
           </TouchableOpacity>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {reportReasons.map((reason, index) => (
+            {reviewReportReasons.map((reason, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.reasonOptionContainer}

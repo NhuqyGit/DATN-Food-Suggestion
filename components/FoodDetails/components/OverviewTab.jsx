@@ -16,7 +16,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { theme } from '../../../theme/index'
 import { setCollectionButtonText } from '../../../slices/modalSlice'
-import { useGetRelatedDishQuery, useGetRecommendedDishQuery } from '../../../slices/foodDetailsSlice'
+import {
+  useGetRelatedDishQuery,
+  useGetRecommendedDishQuery,
+} from '../../../slices/foodDetailsSlice'
 import SmallRecommendItem from '../../RecommendItem/SmallRecommendItem'
 import RecommendSmallSkeleton from '../../../screens/Search/ViewImageScreen/RecommendSmallSkeleton'
 import {
@@ -38,7 +41,7 @@ const reportReasons = [
   'Others',
 ]
 
-function OverviewTab({ foodDetails, navigation }) {
+function OverviewTab({ reviews, foodDetails, navigation }) {
   const collectionButtonText = useSelector(
     (state) => state.modal.collectionButtonText
   )
@@ -76,13 +79,13 @@ function OverviewTab({ foodDetails, navigation }) {
     data: relatedDishs,
     isLoading: relatedLoading,
     isError: relatedError,
-  } = useGetRelatedDishQuery(foodDetails?.id) 
-  
+  } = useGetRelatedDishQuery(foodDetails?.id)
+
   const {
     data: recommendDishs,
     isLoading: recommendLoading,
     isError: recommendError,
-  } = useGetRecommendedDishQuery({ page: 1, limit: 10 });
+  } = useGetRecommendedDishQuery({ page: 1, limit: 10 })
 
   const cancelReporting = () => {
     setReporting(false)
@@ -143,11 +146,7 @@ function OverviewTab({ foodDetails, navigation }) {
   }
 
   const renderReportModal = () => (
-    <Modal
-      transparent
-      visible={isReporting}
-      onRequestClose={cancelReporting}
-    >
+    <Modal transparent visible={isReporting} onRequestClose={cancelReporting}>
       <View style={styles.modalContainer}>
         <TouchableOpacity style={styles.overlay} onPress={cancelReporting} />
         <KeyboardAvoidingView
@@ -166,7 +165,11 @@ function OverviewTab({ foodDetails, navigation }) {
                 onPress={() => toggleReason(reason)}
               >
                 <Ionicons
-                  name={selectedReason === reason ? 'radio-button-on-outline' : 'radio-button-off-outline'}
+                  name={
+                    selectedReason === reason
+                      ? 'radio-button-on-outline'
+                      : 'radio-button-off-outline'
+                  }
                   size={24}
                   color={theme.colors.secondary}
                 />
@@ -184,18 +187,23 @@ function OverviewTab({ foodDetails, navigation }) {
             )}
           </ScrollView>
           <View style={styles.btnSaveContainer}>
-          <TouchableOpacity
-            style={styles.reportButton}
-            onPress={handleReportSubmission}
-          >
-            <Text style={styles.reportButtonText}>Report</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.reportButton}
+              onPress={handleReportSubmission}
+            >
+              <Text style={styles.reportButtonText}>Report</Text>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </View>
     </Modal>
   )
-  const roundedRating = Math.round(foodDetails?.rating * 10) / 10;
+
+  const totalRating = reviews?.reduce((sum, review) => sum + review.rating, 0)
+  const roundedRating = totalRating
+    ? (totalRating / reviews?.length).toFixed(1)
+    : 0
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -213,7 +221,9 @@ function OverviewTab({ foodDetails, navigation }) {
             style={styles.icon}
           />
           <Text style={styles.label}>Rating</Text>
-          <Text style={styles.value}>{roundedRating}</Text>
+          <Text
+            style={styles.value}
+          >{`${roundedRating ?? 0} (${reviews?.length ?? 0} reviews)`}</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.infoItem}>
@@ -421,11 +431,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: 20,
     paddingVertical: 15,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 25,
-    width: "30%",
+    width: '30%',
   },
   reportButtonText: {
     color: 'white',
