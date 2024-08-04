@@ -9,6 +9,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { theme } from '../../theme/index'
 import { MessageProvider } from '../../components/FoodSuggestion/MessageContext'
 import FoodDetailsScreen from '../../components/FoodDetails/FoodDetails'
+import ReviewScreen from '../../components/FoodDetails/ReviewScreen'
+import CollectionScreen from '../../components/FoodDetails/CollectionScreen'
+import AddNewNote from '../../components/FoodDetails/AddNewNote'
+import AddNewCollection from '../../components/FoodDetails/AddNewCollection'
 
 const Stack = createNativeStackNavigator()
 
@@ -69,6 +73,10 @@ const FoodSuggesionStack = ({
             component={RecordDetail}
           />
           <Stack.Screen name='FoodDetail' component={FoodDetailsScreen} />
+          <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
+          <Stack.Screen name='AddNewNote' component={AddNewNote} />
+          <Stack.Screen name='CollectionScreen' component={CollectionScreen} />
+          <Stack.Screen name='AddNewCollection' component={AddNewCollection} />
         </Stack.Navigator>
       </SafeAreaView>
     </MessageProvider>

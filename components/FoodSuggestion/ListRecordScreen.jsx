@@ -19,8 +19,13 @@ import { useMessage } from './MessageContext'
 import RecordPopUp from './RecordPopUp'
 
 const ListRecordScreen = () => {
-  const { recordId, handlePatchRecordSelect, listRecord, setListRecord, getTopics } =
-    useMessage()
+  const {
+    recordId,
+    handlePatchRecordSelect,
+    listRecord,
+    setListRecord,
+    getTopics,
+  } = useMessage()
   const [recordSelect, setRecordSelect] = useState(null)
   const [isSelect, setIsSelect] = useState(recordId)
   // const [listRecord, setListRecord] = useState([])
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
-    width: '30%',
+    width: 200,
     marginVertical: 10,
   },
   btnText: {
