@@ -104,7 +104,6 @@ function ReceipeListScreen({ route, navigation }) {
   const collectionId = route.params.id
   const collectionName = route.params.name
   const isProtected = route.params.isProtected
-  const [isClicked, setIsClicked] = useState(false)
   const [dishes, setDishes] = useState([])
 
   useEffect(() => {
@@ -165,7 +164,6 @@ function ReceipeListScreen({ route, navigation }) {
       })
       console.error(error)
     }
-    setIsClicked(false)
   }
 
   const onBack = () => {
