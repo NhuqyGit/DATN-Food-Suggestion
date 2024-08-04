@@ -147,7 +147,7 @@ const ViewImageScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (resultS?.concepts && resultS?.concepts?.length > 0) {
-      const options = resultS?.concepts?.filter((item) => item?.value > 0.01)
+      const options = resultS?.concepts?.filter((item) => item?.value > 0.1)
       setOptions(options ?? [])
     }
   }, [resultS])

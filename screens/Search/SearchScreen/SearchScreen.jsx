@@ -84,6 +84,7 @@ const SearchScreen = ({ navigation, route }) => {
         })
 
         const json = await response.json()
+
         setDish(json)
       } catch (error) {
         console.error(error)

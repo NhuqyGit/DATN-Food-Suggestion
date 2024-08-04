@@ -83,7 +83,7 @@ function Profile({ navigation }) {
         setFetchCollection(false)
       }
     }
-    fetchCollections()
+    // fetchCollections()
   }, [searchCollectionIndex, isFocused])
 
   const updateProfileImage = async (newImgUrl) => {
