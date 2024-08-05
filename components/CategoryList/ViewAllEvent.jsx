@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -9,48 +9,42 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { HOST } from '../../config'
 import EventViewItemSkeleton from '../../screens/Search/ViewImageScreen/EventViewItemSkeleton'
-import { AsyncStorageService } from '../../utils/AsynStorage'
+import { useGetAllEventQuery } from '../../slices/eventSlice'
 import EventCard from '../RecommendItem/EventCard'
-const CustomLoadingIndicator = () => (
-  <View style={styles.customLoading}>
-    <MaterialIcons name='hourglass-empty' size={36} color='#4CAF50' />
-    <Text style={styles.loadingText}>Loading...</Text>
-  </View>
-)
 
 const ViewAllEvent = ({ route }) => {
   const navigation = useNavigation()
   const eventData = route.params.eventData
-  const [items, setItems] = useState([])
-  const [loading, setLoading] = useState(false)
+  // const [items, setItems] = useState([])
+  // const [loading, setLoading] = useState(false)
+  const { data: events, isLoading: loading } = useGetAllEventQuery()
   const [page, setPage] = useState(1)
   const limit = 8
 
   const windowHeight = useWindowDimensions().height
 
-  const fetchItems = async () => {
-    setLoading(true)
-    try {
-      const token = await AsyncStorageService.getAccessToken()
-      const response = await fetch(`${HOST}/events`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      if (!response.ok) {
-        throw new Error('Failed to fetch data')
-      }
-      const data = await response.json()
-      setItems((prevItems) => [...prevItems, ...data])
-      setPage((prevPage) => prevPage + 1)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const fetchItems = async () => {
+  //   setLoading(true)
+  //   try {
+  //     const token = await AsyncStorageService.getAccessToken()
+  //     const response = await fetch(`${HOST}/events`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch data')
+  //     }
+  //     const data = await response.json()
+  //     setItems((prevItems) => [...prevItems, ...data])
+  //     setPage((prevPage) => prevPage + 1)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   const handleBackPress = () => {
     navigation.goBack()
@@ -70,13 +64,13 @@ const ViewAllEvent = ({ route }) => {
 
   const handleScroll = ({ nativeEvent }) => {
     if (handleEndReached(nativeEvent) && !loading) {
-      fetchItems()
+      // fetchItems()
     }
   }
 
-  useEffect(() => {
-    fetchItems()
-  }, [])
+  // useEffect(() => {
+  //   fetchItems()
+  // }, [])
 
   return (
     <View style={styles.container}>
@@ -98,7 +92,7 @@ const ViewAllEvent = ({ route }) => {
             <EventViewItemSkeleton total={2} />
           ) : (
             <>
-              {items.map((item) => (
+              {events.map((item) => (
                 <EventCard key={item.id} item={item} />
               ))}
             </>

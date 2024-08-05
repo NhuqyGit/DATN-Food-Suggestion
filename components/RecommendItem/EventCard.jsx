@@ -21,7 +21,7 @@ function EventCard({ item }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('FoodDetail', { foodDetails: item })
+        navigation.push('EventDetail', { EventDetails: item })
       }}
       activeOpacity={1}
       style={styles.container}
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    backgroundColor: 'red',
     width: '100%',
     height: 200,
     borderRadius: 8,

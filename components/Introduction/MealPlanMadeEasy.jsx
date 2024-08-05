@@ -10,8 +10,7 @@ function MealPlanMadeEasy() {
       <View style={styles.content}>
         <Text style={styles.title}>Meal planning made easy</Text>
         <Text style={styles.description}>
-          Add recipes, instantly schedule meals, and get
-          cooking reminders
+          Add recipes, instantly schedule meals, and get cooking reminders
         </Text>
       </View>
       <Image
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
 
   content: {
     alignItems: 'center',
-    maxWidth: 240,
+    maxWidth: 260,
   },
 
   image: {
