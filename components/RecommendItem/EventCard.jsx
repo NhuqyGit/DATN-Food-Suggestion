@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native'
 
-function EventCard({ item }) {
+function EventCard({ item, refetch }) {
   const navigation = useNavigation()
 
   const endDate = dayjs(item.endTime)
@@ -21,7 +21,7 @@ function EventCard({ item }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('FoodDetail', { foodDetails: item })
+        navigation.push('EventDetail', { EventDetails: item, refetch: refetch })
       }}
       activeOpacity={1}
       style={styles.container}
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    backgroundColor: 'red',
     width: '100%',
     height: 200,
     borderRadius: 8,

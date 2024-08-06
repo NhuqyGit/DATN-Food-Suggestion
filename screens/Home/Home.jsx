@@ -11,6 +11,9 @@ import MealPlan from '../MealPlan'
 import ExploreCuisine from '../../components/CategoryList/ExploreCuisine'
 import ViewAllRecommend from '../../components/CategoryList/ViewAllRecommend'
 import ViewAllEvent from '../../components/CategoryList/ViewAllEvent'
+import EventDetail from '../../components/RecommendItem/EventDetail'
+import JoinEvent from '../../components/RecommendItem/JoinEvent'
+
 const Stack = createNativeStackNavigator()
 function Home() {
   return (
@@ -30,6 +33,8 @@ function Home() {
       <Stack.Screen name='CollectionScreen' component={CollectionScreen} />
       <Stack.Screen name='AddNewCollection' component={AddNewCollection} />
       <Stack.Screen name='MealPlan' component={MealPlan} />
+      <Stack.Screen name='EventDetail' component={EventDetail} />
+      <Stack.Screen name='JoinEvent' component={JoinEvent} />
     </Stack.Navigator>
   )
 }

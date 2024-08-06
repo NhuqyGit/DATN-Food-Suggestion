@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -7,40 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { HOST } from '../../config'
 import EventItemSkeleton from '../../screens/Search/ViewImageScreen/EventItemSkeleton'
+import { useGetAllEventQuery } from '../../slices/eventSlice'
 import { theme } from '../../theme'
-import { AsyncStorageService } from '../../utils/AsynStorage'
 import EventItem from '../RecommendItem/EventItem'
 
 function EventList() {
-  const [events, setEvents] = useState(null)
-
-  const [loading, setLoading] = useState(true)
   const navigation = useNavigation()
-
-  useEffect(() => {
-    const getAllEvents = async () => {
-      setLoading(true)
-      try {
-        const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/events`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        const json = await response.json()
-        setEvents(json)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getAllEvents()
-  }, [])
+  const { data: events, isLoading: loading, refetch } = useGetAllEventQuery()
 
   const handleClickViewAll = (item) => {
     navigation.navigate('ViewAllEvent', { eventData: item })
@@ -72,7 +46,9 @@ function EventList() {
           <>
             {events &&
               events.length > 0 &&
-              events?.map((item) => <EventItem key={item.id} item={item} />)}
+              events?.map((item) => (
+                <EventItem key={item.id} item={item} refetch={refetch} />
+              ))}
           </>
         )}
       </ScrollView>
