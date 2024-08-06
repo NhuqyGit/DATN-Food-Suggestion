@@ -19,19 +19,27 @@ export const eventApi = createApi({
   }),
   endpoints: (builder) => ({
     updateDishToEvent: builder.mutation({
-      query: (eventId, dishDto) => ({
-        url: `/events/add-dish-to-event/${eventId}`,
-        method: 'PUT',
-        body: dishDto,
+      query: ({ id, formData }) => ({
+        url: `/events/add-dish-to-event/${id}`,
+        method: 'PATCH',
+
+        body: formData,
       }),
     }),
     getAllEvent: builder.query({
       query: () => `/events`,
     }),
+    getAllIngredients: builder.query({
+      query: () => `/ingredient`,
+    }),
   }),
 })
 
-export const { useUpdateDishToEventMutation, useGetAllEventQuery } = eventApi
+export const {
+  useUpdateDishToEventMutation,
+  useGetAllEventQuery,
+  useGetAllIngredientsQuery,
+} = eventApi
 
 export default eventApi
 
