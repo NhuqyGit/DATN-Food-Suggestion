@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native'
 
-function EventItem({ item }) {
+function EventItem({ item, refetch }) {
   const navigation = useNavigation()
 
   const endDate = dayjs(item.endTime)
@@ -21,7 +21,7 @@ function EventItem({ item }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('EventDetail', { eventDetails: item })
+        navigation.push('EventDetail', { eventDetails: item, refetch: refetch })
       }}
       activeOpacity={1}
       style={styles.container}

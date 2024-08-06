@@ -12,14 +12,17 @@ import { theme } from '../../theme'
 import RecommendItem from './RecommendItem'
 
 const EventDetail = ({ navigation, route }) => {
-  const { eventDetails } = route.params
+  const { eventDetails, refetch } = route.params
 
   const handleNavigateBack = () => {
     navigation.goBack()
   }
 
   const onPressJoinEvent = () => {
-    navigation.push('JoinEvent', { eventId: eventDetails?.id })
+    navigation.push('JoinEvent', {
+      eventId: eventDetails?.id,
+      refetch: refetch,
+    })
   }
 
   return (

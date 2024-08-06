@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Alert,
   Image,
@@ -26,20 +26,32 @@ import { AsyncStorageService } from '../../utils/AsynStorage'
 import Toast from 'react-native-toast-message'
 
 const JoinEvent = ({ navigation, route }) => {
-  const { eventId } = route.params
+  const { eventId, refetch } = route.params
   const [dishName, setDishName] = useState('')
   const [cookingTime, setCookingTime] = useState('')
   const [servings, setServings] = useState('')
   const [calories, setCalories] = useState('')
-  const [ingredients, setIngredients] = useState('')
+  const [ingredients, setIngredients] = useState([])
   const [imageUri, setImageUri] = useState('')
   const [uri, setUri] = useState('')
   const [directions, setDirections] = useState('')
   const [loadingUploadImage, setLoadingUploadImage] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { refetch } = useGetAllEventQuery()
+  const [data, setData] = useState([])
+  const { data: ingredientData, loading: loadingIngredient } =
+    useGetAllIngredientsQuery()
 
-  const data = []
+  useEffect(() => {
+    if (ingredientData?.length > 0) {
+      const data = ingredientData?.map((item) => {
+        return {
+          label: item?.ingredientName,
+          value: item?.ingredientName,
+        }
+      })
+      setData(data)
+    }
+  }, [ingredientData])
 
   const handleNavigateBack = () => {
     navigation.goBack()
@@ -79,9 +91,14 @@ const JoinEvent = ({ navigation, route }) => {
       formData.append('cookingTime', cookingTime)
       formData.append('servings', servings)
       formData.append('calories', calories)
-      formData.append('directions', directions)
-      formData.append('ingredients[0][ingredientName]', 'Sushi rice')
-      formData.append('ingredients[0][mass]', '2 cups')
+      formData.append('directions', [directions].toString())
+      if (ingredients?.length > 0) {
+        ingredients.forEach((ingredient, index) => {
+          formData.append(`ingredients[${index}][ingredientName]`, ingredient)
+          formData.append(`ingredients[${index}][mass]`, '1 cup')
+        })
+      }
+
       formData.append('image', {
         uri: uri,
         name: 'image.jpg',
@@ -133,11 +150,16 @@ const JoinEvent = ({ navigation, route }) => {
         !cookingTime ||
         !servings ||
         !calories ||
-        // !ingredients ||
+        !ingredients ||
         !directions ||
         !imageUri
       ) {
-        Alert.alert('Please fill in all fields')
+        Toast.show({
+          type: 'error',
+          text1: 'Submit failed',
+          text2: 'Please fill in all fields',
+          textStyle: { fontSize: 20 },
+        })
         return
       }
 
@@ -190,34 +212,36 @@ const JoinEvent = ({ navigation, route }) => {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Ingredients</Text>
-          <View style={styles.containerDropdown}>
-            <MultiSelect
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              search
-              data={data}
-              labelField='label'
-              valueField='value'
-              placeholder='Select your ingredients'
-              searchPlaceholder='Search...'
-              value={ingredients}
-              onChange={(item) => {
-                setIngredients(item)
-              }}
-              renderLeftIcon={() => (
-                <AntDesign
-                  style={styles.icon}
-                  color='#ccc'
-                  name='search1'
-                  size={20}
-                />
-              )}
-              selectedStyle={styles.selectedStyle}
-            />
-          </View>
+          {!loadingIngredient && (
+            <View style={styles.containerDropdown}>
+              <MultiSelect
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                search
+                data={data}
+                labelField='label'
+                valueField='value'
+                placeholder='Select your ingredients'
+                searchPlaceholder='Search...'
+                value={ingredients}
+                onChange={(item) => {
+                  setIngredients(item)
+                }}
+                renderLeftIcon={() => (
+                  <AntDesign
+                    style={styles.icon}
+                    color='#ccc'
+                    name='search1'
+                    size={20}
+                  />
+                )}
+                selectedStyle={styles.selectedStyle}
+              />
+            </View>
+          )}
         </View>
 
         <View style={styles.inputContainer}>

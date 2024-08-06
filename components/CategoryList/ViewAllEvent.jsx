@@ -18,7 +18,7 @@ const ViewAllEvent = ({ route }) => {
   const eventData = route.params.eventData
   // const [items, setItems] = useState([])
   // const [loading, setLoading] = useState(false)
-  const { data: events, isLoading: loading } = useGetAllEventQuery()
+  const { data: events, isLoading: loading, refetch } = useGetAllEventQuery()
   const [page, setPage] = useState(1)
   const limit = 8
 
@@ -93,7 +93,7 @@ const ViewAllEvent = ({ route }) => {
           ) : (
             <>
               {events.map((item) => (
-                <EventCard key={item.id} item={item} />
+                <EventCard key={item.id} item={item} refetch={refetch} />
               ))}
             </>
           )}

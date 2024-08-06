@@ -14,7 +14,7 @@ import EventItem from '../RecommendItem/EventItem'
 
 function EventList() {
   const navigation = useNavigation()
-  const { data: events, isLoading: loading } = useGetAllEventQuery()
+  const { data: events, isLoading: loading, refetch } = useGetAllEventQuery()
 
   const handleClickViewAll = (item) => {
     navigation.navigate('ViewAllEvent', { eventData: item })
@@ -46,7 +46,9 @@ function EventList() {
           <>
             {events &&
               events.length > 0 &&
-              events?.map((item) => <EventItem key={item.id} item={item} />)}
+              events?.map((item) => (
+                <EventItem key={item.id} item={item} refetch={refetch} />
+              ))}
           </>
         )}
       </ScrollView>
