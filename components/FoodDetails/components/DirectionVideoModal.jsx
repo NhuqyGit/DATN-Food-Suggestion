@@ -5,23 +5,23 @@ import {
   Modal,
   StyleSheet,
   Dimensions,
-} from 'react-native'
-import React from 'react'
-import YoutubePlayer from 'react-native-youtube-iframe'
-import { COLORS } from '../../../theme/theme'
-import { theme } from '../../../theme'
+} from "react-native";
+import React from "react";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { COLORS } from "../../../theme/theme";
+import { theme } from "../../../theme";
 
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window");
 
-const DirectionVideoModal = ({ open, setOpen }) => {
+const DirectionVideoModal = ({ youtubeId, open, setOpen }) => {
   return (
     <View>
       <Modal
-        animationType='fade'
+        animationType="fade"
         transparent={true}
         visible={open}
         onRequestClose={() => {
-          setOpen(!open)
+          setOpen(!open);
         }}
       >
         <View style={styles.centeredView}>
@@ -30,19 +30,19 @@ const DirectionVideoModal = ({ open, setOpen }) => {
               height={height * 0.3}
               width={width * 0.9}
               play={false}
-              videoId={'l3zipB6nek8'}
+              videoId={`${youtubeId}`}
             />
 
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  setOpen(!open)
+                  setOpen(!open);
                 }}
                 style={[styles.button, styles.buttonClose]}
               >
                 <Text
                   style={{
-                    color: 'white',
+                    color: "white",
                     fontWeight: 600,
                   }}
                 >
@@ -54,24 +54,24 @@ const DirectionVideoModal = ({ open, setOpen }) => {
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
-export default DirectionVideoModal
+export default DirectionVideoModal;
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 15,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -89,5 +89,4 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: theme.colors.secondary,
   },
-})
-
+});
