@@ -10,6 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { theme } from '../../theme'
 import RecommendItem from './RecommendItem'
+import EventRanking from './EventRanking'
 
 const EventDetail = ({ navigation, route }) => {
   const { eventDetails, refetch } = route.params
@@ -66,6 +67,8 @@ const EventDetail = ({ navigation, route }) => {
           >{`${eventDetails?.startTime} ~ ${eventDetails?.endTime}`}</Text>
         </View>
       </View>
+
+      <EventRanking eventId= {eventDetails?.id}/>      
 
       <View style={styles.wrapper}>
         <Text style={styles.subTitle}>Newest Submissions</Text>

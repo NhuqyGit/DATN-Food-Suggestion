@@ -161,6 +161,8 @@ export const MessageProvider = ({
     count += 1
     newMessage += `${count}. Có đầy đủ khai vị, món chính và món tráng miệng và mỗi cái phải có ít nhất 2 món trở lên.\n `
     count += 1
+    newMessage += `${count}. Tất cả món thuộc ẩm thực việt nam, asia, châu âu, châu mỹ, châu phi thì đều luôn chuyển về tiền tệ VND.\n `
+    count += 1
     if (typeSuggest === 0 || typeSuggest === '0') {
       newMessage += `${count}. Liệt kê danh sách món ăn theo format json như sau \n${formatJson} và chỉ cần nội dụng json, không cần nội dung khác."`
     } else {

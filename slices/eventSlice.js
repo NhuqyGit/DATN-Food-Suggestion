@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { HOST } from '../config'
 
 export const eventApi = createApi({
   reducerPath: 'eventApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://datn-admin-be.onrender.com',
+    baseUrl: HOST,
     prepareHeaders: async (headers) => {
       try {
         const token = await AsyncStorage.getItem('accessToken')
