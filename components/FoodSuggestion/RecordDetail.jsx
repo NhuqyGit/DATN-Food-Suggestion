@@ -18,9 +18,12 @@ import TagForMeal from './TagForMeal'
 import { useMessage } from './MessageContext'
 import axios from 'axios'
 import TagForType from './TagForType'
+import { useSelector } from 'react-redux'
+import { selectUserInfo } from '../../slices/userLoginSlice'
 
 const RecordDetail = () => {
   const navigation = useNavigation()
+  const userInfo = useSelector(selectUserInfo)
   const route = useRoute()
   const { handleUpdateListRecord, handleSetListRecord } = useMessage()
   const { recordSelect, type } = route.params
@@ -40,6 +43,7 @@ const RecordDetail = () => {
   const [diner, setDiner] = useState(
     type === 'PATCH' ? recordSelect.numberOfDiners.toString() : '1'
   )
+  const [personalize, setPersonlize] = useState(null)
   const [diets, setDiets] = useState(null)
   const [allergies, setAllergies] = useState(null)
   const [cuisines, setCuisines] = useState(null)
@@ -75,83 +79,143 @@ const RecordDetail = () => {
     },
   ]
 
-  const handleFetchCuisines = async () => {
+  const handleFetchPersonalize = async () => {
     const token = await AsyncStorageService.getAccessToken()
     // const userId = await AsyncStorageService.getUserId();
     const headers = {
       Authorization: `Bearer ${token}`,
     }
     try {
-      const response = await fetch(`${HOST}/cuisines`, { headers })
+      const response = await fetch(`${HOST}/personalize/user/${userInfo?.id}`, {
+        headers,
+      })
       const data = await response.json()
-      if (data.length > 0) {
-        const refactorData = data.map((m) => {
-          const { id, name } = m
-          const isExist =
-            type === 'PATCH' &&
-            recordSelect?.cuisines?.some((item) => item.id === id)
-              ? true
-              : false
-          return { id, name: name, isSelect: isExist }
-        })
-        setCuisines(refactorData)
-      }
+      setPersonlize(data)
+      return data
     } catch (error) {
-      console.error('Error fetching data record diet:', error)
+      console.error('Error fetching data personalize:', error)
     }
   }
+
+  const handleFetchCuisines = async () => {
+    const token = await AsyncStorageService.getAccessToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+  
+    try {
+      const response = await fetch(`${HOST}/cuisines`, { headers });
+      const data = await response.json();
+  
+      if (data.length > 0) {
+        let refactorData;
+  
+        if (type !== 'PATCH') {
+          const personalizeResponse = await handleFetchPersonalize();
+          const selectedCuisines = personalizeResponse?.cuisines || [];
+  
+          refactorData = data.map((cuisine) => {
+            const { id, name } = cuisine;
+            const isExist = selectedCuisines.some((selectedCuisine) => selectedCuisine.id === id);
+            return { id, name, isSelect: isExist };
+          });
+        } else {
+          refactorData = data.map((cuisine) => {
+            const { id, name } = cuisine;
+            const isExist =
+              recordSelect?.cuisines?.some((item) => item.id === id)
+                ? true
+                : false;
+            return { id, name, isSelect: isExist };
+          });
+        }
+  
+        setCuisines(refactorData);
+      }
+    } catch (error) {
+      console.error('Error fetching data record diet:', error);
+    }
+  };
 
   const handleFetchDiets = async () => {
-    const token = await AsyncStorageService.getAccessToken()
-    // const userId = await AsyncStorageService.getUserId();
+    const token = await AsyncStorageService.getAccessToken();
     const headers = {
       Authorization: `Bearer ${token}`,
-    }
+    };
+  
     try {
-      const response = await fetch(`${HOST}/diets`, { headers })
-      const data = await response.json()
+      const response = await fetch(`${HOST}/diets`, { headers });
+      const data = await response.json();
+      let refactorData;
+  
       if (data.length > 0) {
-        const refactorData = data.map((m) => {
-          const { id, name } = m
-          const isExist =
-            type === 'PATCH' &&
-            recordSelect?.diets?.some((item) => item.id === id)
-              ? true
-              : false
-          return { id, name: name, isSelect: isExist }
-        })
-        setDiets(refactorData)
+        if (type !== 'PATCH') {
+          const personalizeResponse = await handleFetchPersonalize();
+          const selectedDiets = personalizeResponse?.diets || [];
+  
+          refactorData = data.map((diet) => {
+            const { id, name } = diet;
+            const isExist = selectedDiets.some((selectedDiet) => selectedDiet.id === id);
+            return { id, name, isSelect: isExist };
+          });
+        } else {
+          refactorData = data.map((diet) => {
+            const { id, name } = diet;
+            const isExist =
+              recordSelect?.diets?.some((item) => item.id === id)
+                ? true
+                : false;
+            return { id, name, isSelect: isExist };
+          });
+        }
+  
+        setDiets(refactorData);
       }
     } catch (error) {
-      console.error('Error fetching data record diet:', error)
+      console.error('Error fetching data record diet:', error);
     }
-  }
+  };
 
   const handleFetchAllergies = async () => {
-    const token = await AsyncStorageService.getAccessToken()
-    // const userId = await AsyncStorageService.getUserId();
+    const token = await AsyncStorageService.getAccessToken();
     const headers = {
       Authorization: `Bearer ${token}`,
-    }
+    };
+  
     try {
-      const response = await fetch(`${HOST}/allergies`, { headers })
-      const data = await response.json()
+      const response = await fetch(`${HOST}/allergies`, { headers });
+      const data = await response.json();
+      let refactorData;
+  
       if (data.length > 0) {
-        const refactorData = data.map((m) => {
-          const { id, allergiesName } = m
-          const isExist =
-            type === 'PATCH' &&
-            recordSelect?.allergies?.some((item) => item.id === id)
-              ? true
-              : false
-          return { id, name: allergiesName, isSelect: isExist }
-        })
-        setAllergies(refactorData)
+        if (type !== 'PATCH') {
+          const personalizeResponse = await handleFetchPersonalize();
+          const selectedAllergies = personalizeResponse?.allergies || [];
+  
+          refactorData = data.map((allergy) => {
+            const { id, allergiesName } = allergy;
+            const isExist = selectedAllergies.some((selectedAllergy) => selectedAllergy.id === id);
+            return { id, name: allergiesName, isSelect: isExist };
+          });
+        } else {
+          refactorData = data.map((allergy) => {
+            const { id, allergiesName } = allergy;
+            const isExist =
+              recordSelect?.allergies?.some((item) => item.id === id)
+                ? true
+                : false;
+            return { id, name: allergiesName, isSelect: isExist };
+          });
+        }
+  
+        setAllergies(refactorData);
       }
     } catch (error) {
-      console.error('Error fetching data record allergies:', error)
+      console.error('Error fetching data record allergies:', error);
     }
-  }
+  };
+  
+  
 
   useEffect(() => {
     handleFetchDiets()
