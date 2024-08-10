@@ -28,7 +28,7 @@ export const eventApi = createApi({
       }),
     }),
     getAllEvent: builder.query({
-      query: () => `/events`,
+      query: () => `/events/without-dishes`,
     }),
     getEventById: builder.query({
       query: (id) => `/events/${id}`,
