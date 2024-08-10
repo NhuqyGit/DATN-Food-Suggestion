@@ -33,6 +33,12 @@ export const eventApi = createApi({
     getEventById: builder.query({
       query: (id) => `/events/${id}`,
     }),
+    getMyRankingByEventId: builder.query({
+      query: (id) => `/events/${id}/my-ranking`,
+    }),
+    getEventRankings: builder.query({
+      query: (id) => `/events/${id}/top-dishes`,
+    }),
     getAllIngredients: builder.query({
       query: () => `/ingredient`,
     }),
@@ -44,6 +50,8 @@ export const {
   useGetAllEventQuery,
   useGetAllIngredientsQuery,
   useGetEventByIdQuery,
+  useGetMyRankingByEventIdQuery,
+  useGetEventRankingsQuery,
 } = eventApi
 
 export default eventApi

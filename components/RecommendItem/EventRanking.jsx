@@ -1,42 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
-import { HOST } from '../../config'
-import { AsyncStorageService } from '../../utils/AsynStorage'
+import React from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-const EventRanking = ({ eventId }) => {
-  const [rankingData, setRankingData] = useState([])
-
-  useEffect(() => {
-    const fetchRankingData = async () => {
-      try {
-        const token = await AsyncStorageService.getAccessToken()
-        const response = await fetch(`${HOST}/events/${eventId}/top-dishes`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        const data = await response.json()
-        setRankingData(data)
-      } catch (error) {
-        console.error('Error fetching ranking data:', error)
-      }
-    }
-
-    fetchRankingData()
-  }, [])
-
+const EventRanking = ({ eventRankings }) => {
   return (
     <View
       style={[
         styles.rankingContainer,
         {
-          height: rankingData?.length > 0 ? 150 : 40,
+          height: !eventRankings?.length ? 40 : 150,
         },
       ]}
     >
-      {rankingData?.length && rankingData?.length < 0 ? (
+      {!eventRankings?.length ? (
         <Text>No user has ranked this dish yet</Text>
       ) : (
         <>
@@ -45,17 +21,19 @@ const EventRanking = ({ eventId }) => {
               <Image
                 style={[styles.avatarImage, { width: 60, height: 60 }]}
                 source={
-                  rankingData[1]?.userImage
-                    ? { uri: rankingData[1].userImage }
+                  eventRankings?.[1]?.userImage
+                    ? { uri: eventRankings?.[1].userImage }
                     : require('../../assets/images/Profile/user.png')
                 }
               />
             </View>
-            <Text style={[styles.username]}>{rankingData[1]?.dish.author}</Text>
+            <Text style={[styles.username]}>
+              {eventRankings?.[1]?.dish.author}
+            </Text>
             <View style={styles.likeContainer}>
               <Entypo name='heart' color={'tomato'} size={18} />
               <Text style={{ color: '#bfbfbf' }}>
-                {rankingData[1]?.filteredCollectionsCount}
+                {eventRankings?.[1]?.filteredCollectionsCount}
               </Text>
             </View>
             <View
@@ -75,17 +53,19 @@ const EventRanking = ({ eventId }) => {
               <Image
                 style={[styles.avatarImage, { width: 80, height: 80 }]}
                 source={
-                  rankingData[0]?.userImage
-                    ? { uri: rankingData[0].userImage }
+                  eventRankings?.[0]?.userImage
+                    ? { uri: eventRankings?.[0].userImage }
                     : require('../../assets/images/Profile/user.png')
                 }
               />
             </View>
-            <Text style={[styles.username]}>{rankingData[0]?.dish.author}</Text>
+            <Text style={[styles.username]}>
+              {eventRankings?.[0]?.dish.author}
+            </Text>
             <View style={styles.likeContainer}>
               <Entypo name='heart' color={'tomato'} size={18} />
               <Text style={{ color: '#bfbfbf' }}>
-                {rankingData[0]?.filteredCollectionsCount}
+                {eventRankings?.[0]?.filteredCollectionsCount}
               </Text>
             </View>
             <View style={styles.numberOne}>
@@ -100,17 +80,19 @@ const EventRanking = ({ eventId }) => {
               <Image
                 style={[styles.avatarImage, { width: 60, height: 60 }]}
                 source={
-                  rankingData[2]?.userImage
-                    ? { uri: rankingData[2].userImage }
+                  eventRankings?.[2]?.userImage
+                    ? { uri: eventRankings?.[2].userImage }
                     : require('../../assets/images/Profile/user.png')
                 }
               />
             </View>
-            <Text style={[styles.username]}>{rankingData[2]?.dish.author}</Text>
+            <Text style={[styles.username]}>
+              {eventRankings?.[2]?.dish.author}
+            </Text>
             <View style={styles.likeContainer}>
               <Entypo name='heart' color={'tomato'} size={18} />
               <Text style={{ color: '#bfbfbf' }}>
-                {rankingData[2]?.filteredCollectionsCount}
+                {eventRankings?.[2]?.filteredCollectionsCount}
               </Text>
             </View>
             <View
