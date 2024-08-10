@@ -1,3 +1,4 @@
+import { Skeleton } from 'moti/skeleton'
 import React, { useEffect } from 'react'
 import {
   Image,
@@ -6,16 +7,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { theme } from '../../theme'
-import RecommendItem from './RecommendItem'
-import EventRanking from './EventRanking'
-import { useGetEventByIdQuery } from '../../slices/eventSlice'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Toast from 'react-native-toast-message'
-import { Skeleton } from 'moti/skeleton'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import {
+  useGetEventByIdQuery,
+  useGetEventRankingsQuery,
+  useGetMyRankingByEventIdQuery,
+} from '../../slices/eventSlice'
+import { theme } from '../../theme'
+import EventRanking from './EventRanking'
+import RecommendItem from './RecommendItem'
+import { Dimensions } from 'react-native'
+
+const { width } = Dimensions.get('window')
 
 const EventDetail = ({ navigation, route }) => {
   const { eventId } = route.params
@@ -27,7 +32,21 @@ const EventDetail = ({ navigation, route }) => {
     refetch,
   } = useGetEventByIdQuery(eventId)
 
-  if (isError) {
+  const {
+    data: myRanking,
+    isLoading: isLoadingRanking,
+    isError: isErrorRanking,
+    refetch: refetchRanking,
+  } = useGetMyRankingByEventIdQuery(eventId)
+
+  const {
+    data: eventRankings,
+    isLoading: isLoadingEventRankings,
+    isError: isErrorEventRankings,
+    refetch: refetchEventRankings,
+  } = useGetEventRankingsQuery(eventId)
+
+  if (isError || isErrorRanking || isErrorEventRankings) {
     Toast.show({
       type: 'error',
       text1: 'Error',
@@ -41,10 +60,16 @@ const EventDetail = ({ navigation, route }) => {
     navigation.goBack()
   }
 
+  const refetchData = () => {
+    refetch()
+    refetchRanking()
+    refetchEventRankings()
+  }
+
   const onPressJoinEvent = () => {
     navigation.push('JoinEvent', {
       eventId: eventDetails?.id,
-      refetch: refetch,
+      refetch: refetchData,
     })
   }
 
@@ -66,7 +91,7 @@ const EventDetail = ({ navigation, route }) => {
       showsVerticalScrollIndicator={false}
     >
       <View>
-        {isLoading ? (
+        {isLoading || isLoadingRanking || isLoadingEventRankings ? (
           <>
             <Skeleton
               show
@@ -104,7 +129,7 @@ const EventDetail = ({ navigation, route }) => {
       <View style={styles.header}>
         <View style={styles.headerTextContainer}>
           <View style={styles.titleWrapper}>
-            {isLoading ? (
+            {isLoading || isLoadingRanking || isLoadingEventRankings ? (
               <>
                 <Skeleton
                   show
@@ -131,23 +156,51 @@ const EventDetail = ({ navigation, route }) => {
                 />
               </>
             ) : (
-              <>
-                <Text style={styles.title}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 8,
+                }}
+              >
+                <Text
+                  style={[
+                    styles.title,
+                    {
+                      maxWidth: myRanking?.filteredCollectionsCount
+                        ? width - 130
+                        : width - 110,
+                    },
+                  ]}
+                >
                   {eventDetails?.eventName ?? ''}
                 </Text>
                 <View style={styles.footer}>
                   <TouchableOpacity
                     onPress={onPressJoinEvent}
-                    style={[styles.button, styles.buttonOpen]}
+                    style={[
+                      styles.button,
+                      styles.buttonOpen,
+                      {
+                        width: myRanking?.filteredCollectionsCount ? 130 : 110,
+                      },
+                    ]}
+                    disabled={myRanking?.filteredCollectionsCount}
                   >
-                    <Text style={styles.buttonText}>Join Now</Text>
+                    <Text style={styles.buttonText}>
+                      {myRanking
+                        ? `Your Rank: ${myRanking?.filteredCollectionsCount}`
+                        : 'Join Now'}
+                    </Text>
                   </TouchableOpacity>
                 </View>
-              </>
+              </View>
             )}
           </View>
 
-          {isLoading ? (
+          {isLoading || isLoadingRanking || isLoadingEventRankings ? (
             <View
               style={{
                 gap: 6,
@@ -199,16 +252,19 @@ const EventDetail = ({ navigation, route }) => {
             </View>
           ) : (
             <>
-              <Text style={styles.author}>{eventDetails?.reward ?? ''}</Text>
+              <Text style={styles.author}>
+                {`${eventDetails?.reward}` ?? ''}
+              </Text>
               <Text
                 style={styles.author}
               >{`${eventDetails?.startTime ?? ''} ~ ${eventDetails?.endTime ?? ''}`}</Text>
+              <Text>{eventDetails?.description ?? ''}</Text>
             </>
           )}
         </View>
       </View>
 
-      {isLoading ? (
+      {isLoading || isLoadingRanking || isLoadingEventRankings ? (
         <View
           style={{
             flexDirection: 'row',
@@ -253,7 +309,7 @@ const EventDetail = ({ navigation, route }) => {
           />
         </View>
       ) : (
-        <EventRanking eventId={eventDetails?.id} />
+        <EventRanking eventRankings={eventRankings ?? []} />
       )}
 
       <View style={styles.wrapper}>
@@ -263,7 +319,7 @@ const EventDetail = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
           style={styles.listItem}
         >
-          {isLoading ? (
+          {isLoading || isLoadingRanking || isLoadingEventRankings ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -298,9 +354,15 @@ const EventDetail = ({ navigation, route }) => {
             </View>
           ) : (
             <>
-              {eventDetails?.dishes?.map((item) => {
-                return <RecommendItem key={item.id} item={item} />
-              })}
+              {eventDetails?.dishes.length > 0 ? (
+                <>
+                  {eventDetails?.dishes?.map((item) => {
+                    return <RecommendItem key={item.id} item={item} />
+                  })}
+                </>
+              ) : (
+                <Text>No dish submissions yet.</Text>
+              )}
             </>
           )}
         </ScrollView>
@@ -379,7 +441,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',

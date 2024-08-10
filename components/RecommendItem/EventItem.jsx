@@ -9,8 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { useGetEventByIdQuery } from '../../slices/eventSlice'
-import Toast from 'react-native-toast-message'
 
 function EventItem({ item, refetch }) {
   const navigation = useNavigation()
@@ -36,7 +34,9 @@ function EventItem({ item, refetch }) {
           {item?.eventName}
         </Text>
         <View style={styles.authorContainer}>
-          <Text style={styles.author}>{item.reward}</Text>
+          <Text style={styles.author} numberOfLines={1} ellipsizeMode='tail'>
+            {item.reward}
+          </Text>
           <Text style={styles.status}>{isOngoing ? 'Ongoing' : 'Ended'}</Text>
         </View>
       </View>
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginRight: 4,
     textTransform: 'uppercase',
+    flexShrink: 1,
   },
 
   status: {
