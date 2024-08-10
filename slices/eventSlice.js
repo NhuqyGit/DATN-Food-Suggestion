@@ -30,6 +30,9 @@ export const eventApi = createApi({
     getAllEvent: builder.query({
       query: () => `/events`,
     }),
+    getEventById: builder.query({
+      query: (id) => `/events/${id}`,
+    }),
     getAllIngredients: builder.query({
       query: () => `/ingredient`,
     }),
@@ -40,6 +43,7 @@ export const {
   useUpdateDishToEventMutation,
   useGetAllEventQuery,
   useGetAllIngredientsQuery,
+  useGetEventByIdQuery,
 } = eventApi
 
 export default eventApi

@@ -165,7 +165,7 @@ const JoinEvent = ({ navigation, route }) => {
 
       await updateDishToEvent()
     } catch (error) {
-      console.log('error', error)
+      console.error('error', error)
     }
   }
 

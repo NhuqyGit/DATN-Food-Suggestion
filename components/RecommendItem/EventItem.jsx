@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import { useGetEventByIdQuery } from '../../slices/eventSlice'
+import Toast from 'react-native-toast-message'
 
 function EventItem({ item, refetch }) {
   const navigation = useNavigation()
@@ -21,7 +23,9 @@ function EventItem({ item, refetch }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('EventDetail', { eventDetails: item, refetch: refetch })
+        navigation.push('EventDetail', {
+          eventId: item.id,
+        })
       }}
       activeOpacity={1}
       style={styles.container}

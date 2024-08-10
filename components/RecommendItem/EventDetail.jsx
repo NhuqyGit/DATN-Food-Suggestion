@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Image,
   ScrollView,
@@ -6,14 +6,36 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { theme } from '../../theme'
 import RecommendItem from './RecommendItem'
 import EventRanking from './EventRanking'
+import { useGetEventByIdQuery } from '../../slices/eventSlice'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
+import { Skeleton } from 'moti/skeleton'
 
 const EventDetail = ({ navigation, route }) => {
-  const { eventDetails, refetch } = route.params
+  const { eventId } = route.params
+
+  const {
+    data: eventDetails,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetEventByIdQuery(eventId)
+
+  if (isError) {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Something went wrong. Please try again.',
+      textStyle: { fontSize: 20 },
+    })
+    navigation.goBack()
+  }
 
   const handleNavigateBack = () => {
     navigation.goBack()
@@ -26,49 +48,213 @@ const EventDetail = ({ navigation, route }) => {
     })
   }
 
+  useEffect(() => {
+    if (!eventId) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Event ID is missing.',
+        textStyle: { fontSize: 20 },
+      })
+      navigation.goBack()
+    }
+  }, [eventId])
+
   return (
     <ScrollView
       style={styles.foodDetailsScreen}
       showsVerticalScrollIndicator={false}
     >
       <View>
-        <Image
-          source={{ uri: eventDetails.imageUrl ?? '' }}
-          style={styles.image}
-        />
-        <TouchableOpacity
-          onPress={handleNavigateBack}
-          style={styles.backButtonContainer}
-        >
-          <Ionicons
-            name='chevron-back-circle'
-            size={32}
-            color={theme.colors.grayBackground}
-          />
-        </TouchableOpacity>
+        {isLoading ? (
+          <>
+            <Skeleton
+              show
+              height={200}
+              width={'100%'}
+              style={styles.image}
+              colorMode='light'
+              transition={{
+                type: 'timing',
+                duration: 4000,
+              }}
+              backgroundColor='#D4D4D4'
+            />
+          </>
+        ) : (
+          <>
+            <Image
+              source={{ uri: eventDetails?.imageUrl ?? '' }}
+              style={styles.image}
+            />
+            <TouchableOpacity
+              onPress={handleNavigateBack}
+              style={styles.backButtonContainer}
+            >
+              <Ionicons
+                name='chevron-back-circle'
+                size={32}
+                color={theme.colors.grayBackground}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       <View style={styles.header}>
         <View style={styles.headerTextContainer}>
           <View style={styles.titleWrapper}>
-            <Text style={styles.title}>{eventDetails?.eventName}</Text>
-            <View style={styles.footer}>
-              <TouchableOpacity
-                onPress={onPressJoinEvent}
-                style={[styles.button, styles.buttonOpen]}
-              >
-                <Text style={styles.buttonText}>Join Now</Text>
-              </TouchableOpacity>
-            </View>
+            {isLoading ? (
+              <>
+                <Skeleton
+                  show
+                  height={30}
+                  width={100}
+                  colorMode='light'
+                  transition={{
+                    type: 'timing',
+                    duration: 4000,
+                  }}
+                  backgroundColor='#D4D4D4'
+                />
+
+                <Skeleton
+                  show
+                  height={30}
+                  width={100}
+                  colorMode='light'
+                  transition={{
+                    type: 'timing',
+                    duration: 4000,
+                  }}
+                  backgroundColor='#D4D4D4'
+                />
+              </>
+            ) : (
+              <>
+                <Text style={styles.title}>
+                  {eventDetails?.eventName ?? ''}
+                </Text>
+                <View style={styles.footer}>
+                  <TouchableOpacity
+                    onPress={onPressJoinEvent}
+                    style={[styles.button, styles.buttonOpen]}
+                  >
+                    <Text style={styles.buttonText}>Join Now</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </View>
-          <Text style={styles.author}>{eventDetails?.reward}</Text>
-          <Text
-            style={styles.author}
-          >{`${eventDetails?.startTime} ~ ${eventDetails?.endTime}`}</Text>
+
+          {isLoading ? (
+            <View
+              style={{
+                gap: 6,
+              }}
+            >
+              <Skeleton
+                show
+                height={30}
+                width={100}
+                colorMode='light'
+                transition={{
+                  type: 'timing',
+                  duration: 4000,
+                }}
+                backgroundColor='#D4D4D4'
+              />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 16,
+                }}
+              >
+                <Skeleton
+                  show
+                  height={30}
+                  width={100}
+                  colorMode='light'
+                  transition={{
+                    type: 'timing',
+                    duration: 4000,
+                  }}
+                  backgroundColor='#D4D4D4'
+                />
+                <Text>~</Text>
+                <Skeleton
+                  show
+                  height={30}
+                  width={100}
+                  colorMode='light'
+                  transition={{
+                    type: 'timing',
+                    duration: 4000,
+                  }}
+                  backgroundColor='#D4D4D4'
+                />
+              </View>
+            </View>
+          ) : (
+            <>
+              <Text style={styles.author}>{eventDetails?.reward ?? ''}</Text>
+              <Text
+                style={styles.author}
+              >{`${eventDetails?.startTime ?? ''} ~ ${eventDetails?.endTime ?? ''}`}</Text>
+            </>
+          )}
         </View>
       </View>
 
-      <EventRanking eventId= {eventDetails?.id}/>      
+      {isLoading ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
+            padding: 16,
+          }}
+        >
+          <Skeleton
+            show
+            height={100}
+            width={100}
+            colorMode='light'
+            transition={{
+              type: 'timing',
+              duration: 4000,
+            }}
+            backgroundColor='#D4D4D4'
+          />
+          <Skeleton
+            show
+            height={100}
+            width={100}
+            colorMode='light'
+            transition={{
+              type: 'timing',
+              duration: 4000,
+            }}
+            backgroundColor='#D4D4D4'
+          />
+          <Skeleton
+            show
+            height={100}
+            width={100}
+            colorMode='light'
+            transition={{
+              type: 'timing',
+              duration: 4000,
+            }}
+            backgroundColor='#D4D4D4'
+          />
+        </View>
+      ) : (
+        <EventRanking eventId={eventDetails?.id} />
+      )}
 
       <View style={styles.wrapper}>
         <Text style={styles.subTitle}>Newest Submissions</Text>
@@ -77,9 +263,46 @@ const EventDetail = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
           style={styles.listItem}
         >
-          {eventDetails?.dishes?.map((item) => {
-            return <RecommendItem key={item.id} item={item} />
-          })}
+          {isLoading ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 16,
+                paddingHorizontal: 0,
+              }}
+            >
+              <Skeleton
+                show
+                height={400}
+                width={300}
+                colorMode='light'
+                transition={{
+                  type: 'timing',
+                  duration: 4000,
+                }}
+                backgroundColor='#D4D4D4'
+              />
+              <Skeleton
+                show
+                height={400}
+                width={300}
+                colorMode='light'
+                transition={{
+                  type: 'timing',
+                  duration: 4000,
+                }}
+                backgroundColor='#D4D4D4'
+              />
+            </View>
+          ) : (
+            <>
+              {eventDetails?.dishes?.map((item) => {
+                return <RecommendItem key={item.id} item={item} />
+              })}
+            </>
+          )}
         </ScrollView>
       </View>
     </ScrollView>

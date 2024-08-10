@@ -21,7 +21,9 @@ function EventCard({ item, refetch }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push('EventDetail', { EventDetails: item, refetch: refetch })
+        navigation.push('EventDetail', {
+          eventId: item.id,
+        })
       }}
       activeOpacity={1}
       style={styles.container}
