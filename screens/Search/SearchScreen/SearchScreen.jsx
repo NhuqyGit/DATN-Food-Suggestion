@@ -274,7 +274,7 @@ const SearchScreen = ({ navigation, route }) => {
               </View>
               <View style={styles.popularWrapper}>
                 <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-                  <Text style={styles.title}>Lastest dish</Text>
+                  <Text style={styles.title}>Latest dish</Text>
                   {loadingDish ? (
                     <View
                       style={{
