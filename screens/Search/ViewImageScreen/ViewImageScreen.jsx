@@ -188,7 +188,7 @@ const ViewImageScreen = ({ navigation, route }) => {
     }
   }
 
-  const [limit, setLimit] = useState(0)
+  const [limit, setLimit] = useState(1)
   const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
 
   return (
