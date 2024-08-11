@@ -1,27 +1,38 @@
+import { MaterialIcons } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
 import {
-  View,
-  Text,
+  ActivityIndicator,
   Image,
-  StyleSheet,
+  Keyboard,
+  Platform,
   SafeAreaView,
   ScrollView,
-  Alert,
-  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Button from '../../../components/Button/Button'
-import { MaterialIcons } from '@expo/vector-icons'
+import { HOST } from '../../../config'
+import {
+  setIngredientNames,
+  setLimit,
+  setSearchStep,
+} from '../../../slices/searchSlice'
+import { theme } from '../../../theme'
+import { AsyncStorageService } from '../../../utils/AsynStorage'
 import IngredientItem from './IngredientItem'
 import IngredientSkeletonItem from './IngredientSkeletonItem'
-import { HOST, firebase } from '../../../config'
-import { AsyncStorageService } from '../../../utils/AsynStorage'
-import { theme } from '../../../theme'
-import { useDispatch } from 'react-redux'
-import { setIngredientNames, setSearchStep } from '../../../slices/searchSlice'
 
 const ViewImageScreen = ({ navigation, route }) => {
   const { image } = route.params
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss() // Hạ bàn phím xuống
+  }
 
   const dispatch = useDispatch()
 
@@ -135,6 +146,7 @@ const ViewImageScreen = ({ navigation, route }) => {
 
   const handlePressSearch = () => {
     navigation.navigate('SearchScreen')
+    dispatch(setLimit(parseInt(limit ?? 1)))
     dispatch(setIngredientNames(options?.map((item) => item.name)))
     dispatch(setSearchStep(2))
   }
@@ -152,75 +164,126 @@ const ViewImageScreen = ({ navigation, route }) => {
     }
   }, [resultS])
 
+  const generateBoxShadowStyle = (
+    xOffset,
+    yOffset,
+    shadowColorIos,
+    shadowOpacity,
+    shadowRadius,
+    elevation,
+    shadowColorAndroid
+  ) => {
+    if (Platform.OS === 'ios') {
+      return {
+        shadowColor: shadowColorIos,
+        shadowOffset: { width: xOffset, height: yOffset },
+        shadowOpacity,
+        shadowRadius,
+      }
+    } else if (Platform.OS === 'android') {
+      return {
+        elevation,
+        shadowColor: shadowColorAndroid,
+      }
+    }
+  }
+
+  const [limit, setLimit] = useState(0)
+  const boxShadow = generateBoxShadowStyle(0, 2, 'black', 0.1, 4, 4, 'black')
+
   return (
-    <SafeAreaView style={styles.container} edges={['right', 'left', 'top']}>
-      <Button
-        style={styles.button}
-        onPress={() => navigation.goBack()}
-        childrenIcon={
-          <MaterialIcons name='keyboard-arrow-left' size={32} color='#fff' />
-        }
-      />
-      <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.content}>
-        <Text style={styles.title}>Confirm your ingredients</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {loading ? (
-            <IngredientSkeletonItem total={5} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container} edges={['right', 'left', 'top']}>
+        <Button
+          style={styles.button}
+          onPress={() => navigation.goBack()}
+          childrenIcon={
+            <MaterialIcons name='keyboard-arrow-left' size={32} color='#fff' />
+          }
+        />
+        <Image source={{ uri: image }} style={styles.image} />
+        <View style={styles.content}>
+          <Text style={styles.title}>Confirm your ingredients</Text>
+
+          {options.length > 0 ? (
+            <View style={[boxShadow, styles.searchContainer]}>
+              <TextInput
+                value={limit.toString()}
+                onChangeText={(text) => {
+                  const number = parseInt(text, 10)
+                  if (isNaN(number) || number < 1) {
+                    setLimit('1')
+                  } else {
+                    setLimit(text)
+                  }
+                }}
+                keyboardType='numeric'
+                style={styles.input}
+                placeholder='Limit ingredients'
+              />
+            </View>
           ) : (
-            <>
-              {options?.map((item, index) => {
-                if (index === options.length - 1) {
+            <>{!loading && <Text>No ingredients</Text>}</>
+          )}
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {loading ? (
+              <IngredientSkeletonItem total={5} />
+            ) : (
+              <>
+                {options?.map((item, index) => {
+                  if (index === options.length - 1) {
+                    return (
+                      <IngredientItem
+                        key={item.id}
+                        defaultTitle={item.name}
+                        style={styles.borderButton}
+                        onRemove={() => onRemove(item.id)}
+                        id={item.id}
+                        onEdit={onEdit}
+                      />
+                    )
+                  }
                   return (
                     <IngredientItem
                       key={item.id}
                       defaultTitle={item.name}
-                      style={styles.borderButton}
                       onRemove={() => onRemove(item.id)}
                       id={item.id}
                       onEdit={onEdit}
                     />
                   )
-                }
-                return (
-                  <IngredientItem
-                    key={item.id}
-                    defaultTitle={item.name}
-                    onRemove={() => onRemove(item.id)}
-                    id={item.id}
-                    onEdit={onEdit}
-                  />
-                )
-              })}
+                })}
 
-              {options.length > 0 && (
-                <TouchableOpacity
-                  onPress={handlePressSearch}
-                  style={[
-                    styles.signInButtonContainer,
-                    {
-                      backgroundColor:
-                        options.length === 0 || loading
-                          ? theme?.colors?.grayBackground
-                          : theme.colors.secondary,
-                    },
-                  ]}
-                  disabled={options.length === 0 || loading}
-                >
-                  <Text style={styles.signButton}>
-                    {loading ? (
-                      <ActivityIndicator size='small' color='white' />
-                    ) : (
-                      <Text>Search</Text>
-                    )}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+                {options.length > 0 && (
+                  <TouchableOpacity
+                    onPress={handlePressSearch}
+                    style={[
+                      styles.signInButtonContainer,
+                      {
+                        backgroundColor:
+                          options.length === 0 || loading
+                            ? theme?.colors?.grayBackground
+                            : theme.colors.secondary,
+                      },
+                    ]}
+                    disabled={options.length === 0 || loading}
+                  >
+                    <Text style={styles.signButton}>
+                      {loading ? (
+                        <ActivityIndicator size='small' color='white' />
+                      ) : (
+                        <Text>Search</Text>
+                      )}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -249,16 +312,36 @@ const styles = StyleSheet.create({
     left: 10,
   },
 
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 6,
+    // borderColor: 'red',
+    // borderWidth: 1,
+    flex: 1,
+    maxHeight: 40,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+
+  input: {
+    flex: 1,
+  },
+
   content: {
     marginTop: '90%',
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     paddingBottom: 46,
     alignItems: 'center',
     width: '100%',
     zIndex: 3,
+    flex: 1,
   },
 
   title: {

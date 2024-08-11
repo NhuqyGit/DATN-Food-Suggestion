@@ -6,6 +6,7 @@ const initialState = {
   step: 1,
   ingredientNames: [],
   searchCollectionIndex: 0,
+  limit: 5,
 }
 
 export const searchSlice = createSlice({
@@ -27,6 +28,9 @@ export const searchSlice = createSlice({
     setSearchCollectionIndex: (state, action) => {
       state.searchCollectionIndex = action.payload
     },
+    setLimit: (state, action) => {
+      state.limit = action.payload
+    },
   },
 })
 
@@ -36,6 +40,7 @@ export const {
   setSearchStep,
   setIngredientNames,
   setSearchCollectionIndex,
+  setLimit,
 } = searchSlice.actions
 
 export const selectIngredientIds = (state) => state.search.ingredientIds
@@ -44,6 +49,7 @@ export const selectStep = (state) => state.search.step
 export const selectIngredientNames = (state) => state.search.ingredientNames
 export const selectSearchCollectionIndex = (state) =>
   state.search.searchCollectionIndex
+export const selectLimit = (state) => state.search.limit
 
 export default searchSlice.reducer
 

@@ -18,6 +18,7 @@ import {
   selectCookingTime,
   selectIngredientIds,
   selectIngredientNames,
+  selectLimit,
   selectStep,
   setSearchStep,
 } from '../../../slices/searchSlice'
@@ -50,8 +51,7 @@ const SearchScreen = ({ navigation, route }) => {
   const ingredientIds = useSelector(selectIngredientIds)
   const cookingTime = useSelector(selectCookingTime)
   const ingredientNames = useSelector(selectIngredientNames)
-
-  const LIMIT = 5
+  const limitIngredient = useSelector(selectLimit)
 
   useEffect(() => {
     const getIngredients = async () => {
@@ -125,9 +125,10 @@ const SearchScreen = ({ navigation, route }) => {
       if (ingredientNames && ingredientNames.length > 0) {
         ingredientNames.forEach((name) => {
           if (searchText) {
-            query += `&limit=${LIMIT}&ingredientNames=` + name
+            query += `&limit=${limitIngredient ?? 1}&ingredientNames=` + name
           } else {
-            query += `limit=${LIMIT}&ingredientNames=` + name + '&'
+            query +=
+              `limit=${limitIngredient ?? 1}&ingredientNames=` + name + '&'
           }
         })
       }
