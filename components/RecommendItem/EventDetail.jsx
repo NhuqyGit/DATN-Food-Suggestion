@@ -85,6 +85,7 @@ const EventDetail = ({ navigation, route }) => {
     }
   }, [eventId])
 
+  const isDisabled = !!myRanking?.filteredCollectionsCount;
   return (
     <ScrollView
       style={styles.foodDetailsScreen}
@@ -187,7 +188,7 @@ const EventDetail = ({ navigation, route }) => {
                         width: myRanking?.filteredCollectionsCount ? 130 : 110,
                       },
                     ]}
-                    disabled={myRanking?.filteredCollectionsCount}
+                    disabled={isDisabled}
                   >
                     <Text style={styles.buttonText}>
                       {myRanking
