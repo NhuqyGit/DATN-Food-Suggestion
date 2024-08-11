@@ -58,7 +58,7 @@ const TermScreen = () => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          <Text style={styles.text}>
+          <Text className="mb-8" style={styles.text}>
             Welcome to IntelliTaste! By using our app, you agree to the
             following terms. Our app provides personalized meal suggestions
             based on your dietary preferences and requirements through AI
