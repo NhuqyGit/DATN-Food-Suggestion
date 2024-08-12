@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Linking,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -171,6 +172,22 @@ const About = ({ navigation }) => {
             foodies to do what they love - cook, eat, and share!. IntelliTaste's
             mission is to be the world's largest, most powerful and most helpful
             food site in the world.
+          </Text>
+
+          <Text style={[styles.content]}>
+            <Text style={{ fontWeight: 'bold' }}>Contact US: </Text>
+            <Text
+              style={{
+                color: 'blue',
+              }}
+              onPress={() =>
+                Linking.openURL(
+                  'https://www.facebook.com/profile.php?id=61564069385066'
+                )
+              }
+            >
+              Facebook Fanpage
+            </Text>
           </Text>
 
           {topics.map((topic) => (
