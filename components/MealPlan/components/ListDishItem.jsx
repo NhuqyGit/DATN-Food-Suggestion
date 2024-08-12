@@ -98,23 +98,17 @@ export default function ListDishItem({
     )
 
     const res = await response.json()
-    console.log(res)
   }
 
   useEffect(() => {
     //if isEdit
     if (isEdit && activateEffect) {
-      console.log('edit alarm')
-
       settIsEdit(false)
       const date = new Date(scheduleTime)
       const newPlanDate = new Date(
         dateFormat.setHours(date.getHours(), date.getMinutes(), 0)
       )
       //newPlanDate.setDate(newPlanDate.getDate() + 7);
-
-      console.log(newPlanDate)
-      console.log(mealplanDishId)
 
       // Patch db
       patchMpdishById(mealplanDishId, newPlanDate)
@@ -329,12 +323,7 @@ export default function ListDishItem({
                   }
                 )
                 setRandom(Math.random(0, 10) + 1)
-                console.log({
-                  id: mealplanDishId,
-                  mealPlanId: mealPlanIdInt,
-                  dishId: dishIdInt,
-                  planDate: planDate,
-                })
+
                 if (mealplanDishId) {
                   //cancel schedule: id=mealplanDishId
                   SchedulerService.cancel(String(mealplanDishId))
@@ -359,7 +348,6 @@ export default function ListDishItem({
                     dateFormat.setHours(date.getHours(), date.getMinutes(), 0)
                   )
                   newPlanDate.setDate(newPlanDate.getDate() + 7)
-                  console.log(newPlanDate + ' - ' + dateFormat)
 
                   const formattedDate = momentObject.format('YYYY-MM-DD')
 
@@ -376,7 +364,6 @@ export default function ListDishItem({
                   const dishIdDish = await dishRes.json()
 
                   const dishIdInt = parseInt(id, 10)
-                  console.log(newPlanDate)
                   if (!dishIdDish.includes(dishIdInt)) {
                     const response = await fetch(
                       `https://datn-admin-be.onrender.com/mealplan`,
