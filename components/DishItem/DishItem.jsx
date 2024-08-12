@@ -12,7 +12,6 @@ import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useGetReviewsByDishIdQuery } from "../../slices/reviewSlice";
 const DishItem = ({ item }) => {
   const navigation = useNavigation();
-  const roundedRating = Math.round(item?.rating * 10) / 10;
   const { data: reviews } = useGetReviewsByDishIdQuery(item?.id);
   const [rating, setRating] = useState(0);
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -14,9 +14,10 @@ import { useSelector } from "react-redux";
 import { AsyncStorageService } from "../../utils/AsynStorage";
 import { HOST } from "../../config";
 import { useNavigation } from "@react-navigation/native";
+import { useGetReviewsByDishIdQuery } from "../../slices/reviewSlice";
 
 function DishRecipe({ item, handleSetId, id }) {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const userInfo = useSelector(selectUserInfo);
 
   const dishId = item?.id;
@@ -49,7 +50,24 @@ function DishRecipe({ item, handleSetId, id }) {
     } finally {
     }
   };
-  const roundedRating = Math.round(item?.rating * 10) / 10;
+
+  const { data: reviews } = useGetReviewsByDishIdQuery(dishId);
+  const [rating, setRating] = useState(0);
+  useEffect(() => {
+    if (reviews?.length > 0) {
+      const totalRating = reviews.reduce(
+        (sum, review) => sum + review.rating,
+        0
+      );
+      const roundedRating = totalRating
+        ? (totalRating / reviews.length).toFixed(1)
+        : 0;
+
+      if (roundedRating !== rating) {
+        setRating(roundedRating);
+      }
+    }
+  }, [reviews, rating]);
   return (
     <TouchableOpacity
       onPress={() => handleSetId(item.id)}
@@ -75,7 +93,7 @@ function DishRecipe({ item, handleSetId, id }) {
             marginTop: 5,
           }}
         >
-          <Text style={styles.rating}>{`Rating: ${roundedRating}`}</Text>
+          <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
           {/* <AntDesign name='star' size={20} color='#FF6321' /> */}
           <Ionicons name="star" size={16} color={theme.colors.primary} />
         </View>
