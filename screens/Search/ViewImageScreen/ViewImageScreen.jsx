@@ -148,7 +148,7 @@ const ViewImageScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (resultS?.concepts && resultS?.concepts?.length > 0) {
       const options = resultS?.concepts
-        ?.filter((item) => item?.value > 0.05)
+        ?.filter((item) => item?.value > 0.01)
         ?.sort((a, b) => b.value - a.value)
         ?.slice(0, 10)
 
