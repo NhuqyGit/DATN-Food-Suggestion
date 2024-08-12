@@ -174,7 +174,14 @@ const About = ({ navigation }) => {
             food site in the world.
           </Text>
 
-          <Text style={[styles.content]}>
+          <Text
+            style={[
+              styles.content,
+              {
+                marginBottom: 16,
+              },
+            ]}
+          >
             <Text style={{ fontWeight: 'bold' }}>Contact US: </Text>
             <Text
               style={{
@@ -187,6 +194,24 @@ const About = ({ navigation }) => {
               }
             >
               Facebook Fanpage
+            </Text>
+          </Text>
+
+          <Text
+            style={[
+              styles.content,
+              {
+                marginBottom: 16,
+              },
+            ]}
+          >
+            <Text style={{ fontWeight: 'bold' }}>Email: </Text>
+            <Text
+              style={{
+                color: 'blue',
+              }}
+            >
+              btsang20@clc.fitus.edu.vn
             </Text>
           </Text>
 
